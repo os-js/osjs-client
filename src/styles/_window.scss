@@ -1,0 +1,139 @@
+/*
+ * OS.js - JavaScript Cloud/Web Desktop Platform
+ *
+ * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author  Anders Evenrud <andersevenrud@gmail.com>
+ * @licence Simplified BSD License
+ */
+
+.osjs-window {
+  position: absolute;
+  box-sizing: border-box;
+
+  // FIXME
+  &[data-maximized=true] {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  &[data-minimized=true] {
+    display: none !important;
+  }
+
+  &[data-resizing=true],
+  &[data-moving=true] {
+    cursor: move;
+
+    * {
+      pointer-events: none;
+    }
+  }
+
+  & > .osjs-window-inner {
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+
+    & > .osjs-window-header {
+      display: flex;
+      position: relative;
+      box-sizing: border-box;
+      flex: 0 0;
+      min-height: 2.2em;
+
+      & > div {
+        height: 100%;
+      }
+
+      & > .osjs-window-icon {
+        & > div {
+          width: $base-margin;
+          height: $base-margin;
+          background: url('~@osjs/core/src/styles/logo-blue-32x32.png') no-repeat 50% 50%;
+          background-size: cover;
+        }
+      }
+
+      & > .osjs-window-title {
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      & > .osjs-window-button {
+        overflow: hidden;
+        cursor: pointer;
+        min-width: 1em;
+        position: relative;
+        flex-basis: 1em;
+
+        * {
+          pointer-events: none;
+        }
+
+        &:not(:last-child) {
+          margin-right: $base-margin / 4;
+        }
+      }
+    }
+
+    & > .osjs-window-content {
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      flex: 1 1;
+    }
+
+    & > .osjs-window-resize {
+      z-index: 10;
+      position: absolute;
+      bottom: -0.5em;
+      right: -0.5em;
+      width: 1em;
+      height: 1em;
+      cursor: se-resize;
+    }
+  }
+
+  &[data-minimizable=false] .osjs-window-button[data-action=minimize],
+  &[data-maximizable=false] .osjs-window-button[data-action=maximize],
+  &[data-closable=false] .osjs-window-button[data-action=close],
+  &[data-resizable=false] .osjs-window-resize {
+    display: none;
+  }
+
+}

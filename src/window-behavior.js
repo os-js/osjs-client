@@ -1,0 +1,181 @@
+/*
+ * OS.js - JavaScript Cloud/Web Desktop Platform
+ *
+ * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author  Anders Evenrud <andersevenrud@gmail.com>
+ * @licence Simplified BSD License
+ */
+
+const actionMap = {
+  maximize(win) {
+    if (!win.maximize()) {
+      win.restore();
+    }
+  },
+  minimize(win) {
+    win.minimize();
+  },
+  close(win) {
+    win.close();
+  }
+};
+
+/*
+ * OS.js Default Window Behavior
+ *
+ * Controls certain events and their interaction with a window
+ */
+export default class WindowBehavior {
+  constructor(core, win) {
+    this.core = core;
+    this.win = win;
+    this.mouseMoved = false;
+    this.wasMoved = false;
+    this.wasResized = false;
+  }
+
+  init() {
+    this.win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev));
+    this.win.$element.addEventListener('click', (ev) => this.click(ev));
+    this.win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev));
+
+    // FIXME
+    let top = (30 + ((this.win.wid % 20) * 10));
+    let left = (10 + ((this.win.wid % 20) * 10));
+
+    if (this.win.state.position.top === 0) {
+      this.win.state.position.top = top;
+    }
+
+    if (this.win.state.position.left === 0) {
+      this.win.state.position.left = left;
+    }
+  }
+
+  click(ev) {
+    if (this.mouseMoved) {
+      return;
+    }
+
+    const target = ev.target;
+    const hitButton = target.classList.contains('osjs-window-button');
+
+    if (hitButton) {
+      const action =  ev.target.getAttribute('data-action');
+      actionMap[action](this.win);
+    }
+  }
+
+  dblclick(ev) {
+    if (this.mouseMoved) {
+      return;
+    }
+
+    const target = ev.target;
+    const hitTitle = target.classList.contains('osjs-window-title');
+
+    if (hitTitle) {
+      if (this.win.state.maximized) {
+        this.win.restore();
+      } else if (this.win.state.minimized) {
+        this.win.raise();
+      } else {
+        this.win.maximize();
+      }
+    }
+  }
+
+  mousedown(ev) {
+    const {clientX, clientY, target} = ev;
+    const startPosition = Object.assign({}, this.win.state.position);
+    const startDimension = Object.assign({}, this.win.state.dimension);
+    const maxDimension = Object.assign({}, this.win.attributes.maxDimension);
+    const minDimension = Object.assign({}, this.win.attributes.minDimension);
+    const resize = target.classList.contains('osjs-window-resize');
+    const move = target.classList.contains('osjs-window-title');
+
+    const mousemove = (ev) => {
+      const diffX = ev.clientX - clientX;
+      const diffY = ev.clientY - clientY;
+
+      if (resize) {
+        const newWidth = Math.max(minDimension.width,
+                                  startDimension.width + diffX);
+
+        const newHeight = Math.max(minDimension.height,
+                                   startDimension.height + diffY);
+
+        this.wasResized = true;
+        this.win.setState('resizing', true, false);
+        this.win.setDimension({
+          width: maxDimension.width === -1
+            ? newWidth
+            : Math.min(maxDimension.height, newWidth),
+
+          height: maxDimension.height === -1
+            ? newHeight
+            : Math.min(maxDimension.height, newHeight)
+        });
+      } else {
+        this.wasMoved = true;
+        this.win.setState('moving', true, false);
+        this.win.setPosition({
+          top: startPosition.top + diffY,
+          left: startPosition.left + diffX
+        });
+      }
+
+      this.mouseMoved = true;
+    };
+
+    const mouseup = () => {
+      document.removeEventListener('mousemove', mousemove);
+      document.removeEventListener('mouseup', mouseup);
+
+      if (this.wasMoved) {
+        this.win.emit('window-moved', this.win);
+        this.win.setState('moving', false);
+      } else if (this.wasResized) {
+        this.win.emit('window-resized', this.win);
+        this.win.setState('resizing', false);
+      }
+    };
+
+
+    if (!this.win.focus()) {
+      this.win.setNextZindex();
+    }
+
+    if (move || resize) {
+      document.addEventListener('mousemove', mousemove);
+      document.addEventListener('mouseup', mouseup);
+    }
+
+    this.mouseMoved = false;
+    this.wasResized = false;
+    this.wasMoved = false;
+  }
+
+}

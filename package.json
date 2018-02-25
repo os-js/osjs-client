@@ -1,0 +1,27 @@
+{
+  "name": "@osjs/core",
+  "version": "3.0.0-alpha.1",
+  "description": "OS.js v3 Core",
+  "main": "index.js",
+  "style": "index.scss",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osjs/osjs-core.git"
+  },
+  "keywords": [
+    "osjs"
+  ],
+  "dependencies": {
+    "@osjs/gui": "^3.0.0",
+    "hyperapp": "^1.1.2"
+  },
+  "author": "Anders Evenrud <andersevenrud@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/osjs/osjs-core/issues"
+  },
+  "homepage": "https://github.com/osjs/osjs-core#readme"
+}

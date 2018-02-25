@@ -1,0 +1,217 @@
+/*
+ * OS.js - JavaScript Cloud/Web Desktop Platform
+ *
+ * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author  Anders Evenrud <andersevenrud@gmail.com>
+ * @licence Simplified BSD License
+ */
+
+/*
+ * Get a GET query from data
+ */
+const encodeQueryData = data => Object.keys(data)
+  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+  .join('&');
+
+/*
+ * Get parent directory
+ */
+const parentDirectory = path => path
+  .split('/')
+  .filter((item, index, arr) => index < (arr.length - 1))
+  .join('/');
+
+/*
+ * Sorts an array of files
+ */
+const sortFn = t => (k, d) => (a, b) => {
+  if (t === 'string') {
+    return d === 'asc'
+      ? String(a[k]).localeCompare(b[k])
+      : String(b[k]).localeCompare(a[k]);
+  } else if (t === 'date') {
+    return d === 'asc'
+      ? (new Date(a[k])) > (new Date(b[k]))
+      : (new Date(b[k])) > (new Date(a[k]));
+  }
+
+  return (
+    (a[i] < b[i])
+      ? -1
+      : ((a[i] > b[i])
+        ? (d === 'asc' ? 1 : 0)
+        : (d === 'asc' ? 0 : 1)));
+}
+
+/*
+ * Map of sorters from readdir attributes
+ */
+const sortMap = {
+  size: sortFn('number'),
+  mtime: sortFn('date'),
+  ctime: sortFn('date'),
+  atime: sortFn('date')
+};
+
+/**
+ * Creates "special" directory entries
+ * @param {String} path The path to the readdir root
+ * @return {Object[]}
+ */
+const createSpecials = path => {
+  const specials = [];
+
+  if (path !== '/') {
+    specials.push({
+      isDirectory: true,
+      isFile: false,
+      mime: null,
+      stat: {},
+      filename: '..',
+      path: parentDirectory(path) || '/'
+    });
+  }
+
+  return specials;
+};
+
+/**
+ * Creates a FileReader (promisified)
+ * @param {String} method The method to call
+ * @param {ArrayBuffer} ab The ArrayBuffer
+ * @param {String} mime The MIME type
+ * @return {Promise}
+ */
+const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => {
+  const b = new Blob([ab], {type: mime});
+  const r = new FileReader();
+  r.onerror = e => reject(e);
+  r.onloadend = () => resolve(r.result);
+  r[method](b);
+});
+
+/**
+ * Transforms a readdir result
+ * @param {String} path The path to the readdir root
+ * @param {Object[]} An array of readdir results
+ * @param {String} [sortBy='filename'] Sort by this attribute
+ * @param {String} [sortDir='asc'] Sort in this direction
+ * @return {Object[]}
+ */
+const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => {
+  if (['asc', 'desc'].indexOf(sortDir) === -1) {
+    sortDir = 'asc';
+  }
+
+  const sorter = sortMap[sortBy]
+    ? sortMap[sortBy]()
+    : sortFn('string');
+
+  const sortedSpecial = createSpecials(path)
+    .sort(sorter(sortBy, sortDir));
+
+  const sortedDirectories = files.filter(file => file.isDirectory)
+    .sort(sorter(sortBy, sortDir));
+
+  const sortedFiles = files.filter(file => !file.isDirectory)
+    .sort(sorter(sortBy, sortDir));
+
+  return [
+    ...sortedSpecial,
+    ...sortedDirectories,
+    ...sortedFiles
+  ];
+};
+
+/**
+ * Transform an ArrayBuffer
+ * @param {ArrayBuffer} ab The ArrayBuffer
+ * @param {String} mime The MIME type
+ * @param {String} type Transform to this type
+ * @return {DOMString|String|Blob|ArrayBuffer}
+ */
+const transformArrayBuffer = async (ab, mime, type) => {
+  if (type === 'string') {
+    return await createFileReader('readAsText', ab, mime);
+  } else if (type === 'uri') {
+    return await createFileReader('readAsDataURL', ab, mime);
+  } else if (type === 'blob') {
+    return new Blob([ab], {type: mime});
+  }
+
+  return ab;
+};
+
+/**
+ * Performs a VFS HTTP request
+ * @param {String} fn The function name on the server
+ * @param {*} data The HTTP body
+ * @param {Object} [fetchOptions] Options to pass on to 'fetct'
+ * @return {Object}
+ */
+const request = async (fn, data, fetchOptions = {}) => {
+  fetchOptions = Object.assign({}, {
+    method: 'GET',
+    headers: []
+  }, fetchOptions);
+
+  const method = fetchOptions.method.toUpperCase();
+  const body = method === 'GET' ? null : data;
+  const query = method === 'GET' ? '?' + encodeQueryData(data) : '';
+  const url = `/API/VFS/${fn}` + query;
+
+  const response = await fetch(url, {
+    headers: fetchOptions.headers,
+    method,
+    body
+  });
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  const contentType = response.headers.get('content-type') || 'application/octet-stream';
+
+  let result;
+  if (contentType.includes('application/json')) {
+    result = await response.json();
+  } else {
+    result = await response.arrayBuffer();
+  }
+
+  return {mime: contentType, body: result};
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// EXPORTS
+///////////////////////////////////////////////////////////////////////////////
+
+export {
+  encodeQueryData,
+  transformReaddir,
+  transformArrayBuffer,
+  parentDirectory,
+  request
+};

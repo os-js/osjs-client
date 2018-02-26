@@ -58,6 +58,7 @@ export default class CoreServiceProvider {
         return typeof mod.default === 'undefined' ? mod : mod.default;
       },
       */
+      run: (...args) => this.core.run(...args),
       make: (...args) => this.core.make(...args),
       getWindows: () => Window.getWindows(),
       getApplications: () => Application.getApplications()

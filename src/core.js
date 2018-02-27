@@ -48,6 +48,8 @@ export default class Core extends EventHandler {
     this.providers = [];
     this.registry = [];
     this.instances = {};
+    this.configuration = {};
+    this.ws = null;
     this.$root = document.body;
     this.$root.classList.add('osjs-root');
   }
@@ -115,14 +117,46 @@ export default class Core extends EventHandler {
 
     this.providers.forEach(p => p.start());
 
+    this._createConnection();
+
     console.groupEnd();
+  }
+
+  /*
+   * Creates the main connection to server
+   */
+  _createConnection() {
+    const ws = this.configuration.ws;
+    const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
+
+    console.log('Creating websocket connection on', uri);
+
+    this.ws = new WebSocket(uri);
+    this.ws.onopen = () => {
+      console.info('Connection opened');
+    };
+
+    this.ws.onclose = (ev) => {
+      this.make('osjs/notification', {
+        title: 'Connection lost',
+        message: 'The websocket connection was lost...'
+      });
+      console.warn('Connection closed', ev);
+    };
   }
 
   /**
    * Set the initial configuration
    */
-  configure() {
-
+  configure(configuration) {
+    this.configuration = Object.assign({}, {
+      ws: {
+        protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
+        port: window.location.port,
+        hostname: window.location.hostname,
+        path: window.location.path || '/'
+      }
+    }, configuration);
   }
 
   /**
@@ -139,6 +173,9 @@ export default class Core extends EventHandler {
     }
   }
 
+  /*
+   * Wrapper for registering a service provider
+   */
   _registerMethod(name, singleton, callback) {
     console.debug('Core::_registerMethod()', name);
 

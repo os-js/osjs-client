@@ -37,6 +37,9 @@
   margin: 0;
   padding: 0;
   user-select: none;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
 
   textarea, input, label {
     user-select: all;

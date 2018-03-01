@@ -127,6 +127,7 @@ export default class Application extends EventHandler {
   getSession() {
     const session = {
       args: Object.assign({}, this.state),
+      name: this.metadata.name,
       windows: this.windows.map(w => w.getSession())
     };
 
@@ -143,9 +144,12 @@ export default class Application extends EventHandler {
   static getApplications() {
     return applications.map(app => ({
       pid: app.pid,
+      args: Object.assign({}, app.args),
+      metadata: app.metadata,
       started: app.started,
       windows: app.windows.map(win => win.getSession()),
-      destroy: () => app.destroy()
+      destroy: () => app.destroy(),
+      session: app.getSession()
     }));
   }
 

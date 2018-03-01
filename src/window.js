@@ -524,8 +524,8 @@ export default class Window extends EventHandler {
   getSession() {
     return {
       id: this.id,
-      state: Object.assign({}, this.state),
-      attributes: Object.assign({}, this.attributes)
+      position: Object.assign({}, this.state.position),
+      dimension: Object.assign({}, this.state.dimension)
     };
   }
 

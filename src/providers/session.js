@@ -1,4 +1,4 @@
-/*!
+/*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
  * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
@@ -27,24 +27,75 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import Core from './src/core';
-import PackageServiceProvider from './src/providers/packages';
-import DesktopServiceProvider from './src/providers/desktop'
-import PanelServiceProvider from './src/providers/panels'
-import NotificationServiceProvider from './src/providers/notifications'
-import GUIServiceProvider from './src/providers/gui'
-import VFSServiceProvider from './src/providers/vfs'
-import ThemeServiceProvider from './src/providers/theme'
-import SessionServiceProvider from './src/providers/session'
 
-export {
-  Core,
-  PackageServiceProvider,
-  DesktopServiceProvider,
-  PanelServiceProvider,
-  NotificationServiceProvider,
-  GUIServiceProvider,
-  VFSServiceProvider,
-  ThemeServiceProvider,
-  SessionServiceProvider
-};
+import Application from '../application';
+
+class Session {
+
+  constructor(core) {
+    this.core = core;
+  }
+
+  async saveData(session) {
+    localStorage.setItem('osjs/session', JSON.stringify(session));
+  }
+
+  async loadData() {
+    try {
+      return JSON.parse(localStorage.getItem('osjs/session'));
+    } catch (e) {
+      console.warn(e);
+    }
+
+    return null;
+  }
+
+  async save() {
+    const apps = Application.getApplications();
+    const session = apps.map(app => app.session);
+
+    await this.saveData(session);
+  }
+
+  async load(fresh = false) {
+    if (fresh) {
+      Application.getApplications().forEach(app => app.destroy());
+    }
+
+    const session = await this.loadData();
+    if (session !== null) {
+      session.forEach(app => {
+        // TODO: Windows
+        this.core.run(app.name, app.args);
+      });
+    }
+  }
+}
+
+/**
+ * OS.js Session Service Provider
+ *
+ * Provides wrapper services around Session features
+ */
+export default class SessionServiceProvider {
+
+  constructor(core) {
+    this.core = core;
+    this.session = new Session(core);
+  }
+
+  destroy() {
+  }
+
+  async init() {
+    this.core.singleton('osjs/session', () => ({
+      save: async () => await this.session.save(),
+      load: async (fresh = true) => await this.session.load(fresh)
+    }));
+  }
+
+  start() {
+    this.session.load();
+  }
+
+}

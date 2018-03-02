@@ -50,26 +50,56 @@ const makeTree = (metadata) => {
     categories[cat].items.push({
       icon: defaultIcon,
       label: m.name,
-      name: m.name
+      data: {
+        name: m.name
+      }
     });
   });
 
-  return Object.values(categories);
+  const system = [{
+    icon: defaultIcon,
+    label: 'Save Session & Log Out',
+    data: {
+      action: 'saveAndLogOut'
+    }
+  }, {
+    icon: defaultIcon,
+    label: 'Log Out',
+    data: {
+      action: 'logOut'
+    }
+  }]
+
+  return [...Object.values(categories), ...system];
 };
 
 export default class MenuPanelItem extends PanelItem {
 
   render(state, actions) {
+    const logout = async (save) => {
+      if (save) {
+        await this.core.make('osjs/session').save();
+      }
+
+      this.core.destroy();
+
+      setTimeout(() => window.location.reload(), 1);
+    };
+
     const onclick = (item) => {
       const packages = this.core.make('osjs/packages').metadata;
 
       this.core.make('osjs/contextmenu').show({
         menu: makeTree([].concat(packages)),
         callback: (item) => {
-          const {name} = item;
+          const {name, action} = item.data;
 
           if (name) {
             this.core.make('osjs/package', name);
+          } else if (action === 'saveAndLogOut') {
+            logout(true);
+          } else if (action === 'logOut') {
+            logout(false);
           }
         }
       });

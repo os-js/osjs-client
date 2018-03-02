@@ -148,7 +148,7 @@ export default class PackageManager {
       throw new Error(`Package Metadata ${name} not found`);
     }
 
-    const errors = await this.preload(metadata.files.map(f => `packages/${name}/${f}`));
+    const errors = await this.preload(metadata.files.map(f => `packages/${metadata._path}/${f}`));
     if (errors.length) {
       console.warn(errors);
       throw new Error(`Package Loading ${name} failed`);

@@ -65,7 +65,6 @@ class Session {
     const session = await this.loadData();
     if (session !== null) {
       session.forEach(app => {
-        // TODO: Windows
         this.core.run(app.name, app.args, {
           restore: {
             windows: app.windows

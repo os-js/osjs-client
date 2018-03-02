@@ -252,4 +252,39 @@ export default class Core extends EventHandler {
     return this.make('osjs/package', name, args, options);
   }
 
+  /**
+   * Spawns an application based on the file given
+   * @param {Object} file A file object
+   * @param {Object} [options] Options
+   * @return {Boolean|Application}
+   */
+  async open(file, options = {}) {
+    const pm = this.make('osjs/packages');
+    const compatible = pm.metadata.filter(meta => {
+      if (meta.mimes) {
+        return !!meta.mimes.find(mime => {
+          try {
+            const re = new RegExp(mime);
+            return re.test(file.mime);
+          } catch (e) {
+            console.warn(e);
+          }
+
+          return mime === file.mime;
+        });
+      }
+
+      return false;
+    }).map(meta => meta.name);
+
+    if (compatible.length) {
+      // FIXME
+      return await this.run(compatible[0], {
+        file
+      }, options);
+    }
+
+    return false;
+  }
+
 }

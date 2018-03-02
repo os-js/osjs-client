@@ -90,7 +90,9 @@ export default class GUIServiceProvider {
         }
 
         this.contextmenu.callback = (...args) => {
-          (options.callback ||  function() {})(...args);
+          if (args[0] !== false) {
+            (options.callback ||  function() {})(...args);
+          }
 
           if (this.contextmenu) {
             this.contextmenu.actions.hide();

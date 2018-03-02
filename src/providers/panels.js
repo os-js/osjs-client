@@ -45,7 +45,8 @@ export default class PanelServiceProvider {
   }
 
   destroy() {
-
+    this.panels.forEach(panel => panel.destroy());
+    this.panels = [];
   }
 
   async init() {

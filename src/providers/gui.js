@@ -67,7 +67,12 @@ export default class GUIServiceProvider {
   }
 
   destroy() {
-    this.contextmenu = {};
+    const menu = document.getElementById('osjs-context-menu');
+    if (menu) {
+      menu.remove();
+    }
+
+    this.contextmenu = null;
   }
 
   async init() {
@@ -86,7 +91,10 @@ export default class GUIServiceProvider {
 
         this.contextmenu.callback = (...args) => {
           (options.callback ||  function() {})(...args);
-          this.contextmenu.actions.hide();
+
+          if (this.contextmenu) {
+            this.contextmenu.actions.hide();
+          }
         };
 
         return {visible: true, menu, position};
@@ -96,7 +104,11 @@ export default class GUIServiceProvider {
 
         return {visible: false};
       }
-    }, view((...args) => this.contextmenu.callback(...args)), this.core.$root)
+    }, view((...args) => {
+      if (!this.core.destroyed) {
+        this.contextmenu.callback(...args);
+      }
+    }), this.core.$root)
   }
 
 }

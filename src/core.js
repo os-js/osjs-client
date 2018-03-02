@@ -28,6 +28,7 @@
  * @licence Simplified BSD License
  */
 
+import Application from './application';
 import EventHandler from './event-handler';
 import CoreServiceProvider from './providers/core';
 
@@ -50,6 +51,7 @@ export default class Core extends EventHandler {
     this.instances = {};
     this.configuration = {};
     this.ws = null;
+    this.destroyed = false;
     this.$root = document.body;
     this.$root.classList.add('osjs-root');
   }
@@ -58,17 +60,16 @@ export default class Core extends EventHandler {
    * Destroy core instance
    */
   destroy() {
+    if (this.destroyed) {
+      return;
+    }
+    this.destroyed = true;
+
     this.emit('osjs/core:destroy');
 
-    for ( let i = 0; i < this.providers.length; i++ ) {
-      console.debug('Destroying service provider', i);
+    Application.getApplications().forEach(app => app.destroy());
 
-      try {
-        this.providers[i].destroy();
-      } catch ( e ) {
-        console.warn(e);
-      }
-    }
+    this.providers.forEach(provider => provider.destroy());
 
     this.providers = [];
     this.instances =  {};

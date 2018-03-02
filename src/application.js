@@ -129,6 +129,7 @@ export default class Application extends EventHandler {
     this.windows.push(instance);
 
     this.emit('create-window', instance);
+    instance.on('destroy', win => this.emit('destroy-window', win))
 
     return instance;
   }

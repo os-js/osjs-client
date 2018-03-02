@@ -392,6 +392,10 @@ export default class Window extends EventHandler {
    * Updated the Window DOM
    */
   _updateDOM() {
+    if (!this.inited) {
+      return;
+    }
+
     const {width, height} = this.state.dimension;
     const {top, left} = this.state.position;
     const {zIndex} = this.state;
@@ -400,10 +404,14 @@ export default class Window extends EventHandler {
     setDataAttributes(this.$element, this.attributes);
 
     const $title = this.$element.querySelector('.osjs-window-title');
-    $title.innerHTML = escapeHtml(this.state.title);
+    if ($title) {
+      $title.innerHTML = escapeHtml(this.state.title);
+    }
 
     const $icon = this.$element.querySelector('.osjs-window-icon > div');
-    $icon.style.cssText = `background-image: url(${this.state.icon})`;
+    if ($icon) {
+      $icon.style.cssText = `background-image: url(${this.state.icon})`;
+    }
 
     this.$element.style.cssText = createCssText(Object.assign({
       top: String(top) + 'px',

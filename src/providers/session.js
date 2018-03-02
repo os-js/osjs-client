@@ -66,7 +66,11 @@ class Session {
     if (session !== null) {
       session.forEach(app => {
         // TODO: Windows
-        this.core.run(app.name, app.args);
+        this.core.run(app.name, app.args, {
+          restore: {
+            windows: app.windows
+          }
+        });
       });
     }
   }

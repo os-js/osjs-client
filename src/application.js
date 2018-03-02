@@ -57,7 +57,7 @@ export default class Application extends EventHandler {
     this.pid = applicationCount;
     this.core = core;
     this.args = data.args || {};
-    this.options = data.options | {};
+    this.options = data.options || {};
     this.metadata = data.metadata || {};
     this.windows = [];
     this.destroyed = false;
@@ -112,6 +112,19 @@ export default class Application extends EventHandler {
 
     const instance = new Window(this.core, options);
     instance.init();
+
+    if (this.options.restore) {
+      const windows = this.options.restore.windows || [];
+      const found = windows.findIndex(r => r.id === instance.id);
+
+      if (found !== -1) {
+        const restore = windows[found];
+        instance.setPosition(restore.position);
+        instance.setDimension(restore.dimension);
+
+        this.options.restore.windows.splice(found, 1);
+      }
+    }
 
     this.windows.push(instance);
 

@@ -139,6 +139,7 @@ export default class PackageManager {
    * @param {String} name Package name
    * @param {Object} [args] Launch arguments
    * @param {Object} [options] Launch options
+   * @see PackageServiceProvider
    * @return {Application}
    */
   async launch(name, args = {}, options = {}) {

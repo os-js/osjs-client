@@ -164,7 +164,7 @@ export default class PackageManager {
     console.group('PackageManager::launch()');
 
     try {
-      app = found.callback(this.core, args, options);
+      app = found.callback(this.core, args, options, found.metadata);
     } catch (e) {
       console.warn(e);
     } finally {
@@ -176,11 +176,16 @@ export default class PackageManager {
   /**
    * Registers a package
    *
-   * @param {Object} metadata Package metadata
+   * @param {String} name Package name
    * @param {Function} callback Callback function to construct application instance
    */
-  register(metadata, callback) {
-    console.log('PackageManager::register()', metadata);
+  register(name, callback) {
+    console.log('PackageManager::register()', name);
+
+    const metadata = this.metadata.find(pkg => pkg.name === name);
+    if (!metadata) {
+      throw new Error(`Metadata not found for ${name}. Is it in the manifest ?`);
+    }
 
     this.packages.push({
       metadata,

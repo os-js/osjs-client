@@ -247,8 +247,6 @@ export default class Core extends EventHandler {
   async run(name, args = {}, options = {}) {
     console.log('Core::run()', name, args, options);
 
-    this.emit('osjs/application:create', args, options);
-
     return this.make('osjs/package', name, args, options);
   }
 

@@ -89,7 +89,8 @@ export default class PackageManager {
    * Destroy package manager
    */
   destroy() {
-
+    this.packages = [];
+    this.metadata = [];
   }
 
   /**
@@ -140,25 +141,31 @@ export default class PackageManager {
    * @param {Object} [args] Launch arguments
    * @param {Object} [options] Launch options
    * @see PackageServiceProvider
+   * @throws {Error}
    * @return {Application}
    */
   async launch(name, args = {}, options = {}) {
+    const fail = err => {
+      this.core.emit('osjs/application:created', name, false);
+      throw new Error(err);
+    };
+
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
       throw new Error(`Package Metadata ${name} not found`);
     }
 
+    this.core.emit('osjs/application:create', name, args, options);
+
     const errors = await this.preload(metadata.files.map(f => `packages/${metadata._path}/${f}`));
     if (errors.length) {
-      console.warn(errors);
-      throw new Error(`Package Loading ${name} failed`);
+      fail(`Package Loading ${name} failed: ${errors.join(', ')}`);
     }
 
     const found = this.packages.find(pkg => pkg.metadata.name === name);
     if (!found) {
-      throw new Error(`Package Runtime ${name} not found`);
+      fail(`Package Runtime ${name} not found`);
     }
-
 
     let app;
     console.group('PackageManager::launch()');
@@ -168,6 +175,7 @@ export default class PackageManager {
     } catch (e) {
       console.warn(e);
     } finally {
+      this.core.emit('osjs/application:created', name, app);
       console.groupEnd()
       return app;
     }
@@ -178,6 +186,7 @@ export default class PackageManager {
    *
    * @param {String} name Package name
    * @param {Function} callback Callback function to construct application instance
+   * @throws {Error}
    */
   register(name, callback) {
     console.log('PackageManager::register()', name);

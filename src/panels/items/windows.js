@@ -53,6 +53,7 @@ export default class WindowsPanelItem extends PanelItem {
     }
 
     const actions = super.init({
+      launchers: [],
       windows: Window.getWindows().map(mapWindow)
     }, {
       add: win => state => {
@@ -83,16 +84,30 @@ export default class WindowsPanelItem extends PanelItem {
         }
 
         return {windows};
+      },
+
+      addLauncher: name => state => ({launchers: [...state.launchers, name]}),
+
+      removeLauncher: name => state => {
+        const foundIndex = state.launchers.findIndex(n => n === name);
+        const launchers = [...state.launchers];
+        if (foundIndex !== -1) {
+          launchers.splice(foundIndex, 1);
+        }
+
+        return {launchers};
       }
     });
 
+    this.core.on('osjs/application:create', (name) => actions.addLauncher(name));
+    this.core.on('osjs/application:created', (name) => actions.removeLauncher(name));
     this.core.on('osjs/window:destroy', (win) => actions.remove(mapWindow(win)));
     this.core.on('osjs/window:create', (win) => actions.add(mapWindow(win)));
     this.core.on('osjs/window:change', (win) => actions.change(mapWindow(win)));
   }
 
   render(state, actions) {
-    return super.render('windows', state.windows.map(w => h('div', {
+    const windows = state.windows.map(w => h('div', {
       'data-has-image': w.icon ? true : undefined,
       'data-focused': w.focused ? 'true' : 'false',
       onclick: () => w.raise()
@@ -102,7 +117,15 @@ export default class WindowsPanelItem extends PanelItem {
           backgroundImage: `url(${w.icon})`
         }
       }, w.title || '(window)')
-    ])))
+    ]));
+
+    const special = state.launchers.map(name => h('div', {
+
+    }, h('span', {}, `Launching '${name}'`)));
+
+    const children = [...windows, ...special];
+
+    return super.render('windows', children);
   }
 
 }

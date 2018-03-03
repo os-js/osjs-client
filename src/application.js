@@ -110,17 +110,21 @@ export default class Application extends EventHandler {
    * as the endpoint.
    * @param {String} [path=/] Append this to endpoint
    * @param {Object} [params] Parameters to pass on
-   * @param {String} [method=get] HTTP Method
+   * @param {String} [method=post] HTTP Method
    * @param {Object} [options] HTTP Options
    * @return {*} ArrayBuffer or JSON
    */
-  async request(path = '/', params = {}, method = 'get', options = {}) {
+  async request(path = '/', params = {}, method = 'post', options = {}) {
     const uri = this.resource(path);
     const body = method === 'get' ? null : params;
 
     const response = await fetch(uri, {
-      body,
-      method
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      }
     });
 
     const contentType = response.headers.get('content-type');

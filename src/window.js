@@ -119,6 +119,30 @@ const escapeHtml = (text) => {
 };
 
 /*
+ * Check if element is descendant of root
+ */
+const isDescendantOf = (el, root) => {
+  let current = root;
+  while (current) {
+    if (current.contains(el)) {
+      return true;
+    }
+
+    current = current.parentNode;
+  }
+
+  return false;
+};
+
+/*
+ * Get active element if belonging to root
+ */
+const getActiveElement = (root) => {
+  const ae = document.activeElement;
+  return isDescendantOf(ae, root) ? ae : null;
+};
+
+/*
  * Default window template
  */
 const TEMPLATE = `<div class="osjs-window-inner">
@@ -349,6 +373,12 @@ export default class Window extends EventHandler {
    * @return {Boolean}
    */
   blur() {
+    // Forces blur-ing of browser input element belonging to this window
+    const activeElement = getActiveElement(this.$element);
+    if (activeElement) {
+      activeElement.blur();
+    }
+
     return this._toggleState('focused', false, 'blur');
   }
 

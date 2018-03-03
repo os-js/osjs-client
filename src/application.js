@@ -91,15 +91,64 @@ export default class Application extends EventHandler {
 
     super(name);
 
+    /**
+     * The Application ID
+     * @type {Number}
+     */
     this.pid = applicationCount;
+
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Application arguments
+     * @type {Object}
+     */
     this.args = data.args || {};
+
+    /**
+     * Application options
+     * @type {Object}
+     */
     this.options = data.options || {};
+
+    /**
+     * Application metadata
+     * @type {Object}
+     */
     this.metadata = data.metadata || {};
+
+    /**
+     * Window list
+     * @type {Window[]}
+     */
     this.windows = [];
+
+    /**
+     * The application destruction state
+     * @type {Boolean}
+     */
     this.destroyed = false;
+
+    /**
+     * Application settings
+     * @type {Object}
+     */
     this.settings = {};
+
+    /**
+     * Application started time
+     * @type {Date}
+     */
     this.started = new Date();
+
+    /**
+     * Application WebSockets
+     * @type {ApplicationSocket[]}
+     */
     this.sockets = [];
 
     applications.push(this);

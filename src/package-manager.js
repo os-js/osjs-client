@@ -54,6 +54,7 @@ export default class PackageManager {
     this.core = core;
     this.packages = [];
     this.metadata = [];
+    this.loaded = [];
   }
 
   /**
@@ -76,9 +77,10 @@ export default class PackageManager {
   /**
    * Loads all resources required for a package
    * @param {Array} list A list of resources
+   * @param {Boolean} [force=false] Force loading even though previously cached
    * @return {String[]} A list of failed resources
    */
-  async preload(list) {
+  async preload(list, force = false) {
     const root = this.core.$root;
 
     console.group('PackageManager::preload()');
@@ -86,12 +88,22 @@ export default class PackageManager {
     let failed = [];
     for (let i = 0; i < list.length; i++) {
       const entry = list[i];
+      const cached = this.loaded.find(src => src === entry);
+
+      if (!force && cached) {
+        continue;
+      }
+
       console.debug('PackageManager::preload()', entry);
 
       try {
         const el = entry.match(/\.js$/)
           ? await script(root, entry)
           : await style(root, entry);
+
+        if (!cached) {
+          this.loaded.push(entry);
+        }
 
         console.debug('=>', el);
       } catch (e) {

@@ -30,7 +30,6 @@
 import Core from './src/core';
 import PackageServiceProvider from './src/providers/packages';
 import DesktopServiceProvider from './src/providers/desktop';
-import PanelServiceProvider from './src/providers/panels';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
 import ThemeServiceProvider from './src/providers/theme';
@@ -40,7 +39,6 @@ export {
   Core,
   PackageServiceProvider,
   DesktopServiceProvider,
-  PanelServiceProvider,
   NotificationServiceProvider,
   VFSServiceProvider,
   ThemeServiceProvider,

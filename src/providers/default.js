@@ -1,4 +1,4 @@
-/*!
+/*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
  * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
@@ -27,22 +27,41 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import Core from './src/core';
-import PackageServiceProvider from './src/providers/packages';
-import DesktopServiceProvider from './src/providers/desktop';
-import NotificationServiceProvider from './src/providers/notifications';
-import VFSServiceProvider from './src/providers/vfs';
-import ThemeServiceProvider from './src/providers/theme';
-import SessionServiceProvider from './src/providers/session';
-import DefaultServiceProvider from './src/providers/default';
 
-export {
-  Core,
-  PackageServiceProvider,
-  DesktopServiceProvider,
-  NotificationServiceProvider,
-  VFSServiceProvider,
-  ThemeServiceProvider,
-  SessionServiceProvider,
-  DefaultServiceProvider
-};
+import CoreServiceProvider from './core';
+import PackageServiceProvider from './packages';
+import DesktopServiceProvider from './desktop';
+import NotificationServiceProvider from './notifications';
+import VFSServiceProvider from './vfs';
+import ThemeServiceProvider from './theme';
+import SessionServiceProvider from './session';
+
+/**
+ * OS.js Default Service Provider
+ *
+ * Provides all default services
+ */
+export default class DefaultServiceProvider {
+
+  constructor(core) {
+    this.core = core;
+    this.core.register(CoreServiceProvider);
+    this.core.register(PackageServiceProvider);
+    this.core.register(DesktopServiceProvider);
+    this.core.register(VFSServiceProvider);
+    this.core.register(ThemeServiceProvider);
+    this.core.register(NotificationServiceProvider);
+    this.core.register(SessionServiceProvider);
+  }
+
+  destroy() {
+
+  }
+
+  async init() {
+  }
+
+  start() {
+  }
+
+}

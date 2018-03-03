@@ -35,6 +35,43 @@ const applications = [];
 let applicationCount = 0;
 
 /**
+ * OS.js Application WebSocket Wrapper
+ */
+class ApplicationSocket extends EventHandler {
+
+  /**
+   * Create a new WebSocket
+   * @param {String} uri Connection URI
+   * @param {Object} options Websocket options
+   */
+  constructor(name, uri, options = {}) {
+    console.debug('ApplicationSocket::constructor()', name, uri);
+
+    super('ApplicationSocket@' + name);
+
+    this.connection = new WebSocket(uri);
+    this.connection.onopen = (...args) => this.emit('open', ...args);
+    this.connection.onclose = (...args) => this.emit('close', ...args);
+    this.connection.onmessage = (...args) => this.emit('message', ...args);
+  }
+
+  /**
+   * Wrapper for sending data
+   */
+  send(...args) {
+    return this.connection.send(...args);
+  }
+
+  /**
+   * Wrapper for closing
+   */
+  close(...args) {
+    return this.connection.close(...args);
+  }
+
+}
+
+/**
  * OS.js Application
  */
 export default class Application extends EventHandler {
@@ -76,6 +113,7 @@ export default class Application extends EventHandler {
     if (this.destroyed) {
       return;
     }
+    this.destroyed = true;
 
     this.emit('destroy');
     this.core.emit('osjs/application:destroy', this);
@@ -98,8 +136,6 @@ export default class Application extends EventHandler {
     if (foundIndex !== -1) {
       applications.splice(foundIndex, 1);
     }
-
-    this.destroyed = true;
   }
 
   /**
@@ -148,21 +184,30 @@ export default class Application extends EventHandler {
    * Creates a new WebSocket
    * @param {String} [path=/socket] Append this to endpoint
    * @param {Object} [options] Connection options
-   * @return {WebSocket}
+   * @return {ApplicationSocket}
    */
   socket(path = '/socket', options = {}) {
     options = Object.assign({}, {
       hostname: window.location.hostname,
       protocol: window.location.protocol.replace('http', 'ws'),
-      port: window.location.port
+      port: window.location.port,
+      socket: {}
     }, options);
 
     const resource = this.resource(path);
     const {hostname, port, protocol} = options;
     const uri = `${protocol}//${hostname}:${port}${resource}`;
-    const ws = new WebSocket(uri);
+    const ws = new ApplicationSocket(this.metadata.name, uri, options.socket);
 
     this.sockets.push(ws);
+    /*
+    const index = this.sockets.push(ws) - 1;
+    ws.on('close', () => {
+      if (!this.destroyed) {
+        this.sockets.splice(index)
+      }
+    });
+    */
 
     return ws;
   }

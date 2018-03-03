@@ -148,6 +148,10 @@ export default class Application extends EventHandler {
       throw new Error(`Window with id '${options.id}' already exists`);
     }
 
+    options.attributes = options.attributes || {
+      classNames: [`Window_${this.metadata.name}`]
+    };
+
     const instance = new Window(this.core, options);
     instance.init();
 

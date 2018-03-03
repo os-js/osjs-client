@@ -441,6 +441,8 @@ export default class Window extends EventHandler {
     this.state.title = title || '';
 
     this._updateDOM();
+
+    this.core.emit('osjs/window:change', this, 'title', title);
   }
 
   /**

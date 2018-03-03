@@ -30,7 +30,6 @@
 
 import {h} from 'hyperapp';
 import PanelItem from '../panel-item';
-import {Menu} from '@osjs/gui';
 
 const defaultIcon = require('../../styles/logo-blue-32x32.png');
 
@@ -38,7 +37,7 @@ const makeTree = (metadata) => {
   const categories = {};
 
   metadata.forEach((m) => {
-    const cat = m.category || '(unknown)'
+    const cat = m.category || '(unknown)';
     if (!categories[cat]) {
       categories[cat] = {
         icon: defaultIcon,
@@ -68,7 +67,7 @@ const makeTree = (metadata) => {
     data: {
       action: 'logOut'
     }
-  }]
+  }];
 
   return [...Object.values(categories), ...system];
 };

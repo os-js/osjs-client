@@ -420,7 +420,6 @@ export default class Window extends EventHandler {
       left: String(left) + 'px',
       height: String(height) + 'px',
       width: String(width) + 'px',
-      height: String(height) + 'px',
       zIndex: zIndex
     }, this.state.styles));
   }

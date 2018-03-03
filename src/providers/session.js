@@ -92,8 +92,8 @@ export default class SessionServiceProvider {
 
   async init() {
     this.core.singleton('osjs/session', () => ({
-      save: async () => await this.session.save(),
-      load: async (fresh = true) => await this.session.load(fresh)
+      save: async () => this.session.save(),
+      load: async (fresh = true) => this.session.load(fresh)
     }));
   }
 

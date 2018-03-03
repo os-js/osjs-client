@@ -58,12 +58,12 @@ const sortFn = t => (k, d) => (a, b) => {
   }
 
   return (
-    (a[i] < b[i])
+    (a[k] < b[k])
       ? -1
-      : ((a[i] > b[i])
+      : ((a[k] > b[k])
         ? (d === 'asc' ? 1 : 0)
         : (d === 'asc' ? 0 : 1)));
-}
+};
 
 /*
  * Map of sorters from readdir attributes

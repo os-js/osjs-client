@@ -34,7 +34,7 @@ import {style, script} from './utils';
  * Fetch package manifest
  */
 const fetchManifest = async () => {
-  const response = await fetch('metadata.json')
+  const response = await fetch('metadata.json');
   const metadata = await response.json();
 
   return metadata;
@@ -147,9 +147,10 @@ export default class PackageManager {
       console.warn(e);
     } finally {
       this.core.emit('osjs/application:created', name, app);
-      console.groupEnd()
-      return app;
+      console.groupEnd();
     }
+
+    return app;
   }
 
   /**

@@ -222,10 +222,10 @@ export default class Application extends EventHandler {
     const contentType = response.headers.get('content-type');
 
     if (contentType && contentType.includes('application/json')) {
-      return await response.json();
+      return response.json();
     }
 
-    return await response.arrayBuffer();
+    return response.arrayBuffer();
   }
 
   /**
@@ -295,7 +295,7 @@ export default class Application extends EventHandler {
     this.windows.push(instance);
 
     this.emit('create-window', instance);
-    instance.on('destroy', win => this.emit('destroy-window', win))
+    instance.on('destroy', win => this.emit('destroy-window', win));
 
     return instance;
   }

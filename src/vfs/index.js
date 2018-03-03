@@ -29,7 +29,6 @@
  */
 
 import {
-  encodeQueryData,
   transformReaddir,
   transformArrayBuffer,
   request

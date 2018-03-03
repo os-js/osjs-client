@@ -110,7 +110,7 @@ export default class GUIServiceProvider {
       if (!this.core.destroyed) {
         this.contextmenu.callback(...args);
       }
-    }), this.core.$root)
+    }), this.core.$root);
   }
 
 }

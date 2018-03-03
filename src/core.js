@@ -84,12 +84,12 @@ export default class Core extends EventHandler {
     this.register(CoreServiceProvider);
     this.emit('osjs/core:init');
 
-    for ( let i = 0; i < this.providers.length; i++ ) {
+    for (let i = 0; i < this.providers.length; i++) {
       console.debug('Registering service provider', i);
 
       try {
         await this.providers[i].init();
-      } catch ( e ) {
+      } catch (e) {
         console.warn(e);
       }
     }
@@ -107,7 +107,7 @@ export default class Core extends EventHandler {
 
     try {
       await this.init();
-    } catch ( e ) {
+    } catch (e) {
       console.error('Cannot start because an execption occured....');
       console.error(e);
       console.groupEnd();
@@ -226,8 +226,8 @@ export default class Core extends EventHandler {
       return found.make(...args);
     }
 
-    if ( !this.instances[name] ) {
-      if ( found ) {
+    if (!this.instances[name]) {
+      if (found) {
         this.instances[name] = found.make(...args);
       }
     }
@@ -277,7 +277,7 @@ export default class Core extends EventHandler {
 
     if (compatible.length) {
       // FIXME
-      return await this.run(compatible[0], {
+      return this.run(compatible[0], {
         file
       }, options);
     }

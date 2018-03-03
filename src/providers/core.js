@@ -53,6 +53,7 @@ export default class CoreServiceProvider {
 
     window.OSjs = {
       run: (...args) => this.core.run(...args),
+      open: (...args) => this.core.open(...args),
       make: (...args) => this.core.make(...args),
       createWindow: (options) => new Window(this.core, options),
       getWindows: () => Window.getWindows(),

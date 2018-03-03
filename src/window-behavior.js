@@ -155,10 +155,10 @@ export default class WindowBehavior {
       document.removeEventListener('mouseup', mouseup);
 
       if (this.wasMoved) {
-        this.win.emit('window-moved', this.win);
+        this.win.emit('moved', this.win);
         this.win.setState('moving', false);
       } else if (this.wasResized) {
-        this.win.emit('window-resized', this.win);
+        this.win.emit('resized', this.win);
         this.win.setState('resizing', false);
       }
     };

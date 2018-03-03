@@ -63,6 +63,7 @@ export default class Application extends EventHandler {
     this.destroyed = false;
     this.settings = {};
     this.started = new Date();
+    this.sockets = [];
 
     applications.push(this);
     applicationCount++;
@@ -82,6 +83,13 @@ export default class Application extends EventHandler {
     try {
       this.windows.forEach((window) => window.destroy());
       this.windows = [];
+    } catch (e) {
+      console.warn(e);
+    }
+
+    try {
+      this.sockets.forEach((ws) => ws.close());
+      this.sockets = [];
     } catch (e) {
       console.warn(e);
     }
@@ -134,6 +142,29 @@ export default class Application extends EventHandler {
     }
 
     return await response.arrayBuffer();
+  }
+
+  /**
+   * Creates a new WebSocket
+   * @param {String} [path=/socket] Append this to endpoint
+   * @param {Object} [options] Connection options
+   * @return {WebSocket}
+   */
+  socket(path = '/socket', options = {}) {
+    options = Object.assign({}, {
+      hostname: window.location.hostname,
+      protocol: window.location.protocol.replace('http', 'ws'),
+      port: window.location.port
+    }, options);
+
+    const resource = this.resource(path);
+    const {hostname, port, protocol} = options;
+    const uri = `${protocol}//${hostname}:${port}${resource}`;
+    const ws = new WebSocket(uri);
+
+    this.sockets.push(ws);
+
+    return ws;
   }
 
   /**

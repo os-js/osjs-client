@@ -94,8 +94,42 @@ export default class Application extends EventHandler {
     this.destroyed = true;
   }
 
-  resource(path) {
+  /**
+   * Gets a URI to a resource for this application
+   * @param {String} path The path
+   * @return {String} A complete URI
+   */
+  resource(path = '/') {
+    const uri = `/packages/${this.metadata._path}${path}`;
 
+    return uri;
+  }
+
+  /**
+   * Performs a request to the OS.js server with the application
+   * as the endpoint.
+   * @param {String} [path=/] Append this to endpoint
+   * @param {Object} [params] Parameters to pass on
+   * @param {String} [method=get] HTTP Method
+   * @param {Object} [options] HTTP Options
+   * @return {*} ArrayBuffer or JSON
+   */
+  async request(path = '/', params = {}, method = 'get', options = {}) {
+    const uri = this.resource(path);
+    const body = method === 'get' ? null : params;
+
+    const response = await fetch(uri, {
+      body,
+      method
+    });
+
+    const contentType = response.headers.get('content-type');
+
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    }
+
+    return await response.arrayBuffer();
   }
 
   /**

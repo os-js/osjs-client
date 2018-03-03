@@ -51,11 +51,14 @@ export default class CoreServiceProvider {
       return new Application(this.core, data);
     });
 
+    this.core.instance('osjs/window', (options = {}) => {
+      return new Window(this.core, options);
+    });
+
     window.OSjs = Object.freeze({
       run: (...args) => this.core.run(...args),
       open: (...args) => this.core.open(...args),
       make: (...args) => this.core.make(...args),
-      createWindow: (options) => new Window(this.core, options),
       getWindows: () => Window.getWindows(),
       getApplications: () => Application.getApplications()
     });

@@ -19,7 +19,7 @@
     "hyperapp": "^1.1.2"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
-  "license": "MIT",
+  "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/osjs/osjs-core/issues"
   },

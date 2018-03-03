@@ -52,14 +52,9 @@ export default class CoreServiceProvider {
     });
 
     window.OSjs = {
-      /*
-      require: (f) => {
-        const mod = require('../' + f);
-        return typeof mod.default === 'undefined' ? mod : mod.default;
-      },
-      */
       run: (...args) => this.core.run(...args),
       make: (...args) => this.core.make(...args),
+      createWindow: (options) => new Window(this.core, options),
       getWindows: () => Window.getWindows(),
       getApplications: () => Application.getApplications()
     };

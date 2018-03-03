@@ -29,6 +29,11 @@
  */
 import EventHandler from './event-handler';
 import WindowBehavior from './window-behavior';
+import {
+  escapeHtml,
+  isDescendantOf,
+  createCssText
+} from './utils';
 
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;
@@ -44,14 +49,6 @@ let lastWindow = null;
 const setDataAttributes = (el, obj) => Object.keys(obj)
   .filter(k => typeof obj[k] !== 'object')
   .forEach((k) => el.setAttribute('data-' + k, String(obj[k])));
-
-/*
- * Serialize an object to CSS
- */
-const createCssText = (obj) => Object.keys(obj)
-  .map(k => [k, k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()])
-  .map(k => `${k[1]}: ${obj[k[0]]}`)
-  .join(';');
 
 /*
  * Creates window attributes from an object
@@ -107,31 +104,6 @@ const createWindowId = (win) => {
   windowCount++;
   windows.push(win);
   return id;
-};
-
-/*
- * Escape HTML
- */
-const escapeHtml = (text) => {
-  const div = document.createElement('div');
-  div.innerHTML = text;
-  return div.textContent;
-};
-
-/*
- * Check if element is descendant of root
- */
-const isDescendantOf = (el, root) => {
-  let current = root;
-  while (current) {
-    if (current.contains(el)) {
-      return true;
-    }
-
-    current = current.parentNode;
-  }
-
-  return false;
 };
 
 /*

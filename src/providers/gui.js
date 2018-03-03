@@ -39,7 +39,7 @@ const view = callback => (state, actions) => h(Menu, {
   visible: state.visible,
   menu: state.menu,
   onclick: callback
-})
+});
 
 /**
  * OS.js GUI Service Provider

@@ -31,7 +31,6 @@ import EventHandler from './event-handler';
 import Window from './window';
 
 const applications = [];
-
 let applicationCount = 0;
 
 /**

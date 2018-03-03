@@ -28,36 +28,7 @@
  * @licence Simplified BSD License
  */
 
-/*
- * Creates a new CSS DOM element
- */
-const style = (root, src) => new Promise((resolve, reject) => {
-  const el = document.createElement('link');
-  el.setAttribute('rel', 'stylesheet');
-  el.setAttribute('type', 'text/css');
-  el.onload = () => resolve(el);
-  el.onerror = (err) => reject(err);
-  el.setAttribute('href', src);
-
-  root.appendChild(el);
-});
-
-/*
- * Creates a new Script DOM element
- */
-const script = (root, src) => new Promise((resolve, reject) => {
-  const el = document.createElement('script');
-  el.onreadystatechange = function() {
-    if ((this.readyState === 'complete' || this.readyState === 'loaded')) {
-      resolve(el);
-    }
-  };
-  el.onerror = (err) => reject(err);
-  el.onload = () => resolve(el);
-  el.src = src;
-
-  root.appendChild(el);
-});
+import {style, script} from './utils';
 
 /*
  * Fetch package manifest

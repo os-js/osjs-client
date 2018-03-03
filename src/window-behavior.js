@@ -28,6 +28,9 @@
  * @licence Simplified BSD License
  */
 
+/*
+ * Map of available "actions"
+ */
 const actionMap = {
   maximize(win) {
     if (!win.maximize()) {
@@ -43,19 +46,55 @@ const actionMap = {
 };
 
 /*
+ * Calculates new dimension for a window resize
+ */
+const getNewDimensions = (diffX, diffY, min, max, start) => {
+  const newWidth = Math.max(min.width, start.width + diffX);
+  const newHeight = Math.max(min.height, start.height + diffY);
+
+  return {
+    width: max.width === -1
+      ? newWidth
+      : Math.min(max.height, newWidth),
+
+    height: max.height === -1
+      ? newHeight
+      : Math.min(max.height, newHeight)
+  };
+};
+
+/*
+ * Calculates new position for a window movement
+ */
+const getNewPosition = (diffX, diffY, start) => {
+  return {
+    top: start.top + diffY,
+    left: start.left + diffX
+  };
+};
+
+/*
  * OS.js Default Window Behavior
  *
  * Controls certain events and their interaction with a window
  */
 export default class WindowBehavior {
+  /**
+   * Create window behavior
+   *
+   * @param {Core} core Core reference
+   * @param {Window} window Window reference
+   */
   constructor(core, win) {
     this.core = core;
     this.win = win;
-    this.mouseMoved = false;
     this.wasMoved = false;
     this.wasResized = false;
   }
 
+  /**
+   * Initializes window behavior
+   */
   init() {
     this.win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev));
     this.win.$element.addEventListener('click', (ev) => this.click(ev));
@@ -74,8 +113,12 @@ export default class WindowBehavior {
     }
   }
 
+  /**
+   * Handles Mouse Click Event
+   * @param {Event} ev Browser Event
+   */
   click(ev) {
-    if (this.mouseMoved) {
+    if (this.wasMoved || this.wasResized) {
       return;
     }
 
@@ -88,8 +131,12 @@ export default class WindowBehavior {
     }
   }
 
+  /**
+   * Handles Mouse Double Click Event
+   * @param {Event} ev Browser Event
+   */
   dblclick(ev) {
-    if (this.mouseMoved) {
+    if (this.wasMoved || this.wasResized) {
       return;
     }
 
@@ -107,6 +154,10 @@ export default class WindowBehavior {
     }
   }
 
+  /**
+   * Handles Mouse Down Event
+   * @param {Event} ev Browser Event
+   */
   mousedown(ev) {
     const {clientX, clientY, target} = ev;
     const startPosition = Object.assign({}, this.win.state.position);
@@ -121,33 +172,24 @@ export default class WindowBehavior {
       const diffY = ev.clientY - clientY;
 
       if (resize) {
-        const newWidth = Math.max(minDimension.width,
-                                  startDimension.width + diffX);
-
-        const newHeight = Math.max(minDimension.height,
-                                   startDimension.height + diffY);
-
         this.wasResized = true;
         this.win.setState('resizing', true, false);
-        this.win.setDimension({
-          width: maxDimension.width === -1
-            ? newWidth
-            : Math.min(maxDimension.height, newWidth),
-
-          height: maxDimension.height === -1
-            ? newHeight
-            : Math.min(maxDimension.height, newHeight)
-        });
-      } else {
+        this.win.setDimension(getNewDimensions(
+          diffX,
+          diffY,
+          minDimension,
+          maxDimension,
+          startDimension
+        ));
+      } else if (move) {
         this.wasMoved = true;
         this.win.setState('moving', true, false);
-        this.win.setPosition({
-          top: startPosition.top + diffY,
-          left: startPosition.left + diffX
-        });
+        this.win.setPosition(getNewPosition(
+          diffX,
+          diffY,
+          startPosition
+        ));
       }
-
-      this.mouseMoved = true;
     };
 
     const mouseup = () => {
@@ -173,7 +215,6 @@ export default class WindowBehavior {
       document.addEventListener('mouseup', mouseup);
     }
 
-    this.mouseMoved = false;
     this.wasResized = false;
     this.wasMoved = false;
   }

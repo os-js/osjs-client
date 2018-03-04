@@ -45,13 +45,6 @@ export default class DefaultServiceProvider {
 
   constructor(core) {
     this.core = core;
-    this.core.register(CoreServiceProvider);
-    this.core.register(PackageServiceProvider);
-    this.core.register(DesktopServiceProvider);
-    this.core.register(VFSServiceProvider);
-    this.core.register(ThemeServiceProvider);
-    this.core.register(NotificationServiceProvider);
-    this.core.register(SessionServiceProvider);
   }
 
   destroy() {
@@ -59,6 +52,13 @@ export default class DefaultServiceProvider {
   }
 
   async init() {
+    this.core.register(CoreServiceProvider);
+    this.core.register(PackageServiceProvider);
+    this.core.register(DesktopServiceProvider);
+    this.core.register(VFSServiceProvider);
+    this.core.register(ThemeServiceProvider);
+    this.core.register(NotificationServiceProvider);
+    this.core.register(SessionServiceProvider);
   }
 
   start() {

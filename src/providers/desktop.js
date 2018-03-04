@@ -37,16 +37,51 @@ export default class DesktopServiceProvider {
 
   constructor(core) {
     this.core = core;
+    this.$styles = document.createElement('style');
+    this.$styles.setAttribute('type', 'text/css');
   }
 
   destroy() {
+    this.$styles.remove();
+    this.$styles = null;
+  }
 
+  updateCSS(subtract) {
+    this.$styles.innerHTML = `
+
+  .osjs-window[data-maximized=true] {
+    top: ${subtract.top}px !important;
+    left: ${subtract.left}px !important;
+    right: ${subtract.right}px !important;
+    bottom: ${subtract.bottom}px !important;
+    width: calc(100% -  ${subtract.left + subtract.right}px) !important;
+    height: calc(100% - ${subtract.top + subtract.bottom}px) !important;
+  }
+
+`;
   }
 
   async init() {
+    const subtract = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    };
+
+    this.core.on('osjs/panel:create', panel => {
+      subtract.top += panel.$element.offsetHeight;
+      this.updateCSS(subtract);
+    });
+    this.core.on('osjs/panel:destroy', panel => {
+      subtract.top -= panel.$element.offsetHeight;
+      this.updateCSS(subtract);
+    });
   }
 
   start() {
+    this.core.$root.appendChild(this.$styles);
+
     this.core.$root.addEventListener('contextmenu', (ev) => {
       ev.stopPropagation();
       ev.preventDefault();

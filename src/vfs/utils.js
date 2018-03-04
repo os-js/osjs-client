@@ -31,14 +31,14 @@
 /*
  * Get a GET query from data
  */
-const encodeQueryData = data => Object.keys(data)
+export const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
 
 /*
  * Get parent directory
  */
-const parentDirectory = path => path
+export const parentDirectory = path => path
   .split('/')
   .filter((item, index, arr) => index < (arr.length - 1))
   .join('/');
@@ -113,6 +113,31 @@ const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => 
 });
 
 /**
+ * Converts a number (bytez) into human-readable string
+ * @param {Number} bytes Input
+ * @param {Boolean} [si=false] Use SI units
+ * @return {String}
+ */
+export const humanFileSize = (bytes, si = false) => {
+  const thresh = si ? 1000 : 1024;
+  const units = si
+    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+  if (bytes < thresh) {
+    return bytes + ' B';
+  }
+
+  let u = -1;
+  do {
+    bytes /= thresh;
+    ++u;
+  } while (bytes >= thresh);
+
+  return `${bytes.toFixed(1)} ${units[u]}`;
+};
+
+/**
  * Transforms a readdir result
  * @param {String} path The path to the readdir root
  * @param {Object[]} An array of readdir results
@@ -120,7 +145,7 @@ const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => 
  * @param {String} [sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
-const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => {
+export const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => {
   if (['asc', 'desc'].indexOf(sortDir) === -1) {
     sortDir = 'asc';
   }
@@ -129,14 +154,21 @@ const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => 
     ? sortMap[sortBy]()
     : sortFn('string');
 
+  const modify = (file) => Object.assign(file, {
+    humanSize: humanFileSize(file.size)
+  });
+
   const sortedSpecial = createSpecials(path)
-    .sort(sorter(sortBy, sortDir));
+    .sort(sorter(sortBy, sortDir))
+    .map(modify);
 
   const sortedDirectories = files.filter(file => file.isDirectory)
-    .sort(sorter(sortBy, sortDir));
+    .sort(sorter(sortBy, sortDir))
+    .map(modify);
 
   const sortedFiles = files.filter(file => !file.isDirectory)
-    .sort(sorter(sortBy, sortDir));
+    .sort(sorter(sortBy, sortDir))
+    .map(modify);
 
   return [
     ...sortedSpecial,
@@ -152,11 +184,11 @@ const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => 
  * @param {String} type Transform to this type
  * @return {DOMString|String|Blob|ArrayBuffer}
  */
-const transformArrayBuffer = async (ab, mime, type) => {
+export const transformArrayBuffer = async (ab, mime, type) => {
   if (type === 'string') {
-    return await createFileReader('readAsText', ab, mime);
+    return createFileReader('readAsText', ab, mime);
   } else if (type === 'uri') {
-    return await createFileReader('readAsDataURL', ab, mime);
+    return createFileReader('readAsDataURL', ab, mime);
   } else if (type === 'blob') {
     return new Blob([ab], {type: mime});
   }
@@ -171,7 +203,7 @@ const transformArrayBuffer = async (ab, mime, type) => {
  * @param {Object} [fetchOptions] Options to pass on to 'fetct'
  * @return {Object}
  */
-const request = async (fn, data, fetchOptions = {}) => {
+export const request = async (fn, data, fetchOptions = {}) => {
   fetchOptions = Object.assign({}, {
     method: 'GET',
     headers: []
@@ -204,14 +236,3 @@ const request = async (fn, data, fetchOptions = {}) => {
   return {mime: contentType, body: result};
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// EXPORTS
-///////////////////////////////////////////////////////////////////////////////
-
-export {
-  encodeQueryData,
-  transformReaddir,
-  transformArrayBuffer,
-  parentDirectory,
-  request
-};

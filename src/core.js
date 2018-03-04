@@ -30,7 +30,31 @@
 
 import Application from './application';
 import EventHandler from './event-handler';
-import CoreServiceProvider from './providers/core';
+
+const loadProviders = async (providers, filter) => {
+  const list = providers
+    .filter(filter)
+    .map(({provider}) => provider);
+
+  try {
+    for (let i = 0; i < list.length; i++) {
+      try {
+        await list[i].init();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    console.groupEnd();
+
+    return false;
+  }
+
+  list.forEach(p => p.start());
+
+  return true;
+};
 
 /**
  * OS.js Core
@@ -50,6 +74,7 @@ export default class Core extends EventHandler {
     this.registry = [];
     this.instances = {};
     this.configuration = {};
+    this.user = null;
     this.ws = null;
     this.destroyed = false;
     this.$root = document.body;
@@ -69,54 +94,33 @@ export default class Core extends EventHandler {
 
     Application.getApplications().forEach(app => app.destroy());
 
-    this.providers.forEach(provider => provider.destroy());
+    this.providers.forEach(({provider}) => provider.destroy());
 
     this.providers = [];
     this.instances =  {};
   }
 
   /**
-   * Initialize all service providers
+   * Boots up OS.js
    */
-  async init() {
-    console.group('Core::init()');
+  async boot() {
+    console.info('Booting...');
 
-    this.register(CoreServiceProvider);
-    this.emit('osjs/core:init');
-
-    for (let i = 0; i < this.providers.length; i++) {
-      console.debug('Registering service provider', i);
-
-      try {
-        await this.providers[i].init();
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-
-    console.groupEnd();
+    await loadProviders(this.providers, ({options}) => options.before);
   }
 
   /**
-   * Start all service providers
+   * Starts all core services
    */
   async start() {
     console.group('Core::start()');
 
     this.emit('osjs/core:start');
 
-    try {
-      await this.init();
-    } catch (e) {
-      console.error('Cannot start because an execption occured....');
-      console.error(e);
-      console.groupEnd();
+    const result = await loadProviders(this.providers, ({options}) => !options.before);
+    if (!result) {
       return;
     }
-
-    console.info('Booting...');
-
-    this.providers.forEach(p => p.start());
 
     this._createConnection();
 
@@ -164,11 +168,15 @@ export default class Core extends EventHandler {
    * Register a service provider
    *
    * @param {Class} ref A class reference
+   * @param {Object} [options] Options for handling of provider
    */
-  register(ref) {
+  register(ref, options = {}) {
     try {
-      const instance = new ref(this);
-      this.providers.push(instance);
+      const instance = new ref(this, options.args);
+      this.providers.push({
+        options,
+        provider: instance
+      });
     } catch (e) {
       console.error('Core::register()', e);
     }
@@ -233,6 +241,18 @@ export default class Core extends EventHandler {
     }
 
     return this.instances[name];
+  }
+
+  /**
+   * Register login handler
+   * @param {Class} ref The class reference
+   * @param {Object} options Options
+   */
+  login(ref, options = {}) {
+    console.info('Core::login()', 'requesting login');
+
+    const handler = new ref(this, options);
+    handler.init();
   }
 
   /**

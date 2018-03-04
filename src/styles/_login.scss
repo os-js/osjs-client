@@ -1,4 +1,4 @@
-/*!
+/*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
  * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
@@ -28,8 +28,47 @@
  * @licence Simplified BSD License
  */
 
-@import "./src/styles/variables";
-@import "./src/styles/core";
-@import "./src/styles/window";
-@import "./src/styles/notifications";
-@import "./src/styles/login";
+.osjs-login {
+  max-width: 80%;
+  min-width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+
+  input {
+    font-size: inherit;
+    color: inherit;
+    padding: 0.5em;
+    box-sizing: border-box;
+
+    &:not([type="submit"]) {
+      display: block;
+      width: 100%;
+    }
+
+    &[type="submit"] {
+
+    }
+  }
+
+  & > form {
+    & > div {
+      padding: 1em;
+
+      &:first-child {
+        text-align: center;
+        font-weight: bold;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+

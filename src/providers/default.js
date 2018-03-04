@@ -35,6 +35,7 @@ import NotificationServiceProvider from './notifications';
 import VFSServiceProvider from './vfs';
 import ThemeServiceProvider from './theme';
 import SessionServiceProvider from './session';
+import LoginServiceProvider from './login';
 
 /**
  * OS.js Default Service Provider
@@ -45,13 +46,7 @@ export default class DefaultServiceProvider {
 
   constructor(core) {
     this.core = core;
-  }
 
-  destroy() {
-
-  }
-
-  async init() {
     this.core.register(CoreServiceProvider);
     this.core.register(PackageServiceProvider);
     this.core.register(DesktopServiceProvider);
@@ -59,9 +54,15 @@ export default class DefaultServiceProvider {
     this.core.register(ThemeServiceProvider);
     this.core.register(NotificationServiceProvider);
     this.core.register(SessionServiceProvider);
+    this.core.register(LoginServiceProvider, {
+      before: true
+    });
   }
 
-  start() {
-  }
+  destroy() {}
+
+  async init() {}
+
+  start() {}
 
 }

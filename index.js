@@ -35,6 +35,7 @@ import VFSServiceProvider from './src/providers/vfs';
 import ThemeServiceProvider from './src/providers/theme';
 import SessionServiceProvider from './src/providers/session';
 import DefaultServiceProvider from './src/providers/default';
+import LoginServiceProvider from './src/providers/login';
 
 export {
   Core,
@@ -44,5 +45,6 @@ export {
   VFSServiceProvider,
   ThemeServiceProvider,
   SessionServiceProvider,
-  DefaultServiceProvider
+  DefaultServiceProvider,
+  LoginServiceProvider
 };

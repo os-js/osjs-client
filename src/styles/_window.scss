@@ -77,7 +77,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        cursor: pointer;
+        pointer-events: none;
       }
 
       & > .osjs-window-button {

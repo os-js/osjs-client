@@ -141,7 +141,7 @@ export default class WindowBehavior {
     }
 
     const target = ev.target;
-    const hitTitle = target.classList.contains('osjs-window-title');
+    const hitTitle = target.classList.contains('osjs-window-header');
 
     if (hitTitle) {
       if (this.win.state.maximized) {
@@ -165,7 +165,7 @@ export default class WindowBehavior {
     const maxDimension = Object.assign({}, this.win.attributes.maxDimension);
     const minDimension = Object.assign({}, this.win.attributes.minDimension);
     const resize = target.classList.contains('osjs-window-resize');
-    const move = target.classList.contains('osjs-window-title');
+    const move = target.classList.contains('osjs-window-header');
 
     const mousemove = (ev) => {
       const diffX = ev.clientX - clientX;

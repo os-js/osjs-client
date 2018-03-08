@@ -29,6 +29,7 @@
  */
 
 import Application from '../application';
+import ServiceProvider from '../service-provider';
 
 class Session {
 
@@ -80,14 +81,11 @@ class Session {
  *
  * Provides wrapper services around Session features
  */
-export default class SessionServiceProvider {
+export default class SessionServiceProvider extends ServiceProvider {
 
   constructor(core) {
-    this.core = core;
+    super(core);
     this.session = new Session(core);
-  }
-
-  destroy() {
   }
 
   async init() {

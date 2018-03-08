@@ -29,16 +29,17 @@
  */
 
 import PackageManager from '../package-manager';
+import ServiceProvider from '../service-provider';
 
 /**
  * OS.js Package Service Provider
  *
  * Provides methods to handle packages
  */
-export default class PackageServiceProvider {
+export default class PackageServiceProvider extends ServiceProvider {
 
   constructor(core) {
-    this.core = core;
+    super(core);
     this.pm = null;
   }
 
@@ -53,10 +54,6 @@ export default class PackageServiceProvider {
     await pm.init();
 
     this.pm = pm;
-  }
-
-  start() {
-
   }
 
 }

@@ -30,16 +30,17 @@
 
 import Application from '../application';
 import Window from '../window';
+import ServiceProvider from '../service-provider';
 
 /**
  * OS.js Core Service Provider
  *
  * Provides base services
  */
-export default class CoreServiceProvider {
+export default class CoreServiceProvider extends ServiceProvider {
 
   constructor(core) {
-    this.core = core;
+    super(core);
 
     window.OSjs = Object.freeze({
       run: (...args) => this.core.run(...args),
@@ -50,10 +51,6 @@ export default class CoreServiceProvider {
     });
   }
 
-  destroy() {
-
-  }
-
   async init() {
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);
@@ -62,9 +59,6 @@ export default class CoreServiceProvider {
     this.core.instance('osjs/window', (options = {}) => {
       return new Window(this.core, options);
     });
-  }
-
-  start() {
   }
 
 }

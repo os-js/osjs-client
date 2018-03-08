@@ -28,36 +28,32 @@
  * @licence Simplified BSD License
  */
 
-import CoreServiceProvider from './core';
-import PackageServiceProvider from './packages';
-import DesktopServiceProvider from './desktop';
-import NotificationServiceProvider from './notifications';
-import VFSServiceProvider from './vfs';
-import ThemeServiceProvider from './theme';
-import SessionServiceProvider from './session';
-import LoginServiceProvider from './login';
-import ServiceProvider from '../service-provider';
+export default class ServiceProvider {
 
-/**
- * OS.js Default Service Provider
- *
- * Provides all default services
- */
-export default class DefaultServiceProvider extends ServiceProvider {
-
+  /**
+   * Constructor
+   * @param {Core} core Core reference
+   */
   constructor(core) {
-    super(core);
+    this.core = core;
+  }
 
-    this.core.register(CoreServiceProvider);
-    this.core.register(PackageServiceProvider);
-    this.core.register(DesktopServiceProvider);
-    this.core.register(VFSServiceProvider);
-    this.core.register(ThemeServiceProvider);
-    this.core.register(NotificationServiceProvider);
-    this.core.register(SessionServiceProvider);
-    this.core.register(LoginServiceProvider, {
-      before: true
-    });
+  /**
+   * Initializes provider
+   */
+  async init() {
+  }
+
+  /**
+   * Starts provider
+   */
+  start() {
+  }
+
+  /**
+   * Destroys provider
+   */
+  destroy() {
   }
 
 }

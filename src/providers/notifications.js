@@ -29,16 +29,18 @@
  */
 
 import Notification from '../notification';
+import ServiceProvider from '../service-provider';
 
 /**
  * OS.js Notification Service Provider
  *
  * Provides methods to create notifications
  */
-export default class NotificationServiceProvider {
+export default class NotificationServiceProvider extends ServiceProvider {
 
   constructor(core) {
-    this.core = core;
+    super(core);
+
     this.$element = document.createElement('div');
   }
 

@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import ServiceProvider from '../service-provider';
+
 const TEMPLATE = `
   <form method="post" action="#" autocomplete="off">
     <div>
@@ -50,11 +52,7 @@ const TEMPLATE = `
  *
  * Creates the login prompt and handles authentication flow
  */
-export default class LoginServiceProvider {
-
-  constructor(core) {
-    this.core = core;
-  }
+export default class LoginServiceProvider extends ServiceProvider {
 
   async request(values) {
     const response = await fetch('/login', {
@@ -117,7 +115,4 @@ export default class LoginServiceProvider {
     }
   }
 
-  start() {
-
-  }
 }

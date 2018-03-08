@@ -28,25 +28,13 @@
  * @licence Simplified BSD License
  */
 
+import ServiceProvider from '../service-provider';
+
 /**
  * OS.js Theme Service Provider
  *
  * Provides methods to interact with filesystems
  */
-export default class ThemeServiceProvider {
-
-  constructor(core) {
-    this.core = core;
-  }
-
-  destroy() {
-
-  }
-
-  async init() {
-  }
-
-  start() {
-  }
+export default class ThemeServiceProvider extends ServiceProvider {
 
 }

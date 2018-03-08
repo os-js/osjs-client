@@ -28,28 +28,18 @@
  * @licence Simplified BSD License
  */
 
-const vfs = require('../vfs');
+import * as vfs from '../vfs';
+import ServiceProvider from '../service-provider';
 
 /**
  * OS.js Virtual Filesystem Service Provider
  *
  * Provides methods to interact with filesystems
  */
-export default class VFSServiceProvider {
-
-  constructor(core) {
-    this.core = core;
-  }
-
-  destroy() {
-
-  }
+export default class VFSServiceProvider extends ServiceProvider {
 
   async init() {
     this.core.singleton('osjs/vfs', () => vfs);
-  }
-
-  start() {
   }
 
 }

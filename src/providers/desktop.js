@@ -28,15 +28,18 @@
  * @licence Simplified BSD License
  */
 
+import ServiceProvider from '../service-provider';
+
 /**
  * OS.js Desktop Service Provider
  *
  * Provides desktop features
  */
-export default class DesktopServiceProvider {
+export default class DesktopServiceProvider extends ServiceProvider {
 
   constructor(core) {
-    this.core = core;
+    super(core);
+
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
   }

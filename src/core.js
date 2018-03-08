@@ -66,8 +66,14 @@ export default class Core extends EventHandler {
 
   /**
    * Create core instance
+   * @param {Object} [options] Options
    */
-  constructor() {
+  constructor(options = {}) {
+    options = Object.assign({}, {
+      classNames: ['osjs-root'],
+      root: document.body
+    }, options);
+
     super('Core');
 
     this.providers = [];
@@ -77,8 +83,9 @@ export default class Core extends EventHandler {
     this.user = null;
     this.ws = null;
     this.destroyed = false;
-    this.$root = document.body;
-    this.$root.classList.add('osjs-root');
+    this.$root = options.root;
+
+    options.classNames.forEach(n => this.$root.classList.add(n));
   }
 
   /**

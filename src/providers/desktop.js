@@ -50,6 +50,10 @@ export default class DesktopServiceProvider extends ServiceProvider {
   }
 
   updateCSS(subtract) {
+    if (!this.$styles) {
+      return;
+    }
+
     this.$styles.innerHTML = `
 
   .osjs-window[data-maximized=true] {

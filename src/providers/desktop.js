@@ -84,11 +84,6 @@ export default class DesktopServiceProvider extends ServiceProvider {
 
   start() {
     this.core.$root.appendChild(this.$styles);
-
-    this.core.$root.addEventListener('contextmenu', (ev) => {
-      ev.stopPropagation();
-      ev.preventDefault();
-    });
   }
 
 }

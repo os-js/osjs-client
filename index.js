@@ -36,6 +36,7 @@ import ThemeServiceProvider from './src/providers/theme';
 import SessionServiceProvider from './src/providers/session';
 import DefaultServiceProvider from './src/providers/default';
 import LoginServiceProvider from './src/providers/login';
+import ServiceProvider from './src/service-provider';
 
 export {
   Core,
@@ -46,5 +47,6 @@ export {
   ThemeServiceProvider,
   SessionServiceProvider,
   DefaultServiceProvider,
-  LoginServiceProvider
+  LoginServiceProvider,
+  ServiceProvider
 };

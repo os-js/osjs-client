@@ -220,7 +220,7 @@ export default class Core extends EventHandler {
   /**
    * Create an instance of a provided service
    *
-   * @param {String} name Package name
+   * @param {String} name Service name
    * @param {*} args Constructor arguments
    * @return {*} An instance of a service
    */
@@ -241,6 +241,15 @@ export default class Core extends EventHandler {
     }
 
     return this.instances[name];
+  }
+
+  /**
+   * Check if a service exists
+   * @param {String} name Provider name
+   * @return {Boolean}
+   */
+  has(name) {
+    return this.registry.findIndex(p => p.name === name) !== -1;
   }
 
   /**

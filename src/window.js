@@ -74,7 +74,7 @@ const createAttributes = (attrs) => Object.assign({
 /*
  * Creates window state from an object
  */
-const createState = (state, options) => Object.assign({
+const createState = (state, options, attrs) => Object.assign({
   title: options.title || options.id,
   icon: require('./styles/logo-blue-32x32.png'),
   moving: false,
@@ -92,8 +92,8 @@ const createState = (state, options) => Object.assign({
     top: 0
   },
   dimension: {
-    width: MINIMUM_WIDTH,
-    height: MINIMUM_HEIGHT
+    width: Math.max(attrs.minDimension.width, MINIMUM_WIDTH),
+    height: Math.max(attrs.minDimension.height, MINIMUM_HEIGHT)
   }
 }, state);
 
@@ -215,7 +215,7 @@ export default class Window extends EventHandler {
      * The window state
      * @type {Object}
      */
-    this.state = createState(options.state, options);
+    this.state = createState(options.state, options, this.attributes);
 
     /**
      * The window container

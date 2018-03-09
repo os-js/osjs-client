@@ -229,6 +229,12 @@ export default class Window extends EventHandler {
      */
     this.$content = null;
 
+    /**
+     * The header container
+     * @type {Node}
+     */
+    this.$header = null;
+
     this.core.emit('osjs/window:create', this);
   }
 
@@ -262,6 +268,7 @@ export default class Window extends EventHandler {
     this.parent = null;
     this.$element = null;
     this.$content = null;
+    this.$header = null;
   }
 
   /**
@@ -291,6 +298,7 @@ export default class Window extends EventHandler {
       });
 
     this.$content = this.$element.querySelector('.osjs-window-content');
+    this.$header = this.$element.querySelector('.osjs-window-header');
 
     this.setNextZindex();
     this._updateDOM();
@@ -301,7 +309,9 @@ export default class Window extends EventHandler {
       callback(this.$content, this);
     }
 
-    this.emit('render', this);
+    setTimeout(() => {
+      this.emit('render', this);
+    }, 1);
 
     return this;
   }
@@ -389,6 +399,21 @@ export default class Window extends EventHandler {
    */
   restore() {
     return this._toggleState('maximized', false, 'restore');
+  }
+
+  /**
+   * Resize to fit to current container
+   * @param {Element} [container] The DOM element to use
+   */
+  resizeFit(container) {
+    container = container || this.$content.firstChild;
+
+    const {width, height} = this.state.dimension;
+
+    this.setDimension({
+      width: Math.max(container.offsetWidth, width),
+      height: Math.max(container.offsetHeight + this.$header.offsetHeight, height)
+    });
   }
 
   /**

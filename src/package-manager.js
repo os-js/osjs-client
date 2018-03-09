@@ -81,7 +81,7 @@ export default class PackageManager {
    * @return {String[]} A list of failed resources
    */
   async preload(list, force = false) {
-    const root = this.core.$root;
+    const root = this.core.$resourceRoot;
 
     console.group('PackageManager::preload()');
 

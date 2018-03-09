@@ -87,7 +87,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
   }
 
   start() {
-    this.core.$root.appendChild(this.$styles);
+    this.core.$resourceRoot.appendChild(this.$styles);
   }
 
 }

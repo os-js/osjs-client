@@ -67,6 +67,9 @@ export default class Core extends EventHandler {
   /**
    * Create core instance
    * @param {Object} [options] Options
+   * @param {Element} [options.root] The root DOM element for elements
+   * @param {Element} [options.resourceRoot] The root DOM element for resources
+   * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
   constructor(options = {}) {
     options = Object.assign({}, {
@@ -84,6 +87,7 @@ export default class Core extends EventHandler {
     this.ws = null;
     this.destroyed = false;
     this.$root = options.root;
+    this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
     options.classNames.forEach(n => this.$root.classList.add(n));
   }

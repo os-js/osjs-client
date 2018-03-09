@@ -28,6 +28,14 @@
  * @licence Simplified BSD License
  */
 
+.osjs-root[data-window-action="true"] {
+  .osjs-window {
+    * {
+      pointer-events: none;
+    }
+  }
+}
+
 .osjs-window {
   position: absolute;
   box-sizing: border-box;
@@ -39,10 +47,6 @@
   &[data-resizing=true],
   &[data-moving=true] {
     cursor: move;
-
-    * {
-      pointer-events: none;
-    }
   }
 
   & > .osjs-window-inner {

@@ -203,6 +203,8 @@ export default class WindowBehavior {
         this.win.emit('resized', this.win);
         this.win.setState('resizing', false);
       }
+
+      this.core.$root.setAttribute('data-window-action', String(false));
     };
 
 
@@ -213,6 +215,8 @@ export default class WindowBehavior {
     if (move || resize) {
       document.addEventListener('mousemove', mousemove);
       document.addEventListener('mouseup', mouseup);
+
+      this.core.$root.setAttribute('data-window-action', String(true));
     }
 
     this.wasResized = false;

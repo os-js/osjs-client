@@ -47,7 +47,7 @@ let lastWindow = null;
  * Sets attributes on a DOM element
  */
 const setDataAttributes = (el, obj) => Object.keys(obj)
-  .filter(k => ['icon', 'zIndex', 'id'].indexOf(k) === -1)
+  .filter(k => ['icon', 'zIndex', 'id', 'title'].indexOf(k) === -1)
   .filter(k => typeof obj[k] !== 'object')
   .forEach((k) => el.setAttribute('data-' + k, String(obj[k])));
 

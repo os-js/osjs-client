@@ -28,7 +28,6 @@
  * @licence Simplified BSD License
  */
 import EventHandler from './event-handler';
-import WindowBehavior from './window-behavior';
 import {
   escapeHtml,
   isDescendantOf,
@@ -154,7 +153,6 @@ export default class Window extends EventHandler {
    * @param {Window} options.parent The parent Window reference
    * @param {Object} options.attributes Window attributes
    * @param {Object} options.state Window state
-   * @param {WindowBehavior} options.behavior Window behavior
    */
   constructor(core, options = {}) {
     options = Object.assign({
@@ -192,12 +190,6 @@ export default class Window extends EventHandler {
      * @type {Core}
      */
     this.core = core;
-
-    /**
-     * The window behavior
-     * @type {WindowBehavior}
-     */
-    this.behavior = options.behavior || new WindowBehavior(core, this);
 
     /**
      * The window destruction state
@@ -275,7 +267,10 @@ export default class Window extends EventHandler {
    * Initialize window
    */
   init() {
-    this.behavior.init();
+    const behavior = this.core.make('osjs/window-behavior');
+    if (behavior) {
+      behavior.init(this);
+    }
 
     this.inited = true;
     this.emit('init', this);

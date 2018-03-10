@@ -87,7 +87,6 @@ export default class WindowBehavior {
    */
   constructor(core, win) {
     this.core = core;
-    this.win = win;
     this.wasMoved = false;
     this.wasResized = false;
   }
@@ -95,21 +94,21 @@ export default class WindowBehavior {
   /**
    * Initializes window behavior
    */
-  init() {
-    this.win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev));
-    this.win.$element.addEventListener('click', (ev) => this.click(ev));
-    this.win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev));
+  init(win) {
+    win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
+    win.$element.addEventListener('click', (ev) => this.click(ev, win));
+    win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
 
     // FIXME
-    let top = (30 + ((this.win.wid % 20) * 10));
-    let left = (10 + ((this.win.wid % 20) * 10));
+    let top = (30 + ((win.wid % 20) * 10));
+    let left = (10 + ((win.wid % 20) * 10));
 
-    if (this.win.state.position.top === 0) {
-      this.win.state.position.top = top;
+    if (win.state.position.top === 0) {
+      win.state.position.top = top;
     }
 
-    if (this.win.state.position.left === 0) {
-      this.win.state.position.left = left;
+    if (win.state.position.left === 0) {
+      win.state.position.left = left;
     }
   }
 
@@ -117,7 +116,7 @@ export default class WindowBehavior {
    * Handles Mouse Click Event
    * @param {Event} ev Browser Event
    */
-  click(ev) {
+  click(ev, win) {
     if (this.wasMoved || this.wasResized) {
       return;
     }
@@ -127,7 +126,7 @@ export default class WindowBehavior {
 
     if (hitButton) {
       const action =  ev.target.getAttribute('data-action');
-      actionMap[action](this.win);
+      actionMap[action](win);
     }
   }
 
@@ -135,7 +134,7 @@ export default class WindowBehavior {
    * Handles Mouse Double Click Event
    * @param {Event} ev Browser Event
    */
-  dblclick(ev) {
+  dblclick(ev, win) {
     if (this.wasMoved || this.wasResized) {
       return;
     }
@@ -144,12 +143,12 @@ export default class WindowBehavior {
     const hitTitle = target.classList.contains('osjs-window-header');
 
     if (hitTitle) {
-      if (this.win.state.maximized) {
-        this.win.restore();
-      } else if (this.win.state.minimized) {
-        this.win.raise();
+      if (win.state.maximized) {
+        win.restore();
+      } else if (win.state.minimized) {
+        win.raise();
       } else {
-        this.win.maximize();
+        win.maximize();
       }
     }
   }
@@ -158,12 +157,12 @@ export default class WindowBehavior {
    * Handles Mouse Down Event
    * @param {Event} ev Browser Event
    */
-  mousedown(ev) {
+  mousedown(ev, win) {
     const {clientX, clientY, target} = ev;
-    const startPosition = Object.assign({}, this.win.state.position);
-    const startDimension = Object.assign({}, this.win.state.dimension);
-    const maxDimension = Object.assign({}, this.win.attributes.maxDimension);
-    const minDimension = Object.assign({}, this.win.attributes.minDimension);
+    const startPosition = Object.assign({}, win.state.position);
+    const startDimension = Object.assign({}, win.state.dimension);
+    const maxDimension = Object.assign({}, win.attributes.maxDimension);
+    const minDimension = Object.assign({}, win.attributes.minDimension);
     const resize = target.classList.contains('osjs-window-resize');
     const move = target.classList.contains('osjs-window-header');
     let attributeSet = false;
@@ -174,8 +173,8 @@ export default class WindowBehavior {
 
       if (resize) {
         this.wasResized = true;
-        this.win.setState('resizing', true, false);
-        this.win.setDimension(getNewDimensions(
+        win.setState('resizing', true, false);
+        win.setDimension(getNewDimensions(
           diffX,
           diffY,
           minDimension,
@@ -184,8 +183,8 @@ export default class WindowBehavior {
         ));
       } else if (move) {
         this.wasMoved = true;
-        this.win.setState('moving', true, false);
-        this.win.setPosition(getNewPosition(
+        win.setState('moving', true, false);
+        win.setPosition(getNewPosition(
           diffX,
           diffY,
           startPosition
@@ -205,19 +204,19 @@ export default class WindowBehavior {
       document.removeEventListener('mouseup', mouseup);
 
       if (this.wasMoved) {
-        this.win.emit('moved', this.win);
-        this.win.setState('moving', false);
+        win.emit('moved', win);
+        win.setState('moving', false);
       } else if (this.wasResized) {
-        this.win.emit('resized', this.win);
-        this.win.setState('resizing', false);
+        win.emit('resized', win);
+        win.setState('resizing', false);
       }
 
       this.core.$root.setAttribute('data-window-action', String(false));
     };
 
 
-    if (!this.win.focus()) {
-      this.win.setNextZindex();
+    if (!win.focus()) {
+      win.setNextZindex();
     }
 
     if (move || resize) {

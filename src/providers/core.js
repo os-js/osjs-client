@@ -30,6 +30,7 @@
 
 import Application from '../application';
 import Window from '../window';
+import WindowBehavior from '../window-behavior';
 import ServiceProvider from '../service-provider';
 
 /**
@@ -58,6 +59,10 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.instance('osjs/window', (options = {}) => {
       return new Window(this.core, options);
+    });
+
+    this.core.singleton('osjs/window-behavior', () => {
+      return new WindowBehavior(this.core);
     });
   }
 

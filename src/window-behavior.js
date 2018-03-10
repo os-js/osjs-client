@@ -83,9 +83,8 @@ export default class WindowBehavior {
    * Create window behavior
    *
    * @param {Core} core Core reference
-   * @param {Window} window Window reference
    */
-  constructor(core, win) {
+  constructor(core) {
     this.core = core;
     this.wasMoved = false;
     this.wasResized = false;
@@ -93,6 +92,7 @@ export default class WindowBehavior {
 
   /**
    * Initializes window behavior
+   * @param {Window} win Window reference
    */
   init(win) {
     win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
@@ -115,6 +115,7 @@ export default class WindowBehavior {
   /**
    * Handles Mouse Click Event
    * @param {Event} ev Browser Event
+   * @param {Window} win Window reference
    */
   click(ev, win) {
     if (this.wasMoved || this.wasResized) {
@@ -133,6 +134,7 @@ export default class WindowBehavior {
   /**
    * Handles Mouse Double Click Event
    * @param {Event} ev Browser Event
+   * @param {Window} win Window reference
    */
   dblclick(ev, win) {
     if (this.wasMoved || this.wasResized) {
@@ -156,6 +158,7 @@ export default class WindowBehavior {
   /**
    * Handles Mouse Down Event
    * @param {Event} ev Browser Event
+   * @param {Window} win Window reference
    */
   mousedown(ev, win) {
     const {clientX, clientY, target} = ev;

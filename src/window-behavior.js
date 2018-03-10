@@ -166,6 +166,7 @@ export default class WindowBehavior {
     const minDimension = Object.assign({}, this.win.attributes.minDimension);
     const resize = target.classList.contains('osjs-window-resize');
     const move = target.classList.contains('osjs-window-header');
+    let attributeSet = false;
 
     const mousemove = (ev) => {
       const diffX = ev.clientX - clientX;
@@ -189,6 +190,13 @@ export default class WindowBehavior {
           diffY,
           startPosition
         ));
+      }
+
+      if (resize || move) {
+        if (!attributeSet) {
+          this.core.$root.setAttribute('data-window-action', String(true));
+          attributeSet = true;
+        }
       }
     };
 
@@ -215,8 +223,6 @@ export default class WindowBehavior {
     if (move || resize) {
       document.addEventListener('mousemove', mousemove);
       document.addEventListener('mouseup', mouseup);
-
-      this.core.$root.setAttribute('data-window-action', String(true));
     }
 
     this.wasResized = false;

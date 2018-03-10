@@ -30,6 +30,68 @@
 
 import ServiceProvider from '../service-provider';
 
+const TEMPLATE = subtract => `
+  .osjs-window[data-maximized=true] {
+    top: ${subtract.top}px !important;
+    left: ${subtract.left}px !important;
+    right: ${subtract.right}px !important;
+    bottom: ${subtract.bottom}px !important;
+    width: calc(100% -  ${subtract.left + subtract.right}px) !important;
+    height: calc(100% - ${subtract.top + subtract.bottom}px) !important;
+  }
+`;
+
+class Desktop {
+
+  constructor(core) {
+    this.core = core;
+    this.$styles = document.createElement('style');
+    this.$styles.setAttribute('type', 'text/css');
+    this.subtract = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    };
+  }
+
+  destroy() {
+    this.$styles.remove();
+    this.$styles = null;
+  }
+
+  init() {
+    this.core.on('osjs/panel:create', panel => {
+      this.subtract.top += panel.$element.offsetHeight;
+      this._updateCSS();
+    });
+
+    this.core.on('osjs/panel:destroy', panel => {
+      this.subtract.top -= panel.$element.offsetHeight;
+      this._updateCSS();
+    });
+
+    this.core.$resourceRoot.appendChild(this.$styles);
+  }
+
+  _updateCSS() {
+    if (!this.$styles) {
+      return;
+    }
+
+    this.$styles.innerHTML = TEMPLATE(this.subtract);
+  }
+
+  getRect() {
+    const root = this.core.$root;
+    const {left, top, right, bottom} = this.subtract;
+    const width = root.offsetWidth - left - right;
+    const height = root.offsetHeight - top - bottom;
+
+    return {width, height, top, bottom, left, right};
+  }
+}
+
 /**
  * OS.js Desktop Service Provider
  *
@@ -40,54 +102,19 @@ export default class DesktopServiceProvider extends ServiceProvider {
   constructor(core) {
     super(core);
 
-    this.$styles = document.createElement('style');
-    this.$styles.setAttribute('type', 'text/css');
+    this.desktop = new Desktop(core);
   }
 
   destroy() {
-    this.$styles.remove();
-    this.$styles = null;
-  }
-
-  updateCSS(subtract) {
-    if (!this.$styles) {
-      return;
-    }
-
-    this.$styles.innerHTML = `
-
-  .osjs-window[data-maximized=true] {
-    top: ${subtract.top}px !important;
-    left: ${subtract.left}px !important;
-    right: ${subtract.right}px !important;
-    bottom: ${subtract.bottom}px !important;
-    width: calc(100% -  ${subtract.left + subtract.right}px) !important;
-    height: calc(100% - ${subtract.top + subtract.bottom}px) !important;
-  }
-
-`;
+    this.desktop = this.desktop.destroy();
   }
 
   async init() {
-    const subtract = {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0
-    };
+    this.desktop.init();
 
-    this.core.on('osjs/panel:create', panel => {
-      subtract.top += panel.$element.offsetHeight;
-      this.updateCSS(subtract);
+    this.core.singleton('osjs/desktop', () => {
+      return this.desktop;
     });
-    this.core.on('osjs/panel:destroy', panel => {
-      subtract.top -= panel.$element.offsetHeight;
-      this.updateCSS(subtract);
-    });
-  }
-
-  start() {
-    this.core.$resourceRoot.appendChild(this.$styles);
   }
 
 }

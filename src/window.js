@@ -227,6 +227,8 @@ export default class Window extends EventHandler {
      */
     this.$header = null;
 
+    this.preventDefaultPosition = false;
+
     this.core.emit('osjs/window:create', this);
   }
 
@@ -306,6 +308,10 @@ export default class Window extends EventHandler {
 
     setTimeout(() => {
       this.emit('render', this);
+
+      if (!this.preventDefaultPosition) {
+        this.gravitate(this.attributes.gravity);
+      }
     }, 1);
 
     return this;
@@ -487,12 +493,17 @@ export default class Window extends EventHandler {
    * @param {Object} position The position
    * @param {Number} position.left Left (X) in pixels
    * @param {Number} position.top Top (Y) in pixels
+   * @param {Boolean} [preventDefault=false] Prevents any future position setting in init procedure
    */
-  setPosition(position) {
+  setPosition(position, preventDefault = false) {
     const {left, top} = Object.assign(this.state.position, position || {});
 
     this.state.position.top = top;
     this.state.position.left = left;
+
+    if (preventDefault) {
+      this.preventDefaultPosition = true;
+    }
 
     this._updateDOM();
   }
@@ -529,6 +540,27 @@ export default class Window extends EventHandler {
       console.debug('Window::setState()', name, value);
       this._updateDOM();
     }
+  }
+
+  /**
+   * Gravitates window towards a certain area
+   * @param {String} gravity Gravity
+   */
+  gravitate(gravity) {
+    // TODO: Add more directions
+    if (!this.core.has('osjs/desktop')) {
+      return;
+    }
+
+    const rect = this.core.make('osjs/desktop').getRect();
+    let {left, top} = this.state.position;
+
+    if (gravity === 'center') {
+      left = (rect.width / 2) - (this.state.dimension.width / 2);
+      top = (rect.height / 2) - (this.state.dimension.height / 2);
+    }
+
+    this.setPosition({left, top});
   }
 
   _toggleState(name, value, eventName, update = true) {

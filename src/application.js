@@ -285,7 +285,7 @@ export default class Application extends EventHandler {
 
       if (found !== -1) {
         const restore = windows[found];
-        instance.setPosition(restore.position);
+        instance.setPosition(restore.position, true);
         instance.setDimension(restore.dimension);
 
         this.options.restore.windows.splice(found, 1);

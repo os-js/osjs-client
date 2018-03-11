@@ -409,12 +409,22 @@ export default class Window extends EventHandler {
   resizeFit(container) {
     container = container || this.$content.firstChild;
 
-    const {width, height} = this.state.dimension;
+    const min = this.attributes.minDimension;
+    const max = this.attributes.maxDimension;
+    let width = Math.max(container.offsetWidth, min.width);
+    let height = Math.max(container.offsetHeight + this.$header.offsetHeight, min.height);
 
-    this.setDimension({
-      width: Math.max(container.offsetWidth, width),
-      height: Math.max(container.offsetHeight + this.$header.offsetHeight, height)
-    });
+    if (max.width > 0) {
+      width = Math.min(width, max.width);
+    }
+
+    if (max.height > 0) {
+      height = Math.min(height, max.height);
+    }
+
+    if (!isNaN(width) && !isNaN(height)) {
+      this.setDimension({width, height});
+    }
   }
 
   /**

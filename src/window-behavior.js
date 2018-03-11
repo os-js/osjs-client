@@ -218,6 +218,12 @@ export default class WindowBehavior {
           startPosition,
           rect
         ));
+
+        /* TODO: Might give better performance, but need to set actual position
+         * on mouseup. Also, need to clamp the diffX and diffY with respect of
+         * rect.
+        win.$element.style.transform = `translate(${diffX}px, ${diffY}px)`;
+        */
       }
 
       if (resize || move) {

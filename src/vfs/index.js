@@ -34,10 +34,6 @@ import {
   request
 } from './utils';
 
-///////////////////////////////////////////////////////////////////////////////
-// API
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * Read a directory
  *
@@ -45,7 +41,7 @@ import {
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
-const readdir = async (path, options = {}) => {
+export const readdir = async (path, options = {}) => {
   const response = await request('readdir', {
     path,
     options
@@ -63,7 +59,7 @@ const readdir = async (path, options = {}) => {
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
-const readfile = async (path, type = 'string', options = {}) => {
+export const readfile = async (path, type = 'string', options = {}) => {
   const response = await request('readfile', {path, options});
   const result = await transformArrayBuffer(response.body, response.mime, type);
   return result;
@@ -75,7 +71,7 @@ const readfile = async (path, type = 'string', options = {}) => {
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-const writefile = async (path, data, options = {}) =>
+export const writefile = async (path, data, options = {}) =>
   (await request('writefile', {path, data, options})).body;
 
 /**
@@ -85,7 +81,7 @@ const writefile = async (path, data, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-const rename = async (from, to, options = {}) =>
+export const rename = async (from, to, options = {}) =>
   (await request('rename', {from, to, options})).body;
 
 /**
@@ -94,7 +90,7 @@ const rename = async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-const mkdir = async (path, options = {}) =>
+export const mkdir = async (path, options = {}) =>
   (await request('mkdir', {path, options})).body;
 
 /**
@@ -103,7 +99,7 @@ const mkdir = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-const unlink = async (path, options = {}) =>
+export const unlink = async (path, options = {}) =>
   (await request('unlink', {path, options})).body;
 
 /**
@@ -112,7 +108,7 @@ const unlink = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-const exists = async (path, options = {}) =>
+export const exists = async (path, options = {}) =>
   (await request('exists', {path, options})).body;
 
 /**
@@ -121,7 +117,7 @@ const exists = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Object}
  */
-const stat = async (path, options = {}) =>
+export const stat = async (path, options = {}) =>
   (await request('stat', {path, options})).body;
 
 /**
@@ -130,23 +126,7 @@ const stat = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {String}
  */
-const url = async (path, options = {}) => {
-  const url = `/API/VFS/readfile?path=` + encodeURIComponent(path);
+export const url = async (path, options = {}) => {
+  const url = `/vfs/readfile?path=` + encodeURIComponent(path);
   return url;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// EXPORTS
-///////////////////////////////////////////////////////////////////////////////
-
-export {
-  readdir,
-  readfile,
-  writefile,
-  rename,
-  mkdir,
-  unlink,
-  exists,
-  stat,
-  url
 };

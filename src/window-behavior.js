@@ -66,11 +66,31 @@ const getNewDimensions = (diffX, diffY, min, max, start) => {
 /*
  * Calculates new position for a window movement
  */
-const getNewPosition = (diffX, diffY, start) => {
-  return {
-    top: start.top + diffY,
-    left: start.left + diffX
-  };
+const getNewPosition = (diffX, diffY, start, rect) => {
+  let top = start.top + diffY;
+  let left = start.left + diffX;
+
+  if (rect) {
+    // In case we have panels etc around, we want to stop when we hit these areas
+    top = Math.max(rect.top, top);
+  }
+
+  return {top, left};
+};
+
+/*
+ * Calculates a new initial position for window
+ */
+const getCascadePosition = (win, rect) => {
+  const startX = 10 + (rect ? rect.left : 0);
+  const startY = 10 + (rect ? rect.top : 0);
+  const distance = 10;
+  const wrap = 20;
+
+  const top = startY + ((win.wid % wrap) * distance);
+  const left = startX + ((win.wid % wrap) * distance);
+
+  return {top, left};
 };
 
 /*
@@ -99,10 +119,11 @@ export default class WindowBehavior {
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
 
-    // FIXME
-    let top = (30 + ((win.wid % 20) * 10));
-    let left = (10 + ((win.wid % 20) * 10));
+    const rect = this.core.has('osjs/desktop')
+      ? this.core.make('osjs/desktop').getRect()
+      : null;
 
+    const {top, left} = getCascadePosition(win, rect);
     if (win.state.position.top === 0) {
       win.state.position.top = top;
     }
@@ -168,6 +189,10 @@ export default class WindowBehavior {
     const minDimension = Object.assign({}, win.attributes.minDimension);
     const resize = target.classList.contains('osjs-window-resize');
     const move = target.classList.contains('osjs-window-header');
+    const rect = this.core.has('osjs/desktop')
+      ? this.core.make('osjs/desktop').getRect()
+      : null;
+
     let attributeSet = false;
 
     const mousemove = (ev) => {
@@ -190,7 +215,8 @@ export default class WindowBehavior {
         win.setPosition(getNewPosition(
           diffX,
           diffY,
-          startPosition
+          startPosition,
+          rect
         ));
       }
 

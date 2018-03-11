@@ -284,7 +284,6 @@ export default class Window extends EventHandler {
    * @return {Window} this instance
    */
   render(callback = function() {}) {
-    this.$element.id = `Window_${this.id}`;
     this.$element.innerHTML = TEMPLATE;
     this.$element.setAttribute('data-id', this.id);
 

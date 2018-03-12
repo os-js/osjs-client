@@ -85,6 +85,8 @@ export default class Core extends EventHandler {
     this.configuration = {};
     this.user = null;
     this.ws = null;
+    this.booted = false;
+    this.started = false;
     this.destroyed = false;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
@@ -115,6 +117,11 @@ export default class Core extends EventHandler {
    * Boots up OS.js
    */
   async boot() {
+    if (this.booted) {
+      return;
+    }
+    this.booted = true;
+
     console.info('Booting...');
 
     await loadProviders(this.providers, ({options}) => options.before);
@@ -124,6 +131,11 @@ export default class Core extends EventHandler {
    * Starts all core services
    */
   async start() {
+    if (this.started) {
+      return;
+    }
+    this.started = true;
+
     console.group('Core::start()');
 
     this.emit('osjs/core:start');

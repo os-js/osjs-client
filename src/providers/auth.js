@@ -47,46 +47,21 @@ const TEMPLATE = `
   </form>
 `;
 
-/**
- * Default OS.js Auth Service Provider
- *
- * Creates the login prompt and handles authentication flow
- */
-export default class AuthServiceProvider extends ServiceProvider {
+class Auth {
 
-  async request(values) {
-    const response = await fetch('/login', {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      return false;
-    }
-
-    return response.json();
+  constructor(core) {
+    this.core = core;
   }
 
-  async init() {
+  init() {
     const container = document.createElement('div');
     container.className = 'osjs-login';
     container.innerHTML = TEMPLATE;
 
     const post = async (values) => {
-      const response = await this.request(values);
-      if (!response) {
-        alert('Login failed');
-        return;
+      if (this.login(values)) {
+        container.remove();
       }
-
-      container.remove();
-
-      this.core.user = response.user;
-      this.core.start();
     };
 
     const form = container.querySelector('form');
@@ -102,8 +77,8 @@ export default class AuthServiceProvider extends ServiceProvider {
 
     this.core.$root.appendChild(container);
 
-    const login = this.core.configuration.login;
-    if (login) {
+    const login = this.core.configuration.login || {};
+    if (login.username) {
       Object.keys(login).forEach((k) => {
         const el = form.querySelector(`input[name="${k}"]`);
         if (el) {
@@ -113,6 +88,73 @@ export default class AuthServiceProvider extends ServiceProvider {
 
       post(login);
     }
+  }
+
+  async request(endpoint, values = {}) {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response.ok ? response.json() : false;
+  }
+
+  async login(values) {
+    const response = await this.request('/login', values);
+
+    if (!response) {
+      alert('Login failed');
+      return false;
+    }
+
+    this.core.user = response.user;
+    this.core.start();
+
+    return true;
+  }
+
+  async logout(reload = true) {
+    const response = await this.request('/logout');
+    if (!response) {
+      return;
+    }
+
+    this.core.destroy();
+
+    // FIXME
+    if (reload) {
+      setTimeout(() => window.location.reload(), 1);
+    }
+  }
+
+}
+
+/**
+ * Default OS.js Auth Service Provider
+ *
+ * Creates the login prompt and handles authentication flow
+ */
+export default class AuthServiceProvider extends ServiceProvider {
+
+  constructor(core) {
+    super(core);
+
+    this.auth = new Auth(core);
+  }
+
+  async init() {
+    this.core.singleton('osjs/auth', () => ({
+      login: () => this.auth.login(),
+      logout: () => this.auth.logout()
+    }));
+  }
+
+  start() {
+    this.auth.init();
   }
 
 }

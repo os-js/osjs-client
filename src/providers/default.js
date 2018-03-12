@@ -35,7 +35,7 @@ import NotificationServiceProvider from './notifications';
 import VFSServiceProvider from './vfs';
 import ThemeServiceProvider from './theme';
 import SessionServiceProvider from './session';
-import LoginServiceProvider from './login';
+import AuthServiceProvider from './auth';
 import ServiceProvider from '../service-provider';
 
 /**
@@ -55,7 +55,7 @@ export default class DefaultServiceProvider extends ServiceProvider {
     this.core.register(ThemeServiceProvider);
     this.core.register(NotificationServiceProvider);
     this.core.register(SessionServiceProvider);
-    this.core.register(LoginServiceProvider, {
+    this.core.register(AuthServiceProvider, {
       before: true
     });
   }

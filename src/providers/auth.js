@@ -48,11 +48,11 @@ const TEMPLATE = `
 `;
 
 /**
- * Default OS.js Login Service Provider
+ * Default OS.js Auth Service Provider
  *
  * Creates the login prompt and handles authentication flow
  */
-export default class LoginServiceProvider extends ServiceProvider {
+export default class AuthServiceProvider extends ServiceProvider {
 
   async request(values) {
     const response = await fetch('/login', {

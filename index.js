@@ -35,7 +35,7 @@ import VFSServiceProvider from './src/providers/vfs';
 import ThemeServiceProvider from './src/providers/theme';
 import SessionServiceProvider from './src/providers/session';
 import DefaultServiceProvider from './src/providers/default';
-import LoginServiceProvider from './src/providers/login';
+import AuthServiceProvider from './src/providers/auth';
 import ServiceProvider from './src/service-provider';
 
 export {
@@ -47,6 +47,6 @@ export {
   ThemeServiceProvider,
   SessionServiceProvider,
   DefaultServiceProvider,
-  LoginServiceProvider,
+  AuthServiceProvider,
   ServiceProvider
 };

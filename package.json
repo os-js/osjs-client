@@ -1,6 +1,6 @@
 {
   "name": "@osjs/core",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "description": "OS.js v3 Core",
   "main": "index.js",
   "style": "index.scss",

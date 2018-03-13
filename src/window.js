@@ -86,14 +86,14 @@ const createState = (state, options, attrs) => Object.assign({
   modal: false,
   zIndex: 1,
   styles: {},
-  position: {
+  position: Object.assign({}, {
     left: 0,
     top: 0
-  },
-  dimension: {
+  }, options.position),
+  dimension: Object.assign({}, {
     width: Math.max(attrs.minDimension.width, MINIMUM_WIDTH),
     height: Math.max(attrs.minDimension.height, MINIMUM_HEIGHT)
-  }
+  }, options.dimension)
 }, state);
 
 /*
@@ -150,9 +150,11 @@ export default class Window extends EventHandler {
    * @param {Core} core Core reference
    * @param {Object} options Options
    * @param {String} options.id Window Id (not globaly unique)
-   * @param {Window} options.parent The parent Window reference
-   * @param {Object} options.attributes Window attributes
-   * @param {Object} options.state Window state
+   * @param {Window} [options.parent] The parent Window reference
+   * @param {Object} [options.attributes] Window attributes
+   * @param {Object} [options.state] Window state
+   * @param {Object} [options.position] Window position
+   * @param {Object} [options.dimension] Window dimension
    */
   constructor(core, options = {}) {
     options = Object.assign({
@@ -160,6 +162,8 @@ export default class Window extends EventHandler {
       title: null,
       parent: null,
       attributes: {},
+      position: {},
+      dimension: {},
       state: {}
     }, options);
 

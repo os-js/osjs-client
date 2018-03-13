@@ -75,7 +75,7 @@ const createAttributes = (attrs) => Object.assign({
  */
 const createState = (state, options, attrs) => Object.assign({
   title: options.title || options.id,
-  icon: require('./styles/logo-blue-32x32.png'),
+  icon: options.icon || require('./styles/logo-blue-32x32.png'),
   moving: false,
   resizing: false,
   loading: false,

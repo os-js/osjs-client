@@ -234,6 +234,7 @@ export default class Window extends EventHandler {
     this.$header = null;
 
     this.preventDefaultPosition = false;
+    this.loadingDebounce = null;
 
     this.core.emit('osjs/window:create', this);
   }
@@ -549,12 +550,20 @@ export default class Window extends EventHandler {
    * @param {Boolean} [update=true] Update the DOM
    */
   setState(name, value, update = true) {
-    this.state[name] = value;
+    const set = () => this._setState(name, value, update);
 
-    if (update) {
-      console.debug('Window::setState()', name, value);
-      this._updateDOM();
+    // Allows for some "grace time" so the overlay does not
+    // "blink"
+    if (name === 'loading' && update) {
+      clearTimeout(this.loadingDebounce);
+
+      if (value === true) {
+        this.loadingDebounce = setTimeout(() => set(), 250);
+        return;
+      }
     }
+
+    set();
   }
 
   /**
@@ -576,6 +585,15 @@ export default class Window extends EventHandler {
     }
 
     this.setPosition({left, top});
+  }
+
+  _setState(name, value, update = true) {
+    this.state[name] = value;
+
+    if (update) {
+      console.debug('Window::_setState()', name, value);
+      this._updateDOM();
+    }
   }
 
   _toggleState(name, value, eventName, update = true) {

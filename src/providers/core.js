@@ -32,6 +32,7 @@ import Application from '../application';
 import Window from '../window';
 import WindowBehavior from '../window-behavior';
 import ServiceProvider from '../service-provider';
+import EventHandler from '../event-handler';
 
 /**
  * OS.js Core Service Provider
@@ -59,6 +60,10 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.instance('osjs/window', (options = {}) => {
       return new Window(this.core, options);
+    });
+
+    this.core.instance('osjs/event-handler', (...args) => {
+      return new EventHandler(...args);
     });
 
     this.core.singleton('osjs/window-behavior', () => {

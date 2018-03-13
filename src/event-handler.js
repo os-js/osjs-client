@@ -42,7 +42,13 @@ export default class EventHandler {
   constructor(name = 'undefined') {
     this.name = name;
     this.events = {};
-    this.intervals = [];
+  }
+
+  /**
+   * Destroys all events
+   */
+  destroy() {
+    this.events = {};
   }
 
   /**

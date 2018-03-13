@@ -150,11 +150,13 @@ export default class Window extends EventHandler {
    * @param {Core} core Core reference
    * @param {Object} options Options
    * @param {String} options.id Window Id (not globaly unique)
+   * @param {String} [options.title] Window Title
+   * @param {String} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
-   * @param {Object} [options.attributes] Window attributes
-   * @param {Object} [options.state] Window state
    * @param {Object} [options.position] Window position
    * @param {Object} [options.dimension] Window dimension
+   * @param {Object} [options.attributes] Apply Window attributes
+   * @param {Object} [options.state] Apply Window state
    */
   constructor(core, options = {}) {
     options = Object.assign({

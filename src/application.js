@@ -192,9 +192,11 @@ export default class Application extends EventHandler {
    * @return {String} A complete URI
    */
   resource(path = '/') {
-    const uri = `/packages/${this.metadata._path}${path}`;
+    if (path.substr(0, 1) !== '/') {
+      path = '/' + path;
+    }
 
-    return uri;
+    return `/packages/${this.metadata._path}${path}`;
   }
 
   /**

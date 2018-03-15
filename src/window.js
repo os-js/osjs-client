@@ -192,6 +192,12 @@ export default class Window extends EventHandler {
     this.parent = options.parent;
 
     /**
+     * Child windows (via 'parent')
+     * @type {Window[]}
+     */
+    this.children = [];
+
+    /**
      * Core instance reference
      * @type {Core}
      */
@@ -236,6 +242,18 @@ export default class Window extends EventHandler {
     this.preventDefaultPosition = false;
     this.loadingDebounce = null;
 
+    if (this.parent) {
+      // Assign the window if it is a child
+      this.on('destroy', () => {
+        const foundIndex = this.parent.children.findIndex(w => w === this);
+        if (foundIndex !== -1) {
+          this.parent.children.splice(foundIndex, 1);
+        }
+      });
+
+      this.parent.children.push(this);
+    }
+
     this.core.emit('osjs/window:create', this);
   }
 
@@ -253,6 +271,8 @@ export default class Window extends EventHandler {
     this.emit('destroy');
     this.core.emit('osjs/window:destroy', this);
 
+    this.children.forEach(w => w.destroy());
+
     if (this.$element) {
       this.$element.remove();
     }
@@ -266,6 +286,7 @@ export default class Window extends EventHandler {
       windows.splice(foundIndex, 1);
     }
 
+    this.children = [];
     this.parent = null;
     this.$element = null;
     this.$content = null;

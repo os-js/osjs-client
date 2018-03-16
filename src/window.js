@@ -30,7 +30,6 @@
 import EventHandler from './event-handler';
 import {
   escapeHtml,
-  isDescendantOf,
   createCssText
 } from './utils';
 
@@ -104,7 +103,7 @@ const createWindowId = (win) => {
  */
 const getActiveElement = (root) => {
   const ae = document.activeElement;
-  return isDescendantOf(ae, root) ? ae : null;
+  return root.contains(ae) ? ae : null;
 };
 
 /*

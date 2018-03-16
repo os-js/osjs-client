@@ -78,25 +78,6 @@ export const escapeHtml = (text) => {
 };
 
 /**
- * Check if element is descendant of root
- * @param {Element} el The element
- * @param {Element} root The root to traverse through
- * @return {Boolean}
- */
-export const isDescendantOf = (el, root) => {
-  let current = root;
-  while (current) {
-    if (current.contains(el)) {
-      return true;
-    }
-
-    current = current.parentNode;
-  }
-
-  return false;
-};
-
-/**
  * Serialize an object to CSS
  * @param {Object} obj Object
  * @return {String} CSS text

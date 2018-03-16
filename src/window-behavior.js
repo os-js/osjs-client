@@ -94,6 +94,21 @@ const getCascadePosition = (win, rect) => {
 };
 
 /*
+ * Normalizes event input (position)
+ */
+const getEvent = (ev) => {
+  let {clientX, clientY, target} = ev;
+  const touch = ev.touches || ev.changedTouches || [];
+
+  if (touch.length) {
+    clientX = touch[0].clientX;
+    clientY = touch[0].clientY;
+  }
+
+  return {clientX, clientY, touch: touch.length > 0, target};
+};
+
+/*
  * OS.js Default Window Behavior
  *
  * Controls certain events and their interaction with a window
@@ -115,6 +130,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   init(win) {
+    win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win));
     win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
@@ -182,7 +198,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   mousedown(ev, win) {
-    const {clientX, clientY, target} = ev;
+    const {clientX, clientY, touch, target} = getEvent(ev);
     const startPosition = Object.assign({}, win.state.position);
     const startDimension = Object.assign({}, win.state.dimension);
     const maxDimension = Object.assign({}, win.attributes.maxDimension);
@@ -196,8 +212,9 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const mousemove = (ev) => {
-      const diffX = ev.clientX - clientX;
-      const diffY = ev.clientY - clientY;
+      const transformedEvent = getEvent(ev);
+      const diffX = transformedEvent.clientX - clientX;
+      const diffY = transformedEvent.clientY - clientY;
 
       if (resize) {
         this.wasResized = true;
@@ -235,8 +252,13 @@ export default class WindowBehavior {
     };
 
     const mouseup = () => {
-      document.removeEventListener('mousemove', mousemove);
-      document.removeEventListener('mouseup', mouseup);
+      if (touch) {
+        document.removeEventListener('touchmove', mousemove);
+        document.removeEventListener('touchend', mouseup);
+      } else {
+        document.removeEventListener('mousemove', mousemove);
+        document.removeEventListener('mouseup', mouseup);
+      }
 
       if (this.wasMoved) {
         win.emit('moved', win);
@@ -255,8 +277,13 @@ export default class WindowBehavior {
     }
 
     if (move || resize) {
-      document.addEventListener('mousemove', mousemove);
-      document.addEventListener('mouseup', mouseup);
+      if (touch) {
+        document.addEventListener('touchmove', mousemove);
+        document.addEventListener('touchend', mouseup);
+      } else {
+        document.addEventListener('mousemove', mousemove);
+        document.addEventListener('mouseup', mouseup);
+      }
     }
 
     this.wasResized = false;

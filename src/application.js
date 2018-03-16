@@ -34,6 +34,8 @@ import Window from './window';
 const applications = [];
 let applicationCount = 0;
 
+// TODO: Tray
+
 /**
  * OS.js Application
  */
@@ -44,8 +46,18 @@ export default class Application extends EventHandler {
    *
    * @param {Core} core Core reference
    * @param {Object} data Application data
+   * @param {Object} data.args Launch arguments
+   * @param {Object} [data.options] Options
+   * @param {Object} [data.options.restore] Restore data
+   * @param {Object} [data.metadata] Package Metadata
    */
-  constructor(core, data = {}) {
+  constructor(core, data) {
+    data = Object.assign({}, {
+      args: {},
+      options: {},
+      metadata: {}
+    }, data);
+
     console.log('Application::constructor()', data);
 
     const name = data.metadata && data.metadata.name
@@ -70,19 +82,19 @@ export default class Application extends EventHandler {
      * Application arguments
      * @type {Object}
      */
-    this.args = data.args || {};
+    this.args = data.args;
 
     /**
      * Application options
      * @type {Object}
      */
-    this.options = data.options || {};
+    this.options = data.options;
 
     /**
      * Application metadata
      * @type {Object}
      */
-    this.metadata = data.metadata || {};
+    this.metadata = data.metadata;
 
     /**
      * Window list

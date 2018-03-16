@@ -43,14 +43,6 @@ let nextZindex = 1;
 let lastWindow = null;
 
 /*
- * Sets attributes on a DOM element
- */
-const setDataAttributes = (el, obj) => Object.keys(obj)
-  .filter(k => ['icon', 'zIndex', 'id', 'title'].indexOf(k) === -1)
-  .filter(k => typeof obj[k] !== 'object')
-  .forEach((k) => el.setAttribute('data-' + k, String(obj[k])));
-
-/*
  * Creates window attributes from an object
  */
 const createAttributes = (attrs) => Object.assign({
@@ -313,7 +305,6 @@ export default class Window extends EventHandler {
    */
   render(callback = function() {}) {
     this.$element.innerHTML = TEMPLATE;
-    this.$element.setAttribute('data-id', this.id);
 
     ['osjs-window', ...this.attributes.classNames]
       .filter(val => !!val)
@@ -466,8 +457,23 @@ export default class Window extends EventHandler {
     const {top, left} = this.state.position;
     const {zIndex} = this.state;
 
-    setDataAttributes(this.$element, this.state);
-    setDataAttributes(this.$element, this.attributes);
+    const attributes = {
+      id: this.id,
+      moving: this.state.moving,
+      resizing: this.state.resizing,
+      loading: this.state.loading,
+      focused: this.state.focused,
+      maximized: this.state.maximized,
+      minimized: this.state.minimized,
+      ontop: this.state.ontop,
+      modal: this.state.modal,
+      resizable: this.attributes.resizable,
+      maximizable: this.attributes.maximizable,
+      minimizable: this.attributes.minimizable
+    };
+
+    Object.keys(attributes)
+      .forEach(a => this.$element.setAttribute(`data-${a}`, String(attributes[a])));
 
     const $title = this.$element.querySelector('.osjs-window-title');
     if ($title) {

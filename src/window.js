@@ -36,6 +36,7 @@ import {
 
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;
+const ONTOP_ZINDEX = 8388635;
 
 let windows = [];
 let windowCount = 0;
@@ -47,6 +48,7 @@ let lastWindow = null;
  */
 const createAttributes = (attrs) => Object.assign({
   classNames: [],
+  ontop: false,
   gravity: false,
   resizable: true,
   focusable: true,
@@ -74,7 +76,6 @@ const createState = (state, options, attrs) => Object.assign({
   focused: false,
   maximized: false,
   minimized: false,
-  ontop: false,
   modal: false,
   zIndex: 1,
   styles: {},
@@ -465,8 +466,8 @@ export default class Window extends EventHandler {
       focused: this.state.focused,
       maximized: this.state.maximized,
       minimized: this.state.minimized,
-      ontop: this.state.ontop,
       modal: this.state.modal,
+      ontop: this.attributes.ontop,
       resizable: this.attributes.resizable,
       maximizable: this.attributes.maximizable,
       minimizable: this.attributes.minimizable
@@ -490,7 +491,7 @@ export default class Window extends EventHandler {
       left: String(left) + 'px',
       height: String(height) + 'px',
       width: String(width) + 'px',
-      zIndex: zIndex
+      zIndex: (this.attributes.ontop ? ONTOP_ZINDEX : 0) + zIndex
     }, this.state.styles));
   }
 
@@ -567,6 +568,7 @@ export default class Window extends EventHandler {
    */
   setNextZindex() {
     this.setZindex(nextZindex);
+
     nextZindex++;
   }
 

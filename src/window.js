@@ -447,55 +447,6 @@ export default class Window extends EventHandler {
   }
 
   /**
-   * Updated the Window DOM
-   */
-  _updateDOM() {
-    if (!this.inited) {
-      return;
-    }
-
-    const {width, height} = this.state.dimension;
-    const {top, left} = this.state.position;
-    const {zIndex} = this.state;
-
-    const attributes = {
-      id: this.id,
-      moving: this.state.moving,
-      resizing: this.state.resizing,
-      loading: this.state.loading,
-      focused: this.state.focused,
-      maximized: this.state.maximized,
-      minimized: this.state.minimized,
-      modal: this.state.modal,
-      ontop: this.attributes.ontop,
-      resizable: this.attributes.resizable,
-      maximizable: this.attributes.maximizable,
-      minimizable: this.attributes.minimizable
-    };
-
-    Object.keys(attributes)
-      .forEach(a => this.$element.setAttribute(`data-${a}`, String(attributes[a])));
-
-    const $title = this.$element.querySelector('.osjs-window-title');
-    if ($title) {
-      $title.innerHTML = escapeHtml(this.state.title);
-    }
-
-    const $icon = this.$element.querySelector('.osjs-window-icon > div');
-    if ($icon) {
-      $icon.style.cssText = `background-image: url(${this.state.icon})`;
-    }
-
-    this.$element.style.cssText = createCssText(Object.assign({
-      top: String(top) + 'px',
-      left: String(left) + 'px',
-      height: String(height) + 'px',
-      width: String(width) + 'px',
-      zIndex: (this.attributes.ontop ? ONTOP_ZINDEX : 0) + zIndex
-    }, this.state.styles));
-  }
-
-  /**
    * Set the Window icon
    * @param {String} uri Icon URI
    */
@@ -616,33 +567,6 @@ export default class Window extends EventHandler {
     this.setPosition({left, top});
   }
 
-  _setState(name, value, update = true) {
-    this.state[name] = value;
-
-    if (update) {
-      console.debug('Window::_setState()', name, value);
-      this._updateDOM();
-    }
-  }
-
-  _toggleState(name, value, eventName, update = true) {
-    if (this.state[name] === value) {
-      return false;
-    }
-
-    console.debug('Window::_toggleState()', name, value, eventName);
-
-    this.state[name] = value;
-    this.emit(eventName, this);
-    this.core.emit('osjs/window:change', this, name, value);
-
-    if (update) {
-      this._updateDOM();
-    }
-
-    return true;
-  }
-
   /**
    * Get a snapshot of the Window session
    * @return Object
@@ -669,6 +593,95 @@ export default class Window extends EventHandler {
       restore: () => win.restore(),
       close: () => win.close()
     }, win.getSession()));
+  }
+
+  /**
+   * Internal method for setting state
+   * @param {String} name State name
+   * @param {*} value State value
+   * @param {Boolean} [update=true] Update the DOM
+   */
+  _setState(name, value, update = true) {
+    this.state[name] = value;
+
+    if (update) {
+      console.debug('Window::_setState()', name, value);
+      this._updateDOM();
+    }
+  }
+
+  /**
+   * Internal method for toggling state
+   * @param {String} name State name
+   * @param {*} value State value
+   * @param {String} eventName Name of event to emit
+   * @param {Boolean} [update=true] Update the DOM
+   */
+  _toggleState(name, value, eventName, update = true) {
+    if (this.state[name] === value) {
+      return false;
+    }
+
+    console.debug('Window::_toggleState()', name, value, eventName);
+
+    this.state[name] = value;
+    this.emit(eventName, this);
+    this.core.emit('osjs/window:change', this, name, value);
+
+    if (update) {
+      this._updateDOM();
+    }
+
+    return true;
+  }
+
+  /**
+   * Updated the Window DOM
+   */
+  _updateDOM() {
+    if (!this.inited) {
+      return;
+    }
+
+    const {width, height} = this.state.dimension;
+    const {top, left} = this.state.position;
+    const {zIndex} = this.state;
+
+    const attributes = {
+      id: this.id,
+      moving: this.state.moving,
+      resizing: this.state.resizing,
+      loading: this.state.loading,
+      focused: this.state.focused,
+      maximized: this.state.maximized,
+      minimized: this.state.minimized,
+      modal: this.state.modal,
+      ontop: this.attributes.ontop,
+      resizable: this.attributes.resizable,
+      maximizable: this.attributes.maximizable,
+      minimizable: this.attributes.minimizable
+    };
+
+    Object.keys(attributes)
+      .forEach(a => this.$element.setAttribute(`data-${a}`, String(attributes[a])));
+
+    const $title = this.$element.querySelector('.osjs-window-title');
+    if ($title) {
+      $title.innerHTML = escapeHtml(this.state.title);
+    }
+
+    const $icon = this.$element.querySelector('.osjs-window-icon > div');
+    if ($icon) {
+      $icon.style.cssText = `background-image: url(${this.state.icon})`;
+    }
+
+    this.$element.style.cssText = createCssText(Object.assign({
+      top: String(top) + 'px',
+      left: String(left) + 'px',
+      height: String(height) + 'px',
+      width: String(width) + 'px',
+      zIndex: (this.attributes.ontop ? ONTOP_ZINDEX : 0) + zIndex
+    }, this.state.styles));
   }
 
 }

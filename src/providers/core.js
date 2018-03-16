@@ -45,6 +45,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     super(core);
 
     window.OSjs = Object.freeze({
+      url: (...args) => this.core.url(...args),
       run: (...args) => this.core.run(...args),
       open: (...args) => this.core.open(...args),
       make: (...args) => this.core.make(...args),

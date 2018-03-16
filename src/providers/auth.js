@@ -104,7 +104,8 @@ class Auth {
   }
 
   async login(values) {
-    const response = await this.request('/login', values);
+    const endpoint = this.core.url('/login');
+    const response = await this.request(endpoint, values);
 
     if (!response) {
       alert('Login failed');
@@ -118,7 +119,8 @@ class Auth {
   }
 
   async logout(reload = true) {
-    const response = await this.request('/logout');
+    const endpoint = this.core.url('/logout');
+    const response = await this.request(endpoint);
     if (!response) {
       return;
     }

@@ -177,14 +177,22 @@ export default class Core extends EventHandler {
    * Set the initial configuration
    */
   configure(configuration) {
-    this.configuration = Object.assign({}, {
+    const {port, hostname, pathname} = window.location;
+    const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
+
+    const result = Object.assign({}, {
+      public: path,
       ws: {
         protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
-        port: window.location.port,
-        hostname: window.location.hostname,
-        path: window.location.path || '/'
+        port,
+        hostname,
+        path
       }
     }, configuration);
+
+    console.log('Core::configure()', result);
+
+    this.configuration = result;
   }
 
   /**
@@ -273,6 +281,16 @@ export default class Core extends EventHandler {
    */
   has(name) {
     return this.registry.findIndex(p => p.name === name) !== -1;
+  }
+
+  /**
+   * Creates an URL based on configured public path
+   *
+   * @param {String} [endpoint=/] Endpoint
+   * @return {String}
+   */
+  url(endpoint = '/') {
+    return this.configuration.public + endpoint.replace(/^\/+/, '');
   }
 
   /**

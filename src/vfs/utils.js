@@ -212,7 +212,9 @@ export const request = async (fn, data, fetchOptions = {}) => {
   const method = fetchOptions.method.toUpperCase();
   const body = method === 'GET' ? null : data;
   const query = method === 'GET' ? '?' + encodeQueryData(data) : '';
-  const url = `/vfs/${fn}` + query;
+
+  // FIXME
+  const url = OSjs.url(`/vfs/${fn}` + query);
 
   const response = await fetch(url, {
     headers: fetchOptions.headers,

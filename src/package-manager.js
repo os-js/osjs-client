@@ -83,7 +83,7 @@ export default class PackageManager {
   async preload(list, force = false) {
     const root = this.core.$resourceRoot;
 
-    console.group('PackageManager::preload()');
+    console.debug('PackageManager::preload()');
 
     let failed = [];
     for (let i = 0; i < list.length; i++) {
@@ -112,8 +112,6 @@ export default class PackageManager {
       }
     }
 
-    console.groupEnd();
-
     return failed;
   }
 
@@ -128,6 +126,8 @@ export default class PackageManager {
    * @return {Application}
    */
   async launch(name, args = {}, options = {}) {
+    console.debug('PackageManager::launch()', name, args, options);
+
     const fail = err => {
       this.core.emit('osjs/application:created', name, false);
       throw new Error(err);
@@ -151,7 +151,6 @@ export default class PackageManager {
     }
 
     let app;
-    console.group('PackageManager::launch()');
 
     try {
       app = found.callback(this.core, args, options, found.metadata);
@@ -159,7 +158,6 @@ export default class PackageManager {
       console.warn(e);
     } finally {
       this.core.emit('osjs/application:created', name, app);
-      console.groupEnd();
     }
 
     return app;

@@ -28,47 +28,11 @@
  * @licence Simplified BSD License
  */
 import EventHandler from './event-handler';
+import ApplicationSocket from './application-socket';
 import Window from './window';
 
 const applications = [];
 let applicationCount = 0;
-
-/**
- * OS.js Application WebSocket Wrapper
- */
-class ApplicationSocket extends EventHandler {
-
-  /**
-   * Create a new WebSocket
-   * @param {String} uri Connection URI
-   * @param {Object} options Websocket options
-   */
-  constructor(name, uri, options = {}) {
-    console.debug('ApplicationSocket::constructor()', name, uri);
-
-    super('ApplicationSocket@' + name);
-
-    this.connection = new WebSocket(uri);
-    this.connection.onopen = (...args) => this.emit('open', ...args);
-    this.connection.onclose = (...args) => this.emit('close', ...args);
-    this.connection.onmessage = (...args) => this.emit('message', ...args);
-  }
-
-  /**
-   * Wrapper for sending data
-   */
-  send(...args) {
-    return this.connection.send(...args);
-  }
-
-  /**
-   * Wrapper for closing
-   */
-  close(...args) {
-    return this.connection.close(...args);
-  }
-
-}
 
 /**
  * OS.js Application

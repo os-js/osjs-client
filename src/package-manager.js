@@ -153,11 +153,13 @@ export default class PackageManager {
     let app;
 
     try {
+      console.group('Construct application');
       app = found.callback(this.core, args, options, found.metadata);
     } catch (e) {
       console.warn(e);
     } finally {
       this.core.emit('osjs/application:created', name, app);
+      console.groupEnd();
     }
 
     return app;

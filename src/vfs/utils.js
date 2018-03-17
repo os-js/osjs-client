@@ -140,12 +140,24 @@ export const humanFileSize = (bytes, si = false) => {
 /**
  * Transforms a readdir result
  * @param {String} path The path to the readdir root
- * @param {Object[]} An array of readdir results
- * @param {String} [sortBy='filename'] Sort by this attribute
- * @param {String} [sortDir='asc'] Sort in this direction
+ * @param Object[] files An array of readdir results
+ * @param {Object} options Options
+ * @param {Function} [options.filter] A filter
+ * @param {String} [options.sortBy='filename'] Sort by this attribute
+ * @param {String} [options.sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
-export const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'asc') => {
+export const transformReaddir = (path, files, options = {}) => {
+  options = Object.assign({}, {
+    sortBy: 'filename',
+    sortDir: 'asc'
+  }, options);
+
+  let {sortDir, sortBy, filter} = options;
+  if (typeof filter !== 'function') {
+    filter = () => true;
+  }
+
   if (['asc', 'desc'].indexOf(sortDir) === -1) {
     sortDir = 'asc';
   }
@@ -164,10 +176,12 @@ export const transformReaddir = (path, files, sortBy = 'filename', sortDir = 'as
 
   const sortedDirectories = files.filter(file => file.isDirectory)
     .sort(sorter(sortBy, sortDir))
+    .filter(filter)
     .map(modify);
 
   const sortedFiles = files.filter(file => !file.isDirectory)
     .sort(sorter(sortBy, sortDir))
+    .filter(filter)
     .map(modify);
 
   return [

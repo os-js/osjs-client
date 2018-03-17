@@ -44,10 +44,12 @@ import {
 export const readdir = async (path, options = {}) => {
   const response = await request('readdir', {
     path,
-    options
+    options: {}
   });
 
-  return transformReaddir(path, response.body);
+  return transformReaddir(path, response.body, {
+    filter: options.filter
+  });
 };
 
 /**
@@ -72,7 +74,7 @@ export const readfile = async (path, type = 'string', options = {}) => {
  * @return {Number} File size
  */
 export const writefile = async (path, data, options = {}) =>
-  (await request('writefile', {path, data, options})).body;
+  (await request('writefile', {path, data, options}, {method: 'post'})).body;
 
 /**
  * Renames a file or directory (move)

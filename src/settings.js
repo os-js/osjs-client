@@ -28,8 +28,6 @@
  * @licence Simplified BSD License
  */
 
-import ServiceProvider from '../service-provider';
-
 const localStorageAdapter = {
   save(settings) {
     Object.keys(settings).forEach((k) => {
@@ -51,39 +49,41 @@ const localStorageAdapter = {
 };
 
 /**
- * OS.js Settings Service Provider
- *
- * Provides all settings services
+ * OS.js Settings Handler
  */
-export default class SettingsServiceProvider extends ServiceProvider {
+export default class Settings {
 
-  async init() {
-    let settings = {};
-    let debounce;
+  constructor(core) {
+    this.core = core;
+    this.debounce = null;
+    this.settings = {};
+  }
 
-    const save = () => new Promise((resolve) => {
-      clearTimeout(debounce);
-      debounce = setTimeout(() => {
-        localStorageAdapter.save(settings);
+  save() {
+    return new Promise((resolve) => {
+      clearTimeout(this.debounce);
+      this.debounce = setTimeout(() => {
+        localStorageAdapter.save(this.settings);
         resolve();
       }, 100);
     });
+  }
 
-    const load = () => new Promise((resolve) => {
-      settings = localStorageAdapter.load();
+  load() {
+    return new Promise((resolve) => {
+      this.settings = localStorageAdapter.load();
       resolve();
     });
-
-    const singleton = {
-      get: k => settings[k],
-      set: (k, v) => {
-        settings[k] = v;
-        return singleton;
-      },
-      save,
-      load
-    };
-
-    this.core.singleton('osjs/settings', () => singleton);
   }
+
+  get(k) {
+    return this.settings[k];
+  }
+
+  set(k, v) {
+    this.settings[k] = v;
+
+    return this;
+  }
+
 }

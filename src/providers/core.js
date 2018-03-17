@@ -33,6 +33,8 @@ import Window from '../window';
 import WindowBehavior from '../window-behavior';
 import ServiceProvider from '../service-provider';
 import EventHandler from '../event-handler';
+import Session from '../session';
+import Settings from '../settings';
 
 /**
  * OS.js Core Service Provider
@@ -52,6 +54,9 @@ export default class CoreServiceProvider extends ServiceProvider {
       getWindows: () => Window.getWindows(),
       getApplications: () => Application.getApplications()
     });
+
+    this.session = new Session(core);
+    this.settings = new Settings(core);
   }
 
   async init() {
@@ -70,6 +75,21 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/window-behavior', () => {
       return new WindowBehavior(this.core);
     });
+
+    this.core.singleton('osjs/session', () => ({
+      save: async () => this.session.save(),
+      load: async (fresh = true) => this.session.load(fresh)
+    }));
+
+    this.core.singleton('osjs/settings', () => {
+      return this.settings;
+    });
+
+    this.core.on('osjs/core:started', () => {
+      this.session.load();
+    });
+
+    await this.settings.load();
   }
 
 }

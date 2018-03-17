@@ -34,9 +34,7 @@ import DesktopServiceProvider from './desktop';
 import NotificationServiceProvider from './notifications';
 import VFSServiceProvider from './vfs';
 import ThemeServiceProvider from './theme';
-import SessionServiceProvider from './session';
 import AuthServiceProvider from './auth';
-import SettingsServiceProvider from './settings';
 import ServiceProvider from '../service-provider';
 
 /**
@@ -55,11 +53,6 @@ export default class DefaultServiceProvider extends ServiceProvider {
     this.core.register(VFSServiceProvider);
     this.core.register(ThemeServiceProvider);
     this.core.register(NotificationServiceProvider);
-    this.core.register(SessionServiceProvider);
-
-    this.core.register(SettingsServiceProvider, {
-      before: true
-    });
 
     this.core.register(AuthServiceProvider, {
       before: true

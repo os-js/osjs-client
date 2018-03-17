@@ -33,10 +33,8 @@ import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
 import ThemeServiceProvider from './src/providers/theme';
-import SessionServiceProvider from './src/providers/session';
 import DefaultServiceProvider from './src/providers/default';
 import AuthServiceProvider from './src/providers/auth';
-import SettingsServiceProvider from './src/providers/settings';
 import ServiceProvider from './src/service-provider';
 
 export {
@@ -46,9 +44,7 @@ export {
   NotificationServiceProvider,
   VFSServiceProvider,
   ThemeServiceProvider,
-  SessionServiceProvider,
   DefaultServiceProvider,
   AuthServiceProvider,
-  SettingsServiceProvider,
   ServiceProvider
 };

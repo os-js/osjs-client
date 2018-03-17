@@ -147,6 +147,8 @@ export default class Core extends EventHandler {
 
     this._createConnection();
 
+    this.emit('osjs/core:started');
+
     console.groupEnd();
   }
 

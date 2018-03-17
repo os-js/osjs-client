@@ -28,10 +28,12 @@
  * @licence Simplified BSD License
  */
 
-import Application from '../application';
-import ServiceProvider from '../service-provider';
+import Application from './application';
 
-class Session {
+/**
+ * OS.js Session Handler
+ */
+export default class Session {
 
   constructor(core) {
     this.core = core;
@@ -66,27 +68,3 @@ class Session {
   }
 }
 
-/**
- * OS.js Session Service Provider
- *
- * Provides wrapper services around Session features
- */
-export default class SessionServiceProvider extends ServiceProvider {
-
-  constructor(core) {
-    super(core);
-    this.session = new Session(core);
-  }
-
-  async init() {
-    this.core.singleton('osjs/session', () => ({
-      save: async () => this.session.save(),
-      load: async (fresh = true) => this.session.load(fresh)
-    }));
-  }
-
-  start() {
-    this.session.load();
-  }
-
-}

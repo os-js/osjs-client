@@ -36,6 +36,7 @@ import ThemeServiceProvider from './src/providers/theme';
 import SessionServiceProvider from './src/providers/session';
 import DefaultServiceProvider from './src/providers/default';
 import AuthServiceProvider from './src/providers/auth';
+import SettingsServiceProvider from './src/providers/settings';
 import ServiceProvider from './src/service-provider';
 
 export {
@@ -48,5 +49,6 @@ export {
   SessionServiceProvider,
   DefaultServiceProvider,
   AuthServiceProvider,
+  SettingsServiceProvider,
   ServiceProvider
 };

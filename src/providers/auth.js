@@ -113,6 +113,9 @@ class Auth {
     }
 
     this.core.user = response.user;
+
+    await this.core.make('osjs/settings').load();
+
     this.core.start();
 
     return true;

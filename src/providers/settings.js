@@ -28,42 +28,62 @@
  * @licence Simplified BSD License
  */
 
-import CoreServiceProvider from './core';
-import PackageServiceProvider from './packages';
-import DesktopServiceProvider from './desktop';
-import NotificationServiceProvider from './notifications';
-import VFSServiceProvider from './vfs';
-import ThemeServiceProvider from './theme';
-import SessionServiceProvider from './session';
-import AuthServiceProvider from './auth';
-import SettingsServiceProvider from './settings';
 import ServiceProvider from '../service-provider';
 
-/**
- * OS.js Default Service Provider
- *
- * Provides all default services
- */
-export default class DefaultServiceProvider extends ServiceProvider {
-
-  constructor(core) {
-    super(core);
-
-    this.core.register(CoreServiceProvider);
-    this.core.register(PackageServiceProvider);
-    this.core.register(DesktopServiceProvider);
-    this.core.register(VFSServiceProvider);
-    this.core.register(ThemeServiceProvider);
-    this.core.register(NotificationServiceProvider);
-    this.core.register(SessionServiceProvider);
-
-    this.core.register(SettingsServiceProvider, {
-      before: true
+const localStorageAdapter = {
+  save(settings) {
+    Object.keys(settings).forEach((k) => {
+      console.error(k, settings[k], JSON.stringify(settings[k]));
+      localStorage.setItem(k, JSON.stringify(settings[k]));
     });
+  },
 
-    this.core.register(AuthServiceProvider, {
-      before: true
-    });
+  load() {
+    return Object.keys(localStorage).reduce((o, v) => {
+      let value = localStorage.getItem(v);
+      try {
+        value = JSON.parse(value);
+      } catch (e) {}
+
+      return Object.assign(o, {[v]: value});
+    }, {});
   }
+};
 
+/**
+ * OS.js Settings Service Provider
+ *
+ * Provides all settings services
+ */
+export default class SettingsServiceProvider extends ServiceProvider {
+
+  async init() {
+    let settings = {};
+    let debounce;
+
+    const save = () => new Promise((resolve) => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        localStorageAdapter.save(settings);
+        resolve();
+      }, 100);
+    });
+
+    const load = () => new Promise((resolve) => {
+      settings = localStorageAdapter.load();
+      resolve();
+    });
+
+    const singleton = {
+      get: k => settings[k],
+      set: (k, v) => {
+        settings[k] = v;
+        return singleton;
+      },
+      save,
+      load
+    };
+
+    this.core.singleton('osjs/settings', () => singleton);
+  }
 }

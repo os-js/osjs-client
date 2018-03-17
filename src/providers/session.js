@@ -37,25 +37,13 @@ class Session {
     this.core = core;
   }
 
-  async saveData(session) {
-    localStorage.setItem('osjs/session', JSON.stringify(session));
-  }
-
-  async loadData() {
-    try {
-      return JSON.parse(localStorage.getItem('osjs/session'));
-    } catch (e) {
-      console.warn(e);
-    }
-
-    return null;
-  }
-
   async save() {
     const apps = Application.getApplications();
     const session = apps.map(app => app.session);
 
-    await this.saveData(session);
+    await this.core.make('osjs/settings')
+      .set('osjs/session', session)
+      .save();
   }
 
   async load(fresh = false) {
@@ -63,8 +51,10 @@ class Session {
       Application.getApplications().forEach(app => app.destroy());
     }
 
-    const session = await this.loadData();
-    if (session !== null) {
+    const session = await this.core.make('osjs/settings')
+      .get('osjs/session');
+
+    if (session) {
       session.forEach(app => {
         this.core.run(app.name, app.args, {
           restore: {

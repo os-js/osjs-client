@@ -28,6 +28,14 @@
  * @licence Simplified BSD License
  */
 
+/*
+ * Gets an array of event names based in input,
+ * be it array or a comma separated string.
+ */
+const getEventNames = name => (name instanceof Array)
+  ? name
+  : String(name).replace(/\s+/g, '').split(',');
+
 /**
  * Event Handler
  *
@@ -53,7 +61,10 @@ export default class EventHandler {
 
   /**
    * Add an event handler
-   * @param {String} name Event name
+   *
+   * You can supply an array of event names or a comma separated list with a string
+   *
+   * @param {String|String[]} name Event name
    * @param {Function} callback Callback function
    * @param {Object} [options] Options
    * @return {EventHandler} Returns current instance
@@ -65,11 +76,13 @@ export default class EventHandler {
       throw new TypeError('Invalid callback');
     }
 
-    if (!this.events[name]) {
-      this.events[name] = [];
-    }
+    getEventNames(name).forEach(n => {
+      if (!this.events[n]) {
+        this.events[n] = [];
+      }
 
-    this.events[name].push(callback);
+      this.events[n].push(callback);
+    });
 
     return this;
   }
@@ -79,25 +92,27 @@ export default class EventHandler {
    *
    * If no callback is provided, all events bound to given name will be removed.
    *
-   * @param {String} name Event name
+   * You can supply an array of event names or a comma separated list with a string
+   *
+   * @param {String|String[]} name Event name
    * @param {Function} [callback] Callback function
    * @return {EventHandler} Returns current instance
    */
   off(name, callback = null) {
-    if (!this.events[name]) {
-      return this;
-    }
-
-    if (callback) {
-      let i = this.events[name].length;
-      while (i--) {
-        if (this.events[name][i] === callback) {
-          this.events[name].splice(i, 1);
+    getEventNames(name)
+      .filter(n => !!this.events[n])
+      .forEach(n => {
+        if (callback) {
+          let i = this.events[n].length;
+          while (i--) {
+            if (this.events[n][i] === callback) {
+              this.events[n].splice(i, 1);
+            }
+          }
+        } else {
+          this.events[n] = [];
         }
-      }
-    } else {
-      this.events[name] = [];
-    }
+      });
 
     return this;
   }
@@ -105,18 +120,20 @@ export default class EventHandler {
   /**
    * Emits an event
    *
-   * @param {String} name Event name
+   * You can supply an array of event names or a comma separated list with a string
+   *
+   * @param {String|String[]} name Event name
    * @param {*} [args] Arguments
    * @return {EventHandler} Returns current instance
    */
   emit(name, ...args) {
     console.debug(`[${this.name}] emit(${name})`);
 
-    if (!this.events[name]) {
-      return this;
-    }
-
-    this.events[name].forEach(callback => callback(...args));
+    getEventNames(name).forEach(n => {
+      if (this.events[n]) {
+        this.events[n].forEach(callback => callback(...args));
+      }
+    });
 
     return this;
   }

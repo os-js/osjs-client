@@ -288,6 +288,10 @@ export default class WindowBehavior {
 
     this.wasResized = false;
     this.wasMoved = false;
+
+    if (this.core.has('osjs/contextmenu')) {
+      this.core.make('osjs/contextmenu').hide();
+    }
   }
 
 }

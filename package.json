@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/osjs/osjs-core.git"
+    "url": "git+https://github.com/os-js/osjs-core.git"
   },
   "keywords": [
     "osjs"
@@ -21,7 +21,7 @@
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/osjs/osjs-core/issues"
+    "url": "https://github.com/os-js/osjs-core/issues"
   },
-  "homepage": "https://github.com/osjs/osjs-core#readme"
+  "homepage": "https://github.com/os-js/osjs-core#readme"
 }

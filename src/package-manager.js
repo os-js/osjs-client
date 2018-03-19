@@ -33,8 +33,8 @@ import {style, script} from './utils';
 /*
  * Fetch package manifest
  */
-const fetchManifest = async () => {
-  const response = await fetch('metadata.json');
+const fetchManifest = async (core) => {
+  const response = await fetch(core.url('/metadata.json'));
   const metadata = await response.json();
 
   return metadata;
@@ -71,7 +71,7 @@ export default class PackageManager {
   async init() {
     console.debug('PackageManager::init()');
 
-    this.metadata = await fetchManifest();
+    this.metadata = await fetchManifest(this.core);
   }
 
   /**
@@ -140,7 +140,10 @@ export default class PackageManager {
 
     this.core.emit('osjs/application:create', name, args, options);
 
-    const errors = await this.preload(metadata.files.map(f => `packages/${metadata._path}/${f}`));
+    const errors = await this.preload(
+      metadata.files
+        .map(f => this.core.url(`/packages/${metadata._path}/${f}`))
+    );
     if (errors.length) {
       fail(`Package Loading ${name} failed: ${errors.join(', ')}`);
     }

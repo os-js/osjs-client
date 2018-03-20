@@ -36,6 +36,7 @@ const createConfiguration = configuration => {
   const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
   return Object.assign({}, {
+    standalone: false,
     public: path,
     login: {
       username: null,
@@ -159,12 +160,12 @@ export default class Core extends EventHandler {
 
     this.emit('osjs/core:start');
 
+    await this._createConnection();
+
     const result = await loadProviders(this.providers, ({options}) => !options.before);
     if (!result) {
       return;
     }
-
-    this._createConnection();
 
     this.emit('osjs/core:started');
 
@@ -175,23 +176,35 @@ export default class Core extends EventHandler {
    * Creates the main connection to server
    */
   _createConnection() {
-    const ws = this.configuration.ws;
-    const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
+    if (this.configuration.standalone) {
+      return Promise.resolve();
+    }
 
-    console.log('Creating websocket connection on', uri);
+    return new Promise((resolve, reject) => {
+      const ws = this.configuration.ws;
+      const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
 
-    this.ws = new WebSocket(uri);
-    this.ws.onopen = () => {
-      console.info('Connection opened');
-    };
+      console.log('Creating websocket connection on', uri);
 
-    this.ws.onclose = (ev) => {
-      this.make('osjs/notification', {
-        title: 'Connection lost',
-        message: 'The websocket connection was lost...'
-      });
-      console.warn('Connection closed', ev);
-    };
+      this.ws = new WebSocket(uri);
+      this.ws.onopen = () => {
+        console.info('Connection opened');
+
+        // Allow for some grace-time in case we close
+        // prematurely
+        setTimeout(() => resolve(), 100);
+      };
+
+      this.ws.onclose = (ev) => {
+        reject();
+
+        this.make('osjs/notification', {
+          title: 'Connection lost',
+          message: 'The websocket connection was lost...'
+        });
+        console.warn('Connection closed', ev);
+      };
+    });
   }
 
   /**

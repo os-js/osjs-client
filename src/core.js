@@ -31,6 +31,25 @@
 import Application from './application';
 import EventHandler from './event-handler';
 
+const createConfiguration = configuration => {
+  const {port, hostname, pathname} = window.location;
+  const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
+
+  return Object.assign({}, {
+    public: path,
+    login: {
+      username: null,
+      password: null
+    },
+    ws: {
+      protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
+      port,
+      hostname,
+      path
+    }
+  }, configuration);
+};
+
 const loadProviders = async (providers, filter) => {
   const list = providers
     .filter(filter)
@@ -179,18 +198,7 @@ export default class Core extends EventHandler {
    * Set the initial configuration
    */
   configure(configuration) {
-    const {port, hostname, pathname} = window.location;
-    const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
-
-    const result = Object.assign({}, {
-      public: path,
-      ws: {
-        protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
-        port,
-        hostname,
-        path
-      }
-    }, configuration);
+    const result = createConfiguration(configuration);
 
     console.log('Core::configure()', result);
 

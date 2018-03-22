@@ -273,7 +273,14 @@ export default class Application extends EventHandler {
     this.windows.push(instance);
 
     this.emit('create-window', instance);
-    instance.on('destroy', win => this.emit('destroy-window', win));
+    instance.on('destroy', () => {
+      const foundIndex = this.windows.findIndex(w => w === instance);
+      if (foundIndex !== -1) {
+        this.windows.splice(foundIndex, 1);
+      }
+
+      this.emit('destroy-window', instance);
+    });
 
     return instance;
   }

@@ -34,8 +34,6 @@ import Window from './window';
 const applications = [];
 let applicationCount = 0;
 
-// TODO: Tray
-
 /**
  * OS.js Application
  */
@@ -128,6 +126,8 @@ export default class Application extends EventHandler {
 
     applications.push(this);
     applicationCount++;
+
+    this.core.emit('osjs/application:create', this);
   }
 
   /**

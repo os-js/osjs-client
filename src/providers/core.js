@@ -83,6 +83,13 @@ export default class CoreServiceProvider extends ServiceProvider {
       load: async (fresh = true) => this.session.load(fresh)
     }));
 
+    this.core.singleton('osjs/core', () => ({
+      url: (...args) => this.core.url(...args),
+      run: (...args) => this.core.run(...args),
+      open: (...args) => this.core.open(...args),
+      config: (...args) => this.core.config(...args)
+    }));
+
     this.core.singleton('osjs/settings', () => {
       return this.settings;
     });

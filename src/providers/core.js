@@ -35,6 +35,7 @@ import ServiceProvider from '../service-provider';
 import EventHandler from '../event-handler';
 import Session from '../session';
 import Settings from '../settings';
+import Tray from '../tray';
 
 /**
  * OS.js Core Service Provider
@@ -57,6 +58,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.session = new Session(core);
     this.settings = new Settings(core);
+    this.tray = new Tray(core);
   }
 
   async init() {
@@ -84,6 +86,11 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/settings', () => {
       return this.settings;
     });
+
+    this.core.singleton('osjs/tray', () => ({
+      create: (options, handler) => this.tray.create(options, handler),
+      list: () => this.tray.entries.map(e => Object.assign({}, e))
+    }));
 
     this.core.on('osjs/core:started', () => {
       this.session.load();

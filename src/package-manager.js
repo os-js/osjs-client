@@ -129,7 +129,7 @@ export default class PackageManager {
     console.debug('PackageManager::launch()', name, args, options);
 
     const fail = err => {
-      this.core.emit('osjs/application:created', name, false);
+      this.core.emit('osjs/application:launched', name, false);
       throw new Error(err);
     };
 
@@ -138,7 +138,7 @@ export default class PackageManager {
       throw new Error(`Package Metadata ${name} not found`);
     }
 
-    this.core.emit('osjs/application:create', name, args, options);
+    this.core.emit('osjs/application:launch', name, args, options);
 
     const errors = await this.preload(
       metadata.files
@@ -161,7 +161,7 @@ export default class PackageManager {
     } catch (e) {
       console.warn(e);
     } finally {
-      this.core.emit('osjs/application:created', name, app);
+      this.core.emit('osjs/application:launched', name, app);
       console.groupEnd();
     }
 

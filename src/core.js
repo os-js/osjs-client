@@ -219,6 +219,28 @@ export default class Core extends EventHandler {
   }
 
   /**
+   * Gets a configuration entry by key
+   *
+   * You can specify this as 'foo.bar.baz' to resolve {foo: {bar: {baz: 'Hello World'}}}
+   * and get "Hello World" back.
+   *
+   * @param {String} key The key to get the value from
+   * @param {*} [defaultValue] If result is undefined, return this instead
+   * @return {*}
+   */
+  config(key, defaultValue) {
+    let result;
+
+    try {
+      result = key
+        .split(/\./g)
+        .reduce((result, key) => result[key], Object.assign({}, this.configuration));
+    } catch (e) { /* noop */ }
+
+    return typeof result === 'undefined' ? defaultValue : result;
+  }
+
+  /**
    * Register a service provider
    *
    * @param {Class} ref A class reference

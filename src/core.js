@@ -38,6 +38,40 @@ const createConfiguration = configuration => {
   return Object.assign({}, {
     standalone: false,
     public: path,
+    application: {
+      categories: {
+        development: {
+          label: 'Development'
+        },
+        education: {
+          label: 'Education'
+        },
+        games: {
+          label: 'Games'
+        },
+        graphics: {
+          label: 'Graphics'
+        },
+        network: {
+          label: 'Network'
+        },
+        multimedia: {
+          label: 'Multimedia'
+        },
+        office: {
+          label: 'Office'
+        },
+        system: {
+          label: 'System'
+        },
+        utilities: {
+          label: 'Utilities'
+        },
+        other: {
+          label: 'Other'
+        }
+      }
+    },
     login: {
       username: null,
       password: null

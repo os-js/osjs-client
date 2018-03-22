@@ -131,7 +131,10 @@ export default class WindowBehavior {
    */
   init(win) {
     win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win));
-    win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
+    win.$element.addEventListener('mousedown', (ev) => {
+      ev.preventDefault();
+      this.mousedown(ev, win);
+    });
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
 

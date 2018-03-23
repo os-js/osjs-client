@@ -167,6 +167,9 @@ export default class Application extends EventHandler {
    */
   relaunch() {
     this.core.run(this.metadata.name, Object.assign({}, this.args), Object.assign({}, this.options, {
+      restore: {
+        windows: this.windows.map(w => w.getSession())
+      },
       forcePreload: true
     }));
 

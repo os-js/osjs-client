@@ -28,10 +28,7 @@
  * @licence Simplified BSD License
  */
 import EventHandler from './event-handler';
-import {
-  escapeHtml,
-  createCssText
-} from './utils';
+import {escapeHtml, createCssText} from './utils/dom';
 
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;

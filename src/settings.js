@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import {resolveTreeByKey} from './utils';
+import {resolveTreeByKey} from './utils/config';
 
 const localStorageAdapter = {
   save(settings) {

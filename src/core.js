@@ -30,7 +30,7 @@
 
 import Application from './application';
 import EventHandler from './event-handler';
-import {resolveTreeByKey} from './utils';
+import {resolveTreeByKey} from './utils/config';
 
 const createConfiguration = configuration => {
   const {port, hostname, pathname} = window.location;

@@ -29,65 +29,6 @@
  */
 
 /**
- * Creates a new CSS DOM element
- * @param {Element} root Root node
- * @param {String} src Source
- * @return {Promise<ScriptElement, Error>}
- */
-export const style = (root, src) => new Promise((resolve, reject) => {
-  const el = document.createElement('link');
-  el.setAttribute('rel', 'stylesheet');
-  el.setAttribute('type', 'text/css');
-  el.onload = () => resolve(el);
-  el.onerror = (err) => reject(err);
-  el.setAttribute('href', src);
-
-  root.appendChild(el);
-});
-
-/**
- * Creates a new Script DOM element
- * @param {Element} root Root node
- * @param {String} src Source
- * @return {Promise<StyleElement>, Error>}
- */
-export const script = (root, src) => new Promise((resolve, reject) => {
-  const el = document.createElement('script');
-  el.onreadystatechange = function() {
-    if ((this.readyState === 'complete' || this.readyState === 'loaded')) {
-      resolve(el);
-    }
-  };
-  el.onerror = (err) => reject(err);
-  el.onload = () => resolve(el);
-  el.src = src;
-
-  root.appendChild(el);
-});
-
-
-/**
- * Escape text so it is "safe" for HTML usage
- * @param {String} text Input text
- * @return {String}
- */
-export const escapeHtml = (text) => {
-  const div = document.createElement('div');
-  div.innerHTML = text;
-  return div.textContent;
-};
-
-/**
- * Serialize an object to CSS
- * @param {Object} obj Object
- * @return {String} CSS text
- */
-export const createCssText = (obj) => Object.keys(obj)
-  .map(k => [k, k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()])
-  .map(k => `${k[1]}: ${obj[k[0]]}`)
-  .join(';');
-
-/**
  * Gets a configuration entry by key
  *
  * You can specify this as 'foo.bar.baz' to resolve {foo: {bar: {baz: 'Hello World'}}}

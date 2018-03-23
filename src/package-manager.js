@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import {style, script} from './utils';
+import {style, script} from './utils/dom';
 
 /**
  * A registered package reference

@@ -32,7 +32,7 @@ import {
   transformReaddir,
   transformArrayBuffer,
   request
-} from './utils';
+} from '../utils/vfs';
 
 /**
  * Read a directory

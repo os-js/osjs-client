@@ -54,7 +54,7 @@ export default class Tray {
   }
 
   remove(entry) {
-    const foundIndex = this.entries.find(e => e === entry);
+    const foundIndex = this.entries.findIndex(e => e === entry);
     if (foundIndex !== -1) {
       this.entries.splice(foundIndex, 1);
 

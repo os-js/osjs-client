@@ -30,6 +30,51 @@
 import EventHandler from './event-handler';
 import {escapeHtml, createCssText} from './utils/dom';
 
+/**
+ * Window dimension definition
+ * @property {number} width Width in pixels
+ * @property {number} height Height in pixels
+ * @typedef WindowDimension
+ */
+
+/**
+ * Window position definition
+ * @property {number} left Left in pixels
+ * @property {number} top Top in pixels
+ * @typedef WindowPosition
+ */
+
+/**
+ * Window attributes definition
+ * @property {String[]} [classNames=[]] A list of class names
+ * @property {Boolean} [ontop=false] If always on top
+ * @property {String} [gravity] Gravity (center/top/left/right/bottom)
+ * @property {Boolean} [resizable=true] If resizable
+ * @property {Boolean} [focusable=true] If focusable
+ * @property {Boolean} [maximizable=true] If window if maximizable
+ * @property {Boolean} [minimizable=true] If minimizable
+ * @property {WindowDimension} [minDimension] Minimum dimension
+ * @property {WindowDimension} [maxDimension] Maximum dimension
+ * @typedef WindowAttributes
+ */
+
+/**
+ * Window state definition
+ * @property {String} title Title
+ * @property {String} icon Icon
+ * @property {Boolean} [moving=false] If moving
+ * @property {Boolean} [resizing=false] If resizing
+ * @property {Boolean} [loading=false] If loading
+ * @property {Boolean} [focused=false] If focused
+ * @property {Boolean} [maximized=false] If maximized
+ * @property {Boolean} [mimimized=false] If mimimized
+ * @property {Boolean} [modal=false] If modal
+ * @property {number} [zIndex=1] The z-index (auto calculated)
+ * @property {WindowPosition} [position] Position
+ * @property {WindowDimension} [dimension] Dimension
+ * @typedef WindowState
+ */
+
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;
 const ONTOP_ZINDEX = 8388635;
@@ -144,10 +189,10 @@ export default class Window extends EventHandler {
    * @param {String} [options.title] Window Title
    * @param {String} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
-   * @param {Object} [options.position] Window position
-   * @param {Object} [options.dimension] Window dimension
-   * @param {Object} [options.attributes] Apply Window attributes
-   * @param {Object} [options.state] Apply Window state
+   * @param {WindowPosition} [options.position] Window position
+   * @param {WindowDimension} [options.dimension] Window dimension
+   * @param {WindowAttributes} [options.attributes] Apply Window attributes
+   * @param {WindowState} [options.state] Apply Window state
    */
   constructor(core, options = {}) {
     options = Object.assign({
@@ -202,13 +247,13 @@ export default class Window extends EventHandler {
 
     /**
      * The window attributes
-     * @type {Object}
+     * @type {WindowAttributes}
      */
     this.attributes = createAttributes(options.attributes);
 
     /**
      * The window state
-     * @type {Object}
+     * @type {WindowState}
      */
     this.state = createState(options.state, options, this.attributes);
 
@@ -479,9 +524,7 @@ export default class Window extends EventHandler {
 
   /**
    * Set the Window dimension
-   * @param {Object} dimension The dimension
-   * @param {Number} dimension.width Width in pixels
-   * @param {Number} dimension.height Height in pixels
+   * @param {WindowDimension} dimension The dimension
    */
   setDimension(dimension) {
     const {width, height} = Object.assign(this.state.dimension, dimension || {});
@@ -494,9 +537,7 @@ export default class Window extends EventHandler {
 
   /**
    * Set the Window position
-   * @param {Object} position The position
-   * @param {Number} position.left Left (X) in pixels
-   * @param {Number} position.top Top (Y) in pixels
+   * @param {WindowPosition} position The position
    * @param {Boolean} [preventDefault=false] Prevents any future position setting in init procedure
    */
   setPosition(position, preventDefault = false) {
@@ -537,6 +578,7 @@ export default class Window extends EventHandler {
    * @param {String} name State name
    * @param {*} value State value
    * @param {Boolean} [update=true] Update the DOM
+   * @see {WindowState}
    */
   setState(name, value, update = true) {
     const set = () => this._setState(name, value, update);

@@ -125,6 +125,10 @@ export default class Packages {
 
     console.debug('Packages::preload()');
 
+    const getSource = entry => this.core.config('development')
+      ? entry + '?_time=' + (new Date()).getTime()
+      : entry;
+
     let failed = [];
     for (let i = 0; i < list.length; i++) {
       const entry = list[i];
@@ -138,8 +142,8 @@ export default class Packages {
 
       try {
         const el = entry.match(/\.js$/)
-          ? await script(root, entry)
-          : await style(root, entry);
+          ? await script(root, getSource(entry))
+          : await style(root, getSource(entry));
 
         if (!cached) {
           this.loaded.push(entry);

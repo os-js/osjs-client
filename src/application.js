@@ -163,6 +163,14 @@ export default class Application extends EventHandler {
   }
 
   /**
+   * Re-launch this application
+   */
+  relaunch() {
+    this.core.run(this.metadata.name, this.args, this.options);
+    this.destroy();
+  }
+
+  /**
    * Gets a URI to a resource for this application
    * @param {String} path The path
    * @return {String} A complete URI
@@ -314,6 +322,7 @@ export default class Application extends EventHandler {
       started: app.started,
       windows: app.windows.map(win => win.getSession()),
       destroy: () => app.destroy(),
+      relaunch: () => app.relaunch(),
       session: app.getSession()
     }));
   }

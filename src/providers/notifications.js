@@ -34,7 +34,7 @@ import ServiceProvider from '../service-provider';
 /**
  * OS.js Notification Service Provider
  *
- * Provides methods to create notifications
+ * @desc Provides methods to create notifications
  */
 export default class NotificationServiceProvider extends ServiceProvider {
 

@@ -137,9 +137,9 @@ class Auth {
 }
 
 /**
- * Default OS.js Auth Service Provider
+ * OS.js Auth Service Provider
  *
- * Creates the login prompt and handles authentication flow
+ * @desc Creates the login prompt and handles authentication flow
  */
 export default class AuthServiceProvider extends ServiceProvider {
 

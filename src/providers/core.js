@@ -40,7 +40,7 @@ import Tray from '../tray';
 /**
  * OS.js Core Service Provider
  *
- * Provides base services
+ * @desc Provides base services
  */
 export default class CoreServiceProvider extends ServiceProvider {
 

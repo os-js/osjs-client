@@ -34,7 +34,7 @@ import ServiceProvider from '../service-provider';
 /**
  * OS.js Package Service Provider
  *
- * Provides methods to handle packages
+ * @desc Provides methods to handle packages
  */
 export default class PackageServiceProvider extends ServiceProvider {
 

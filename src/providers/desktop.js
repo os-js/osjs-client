@@ -95,7 +95,7 @@ class Desktop {
 /**
  * OS.js Desktop Service Provider
  *
- * Provides desktop features
+ * @desc Provides desktop features
  */
 export default class DesktopServiceProvider extends ServiceProvider {
 

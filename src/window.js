@@ -235,14 +235,14 @@ export default class Window extends EventHandler {
      * given by user (used for restore)
      * @type {Boolean}
      */
-    this.preventDefaultPosition = false;
+    this._preventDefaultPosition = false;
 
     /**
      * Internal timeout reference used for triggering the loading
      * overlay.
      * @type {Boolean}
      */
-    this.loadingDebounce = null;
+    this._loadingDebounce = null;
 
     // Assign the window if it is a child
     if (this.parent) {
@@ -337,7 +337,7 @@ export default class Window extends EventHandler {
     setTimeout(() => {
       this.emit('render', this);
 
-      if (!this.preventDefaultPosition) {
+      if (!this._preventDefaultPosition) {
         this.gravitate(this.attributes.gravity);
       }
     }, 1);
@@ -506,7 +506,7 @@ export default class Window extends EventHandler {
     this.state.position.left = left;
 
     if (preventDefault) {
-      this.preventDefaultPosition = true;
+      this._preventDefaultPosition = true;
     }
 
     this._updateDOM();
@@ -544,10 +544,10 @@ export default class Window extends EventHandler {
     // Allows for some "grace time" so the overlay does not
     // "blink"
     if (name === 'loading' && update) {
-      clearTimeout(this.loadingDebounce);
+      clearTimeout(this._loadingDebounce);
 
       if (value === true) {
-        this.loadingDebounce = setTimeout(() => set(), 250);
+        this._loadingDebounce = setTimeout(() => set(), 250);
         return;
       }
     }

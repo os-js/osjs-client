@@ -33,7 +33,7 @@ import Application from './application';
 /**
  * Session Handler
  *
- * @desc Handles Sessions in OS.js
+ * @desc Handles Sessions
  */
 export default class Session {
 

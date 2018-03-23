@@ -46,7 +46,7 @@ export default class Application extends EventHandler {
    *
    * @param {Core} core Core reference
    * @param {Object} data Application data
-   * @param {Object} data.args Launch arguments
+   * @param {Map<String, *>} data.args Launch arguments
    * @param {Object} [data.options] Options
    * @param {Object} [data.options.restore] Restore data
    * @param {PackageMetadata} [data.metadata] Package Metadata
@@ -80,7 +80,7 @@ export default class Application extends EventHandler {
 
     /**
      * Application arguments
-     * @type {Object}
+     * @type {Map<String, *>}
      */
     this.args = data.args;
 
@@ -92,7 +92,7 @@ export default class Application extends EventHandler {
 
     /**
      * Application metadata
-     * @type {Object}
+     * @type {PackageMetadata}
      */
     this.metadata = data.metadata;
 

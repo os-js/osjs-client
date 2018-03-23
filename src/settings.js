@@ -53,7 +53,7 @@ const localStorageAdapter = {
 /**
  * Settings Handler
  *
- * @desc Handles Settings in OS.js
+ * @desc Handles Settings
  */
 export default class Settings {
 

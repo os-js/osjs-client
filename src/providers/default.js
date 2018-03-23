@@ -40,7 +40,7 @@ import ServiceProvider from '../service-provider';
 /**
  * OS.js Default Service Provider
  *
- * Provides all default services
+ * @desc Provides all default services
  */
 export default class DefaultServiceProvider extends ServiceProvider {
 

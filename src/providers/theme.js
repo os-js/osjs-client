@@ -33,7 +33,7 @@ import ServiceProvider from '../service-provider';
 /**
  * OS.js Theme Service Provider
  *
- * Provides methods to interact with filesystems
+ * @desc Provides methods to interact with filesystems
  */
 export default class ThemeServiceProvider extends ServiceProvider {
 

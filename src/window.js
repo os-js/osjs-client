@@ -132,7 +132,9 @@ const TEMPLATE = `<div class="osjs-window-inner">
 </div>`.replace(/\n\s+/g, '').trim();
 
 /**
- * OS.js Window
+ * Window
+ *
+ * @desc Class for a OS.js Window
  */
 export default class Window extends EventHandler {
 

@@ -35,7 +35,9 @@ const applications = [];
 let applicationCount = 0;
 
 /**
- * OS.js Application
+ * Application
+ *
+ * @desc Base class for an Application
  */
 export default class Application extends EventHandler {
 
@@ -47,7 +49,7 @@ export default class Application extends EventHandler {
    * @param {Object} data.args Launch arguments
    * @param {Object} [data.options] Options
    * @param {Object} [data.options.restore] Restore data
-   * @param {Object} [data.metadata] Package Metadata
+   * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
     data = Object.assign({}, {

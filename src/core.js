@@ -119,10 +119,9 @@ const loadProviders = async (providers, filter) => {
 };
 
 /**
- * OS.js Core
+ * Core
  *
- * Handles registration of service providers
- * and all instanciation.
+ * @desc Main class for OS.js service providers and bootstrapping.
  */
 export default class Core extends EventHandler {
 

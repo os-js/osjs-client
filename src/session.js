@@ -31,12 +31,14 @@
 import Application from './application';
 
 /**
- * OS.js Session Manager
+ * Session Handler
+ *
+ * @desc Handles Sessions in OS.js
  */
 export default class Session {
 
   /**
-   * Creates the Session Manager
+   * Creates the Session Handler
    *
    * @param {Core} core Core reference
    */

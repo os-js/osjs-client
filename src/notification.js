@@ -29,7 +29,9 @@
  */
 
 /**
- * OS.js Notification
+ * Notification
+ *
+ * @desc Class that creates a notification
  */
 export default class Notification {
 

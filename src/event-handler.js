@@ -39,7 +39,7 @@ const getEventNames = name => (name instanceof Array)
 /**
  * Event Handler
  *
- * A standard event handling
+ * @desc A standards compatible event handler (observer) with some sugar.
  */
 export default class EventHandler {
 

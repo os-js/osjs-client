@@ -108,10 +108,10 @@ const getEvent = (ev) => {
   return {clientX, clientY, touch: touch.length > 0, target};
 };
 
-/*
- * OS.js Default Window Behavior
+/**
+ * Default Window Behavior
  *
- * Controls certain events and their interaction with a window
+ * @desc Controls certain events and their interaction with a window
  */
 export default class WindowBehavior {
   /**

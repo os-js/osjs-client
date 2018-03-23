@@ -36,12 +36,14 @@
  */
 
 /**
- * OS.js Tray Icon Manager
+ * Tray Handler
+ *
+ * @desc Handles OS.js Tray Icons
  */
 export default class Tray {
 
   /**
-   * Creates the Tray Manager
+   * Creates the Tray Handler
    *
    * @param {Core} core Core reference
    */

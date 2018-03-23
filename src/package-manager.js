@@ -59,8 +59,10 @@ const fetchManifest = async (core) => {
   return metadata;
 };
 
-/*
- * OS.js Package Manager
+/**
+ * Package Manager
+ *
+ * @desc Handles indexing, loading and launching of OS.js packages
  */
 export default class PackageManager {
 

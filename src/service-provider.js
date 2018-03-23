@@ -29,7 +29,11 @@
  */
 
 /**
- * Default OS.js Service Provider Interface
+ * Service Provider Interface
+ *
+ * @desc Provides a basic Service Provider interface for OS.js
+ *
+ * @interface
  */
 export default class ServiceProvider {
 
@@ -38,6 +42,10 @@ export default class ServiceProvider {
    * @param {Core} core Core reference
    */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
   }
 

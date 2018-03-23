@@ -31,7 +31,9 @@
 import EventHandler from './event-handler';
 
 /**
- * OS.js Application WebSocket Wrapper
+ * Application Socket
+ *
+ * @desc Handles WebSocket for an Application
  */
 export default class ApplicationSocket extends EventHandler {
 

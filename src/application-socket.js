@@ -45,7 +45,12 @@ export default class ApplicationSocket extends EventHandler {
 
     super('ApplicationSocket@' + name);
 
+    /**
+     * The WebSocket
+     * @type {WebSocket}
+     */
     this.connection = new WebSocket(uri);
+
     this.connection.onopen = (...args) => this.emit('open', ...args);
     this.connection.onclose = (...args) => this.emit('close', ...args);
     this.connection.onmessage = (...args) => this.emit('message', ...args);

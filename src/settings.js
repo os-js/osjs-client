@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import {resolveTreeByKey} from './utils';
+
 const localStorageAdapter = {
   save(settings) {
     Object.keys(settings).forEach((k) => {
@@ -49,26 +51,53 @@ const localStorageAdapter = {
 };
 
 /**
- * OS.js Settings Handler
+ * OS.js Settings Manager
  */
 export default class Settings {
 
+  /**
+   * Creates the Settings Manager
+   *
+   * @param {Core} core Core reference
+   */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Internal timeout reference used for debouncing
+     * @type {Object}
+     */
     this.debounce = null;
+
+    /**
+     * The settings tree
+     * @type {Object}
+     */
     this.settings = {};
   }
 
+  /**
+   * Saves Settings
+   * @return {Promise<Boolean, Error>}
+   */
   save() {
     return new Promise((resolve) => {
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         localStorageAdapter.save(this.settings);
-        resolve();
+        resolve(true);
       }, 100);
     });
   }
 
+  /**
+   * Loads Settings
+   * @return {Promise<Boolean, Error>}
+   */
   load() {
     return new Promise((resolve) => {
       this.settings = localStorageAdapter.load();
@@ -76,12 +105,26 @@ export default class Settings {
     });
   }
 
-  get(k) {
-    return this.settings[k];
+  /**
+   * Gets a settings entry by key
+   *
+   * @param {String} key The key to get the value from
+   * @param {*} [defaultValue] If result is undefined, return this instead
+   * @see {resolveTreeByKey}
+   * @return {*}
+   */
+  get(key, defaultValue) {
+    return resolveTreeByKey(this.settings, key, defaultValue);
   }
 
-  set(k, v) {
-    this.settings[k] = v;
+  /**
+   * Sets a settings entry by root key
+   * @param {String} key The key to set
+   * @param {*} value The value to set
+   * @return {Settings} This
+   */
+  set(key, value) {
+    this.settings[key] = value;
 
     return this;
   }

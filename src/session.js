@@ -31,14 +31,26 @@
 import Application from './application';
 
 /**
- * OS.js Session Handler
+ * OS.js Session Manager
  */
 export default class Session {
 
+  /**
+   * Creates the Session Manager
+   *
+   * @param {Core} core Core reference
+   */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
   }
 
+  /**
+   * Saves session
+   */
   async save() {
     const apps = Application.getApplications();
     const session = apps.map(app => app.session);
@@ -48,6 +60,10 @@ export default class Session {
       .save();
   }
 
+  /**
+   * Loads session
+   * @param {Boolean} [fresh=false] Kill all current applications first
+   */
   async load(fresh = false) {
     if (fresh) {
       Application.getApplications().forEach(app => app.destroy());

@@ -28,6 +28,9 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Default OS.js Service Provider Interface
+ */
 export default class ServiceProvider {
 
   /**

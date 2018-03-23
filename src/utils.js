@@ -86,3 +86,25 @@ export const createCssText = (obj) => Object.keys(obj)
   .map(k => [k, k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()])
   .map(k => `${k[1]}: ${obj[k[0]]}`)
   .join(';');
+
+/**
+ * Gets a configuration entry by key
+ *
+ * You can specify this as 'foo.bar.baz' to resolve {foo: {bar: {baz: 'Hello World'}}}
+ * and get "Hello World" back.
+ *
+ * @param {String} key The key to get the value from
+ * @param {*} [defaultValue] If result is undefined, return this instead
+ * @return {*}
+ */
+export const resolveTreeByKey = (tree, key, defaultValue) => {
+  let result;
+
+  try {
+    result = key
+      .split(/\./g)
+      .reduce((result, key) => result[key], Object.assign({}, tree));
+  } catch (e) { /* noop */ }
+
+  return typeof result === 'undefined' ? defaultValue : result;
+};

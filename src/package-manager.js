@@ -30,6 +30,13 @@
 
 import {style, script} from './utils';
 
+/**
+ * A registered package-s data
+ * @property {Object} metadata Package metadata
+ * @property {Function} callback Callback to instanciate
+ * @typedef RegisteredPackage
+ */
+
 /*
  * Fetch package manifest
  */
@@ -51,9 +58,28 @@ export default class PackageManager {
    * @param {Core} core Core reference
    */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * A list of registered packages
+     * @type {RegisteredPackage[]}
+     */
     this.packages = [];
+
+    /**
+     * The lost of loaded package metadata
+     * @type {Object[]}
+     */
     this.metadata = [];
+
+    /**
+     * A list of cached preloads
+     * @type {String[]}
+     */
     this.loaded = [];
   }
 
@@ -121,6 +147,7 @@ export default class PackageManager {
    * @param {String} name Package name
    * @param {Object} [args] Launch arguments
    * @param {Object} [options] Launch options
+   * @param {Boolean} [options.forcePreload=false] Force preload reloading
    * @see PackageServiceProvider
    * @throws {Error}
    * @return {Application}
@@ -142,7 +169,8 @@ export default class PackageManager {
 
     const errors = await this.preload(
       metadata.files
-        .map(f => this.core.url(`/packages/${metadata._path}/${f}`))
+        .map(f => this.core.url(`/packages/${metadata._path}/${f}`)),
+      options.forcePreload === true
     );
     if (errors.length) {
       fail(`Package Loading ${name} failed: ${errors.join(', ')}`);

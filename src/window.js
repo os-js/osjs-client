@@ -231,11 +231,22 @@ export default class Window extends EventHandler {
      */
     this.$header = null;
 
+    /**
+     * Internal variable to signal not to use default position
+     * given by user (used for restore)
+     * @type {Boolean}
+     */
     this.preventDefaultPosition = false;
+
+    /**
+     * Internal timeout reference used for triggering the loading
+     * overlay.
+     * @type {Boolean}
+     */
     this.loadingDebounce = null;
 
+    // Assign the window if it is a child
     if (this.parent) {
-      // Assign the window if it is a child
       this.on('destroy', () => {
         const foundIndex = this.parent.children.findIndex(w => w === this);
         if (foundIndex !== -1) {

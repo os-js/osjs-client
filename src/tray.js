@@ -28,13 +28,45 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * A Tray Icon ("Entry")
+ * @property {Object} entry The given entry data
+ * @property {Function} destroy Destroy the entry
+ * @typedef TrayEntry
+ */
+
+/**
+ * OS.js Tray Icon Manager
+ */
 export default class Tray {
 
+  /**
+   * Creates the Tray Manager
+   *
+   * @param {Core} core Core reference
+   */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * All Tray entries
+     * @type {TrayEntry[]}
+     */
     this.entries = [];
   }
 
+  /**
+   * Creates a new Tray entry
+   * @param {Object} options Options
+   * @param {String} [options.icon] Icon source
+   * @param {String} [options.title] The title and tooltip
+   * @param {Function} handler The callback function
+   * @return {TrayEntry}
+   */
   create(options, handler) {
     const entry = Object.assign({}, {
       icon: require('./styles/logo-blue-32x32.png'),
@@ -53,6 +85,10 @@ export default class Tray {
     };
   }
 
+  /**
+   * Removes a Tray entry
+   * @param {TrayEntry} entry The tray entry
+   */
   remove(entry) {
     const foundIndex = this.entries.findIndex(e => e === entry);
     if (foundIndex !== -1) {

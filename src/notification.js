@@ -39,11 +39,34 @@ export default class Notification {
    * @param {Core} core Core reference
    * @param {Node} root Root DOM element
    * @param {Object} options Options
+   * @param {String} options.title Title
+   * @param {String} options.message Message
+   * @param {String} [options.icon] Icon source
+   * @param {number} [options.timeout=5000] Timeout value (0=infinite)
    */
   constructor(core, root, options = {}) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Root node reference
+     * @type {Node}
+     */
     this.$root = root;
+
+    /**
+     * Notification DOM node
+     * @type {Node}
+     */
     this.$element = document.createElement('div');
+
+    /**
+     * Options
+     * @type {Object}
+     */
     this.options = Object.assign({
       icon: null,
       title: 'Notification',

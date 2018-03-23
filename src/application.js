@@ -166,7 +166,10 @@ export default class Application extends EventHandler {
    * Re-launch this application
    */
   relaunch() {
-    this.core.run(this.metadata.name, this.args, this.options);
+    this.core.run(this.metadata.name, Object.assign({}, this.args), Object.assign({}, this.options, {
+      forcePreload: true
+    }));
+
     this.destroy();
   }
 

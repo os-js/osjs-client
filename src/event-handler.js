@@ -48,7 +48,16 @@ export default class EventHandler {
    * @param {String} [name] A name for logging
    */
   constructor(name = 'undefined') {
+    /**
+     * The name of the handler
+     * @type {String}
+     */
     this.name = name;
+
+    /**
+     * Registered events
+     * @type {Object}
+     */
     this.events = {};
   }
 

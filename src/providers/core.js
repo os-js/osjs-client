@@ -106,4 +106,38 @@ export default class CoreServiceProvider extends ServiceProvider {
     await this.settings.load();
   }
 
+  start() {
+    if (!this.core.config('development')) {
+      return;
+    }
+
+    const tray = this.tray.create({
+      title: 'OS.js developer tools'
+    }, (ev) => {
+      this.core.make('osjs/contextmenu').show({
+        position: ev,
+        menu: [
+          {
+            label: 'Applications',
+            items: Application.getApplications().map(proc => ({
+              label: `${proc.metadata.name} (${proc.pid})`,
+              items: [
+                {
+                  label: 'Kill',
+                  onclick: () => proc.destroy()
+                },
+                {
+                  label: 'Reload',
+                  onclick: () => proc.relaunch()
+                }
+              ]
+            }))
+          }
+        ]
+      });
+    });
+
+    this.core.on('destroy', () => tray.destroy());
+  }
+
 }

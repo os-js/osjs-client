@@ -36,6 +36,7 @@ const createConfiguration = configuration => {
   const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
   return Object.assign({}, {
+    development: true,
     standalone: false,
     public: path,
     application: {

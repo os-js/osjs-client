@@ -57,6 +57,8 @@ export default class Session {
       .get('osjs/session');
 
     if (session) {
+      console.group('Session::load()');
+
       session.forEach(app => {
         this.core.run(app.name, app.args, {
           restore: {
@@ -64,6 +66,8 @@ export default class Session {
           }
         });
       });
+
+      console.groupEnd();
     }
   }
 }

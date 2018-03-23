@@ -156,9 +156,10 @@ export default class PackageManager {
     let app;
 
     try {
-      console.group('Construct application');
+      console.group('PackageManager::launch()');
       app = found.callback(this.core, args, options, found.metadata);
     } catch (e) {
+      // TODO
       console.warn(e);
     } finally {
       this.core.emit('osjs/application:launched', name, app);
@@ -176,7 +177,7 @@ export default class PackageManager {
    * @throws {Error}
    */
   register(name, callback) {
-    console.log('PackageManager::register()', name);
+    console.debug('PackageManager::register()', name);
 
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {

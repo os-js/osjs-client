@@ -34,8 +34,7 @@ import EventHandler from './event-handler';
 const createConfiguration = configuration => {
   const {port, hostname, pathname} = window.location;
   const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
-
-  return Object.assign({}, {
+  const defaults = {
     development: true,
     standalone: false,
     public: path,
@@ -83,13 +82,20 @@ const createConfiguration = configuration => {
       hostname,
       path
     }
-  }, configuration);
+  };
+
+  console.log('Defaults', defaults);
+  console.log('Given', configuration);
+
+  return Object.assign({}, defaults, configuration);
 };
 
 const loadProviders = async (providers, filter) => {
   const list = providers
     .filter(filter)
     .map(({provider}) => provider);
+
+  console.log('Loading', list.length, 'providers');
 
   try {
     for (let i = 0; i < list.length; i++) {
@@ -177,9 +183,11 @@ export default class Core extends EventHandler {
     }
     this.booted = true;
 
-    console.info('Booting...');
+    console.group('Core::boot()');
 
     await loadProviders(this.providers, ({options}) => options.before);
+
+    console.groupEnd();
   }
 
   /**
@@ -246,11 +254,11 @@ export default class Core extends EventHandler {
    * Set the initial configuration
    */
   configure(configuration) {
-    const result = createConfiguration(configuration);
+    console.group('Core::configure()');
 
-    console.log('Core::configure()', result);
+    this.configuration = createConfiguration(configuration);
 
-    this.configuration = result;
+    console.groupEnd();
   }
 
   /**

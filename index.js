@@ -28,7 +28,6 @@
  * @licence Simplified BSD License
  */
 import Core from './src/core';
-import PackageServiceProvider from './src/providers/packages';
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
@@ -39,7 +38,6 @@ import ServiceProvider from './src/service-provider';
 
 export {
   Core,
-  PackageServiceProvider,
   DesktopServiceProvider,
   NotificationServiceProvider,
   VFSServiceProvider,

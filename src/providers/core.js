@@ -35,6 +35,7 @@ import ServiceProvider from '../service-provider';
 import EventHandler from '../event-handler';
 import Session from '../session';
 import Settings from '../settings';
+import Packages from '../packages';
 import Tray from '../tray';
 
 /**
@@ -59,6 +60,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.session = new Session(core);
     this.settings = new Settings(core);
     this.tray = new Tray(core);
+    this.pm = new Packages(core);
   }
 
   async init() {
@@ -103,6 +105,10 @@ export default class CoreServiceProvider extends ServiceProvider {
       this.session.load();
     });
 
+    this.core.singleton('osjs/packages', () => this.pm);
+    this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
+
+    await this.pm.init();
     await this.settings.load();
   }
 

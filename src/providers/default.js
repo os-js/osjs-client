@@ -29,7 +29,6 @@
  */
 
 import CoreServiceProvider from './core';
-import PackageServiceProvider from './packages';
 import DesktopServiceProvider from './desktop';
 import NotificationServiceProvider from './notifications';
 import VFSServiceProvider from './vfs';
@@ -48,7 +47,6 @@ export default class DefaultServiceProvider extends ServiceProvider {
     super(core);
 
     this.core.register(CoreServiceProvider);
-    this.core.register(PackageServiceProvider);
     this.core.register(DesktopServiceProvider);
     this.core.register(VFSServiceProvider);
     this.core.register(ThemeServiceProvider);

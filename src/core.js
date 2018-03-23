@@ -389,7 +389,7 @@ export default class Core extends EventHandler {
    * @param {String} name Package name
    * @param {Object} [args] Launch arguments
    * @param {Object} [options] Launch options
-   * @see {PackageManager}
+   * @see {Packages}
    * @return {Application}
    */
   async run(name, args = {}, options = {}) {

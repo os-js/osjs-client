@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import PackageManager from '../package-manager';
+import Packages from '../packages';
 import ServiceProvider from '../service-provider';
 
 /**
@@ -48,7 +48,7 @@ export default class PackageServiceProvider extends ServiceProvider {
   }
 
   async init() {
-    const pm = new PackageManager(this.core);
+    const pm = new Packages(this.core);
     this.core.singleton('osjs/packages', () => pm);
     this.core.instance('osjs/package', (...args) => pm.launch(...args));
     await pm.init();

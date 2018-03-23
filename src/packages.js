@@ -64,7 +64,7 @@ const fetchManifest = async (core) => {
  *
  * @desc Handles indexing, loading and launching of OS.js packages
  */
-export default class PackageManager {
+export default class Packages {
 
   /**
    * Create package manage
@@ -109,7 +109,7 @@ export default class PackageManager {
    * Initializes package manager
    */
   async init() {
-    console.debug('PackageManager::init()');
+    console.debug('Packages::init()');
 
     this.metadata = await fetchManifest(this.core);
   }
@@ -123,7 +123,7 @@ export default class PackageManager {
   async preload(list, force = false) {
     const root = this.core.$resourceRoot;
 
-    console.debug('PackageManager::preload()');
+    console.debug('Packages::preload()');
 
     let failed = [];
     for (let i = 0; i < list.length; i++) {
@@ -134,7 +134,7 @@ export default class PackageManager {
         continue;
       }
 
-      console.debug('PackageManager::preload()', entry);
+      console.debug('Packages::preload()', entry);
 
       try {
         const el = entry.match(/\.js$/)
@@ -167,7 +167,7 @@ export default class PackageManager {
    * @return {Application}
    */
   async launch(name, args = {}, options = {}) {
-    console.debug('PackageManager::launch()', name, args, options);
+    console.debug('Packages::launch()', name, args, options);
 
     const fail = err => {
       this.core.emit('osjs/application:launched', name, false);
@@ -198,7 +198,7 @@ export default class PackageManager {
     let app;
 
     try {
-      console.group('PackageManager::launch()');
+      console.group('Packages::launch()');
       app = found.callback(this.core, args, options, found.metadata);
     } catch (e) {
       // TODO
@@ -219,7 +219,7 @@ export default class PackageManager {
    * @throws {Error}
    */
   register(name, callback) {
-    console.debug('PackageManager::register()', name);
+    console.debug('Packages::register()', name);
 
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {

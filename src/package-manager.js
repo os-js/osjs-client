@@ -31,10 +31,22 @@
 import {style, script} from './utils';
 
 /**
- * A registered package-s data
+ * A registered package reference
  * @property {Object} metadata Package metadata
  * @property {Function} callback Callback to instanciate
- * @typedef RegisteredPackage
+ * @typedef PackageReference
+ */
+
+/**
+ * A package metadata
+ * @property {String} name The package name
+ * @property {String} [category] Package category
+ * @property {String} [icon] Package icon
+ * @property {String} [server] Server script filename
+ * @property {String[]} [files] Files to preload
+ * @property {Map<String, String>} title A map of locales and titles
+ * @property {Map<String, String>} description A map of locales and titles
+ * @typedef PackageMetadata
  */
 
 /*
@@ -66,13 +78,13 @@ export default class PackageManager {
 
     /**
      * A list of registered packages
-     * @type {RegisteredPackage[]}
+     * @type {PackageReference[]}
      */
     this.packages = [];
 
     /**
      * The lost of loaded package metadata
-     * @type {Object[]}
+     * @type {PackageMetadata[]}
      */
     this.metadata = [];
 

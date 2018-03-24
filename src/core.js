@@ -295,7 +295,7 @@ export default class Core extends EventHandler {
    * Wrapper for registering a service provider
    */
   _registerMethod(name, singleton, callback) {
-    console.debug('Core::_registerMethod()', name);
+    console.log(`Registering service provider: "${name}" (${singleton ? 'singleton' : 'instance'})`);
 
     this.registry.push({
       singleton,

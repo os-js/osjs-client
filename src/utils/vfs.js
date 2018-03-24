@@ -119,6 +119,10 @@ const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => 
  * @return {String}
  */
 export const humanFileSize = (bytes, si = false) => {
+  if (isNaN(bytes) || typeof bytes !== 'number') {
+    bytes = 0;
+  }
+
   const thresh = si ? 1000 : 1024;
   const units = si
     ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']

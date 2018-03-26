@@ -45,8 +45,6 @@ const actionMap = {
   }
 };
 
-const isInput = el => ['INPUT', 'TEXTAREA', 'IFRAME', 'BUTTON'].indexOf(el.tagName) !== -1;
-
 /*
  * Calculates new dimension for a window resize
  */
@@ -133,12 +131,7 @@ export default class WindowBehavior {
    */
   init(win) {
     win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win));
-    win.$element.addEventListener('mousedown', (ev) => {
-      if (!isInput(ev.target)) {
-        ev.preventDefault();
-      }
-      this.mousedown(ev, win);
-    });
+    win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
 
@@ -219,6 +212,8 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const mousemove = (ev) => {
+      ev.preventDefault();
+
       const transformedEvent = getEvent(ev);
       const diffX = transformedEvent.clientX - clientX;
       const diffY = transformedEvent.clientY - clientY;

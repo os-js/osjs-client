@@ -46,6 +46,13 @@ import {escapeHtml, createCssText} from './utils/dom';
 
 /**
  * Window attributes definition
+ *
+ * @desc Contains attributes for a window.
+ * Media queries will add a given name as a `data-media` attribute to the window
+ * root DOM element.
+ *
+ * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Testing_media_queries
+ *
  * @property {String[]} [classNames=[]] A list of class names
  * @property {Boolean} [ontop=false] If always on top
  * @property {String} [gravity] Gravity (center/top/left/right/bottom)
@@ -55,6 +62,7 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [minimizable=true] If minimizable
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
+ * @property {Map<String,String>} [mediaQueries] A map of matchMedia to name
  * @typedef WindowAttributes
  */
 
@@ -95,6 +103,11 @@ const createAttributes = (attrs) => Object.assign({
   focusable: true,
   maximizable: true,
   minimizable: true,
+  mediaQueries: {
+    small: 'screen and (max-width: 640px)',
+    medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
+    big: 'screen and (min-width: 1024px)'
+  },
   minDimension: {
     width: MINIMUM_WIDTH,
     height: MINIMUM_HEIGHT
@@ -111,6 +124,7 @@ const createAttributes = (attrs) => Object.assign({
 const createState = (state, options, attrs) => Object.assign({
   title: options.title || options.id,
   icon: options.icon || require('./styles/logo-blue-32x32.png'),
+  media: null,
   moving: false,
   resizing: false,
   loading: false,
@@ -694,12 +708,15 @@ export default class Window extends EventHandler {
       return;
     }
 
+    // TODO: Optimize
+
     const {width, height} = this.state.dimension;
     const {top, left} = this.state.position;
     const {zIndex} = this.state;
 
     const attributes = {
       id: this.id,
+      media: this.state.media,
       moving: this.state.moving,
       resizing: this.state.resizing,
       loading: this.state.loading,

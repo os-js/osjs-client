@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import * as mediaQuery from 'css-mediaquery';
+
 /*
  * Map of available "actions"
  */
@@ -108,6 +110,18 @@ const getEvent = (ev) => {
   return {clientX, clientY, touch: touch.length > 0, target};
 };
 
+/*
+ * Gets a media query name from a map
+ */
+const getMediaQueryName = (win) => Object.keys(win.attributes.mediaQueries)
+  .filter(name => mediaQuery.match(win.attributes.mediaQueries[name], {
+    type: 'screen',
+    orientation: window.screen.orientation.type,
+    width: win.state.dimension.width,
+    height: win.state.dimension.height
+  }))
+  .pop();
+
 /**
  * Default Window Behavior
  *
@@ -147,6 +161,8 @@ export default class WindowBehavior {
     if (win.state.position.left === 0) {
       win.state.position.left = left;
     }
+
+    win.state.media = getMediaQueryName(win);
   }
 
   /**
@@ -220,7 +236,7 @@ export default class WindowBehavior {
 
       if (resize) {
         this.wasResized = true;
-        win.setState('resizing', true, false);
+        win._setState('resizing', true, false);
         win.setDimension(getNewDimensions(
           diffX,
           diffY,
@@ -230,7 +246,7 @@ export default class WindowBehavior {
         ));
       } else if (move) {
         this.wasMoved = true;
-        win.setState('moving', true, false);
+        win._setState('moving', true, false);
         win.setPosition(getNewPosition(
           diffX,
           diffY,
@@ -262,12 +278,14 @@ export default class WindowBehavior {
         document.removeEventListener('mouseup', mouseup);
       }
 
+      win._setState('media', getMediaQueryName(win), false);
+
       if (this.wasMoved) {
         win.emit('moved', Object.assign({}, win.state.position), win);
-        win.setState('moving', false);
+        win._setState('moving', false);
       } else if (this.wasResized) {
         win.emit('resized', Object.assign({}, win.state.dimension), win);
-        win.setState('resizing', false);
+        win._setState('resizing', false);
       }
 
       this.core.$root.setAttribute('data-window-action', String(false));

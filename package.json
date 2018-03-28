@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "@osjs/gui": "^3.0.0-alpha.6",
+    "css-mediaquery": "^0.1.2",
     "hyperapp": "^1.1.2"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",

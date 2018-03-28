@@ -233,16 +233,11 @@ export const request = async (fn, data, fetchOptions = {}) => {
 
   // FIXME
   const url = OSjs.url(`/vfs/${fn}` + query);
-
-  const response = await fetch(url, {
+  const response = await OSjs.request(url, {
     headers: fetchOptions.headers,
     method,
     body
   });
-
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
 
   const contentType = response.headers.get('content-type') || 'application/octet-stream';
 

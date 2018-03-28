@@ -90,22 +90,12 @@ class Auth {
     }
   }
 
-  async request(endpoint, values = {}) {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      }
-    });
-
-    return response.ok ? response.json() : false;
-  }
-
   async login(values) {
     const endpoint = this.core.url('/login');
-    const response = await this.request(endpoint, values);
+    const response = await this.core.request(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(values)
+    }, 'json');
 
     if (!response) {
       alert('Login failed');
@@ -121,7 +111,10 @@ class Auth {
 
   async logout(reload = true) {
     const endpoint = this.core.url('/logout');
-    const response = await this.request(endpoint);
+    const response = await this.core.request(endpoint, {
+      method: 'POST'
+    }, 'json');
+
     if (!response) {
       return;
     }

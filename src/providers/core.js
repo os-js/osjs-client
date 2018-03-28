@@ -53,6 +53,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       run: (...args) => this.core.run(...args),
       open: (...args) => this.core.open(...args),
       make: (...args) => this.core.make(...args),
+      request: (...args) => this.core.request(...args),
       getWindows: () => Window.getWindows(),
       getApplications: () => Application.getApplications()
     });
@@ -78,6 +79,10 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.singleton('osjs/window-behavior', () => {
       return new WindowBehavior(this.core);
+    });
+
+    this.core.instance('osjs/request', async (...args) => {
+      return this.core.request(...args);
     });
 
     this.core.singleton('osjs/session', () => ({

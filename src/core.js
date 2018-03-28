@@ -372,15 +372,39 @@ export default class Core extends EventHandler {
   }
 
   /**
-   * Register login handler
-   * @param {Class} ref The class reference
-   * @param {Object} options Options
+   * Make a HTTP request
+   *
+   * @desc This is a wrapper for making a 'fetch' request with some helpers
+   * and integration with OS.js
+   * @param {String} url The endpoint
+   * @param {Options} [options] fetch options
+   * @param {String} [type] Request / Response type
+   * @return {*}
    */
-  login(ref, options = {}) {
-    console.info('Core::login()', 'requesting login');
+  async request(url, options = {}, type = null) {
+    // TODO: Check actual connection or standalone mode
+    options = Object.assign({}, {
+      headers: {}
+    }, options);
 
-    const handler = new ref(this, options);
-    handler.init();
+    if (type === 'json') {
+      options.headers = Object.assign(options.headers, {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      });
+    }
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error('An error occured:' + response.statusText); // TODO
+    }
+
+    if (type === 'json') {
+      return response.json();
+    }
+
+    return response;
   }
 
   /**

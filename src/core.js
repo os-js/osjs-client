@@ -278,6 +278,8 @@ export default class Core extends EventHandler {
    *
    * @param {Class} ref A class reference
    * @param {Object} [options] Options for handling of provider
+   * @param {Boolean} [options.before] Load this provider early
+   * @param {Object} [options.args] Arguments to send to the constructor
    */
   register(ref, options = {}) {
     try {

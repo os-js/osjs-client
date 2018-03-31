@@ -29,13 +29,6 @@
  */
 
 /*
- * Get a GET query from data
- */
-export const encodeQueryData = data => Object.keys(data)
-  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-  .join('&');
-
-/*
  * Get parent directory
  */
 export const parentDirectory = path => path
@@ -213,41 +206,3 @@ export const transformArrayBuffer = async (ab, mime, type) => {
 
   return ab;
 };
-
-/**
- * Performs a VFS HTTP request
- * @param {String} fn The function name on the server
- * @param {*} data The HTTP body
- * @param {Object} [fetchOptions] Options to pass on to 'fetct'
- * @return {Object}
- */
-export const request = async (fn, data, fetchOptions = {}) => {
-  fetchOptions = Object.assign({}, {
-    method: 'GET',
-    headers: []
-  }, fetchOptions);
-
-  const method = fetchOptions.method.toUpperCase();
-  const body = method === 'GET' ? null : data;
-  const query = method === 'GET' ? '?' + encodeQueryData(data) : '';
-
-  // FIXME
-  const url = OSjs.url(`/vfs/${fn}` + query);
-  const response = await OSjs.request(url, {
-    headers: fetchOptions.headers,
-    method,
-    body
-  });
-
-  const contentType = response.headers.get('content-type') || 'application/octet-stream';
-
-  let result;
-  if (contentType.includes('application/json')) {
-    result = await response.json();
-  } else {
-    result = await response.arrayBuffer();
-  }
-
-  return {mime: contentType, body: result};
-};
-

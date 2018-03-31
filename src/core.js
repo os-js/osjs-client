@@ -118,6 +118,10 @@ const loadProviders = async (providers, filter) => {
   return true;
 };
 
+const encodeQueryData = data => Object.keys(data)
+  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+  .join('&');
+
 /**
  * Core
  *
@@ -386,6 +390,7 @@ export default class Core extends EventHandler {
   async request(url, options = {}, type = null) {
     // TODO: Check actual connection or standalone mode
     options = Object.assign({}, {
+      method: 'get',
       headers: {}
     }, options);
 
@@ -394,6 +399,10 @@ export default class Core extends EventHandler {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       });
+    }
+
+    if (options.body && options.method === 'get') {
+      url += '?' + encodeQueryData(options.body);
     }
 
     const response = await fetch(url, options);

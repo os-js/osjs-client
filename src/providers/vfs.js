@@ -28,8 +28,8 @@
  * @licence Simplified BSD License
  */
 
-import * as vfs from '../vfs';
 import ServiceProvider from '../service-provider';
+import Filesystem from '../filesystem';
 
 /**
  * OS.js Virtual Filesystem Service Provider
@@ -37,9 +37,23 @@ import ServiceProvider from '../service-provider';
  * @desc Provides methods to interact with filesystems
  */
 export default class VFSServiceProvider extends ServiceProvider {
+  constructor(core) {
+    super(core);
+
+    this.fs = new Filesystem(core);
+  }
 
   async init() {
-    this.core.singleton('osjs/vfs', () => vfs);
+    const mount = this.fs.mounts[0]; // FIXME
+
+    this.core.singleton('osjs/vfs', () => mount.transport);
+
+    this.core.singleton('osjs/fs', () => ({
+      mountpoints: (...args) => this.fs.getMounts(...args),
+      mount: (...args) => this.fs.mount(...args),
+      unmount: (...args) => this.fs.unmount(...args),
+      register: (...args) => this.fs.register(...args)
+    }));
   }
 
 }

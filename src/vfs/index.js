@@ -30,8 +30,7 @@
 
 import {
   transformReaddir,
-  transformArrayBuffer,
-  request
+  transformArrayBuffer
 } from '../utils/vfs';
 
 /**
@@ -41,11 +40,11 @@ import {
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
-export const readdir = async (path, options = {}) => {
+export const readdir = request => async (path, options = {}) => {
   const response = await request('readdir', {
     path,
     options: {}
-  });
+  }, {}, 'json');
 
   return transformReaddir(path, response.body, {
     filter: options.filter
@@ -61,7 +60,7 @@ export const readdir = async (path, options = {}) => {
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
-export const readfile = async (path, type = 'string', options = {}) => {
+export const readfile = request => async (path, type = 'string', options = {}) => {
   const response = await request('readfile', {path, options});
   const result = await transformArrayBuffer(response.body, response.mime, type);
   return result;
@@ -73,7 +72,7 @@ export const readfile = async (path, type = 'string', options = {}) => {
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = async (path, data, options = {}) =>
+export const writefile = request => async (path, data, options = {}) =>
   (await request('writefile', {path, data, options}, {method: 'post'})).body;
 
 /**
@@ -83,7 +82,7 @@ export const writefile = async (path, data, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const rename = async (from, to, options = {}) =>
+export const rename = request => async (from, to, options = {}) =>
   (await request('rename', {from, to, options})).body;
 
 /**
@@ -92,7 +91,7 @@ export const rename = async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const mkdir = async (path, options = {}) =>
+export const mkdir = request => async (path, options = {}) =>
   (await request('mkdir', {path, options})).body;
 
 /**
@@ -101,7 +100,7 @@ export const mkdir = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const unlink = async (path, options = {}) =>
+export const unlink = request => async (path, options = {}) =>
   (await request('unlink', {path, options})).body;
 
 /**
@@ -110,7 +109,7 @@ export const unlink = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const exists = async (path, options = {}) =>
+export const exists = request => async (path, options = {}) =>
   (await request('exists', {path, options})).body;
 
 /**
@@ -119,7 +118,7 @@ export const exists = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Object}
  */
-export const stat = async (path, options = {}) =>
+export const stat = request => async (path, options = {}) =>
   (await request('stat', {path, options})).body;
 
 /**
@@ -128,7 +127,7 @@ export const stat = async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {String}
  */
-export const url = async (path, options = {}) => {
+export const url = request => async (path, options = {}) => {
   const url = `/vfs/readfile?path=` + encodeURIComponent(path);
   return url;
 };

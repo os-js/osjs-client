@@ -43,7 +43,9 @@ const localStorageAdapter = {
       let value = localStorage.getItem(v);
       try {
         value = JSON.parse(value);
-      } catch (e) {}
+      } catch (e) {
+        console.warn('localStorageAdapter parse error', e);
+      }
 
       return Object.assign(o, {[v]: value});
     }, {});

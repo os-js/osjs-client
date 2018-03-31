@@ -302,6 +302,19 @@ export default class Application extends EventHandler {
   }
 
   /**
+   * Removes window(s) based on given filter
+   * @param {Function} filter Filter function
+   */
+  removeWindow(filter) {
+    let i = this.windows.length;
+    while (i--) {
+      if (filter(this.windows[i], i)) {
+        this.windows.splice(i, 1);
+      }
+    }
+  }
+
+  /**
    * Gets a snapshot of the application session
    * @return {Object}
    */

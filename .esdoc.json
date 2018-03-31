@@ -1,0 +1,27 @@
+{
+  "source": "./src",
+  "destination": "./doc",
+  "plugins": [
+    {
+      "name": "esdoc-standard-plugin",
+      "option": {
+        "brand": {
+          "title": "OS.js Core API",
+          "description": "OS.js Core API Documentation",
+          "repository": "https://github.com/os-js/osjs-core",
+          "author": "Anders Evenrud <andersevenrud@gmail.com>"
+        },
+        "lint": {
+          "enable": false
+        },
+        "coverage": {
+          "enable": false
+        },
+        "undocumentIdentifier": {
+          "enable": false
+        }
+      }
+    },
+    {"name": "esdoc-publish-html-plugin"}
+  ]
+}

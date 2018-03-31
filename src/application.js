@@ -322,7 +322,9 @@ export default class Application extends EventHandler {
     const session = {
       args: Object.assign({}, this.args),
       name: this.metadata.name,
-      windows: this.windows.map(w => w.getSession())
+      windows: this.windows
+        .map(w => w.getSession())
+        .filter(s => s !== null)
     };
 
     return session;

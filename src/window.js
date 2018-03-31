@@ -103,6 +103,7 @@ const createAttributes = (attrs) => Object.assign({
   focusable: true,
   maximizable: true,
   minimizable: true,
+  sessionable: true,
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
@@ -637,7 +638,7 @@ export default class Window extends EventHandler {
    * @return Object
    */
   getSession() {
-    return {
+    return this.attributes.sessionable === false ? null : {
       id: this.id,
       position: Object.assign({}, this.state.position),
       dimension: Object.assign({}, this.state.dimension)

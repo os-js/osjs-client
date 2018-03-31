@@ -28,6 +28,14 @@
  * @licence Simplified BSD License
  */
 import Core from './src/core';
+import Auth from './src/auth';
+import Window from './src/window';
+import Desktop from './src/desktop';
+import Application from './src/application';
+import Notification from './src/notification';
+import EventHandler from './src/event-handler';
+import WindowBehavior from './src/window-behavior';
+
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
@@ -37,6 +45,14 @@ import ServiceProvider from './src/service-provider';
 
 export {
   Core,
+  Auth,
+  Window,
+  Desktop,
+  Application,
+  Notification,
+  EventHandler,
+  WindowBehavior,
+
   DesktopServiceProvider,
   NotificationServiceProvider,
   VFSServiceProvider,

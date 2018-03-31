@@ -32,6 +32,13 @@ import Application from './application';
 import EventHandler from './event-handler';
 import {resolveTreeByKey} from './utils/config';
 
+import CoreServiceProvider from './providers/core';
+import DesktopServiceProvider from './providers/desktop';
+import NotificationServiceProvider from './providers/notifications';
+import VFSServiceProvider from './providers/vfs';
+import ThemeServiceProvider from './providers/theme';
+import AuthServiceProvider from './providers/auth';
+
 const createConfiguration = configuration => {
   const {port, hostname, pathname} = window.location;
   const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
@@ -131,13 +138,16 @@ export default class Core extends EventHandler {
 
   /**
    * Create core instance
+   * @param {Object} config Configuration tree
    * @param {Object} [options] Options
    * @param {Element} [options.root] The root DOM element for elements
    * @param {Element} [options.resourceRoot] The root DOM element for resources
+   * @param {Boolean} [options.registerDefault] Register default provided service providers
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
-  constructor(options = {}) {
+  constructor(config, options = {}) {
     options = Object.assign({}, {
+      registerDefault: true,
       classNames: ['osjs-root'],
       root: document.body
     }, options);
@@ -147,7 +157,7 @@ export default class Core extends EventHandler {
     this.providers = [];
     this.registry = [];
     this.instances = {};
-    this.configuration = {};
+    this.configuration = createConfiguration(config);
     this.user = null;
     this.ws = null;
     this.booted = false;
@@ -157,6 +167,18 @@ export default class Core extends EventHandler {
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
     options.classNames.forEach(n => this.$root.classList.add(n));
+
+    if (options.registerDefault) {
+      this.register(CoreServiceProvider);
+      this.register(DesktopServiceProvider);
+      this.register(VFSServiceProvider);
+      this.register(ThemeServiceProvider);
+      this.register(NotificationServiceProvider);
+
+      this.register(AuthServiceProvider, {
+        before: true
+      });
+    }
   }
 
   /**
@@ -252,17 +274,6 @@ export default class Core extends EventHandler {
         console.warn('Connection closed', ev);
       };
     });
-  }
-
-  /**
-   * Set the initial configuration
-   */
-  configure(configuration) {
-    console.group('Core::configure()');
-
-    this.configuration = createConfiguration(configuration);
-
-    console.groupEnd();
   }
 
   /**

@@ -1,6 +1,6 @@
 {
   "name": "@osjs/core",
-  "version": "3.0.0-alpha.6",
+  "version": "3.0.0-alpha.7",
   "description": "OS.js v3 Core",
   "main": "index.js",
   "style": "index.scss",
@@ -15,7 +15,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/gui": "^3.0.0-alpha.6",
+    "@osjs/gui": "^3.0.0-alpha.7",
     "css-mediaquery": "^0.1.2",
     "hyperapp": "^1.1.2"
   },

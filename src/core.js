@@ -49,34 +49,44 @@ const createConfiguration = configuration => {
     application: {
       categories: {
         development: {
-          label: 'Development'
+          label: 'Development',
+          icon: 'applications-development'
         },
-        education: {
-          label: 'Education'
+        science: {
+          label: 'Science',
+          icon: 'applications-science'
         },
         games: {
-          label: 'Games'
+          label: 'Games',
+          icon: 'applications-games'
         },
         graphics: {
-          label: 'Graphics'
+          label: 'Graphics',
+          icon: 'applications-graphics'
         },
         network: {
-          label: 'Network'
+          label: 'Network',
+          icon: 'applications-internet'
         },
         multimedia: {
-          label: 'Multimedia'
+          label: 'Multimedia',
+          icon: 'applications-multimedia'
         },
         office: {
-          label: 'Office'
+          label: 'Office',
+          icon: 'applications-office'
         },
         system: {
-          label: 'System'
+          label: 'System',
+          icon: 'applications-system'
         },
         utilities: {
-          label: 'Utilities'
+          label: 'Utilities',
+          icon: 'applications-utilities'
         },
         other: {
-          label: 'Other'
+          label: 'Other',
+          icon: 'applications-other'
         }
       }
     },

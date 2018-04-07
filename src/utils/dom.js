@@ -43,6 +43,8 @@ export const style = (root, src) => new Promise((resolve, reject) => {
   el.setAttribute('href', src);
 
   root.appendChild(el);
+
+  return el;
 });
 
 /**
@@ -63,6 +65,8 @@ export const script = (root, src) => new Promise((resolve, reject) => {
   el.src = src;
 
   root.appendChild(el);
+
+  return el;
 });
 
 

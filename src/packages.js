@@ -185,9 +185,10 @@ export default class Packages {
 
     this.core.emit('osjs/application:launch', name, args, options);
 
+    const basePath = this.core.config('public');
     const errors = await this.preload(
       metadata.files
-        .map(f => this.core.url(`/packages/${metadata._path}/${f}`)),
+        .map(f => this.core.url(`${basePath}apps/${metadata._path}/${f}`)),
       options.forcePreload === true
     );
     if (errors.length) {

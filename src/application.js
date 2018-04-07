@@ -188,7 +188,8 @@ export default class Application extends EventHandler {
       path = '/' + path;
     }
 
-    return `/packages/${this.metadata._path}${path}`;
+    const basePath = this.core.config('public');
+    return `${basePath}apps/${this.metadata._path}${path}`;
   }
 
   /**

@@ -46,6 +46,7 @@ const createConfiguration = configuration => {
     development: true,
     standalone: false,
     public: path,
+    theme: 'Standard',
     application: {
       categories: {
         development: {

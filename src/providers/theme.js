@@ -29,6 +29,7 @@
  */
 
 import ServiceProvider from '../service-provider';
+import {style} from '../utils/dom';
 
 /**
  * OS.js Theme Service Provider
@@ -37,4 +38,26 @@ import ServiceProvider from '../service-provider';
  */
 export default class ThemeServiceProvider extends ServiceProvider {
 
+  constructor(core) {
+    super(core);
+
+    this.$theme = null;
+  }
+
+  destroy() {
+    if (this.$theme) {
+      this.$theme.remove();
+    }
+  }
+
+  start() {
+    if (this.$theme) {
+      this.$theme.remove();
+    }
+
+    const basePath = this.core.config('public');
+    const name = this.core.config('theme');
+    const src = `${basePath}themes/${name}/index.css`; // FIXME
+    this.$theme = style(this.core.$resourceRoot, src);
+  }
 }

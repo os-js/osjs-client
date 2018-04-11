@@ -69,11 +69,24 @@ export const readfile = request => async (path, type = 'string', options = {}) =
 /**
  * Writes a file
  * @param {String} path The path to write
+ * @param {ArrayBuffer|Blob|String} data The data
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = request => async (path, data, options = {}) =>
-  (await request('writefile', {path, data, options}, {method: 'post'})).body;
+export const writefile = request => async (path, data, options = {}) => {
+  const formData = new FormData();
+  const writeStream = (data instanceof ArrayBuffer || data instanceof Blob)
+    ? data
+    : new Blob([data], {type: 'application/octet-stream'});
+
+  formData.append('upload', writeStream);
+  formData.append('path', path);
+  formData.append('options', options);
+
+  return (await request('writefile', formData, {
+    method: 'post'
+  })).body;
+};
 
 /**
  * Renames a file or directory (move)

@@ -45,9 +45,11 @@ export default class ThemeServiceProvider extends ServiceProvider {
   }
 
   destroy() {
-    if (this.$theme) {
+    if (this.$theme && this.$theme.parentNode) {
       this.$theme.remove();
     }
+
+    this.$theme = null;
   }
 
   start() {

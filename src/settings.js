@@ -33,7 +33,6 @@ import {resolveTreeByKey} from './utils/config';
 const localStorageAdapter = {
   save(settings) {
     Object.keys(settings).forEach((k) => {
-      console.error(k, settings[k], JSON.stringify(settings[k]));
       localStorage.setItem(k, JSON.stringify(settings[k]));
     });
   },

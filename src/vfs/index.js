@@ -40,13 +40,10 @@ import {
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
-export const readdir = request => async (path, options = {}) => {
-  const response = await request('readdir', {
-    path,
-    options: {}
-  }, {}, 'json');
+export const readdir = transport => async (path, options = {}) => {
+  const result = await transport.readdir(path, options);
 
-  return transformReaddir(path, response.body, {
+  return transformReaddir(path, result, {
     filter: options.filter
   });
 };
@@ -57,11 +54,12 @@ export const readdir = request => async (path, options = {}) => {
  * Available types are 'arraybuffer', 'blob', 'uri' and 'string'
  *
  * @param {String} path The path to read
+ * @param {String} [type=string] Return this content type
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
-export const readfile = request => async (path, type = 'string', options = {}) => {
-  const response = await request('readfile', {path, options});
+export const readfile = transport => async (path, type = 'string', options = {}) => {
+  const response = await transport.readfile(path, type, options);
   const result = await transformArrayBuffer(response.body, response.mime, type);
   return result;
 };
@@ -73,20 +71,8 @@ export const readfile = request => async (path, type = 'string', options = {}) =
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = request => async (path, data, options = {}) => {
-  const formData = new FormData();
-  const writeStream = (data instanceof ArrayBuffer || data instanceof Blob)
-    ? data
-    : new Blob([data], {type: 'application/octet-stream'});
-
-  formData.append('upload', writeStream);
-  formData.append('path', path);
-  formData.append('options', options);
-
-  return (await request('writefile', formData, {
-    method: 'post'
-  })).body;
-};
+export const writefile = transport => async (path, data, options = {}) =>
+  transport.writefile(path, data, options);
 
 /**
  * Renames a file or directory (move)
@@ -95,8 +81,8 @@ export const writefile = request => async (path, data, options = {}) => {
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const rename = request => async (from, to, options = {}) =>
-  (await request('rename', {from, to, options})).body;
+export const rename = transport => async (from, to, options = {}) =>
+  transport.rename(from, to, options);
 
 /**
  * Creates a directory
@@ -104,8 +90,8 @@ export const rename = request => async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const mkdir = request => async (path, options = {}) =>
-  (await request('mkdir', {path, options})).body;
+export const mkdir = transport => async (path, options = {}) =>
+  transport.mkdir(path, options);
 
 /**
  * Removes a file or directory
@@ -113,8 +99,8 @@ export const mkdir = request => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const unlink = request => async (path, options = {}) =>
-  (await request('unlink', {path, options})).body;
+export const unlink = transport => async (path, options = {}) =>
+  transport.unlink(path, options);
 
 /**
  * Checks if path exists
@@ -122,8 +108,8 @@ export const unlink = request => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const exists = request => async (path, options = {}) =>
-  (await request('exists', {path, options})).body;
+export const exists = transport => async (path, options = {}) =>
+  transport.exists(path, options);
 
 /**
  * Gets the stats of the file or directory
@@ -131,8 +117,8 @@ export const exists = request => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Object}
  */
-export const stat = request => async (path, options = {}) =>
-  (await request('stat', {path, options})).body;
+export const stat = transport => async (path, options = {}) =>
+  transport.stat(path, options);
 
 /**
  * Gets an URL to a resource defined by file
@@ -140,7 +126,5 @@ export const stat = request => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {String}
  */
-export const url = request => async (path, options = {}) => {
-  const url = `/vfs/readfile?path=` + encodeURIComponent(path);
-  return url;
-};
+export const url = transport => async (path, options = {}) =>
+  transport.url(path, options);

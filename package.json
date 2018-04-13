@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/os-js/osjs-core/issues"
   },
-  "homepage": "https://github.com/os-js/osjs-core#readme"
+  "homepage": "https://github.com/os-js/osjs-core#readme",
+  "devDependencies": {
+    "babel-register": "^6.26.0",
+    "mocha": "^5.1.0"
+  }
 }

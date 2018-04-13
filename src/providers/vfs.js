@@ -37,16 +37,17 @@ import Filesystem from '../filesystem';
  * @desc Provides methods to interact with filesystems
  */
 export default class VFSServiceProvider extends ServiceProvider {
-  constructor(core) {
+  constructor(core, args = {}) {
     super(core);
 
-    this.fs = new Filesystem(core);
+    this.fs = new Filesystem(core, {
+      transports: args.transports || {},
+      mounts: args.mounts || []
+    });
   }
 
   async init() {
-    const mount = this.fs.mounts[0]; // FIXME
-
-    this.core.singleton('osjs/vfs', () => mount.transport);
+    this.core.singleton('osjs/vfs', () => this.fs.request());
 
     this.core.singleton('osjs/fs', () => ({
       mountpoints: (...args) => this.fs.getMounts(...args),

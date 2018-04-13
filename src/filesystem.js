@@ -30,42 +30,26 @@
 
 import * as VFS from './vfs';
 import EventHandler from './event-handler';
-
-/*
- * Factory for request (transports)
- */
-const createRequest = core => async (fn, body, fetchOptions = {}, type) => {
-  const url = core.url(`/vfs/${fn}`);
-  const response = await core.request(url, Object.assign({
-    body
-  }, fetchOptions), type);
-
-  if (type === 'json') {
-    return {mime: 'application/json', body: response};
-  }
-
-  const contentType = response.headers.get('content-type') || 'application/octet-stream';
-  const result = await response.arrayBuffer();
-
-  return {mime: contentType, body: result};
-};
+import SystemTransport from './vfs/transports/system';
 
 /*
  * Creates given mountpoint
  */
-const createMountpoint = (core, props) => {
-  const request = createRequest(core);
-  const transport = Object.keys(VFS)
+const createMountpoint = (core, transports, props) => {
+  const name = props.transport || 'system'; // FIXME
+  const transport = new transports[name](core);
+
+  const request = Object.keys(VFS)
     .reduce((result, method) => Object.assign(result, {
       [method]: (...args) => {
         core.emit(`osjs/vfs:${method}`, ...args);
 
-        return VFS[method](request)(...args);
+        return VFS[method](transport)(...args);
       }
     }), {});
 
   return Object.assign({
-    transport,
+    _transport: request,
     mouted: true,
     attributes: {
       readOnly: false
@@ -84,17 +68,31 @@ export default class Filesystem extends EventHandler {
    * Create filesystem manager
    *
    * @param {Core} core Core reference
+   * @param {Object} [options] Options
+   * @param {Map<String,Transport>} [options.transports] Transport registry
+   * @param {Object[]} [options.mounts] Mountpoints
    */
-  constructor(core) {
+  constructor(core, options = {}) {
+    options = Object.assign({}, {
+      transports: {},
+      mounts: []
+    }, options);
+
     super('Filesystem');
 
     this.core = core;
+
+    this.transports = Object.assign({}, {
+      system: SystemTransport
+    }, options.transports);
+
     this.mounts = [
-      createMountpoint(this.core, {
+      createMountpoint(this.core, this.transports, {
         name: 'osjs',
         label: 'OS.js',
+        transport: 'system'
       })
-    ];
+    ].concat(options.mounts);
   }
 
   /**
@@ -135,6 +133,16 @@ export default class Filesystem extends EventHandler {
     found.mounted = false;
     this.emit('unmounted', found);
     this.core.emit('osjs/fs:unmount');
+  }
+
+  /**
+   * Creates a VFS request
+   * @return {Map<<String, Function>} A map of VFS functions
+   */
+  request() {
+    // FIXME TODO
+    const mount = this.mounts[0];
+    return mount._transport;
   }
 
   /**

@@ -94,13 +94,13 @@ export default class Filesystem extends EventHandler {
       system: SystemTransport
     }, options.transports);
 
-    this.mounts = [
-      createMountpoint(this.core, this.transports, {
-        name: 'osjs',
-        label: 'OS.js',
-        transport: 'system'
-      })
-    ].concat(options.mounts);
+    this.mounts = [{
+      name: 'osjs',
+      label: 'OS.js',
+      transport: 'system'
+    }]
+      .concat(options.mounts) // TODO: Unique
+      .map(mount => createMountpoint(this.core, this.transports, mount));
   }
 
   /**

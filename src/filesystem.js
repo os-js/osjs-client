@@ -32,6 +32,14 @@ import * as VFS from './vfs';
 import EventHandler from './event-handler';
 import SystemTransport from './vfs/transports/system';
 
+/**
+ * VFS Mountpoint
+ * @param {String} name Name
+ * @param {String} label Label
+ * @param {String} transport Transport name
+ * @typedef Mountpoint
+ */
+
 /*
  * Creates given mountpoint
  */
@@ -70,7 +78,7 @@ export default class Filesystem extends EventHandler {
    * @param {Core} core Core reference
    * @param {Object} [options] Options
    * @param {Map<String,Transport>} [options.transports] Transport registry
-   * @param {Object[]} [options.mounts] Mountpoints
+   * @param {Mountpoint[]} [options.mounts] Mountpoints
    */
   constructor(core, options = {}) {
     options = Object.assign({}, {

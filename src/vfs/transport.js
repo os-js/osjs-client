@@ -66,7 +66,7 @@ export default class Transport {
    * @return {ArrayBuffer}
    */
   async readfile(path, type, options) {
-    return null;
+    return {body: null, mime: 'application/octet-stream'};
   }
 
   /**

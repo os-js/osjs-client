@@ -30,6 +30,11 @@
 
 import Transport from '../transport';
 
+/**
+ * System VFS Transport Module
+ *
+ * @desc Provides filesystem via the OS.js server
+ */
 export default class SystemTransport extends Transport {
 
   async _request(fn, body, fetchOptions = {}, type) {

@@ -66,6 +66,12 @@ export default class Notification {
     this.$element = document.createElement('div');
 
     /**
+     * The notification destruction state
+     * @type {Boolean}
+     */
+    this.destroyed = false;
+
+    /**
      * Options
      * @type {Object}
      */
@@ -83,6 +89,11 @@ export default class Notification {
    * Destroy notification
    */
   destroy() {
+    if (this.destroyed) {
+      return;
+    }
+
+    this.destroyed = true;
     this.core.emit('osjs/notification:destroy', this);
 
     this.$element.remove();

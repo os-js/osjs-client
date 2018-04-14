@@ -80,6 +80,16 @@ export const writefile = transport => async (path, data, options = {}) => {
 };
 
 /**
+ * Copies a file or directory (move)
+ * @param {String} from The source (from)
+ * @param {String} to The destination (to)
+ * @param {Object} [options] Options
+ * @return {Boolean}
+ */
+export const copy = transport => async (from, to, options = {}) =>
+  transport.copy(from, to, options);
+
+/**
  * Renames a file or directory (move)
  * @param {String} from The source (from)
  * @param {String} to The destination (to)

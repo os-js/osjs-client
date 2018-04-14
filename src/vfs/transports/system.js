@@ -62,7 +62,7 @@ export default class SystemTransport extends Transport {
     return response.body;
   }
 
-  async readfile(path, type = 'string', options) {
+  async readfile(path, type, options) {
     const response = await this._request('readfile', {path, options});
     return response;
   }
@@ -77,6 +77,11 @@ export default class SystemTransport extends Transport {
       method: 'post'
     });
 
+    return response.body;
+  }
+
+  async copy(from, to, options) {
+    const response = await this._request('copy', {from, to, options});
     return response.body;
   }
 

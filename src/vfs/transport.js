@@ -32,6 +32,7 @@
  * VFS Transport Interface
  *
  * @desc Base Class/Interface for a VFS Transport implementation
+ * @interface
  */
 export default class Transport {
 
@@ -78,6 +79,17 @@ export default class Transport {
    */
   async writefile(path, data, options) {
     return -1;
+  }
+
+  /**
+   * Copies a file or directory (move)
+   * @param {String} from The source (from)
+   * @param {String} to The destination (to)
+   * @param {Object} [options] Options
+   * @return {Boolean}
+   */
+  async copy(from, to, options) {
+    return false;
   }
 
   /**

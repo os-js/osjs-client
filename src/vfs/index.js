@@ -71,8 +71,13 @@ export const readfile = transport => async (path, type = 'string', options = {})
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = transport => async (path, data, options = {}) =>
-  transport.writefile(path, data, options);
+export const writefile = transport => async (path, data, options = {}) => {
+  const binary = (data instanceof ArrayBuffer || data instanceof Blob)
+    ? data
+    : new Blob([data], {type: 'application/octet-stream'});
+
+  return transport.writefile(path, binary, options);
+};
 
 /**
  * Renames a file or directory (move)

@@ -47,19 +47,11 @@ const createMountpoint = (core, transports, props) => {
   const name = props.transport || 'system'; // FIXME
   const transport = new transports[name](core);
 
-  const request = Object.keys(VFS)
-    .reduce((result, method) => Object.assign(result, {
-      [method]: (...args) => {
-        core.emit(`osjs/vfs:${method}`, ...args);
-
-        return VFS[method](transport)(...args);
-      }
-    }), {});
-
   return Object.assign({
-    _transport: request,
+    _transport: transport,
     mouted: true,
     attributes: {
+      local: true,
       readOnly: false
     }
   }, props);
@@ -88,12 +80,24 @@ export default class Filesystem extends EventHandler {
 
     super('Filesystem');
 
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
 
+    /**
+     * Transport registry
+     * @type {Map<String, Transport>}
+     */
     this.transports = Object.assign({}, {
       system: SystemTransport
     }, options.transports);
 
+    /**
+     * Mountpoints
+     * @type {Mountpoint[]}
+     */
     this.mounts = [{
       name: 'osjs',
       label: 'OS.js',
@@ -101,6 +105,16 @@ export default class Filesystem extends EventHandler {
     }]
       .concat(options.mounts) // TODO: Unique
       .map(mount => createMountpoint(this.core, this.transports, mount));
+
+    /**
+     * A wrapper for VFS method requests
+     * @type {Map<String, Function>}
+     */
+    this.proxy = Object.keys(VFS).reduce((result, method) => {
+      return Object.assign({
+        [method]: (...args) => this._request(method, ...args)
+      }, result);
+    }, {});
   }
 
   /**
@@ -144,13 +158,31 @@ export default class Filesystem extends EventHandler {
   }
 
   /**
-   * Creates a VFS request
-   * @return {Map<<String, Function>} A map of VFS functions
+   * Gets the proxy for VFS methods
+   * @return {Map<String, Function>} A map of VFS functions
    */
   request() {
-    // FIXME TODO
-    const mount = this.mounts[0];
-    return mount._transport;
+    return this.proxy;
+  }
+
+  /**
+   * Perform a VFS method request
+   * @param {String} method VFS method name
+   * @param {*} ...args Arguments
+   * @return {*}
+   */
+  _request(method, ...args) {
+    // TODO: 'rename' and 'copy' between transports
+    const [path] = args;
+    const mount = this.mounts.find(mount => mount.name === 'osjs'); // FIXME
+
+    if (!mount) {
+      throw new Error(`Could not find a mountpoint for '${path}'`);
+    }
+
+    this.core.emit(`osjs/vfs:${method}`, ...args);
+
+    return VFS[method](mount._transport)(...args);
   }
 
   /**

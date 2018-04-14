@@ -72,7 +72,7 @@ export default class Transport {
   /**
    * Writes a file
    * @param {String} path The path to write
-   * @param {ArrayBuffer|Blob|String} data The data
+   * @param {ArrayBuffer|Blob} data The data
    * @param {Object} [options] Options
    * @return {Number} File size
    */

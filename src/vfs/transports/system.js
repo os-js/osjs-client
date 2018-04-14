@@ -53,7 +53,7 @@ export default class SystemTransport extends Transport {
     return {mime: contentType, body: result};
   }
 
-  async readdir(path, options = {}) {
+  async readdir(path, options) {
     const response = await this._request('readdir', {
       path,
       options: {}
@@ -62,18 +62,14 @@ export default class SystemTransport extends Transport {
     return response.body;
   }
 
-  async readfile(path, type = 'string', options = {}) {
+  async readfile(path, type = 'string', options) {
     const response = await this._request('readfile', {path, options});
     return response;
   }
 
-  async writefile(path, data, options = {}) {
+  async writefile(path, data, options) {
     const formData = new FormData();
-    const writeStream = (data instanceof ArrayBuffer || data instanceof Blob)
-      ? data
-      : new Blob([data], {type: 'application/octet-stream'});
-
-    formData.append('upload', writeStream);
+    formData.append('upload', data);
     formData.append('path', path);
     formData.append('options', options);
 
@@ -84,32 +80,32 @@ export default class SystemTransport extends Transport {
     return response.body;
   }
 
-  async rename(from, to, options = {}) {
+  async rename(from, to, options) {
     const response = await this._request('rename', {from, to, options});
     return response.body;
   }
 
-  async mkdir(path, options = {}) {
+  async mkdir(path, options) {
     const response = await this._request('mkdir', {path, options});
     return response.body;
   }
 
-  async unlink(path, options = {}) {
+  async unlink(path, options) {
     const response = await this._request('unlink', {path, options});
     return response.body;
   }
 
-  async exists(path, options = {}) {
+  async exists(path, options) {
     const response = await this._request('exists', {path, options});
     return response.body;
   }
 
-  async stat(path, options = {}) {
+  async stat(path, options) {
     const response = await this._request('stat', {path, options});
     return response.body;
   }
 
-  async url(path, options = {}) {
+  async url(path, options) {
     const url = `/vfs/readfile?path=` + encodeURIComponent(path);
     return url;
   }

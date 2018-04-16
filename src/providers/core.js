@@ -120,7 +120,7 @@ export default class CoreServiceProvider extends ServiceProvider {
           const proc = Application.getApplications().find(p => p.pid === message.pid);
           if (proc) {
             console.debug('Routing message', message);
-            proc.emit('message', message.args);
+            proc.emit('message', ...message.args);
             return;
           }
         }

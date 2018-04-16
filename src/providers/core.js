@@ -113,6 +113,22 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/packages', () => this.pm);
     this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
 
+    window.addEventListener('message', ev => {
+      const message = ev.data || {};
+      if (message) {
+        if (message.pid) {
+          const proc = Application.getApplications().find(p => p.pid === message.pid);
+          if (proc) {
+            console.debug('Routing message', message);
+            proc.emit('message', message.data);
+            return;
+          }
+        }
+
+        console.warn('Message with unknown reciever', message);
+      }
+    });
+
     await this.pm.init();
     await this.settings.load();
   }

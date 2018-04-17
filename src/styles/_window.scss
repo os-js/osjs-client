@@ -55,6 +55,10 @@
     display: none !important;
   }
 
+  &[data-focused=false] iframe {
+    pointer-events: none;
+  }
+
   &[data-resizing=true],
   &[data-moving=true] {
     cursor: move;

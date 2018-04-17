@@ -128,7 +128,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     window.addEventListener('message', ev => {
       const message = ev.data || {};
       if (message) {
-        if (message.pid) {
+        if (message.pid >= 0) {
           const proc = Application.getApplications().find(p => p.pid === message.pid);
           if (proc) {
             console.debug('Routing message', message);

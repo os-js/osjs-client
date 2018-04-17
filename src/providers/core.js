@@ -48,6 +48,18 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core) {
     super(core);
 
+    const getApplications = Application.getApplications().map(app => ({
+      pid: app.pid,
+      args: Object.assign({}, app.args),
+      metadata: Object.assign({}, app.metadata),
+      started: app.started,
+      windows: app.windows.map(win => win.getSession()),
+      emit: (...args) => app.emit(...args),
+      destroy: () => app.destroy(),
+      relaunch: () => app.relaunch(),
+      session: app.getSession()
+    }));
+
     window.OSjs = Object.freeze({
       url: (...args) => this.core.url(...args),
       run: (...args) => this.core.run(...args),
@@ -55,7 +67,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       make: (...args) => this.core.make(...args),
       request: (...args) => this.core.request(...args),
       getWindows: () => Window.getWindows(),
-      getApplications: () => Application.getApplications()
+      getApplications
     });
 
     this.session = new Session(core);

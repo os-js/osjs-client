@@ -334,22 +334,10 @@ export default class Application extends EventHandler {
   /**
    * Get a list of all running applications
    *
-   * Does not return a reference, but rather a serialized list
-   *
-   * @return {Object[]}
+   * @return {Application[]}
    */
   static getApplications() {
-    return applications.map(app => ({
-      pid: app.pid,
-      args: Object.assign({}, app.args),
-      metadata: app.metadata,
-      started: app.started,
-      windows: app.windows.map(win => win.getSession()),
-      emit: (...args) => app.emit(...args),
-      destroy: () => app.destroy(),
-      relaunch: () => app.relaunch(),
-      session: app.getSession()
-    }));
+    return applications;
   }
 
 }

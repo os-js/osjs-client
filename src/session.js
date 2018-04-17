@@ -55,7 +55,7 @@ export default class Session {
    */
   async save() {
     const apps = Application.getApplications();
-    const session = apps.map(app => app.session);
+    const session = apps.map(app => app.getSession());
 
     await this.core.make('osjs/settings')
       .set('osjs/session', session)

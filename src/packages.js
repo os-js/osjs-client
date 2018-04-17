@@ -95,6 +95,13 @@ export default class Packages {
      * @type {String[]}
      */
     this.loaded = [];
+
+    /**
+     * A list of running application names
+     * @desc Mainly used for singleton awareness
+     * @type {String[]}
+     */
+    this.running = [];
   }
 
   /**
@@ -160,7 +167,7 @@ export default class Packages {
   }
 
   /**
-   * Launches a package
+   * Launches a (application) package
    *
    * @param {String} name Package name
    * @param {Object} [args] Launch arguments
@@ -168,15 +175,10 @@ export default class Packages {
    * @param {Boolean} [options.forcePreload=false] Force preload reloading
    * @see PackageServiceProvider
    * @throws {Error}
-   * @return {Application}
+   * @return {Promise<Application, Error>}
    */
-  async launch(name, args = {}, options = {}) {
+  launch(name, args = {}, options = {}) {
     console.debug('Packages::launch()', name, args, options);
-
-    const fail = err => {
-      this.core.emit('osjs/application:launched', name, false);
-      throw new Error(err);
-    };
 
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
@@ -184,6 +186,40 @@ export default class Packages {
     }
 
     this.core.emit('osjs/application:launch', name, args, options);
+
+    if (metadata.singleton) {
+      const found = this.running.filter(n => n === name);
+
+      if (found.length > 0) {
+        return new Promise((resolve, reject) => {
+          this.core.on('osjs/application:launched', (n, a) => {
+            if (n === name) {
+              a.emit('attention', args, options);
+              resolve(a);
+            }
+          });
+        });
+      }
+    }
+
+    this.running.push(name);
+
+    return this._launch(name, metadata, args, options);
+  }
+
+  /**
+   * Wrapper for launching a (application) package
+   *
+   * @param {String} name Package name
+   * @param {Object} args Launch arguments
+   * @param {Object} options Launch options
+   * @return {Application}
+   */
+  async _launch(name, metadata, args, options) {
+    const fail = err => {
+      this.core.emit('osjs/application:launched', name, false);
+      throw new Error(err);
+    };
 
     const basePath = this.core.config('public');
     const errors = await this.preload(
@@ -203,7 +239,7 @@ export default class Packages {
     let app;
 
     try {
-      console.group('Packages::launch()');
+      console.group('Packages::_launch()');
       app = found.callback(this.core, args, options, found.metadata);
     } catch (e) {
       // TODO

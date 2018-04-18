@@ -28,22 +28,24 @@
  * @licence Simplified BSD License
  */
 
-const TEMPLATE = `
-  <form method="post" action="#" autocomplete="off">
-    <div>
-      <span>Welcome to OS.js</span>
-    </div>
-    <div>
-      <input type="text" name="username" placeholder="Username" autocapitalize="off" autocomplete="off" />
-    </div>
-    <div>
-      <input type="password" name="password" placeholder="Password" />
-    </div>
-    <div>
-      <input type="submit" />
-    </div>
-  </form>
-`;
+import {h, app} from 'hyperapp';
+
+const createAttributes = (props, field) => {
+  if (field.tagName === 'input') {
+    if (field.attributes.type !== 'submit') {
+      return Object.assign({}, {
+        autocapitalize: 'off',
+        autocomplete: 'off',
+        oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
+      }, field.attributes);
+    }
+  }
+
+  return field.attributes;
+};
+
+const createFields = (props, fields) => fields.map(f => h('div', {}, h(f.tagName, createAttributes(props, f))));
+
 
 /**
  * Authentication Handler
@@ -57,13 +59,41 @@ export default class Auth {
    *
    * @param {Core} core Core reference
    * @param {Object} [options] Options
-   * @param {String} [options.template] Login template
+   * @param {String} [options.ui] UI Options
+   * @param {String} [options.title] Login box title
+   * @param {Object[]} [options.fields] Login box fields
    */
   constructor(core, options = {}) {
     this.core = core;
     this.options = Object.assign({
-      template: TEMPLATE
+      ui: {
+        title: 'Welcome to OS.js',
+        fields: [{
+          tagName: 'input',
+          attributes: {
+            name: 'username',
+            type: 'text',
+            placeholder: 'Username'
+          }
+        }, {
+          tagName: 'input',
+          attributes: {
+            name: 'password',
+            type: 'password',
+            placeholder: 'Password'
+          }
+        }, {
+          tagName: 'input',
+          attributes: {
+            type: 'submit',
+            value: 'Login'
+          }
+        }]
+      }
     }, options);
+
+    this.$container = document.createElement('div');
+    this.$container.className = 'osjs-login';
   }
 
   /**
@@ -72,40 +102,39 @@ export default class Auth {
    * @desc Shows the login screen etc
    */
   init() {
-    const container = document.createElement('div');
-    container.className = 'osjs-login';
-    container.innerHTML = this.options.template;
+    this.core.$root.appendChild(this.$container);
 
-    const post = async (values) => {
-      if (this.login(values)) {
-        container.remove();
-      }
-    };
-
-    const form = container.querySelector('form');
-    form.onsubmit = (ev) => {
-      ev.preventDefault();
-
-      const values = Array.from(form.elements)
-        .filter(el => el.type !== 'submit')
-        .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
-
-      post(values);
-    };
-
-    this.core.$root.appendChild(container);
+    this.render();
 
     const login = this.core.configuration.login || {};
-    if (login.username) {
-      Object.keys(login).forEach((k) => {
-        const el = form.querySelector(`input[name="${k}"]`);
-        if (el) {
-          el.value = login[k];
-        }
-      });
-
-      post(login);
+    if (login.username && login.password) {
+      this.login(login);
     }
+  }
+
+  render() {
+    const login = this.core.configuration.login || {};
+    const createView = (state, actions) => h('form', {
+      method: 'post',
+      action: '#',
+      autocomplete: 'off',
+      onsubmit: actions.submit
+    }, [
+      h('div', {}, h('span', {}, this.options.ui.title)),
+      ...createFields(state, this.options.ui.fields)
+    ]);
+
+    app(Object.assign({}, login), {
+      submit: ev => state => {
+        ev.preventDefault();
+
+        const values = Array.from(ev.target.elements)
+          .filter(el => el.type !== 'submit')
+          .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
+
+        this.login(values);
+      }
+    }, createView, this.$container);
   }
 
   /**
@@ -152,6 +181,10 @@ export default class Auth {
    * @param {Object} response The response
    */
   onLogin(response) {
+    if (this.$container) {
+      this.$container.remove();
+    }
+
     this.core.user = response.user;
 
     this.core.start();

@@ -38,10 +38,11 @@ import Auth from '../auth';
  */
 export default class AuthServiceProvider extends ServiceProvider {
 
-  constructor(core) {
+  constructor(core, args = {}) {
     super(core);
 
-    this.auth = new Auth(core);
+    const classRef = args.class || Auth;
+    this.auth = new classRef(core);
   }
 
   async init() {

@@ -28,6 +28,7 @@
  * @licence Simplified BSD License
  */
 
+import Application from './application';
 import {style, script} from './utils/dom';
 
 /**
@@ -241,6 +242,15 @@ export default class Packages {
     try {
       console.group('Packages::_launch()');
       app = found.callback(this.core, args, options, found.metadata);
+
+      if (app instanceof Application) {
+        app.on('destroy', () => {
+          const foundIndex = this.running.findIndex(n => n === name);
+          if (foundIndex !== -1) {
+            this.running.splice(foundIndex, 1);
+          }
+        });
+      }
     } catch (e) {
       // TODO
       console.warn(e);

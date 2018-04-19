@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "css-mediaquery": "^0.1.2",
-    "hyperapp": "^1.1.2"
+    "hyperapp": "^1.2.5"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",

@@ -102,6 +102,7 @@ const createConfiguration = configuration => {
       path
     },
     vfs: {
+      defaultPath: 'osjs:/',
       transports: {},
       mountpoints: [{
         name: 'osjs',

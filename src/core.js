@@ -100,6 +100,14 @@ const createConfiguration = configuration => {
       port,
       hostname,
       path
+    },
+    vfs: {
+      transports: {},
+      mountpoints: [{
+        name: 'osjs',
+        label: 'OS.js',
+        transport: 'system'
+      }]
     }
   };
 

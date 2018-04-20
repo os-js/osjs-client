@@ -92,17 +92,13 @@ export default class Filesystem extends EventHandler {
      */
     this.transports = Object.assign({}, {
       system: SystemTransport
-    }, options.transports);
+    }, this.core.config('vfs.transports', {}), options.transports);
 
     /**
      * Mountpoints
      * @type {Mountpoint[]}
      */
-    this.mounts = [{
-      name: 'osjs',
-      label: 'OS.js',
-      transport: 'system'
-    }]
+    this.mounts = this.core.config('vfs.mountpoints')
       .concat(options.mounts) // TODO: Unique
       .map(mount => createMountpoint(this.core, this.transports, mount));
 

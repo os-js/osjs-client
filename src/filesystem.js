@@ -41,6 +41,27 @@ import SystemTransport from './vfs/transports/system';
  */
 
 /*
+ * Gets mountpoint from a path
+ */
+const getMountpointFromPath = (mounts, path) => {
+  const re = /^(\w+):(.*)/;
+  const match = String(path).replace(/\+/g, '/').match(re);
+  const [matching, prefix, str] = Array.from(match || []);
+
+  if (!prefix) {
+    throw new Error(`Given path '${path}' does not match 'name:/path'`);
+  }
+
+  const found = mounts.find(m => m.name === prefix);
+
+  if (!found) {
+    throw new Error(`Mountpoint for '${prefix}:' not found`);
+  }
+
+  return found;
+};
+
+/*
  * Creates given mountpoint
  */
 const createMountpoint = (core, transports, props) => {
@@ -170,11 +191,7 @@ export default class Filesystem extends EventHandler {
   _request(method, ...args) {
     // TODO: 'rename' and 'copy' between transports
     const [path] = args;
-    const mount = this.mounts.find(mount => mount.name === 'osjs'); // FIXME
-
-    if (!mount) {
-      throw new Error(`Could not find a mountpoint for '${path}'`);
-    }
+    const mount = getMountpointFromPath(this.mounts, path);
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 

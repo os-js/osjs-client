@@ -31,6 +31,7 @@
 import Application from './application';
 import EventHandler from './event-handler';
 import {resolveTreeByKey} from './utils/config';
+import merge from 'deepmerge';
 
 import CoreServiceProvider from './providers/core';
 import DesktopServiceProvider from './providers/desktop';
@@ -112,10 +113,11 @@ const createConfiguration = configuration => {
     }
   };
 
+  const result = merge(defaults, configuration);
   console.log('Defaults', defaults);
   console.log('Given', configuration);
-
-  return Object.assign({}, defaults, configuration);
+  console.log('Result', result);
+  return result;
 };
 
 const loadProviders = async (providers, filter) => {

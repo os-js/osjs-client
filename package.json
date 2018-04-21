@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "css-mediaquery": "^0.1.2",
+    "deepmerge": "^2.1.0",
     "hyperapp": "^1.2.5"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",

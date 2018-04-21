@@ -70,7 +70,7 @@ const createMountpoint = (core, transports, props) => {
 
   return Object.assign({
     _transport: transport,
-    mouted: true,
+    mounted: true,
     attributes: {
       local: true,
       readOnly: false

@@ -251,6 +251,8 @@ export default class Core extends EventHandler {
 
     this.emit('osjs/core:start');
 
+    this._createListeners();
+
     await this._createConnection();
 
     const result = await loadProviders(this.providers, ({options}) => !options.before);
@@ -263,7 +265,7 @@ export default class Core extends EventHandler {
     console.groupEnd();
   }
 
-  /*
+  /**
    * Creates the main connection to server
    */
   _createConnection() {
@@ -295,6 +297,27 @@ export default class Core extends EventHandler {
         });
         console.warn('Connection closed', ev);
       };
+    });
+  }
+
+  /**
+   * Creates event listeners*
+   */
+  _createListeners() {
+    window.addEventListener('message', ev => {
+      const message = ev.data || {};
+      if (message) {
+        if (message.pid >= 0) {
+          const proc = Application.getApplications().find(p => p.pid === message.pid);
+          if (proc) {
+            console.debug('Routing message', message);
+            proc.emit('message', ...message.args);
+            return;
+          }
+        }
+
+        console.warn('Message with unknown reciever', message);
+      }
     });
   }
 

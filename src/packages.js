@@ -186,8 +186,6 @@ export default class Packages {
       throw new Error(`Package Metadata ${name} not found`);
     }
 
-    this.core.emit('osjs/application:launch', name, args, options);
-
     if (metadata.singleton) {
       const found = this.running.filter(n => n === name);
 
@@ -202,6 +200,8 @@ export default class Packages {
         });
       }
     }
+
+    this.core.emit('osjs/application:launch', name, args, options);
 
     this.running.push(name);
 

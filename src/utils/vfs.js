@@ -34,7 +34,8 @@
 export const parentDirectory = path => path
   .split('/')
   .filter((item, index, arr) => index < (arr.length - 1))
-  .join('/');
+  .join('/')
+  .replace(/\/?$/, '/');
 
 /*
  * Sorts an array of files

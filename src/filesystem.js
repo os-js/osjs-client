@@ -46,7 +46,7 @@ import SystemTransport from './vfs/transports/system';
 const getMountpointFromPath = (mounts, path) => {
   const re = /^(\w+):(.*)/;
   const match = String(path).replace(/\+/g, '/').match(re);
-  const [matching, prefix, str] = Array.from(match || []);
+  const [prefix] = Array.from(match || []).slice(1);
 
   if (!prefix) {
     throw new Error(`Given path '${path}' does not match 'name:/path'`);

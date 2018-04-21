@@ -109,6 +109,10 @@ const createConfiguration = configuration => {
         name: 'osjs',
         label: 'OS.js',
         transport: 'system'
+      }, {
+        name: 'home',
+        label: 'Home',
+        transport: 'system'
       }]
     }
   };

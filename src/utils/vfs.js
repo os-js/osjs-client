@@ -76,7 +76,10 @@ const sortMap = {
 const createSpecials = path => {
   const specials = [];
 
-  if (path !== '/') {
+  const stripped = path.replace(/\/+/g, '/')
+    .replace(/^(\w+):/, '') || '/';
+
+  if (stripped !== '/') {
     specials.push({
       isDirectory: true,
       isFile: false,

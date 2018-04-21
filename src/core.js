@@ -446,6 +446,7 @@ export default class Core extends EventHandler {
   async request(url, options = {}, type = null) {
     // TODO: Check actual connection or standalone mode
     options = Object.assign({}, {
+      credentials: 'same-origin',
       method: 'get',
       headers: {}
     }, options);

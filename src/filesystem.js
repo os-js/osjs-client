@@ -31,6 +31,7 @@
 import * as VFS from './vfs';
 import EventHandler from './event-handler';
 import SystemTransport from './vfs/transports/system';
+import merge from 'deepmerge';
 
 /**
  * VFS Mountpoint
@@ -68,14 +69,21 @@ const createMountpoint = (core, transports, props) => {
   const name = props.transport || 'system'; // FIXME
   const transport = new transports[name](core);
 
-  return Object.assign({
-    _transport: transport,
+  const result = merge({
     mounted: true,
+    transport: name,
     attributes: {
       local: true,
       readOnly: false
     }
   }, props);
+
+  result._transport = transport;
+  if (!result.label) {
+    result.label = result.name || name;
+  }
+
+  return result;
 };
 
 /**

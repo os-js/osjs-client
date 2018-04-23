@@ -144,19 +144,26 @@ export default class Auth {
    */
   async login(values) {
     const endpoint = this.core.url('/login');
-    const response = await this.core.request(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(values)
-    }, 'json');
 
-    if (!response) {
+    try {
+      const response = await this.core.request(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(values)
+      }, 'json');
+
+
+      this.onLogin(response);
+
+      return true;
+    } catch (e) {
+      if (this.core.config('development')) {
+        console.warn(e);
+      }
+
       alert('Login failed');
+
       return false;
     }
-
-    this.onLogin(response);
-
-    return true;
   }
 
   /**

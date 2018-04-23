@@ -155,6 +155,10 @@ const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
 
+const providerOptions = (name, defaults, opts = {}) => Object.assign({
+  args: defaults[name] ? defaults[name] : {}
+}, opts);
+
 /**
  * Core
  *
@@ -168,7 +172,7 @@ export default class Core extends EventHandler {
    * @param {Object} [options] Options
    * @param {Element} [options.root] The root DOM element for elements
    * @param {Element} [options.resourceRoot] The root DOM element for resources
-   * @param {Boolean} [options.registerDefault] Register default provided service providers
+   * @param {Boolean|Map<string, Object>} [options.registerDefault=true] Register default provided service providers. Can also be a map with arguments to pass on to options.
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
   constructor(config, options = {}) {
@@ -195,15 +199,18 @@ export default class Core extends EventHandler {
     options.classNames.forEach(n => this.$root.classList.add(n));
 
     if (options.registerDefault) {
-      this.register(CoreServiceProvider);
-      this.register(DesktopServiceProvider);
-      this.register(VFSServiceProvider);
-      this.register(ThemeServiceProvider);
-      this.register(NotificationServiceProvider);
+      const defaults = typeof options.registerDefault === 'object'
+        ? options.registerDefault || {}
+        : {};
 
-      this.register(AuthServiceProvider, {
+      this.register(CoreServiceProvider, providerOptions('core', defaults));
+      this.register(DesktopServiceProvider, providerOptions('desktop', defaults));
+      this.register(VFSServiceProvider, providerOptions('vfs', defaults));
+      this.register(ThemeServiceProvider, providerOptions('theme', defaults));
+      this.register(NotificationServiceProvider, providerOptions('notification', defaults));
+      this.register(AuthServiceProvider, providerOptions('auth', defaults, {
         before: true
-      });
+      }));
     }
   }
 

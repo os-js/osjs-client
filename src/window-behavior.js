@@ -110,13 +110,17 @@ const getEvent = (ev) => {
   return {clientX, clientY, touch: touch.length > 0, target};
 };
 
+const getScreenOrientation = screen => screen && screen.orientation
+  ? screen.orientation.type
+  : window.matchMedia('(orientation: portrait)') ? 'portrait' : 'landscape';
+
 /*
  * Gets a media query name from a map
  */
 const getMediaQueryName = (win) => Object.keys(win.attributes.mediaQueries)
   .filter(name => mediaQuery.match(win.attributes.mediaQueries[name], {
     type: 'screen',
-    orientation: window.screen.orientation.type,
+    orientation: getScreenOrientation(window.screen),
     width: win.state.dimension.width,
     height: win.state.dimension.height
   }))

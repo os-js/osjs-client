@@ -29,6 +29,7 @@
  */
 
 .osjs-login {
+  font-family: arial;
   max-width: 80%;
   min-width: 400px;
   position: absolute;
@@ -49,26 +50,27 @@
     &:not([type="submit"]) {
       display: block;
       width: 100%;
-    }
-
-    &[type="submit"] {
-
+      border: 1px solid #e6e6e6;
     }
   }
 
-  & > form {
-    & > div {
-      padding: 1em;
+  .osjs-login-header {
+    text-align: center;
+    font-weight: bold;
+  }
 
-      &:first-child {
-        text-align: center;
-        font-weight: bold;
-      }
+  .osjs-login-error {
+    background: #ff0000;
+    color: #fff;
+    text-align: center;
+    text-decoration: uppercase;
+  }
 
-      &:last-child {
-        text-align: right;
-      }
+  div div {
+    padding: $base-margin / 2;
+
+    &:last-child {
+      text-align: right;
     }
   }
 }
-

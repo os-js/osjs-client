@@ -29,30 +29,33 @@
  */
 
 import {h, app} from 'hyperapp';
+import EventHandler from './event-handler';
 
-const createAttributes = (props, field) => {
+const createAttributes = (props, field, disabled) => {
+  disabled = disabled ? 'disabled' : undefined;
   if (field.tagName === 'input') {
     if (field.attributes.type !== 'submit') {
       return Object.assign({}, {
         autocapitalize: 'off',
         autocomplete: 'off',
+        disabled,
         oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
       }, field.attributes);
     }
   }
 
-  return field.attributes;
+  return Object.assign({disabled}, field.attributes);
 };
 
-const createFields = (props, fields) => fields.map(f => h('div', {}, h(f.tagName, createAttributes(props, f))));
-
+const createFields = (props, fields, disabled) =>
+  fields.map(f => h('div', {}, h(f.tagName, createAttributes(props, f, disabled))));
 
 /**
  * Authentication Handler
  *
  * @desc Handles Authentication
  */
-export default class Auth {
+export default class Auth extends EventHandler {
 
   /**
    * Create authentication handler
@@ -64,6 +67,8 @@ export default class Auth {
    * @param {Object[]} [options.fields] Login box fields
    */
   constructor(core, options = {}) {
+    super('Auth');
+
     this.core = core;
     this.options = Object.assign({
       ui: {
@@ -91,9 +96,6 @@ export default class Auth {
         }]
       }
     }, options);
-
-    this.$container = document.createElement('div');
-    this.$container.className = 'osjs-login';
   }
 
   /**
@@ -102,31 +104,45 @@ export default class Auth {
    * @desc Shows the login screen etc
    */
   init() {
+    this.$container = document.createElement('div');
+    this.$container.className = 'osjs-login';
     this.core.$root.appendChild(this.$container);
 
     this.render();
 
-    const login = this.core.configuration.login || {};
-    if (login.username && login.password) {
-      this.login(login);
-    }
+    this.onInit();
   }
 
   render() {
     const login = this.core.configuration.login || {};
-    const createView = (state, actions) => h('form', {
-      method: 'post',
-      action: '#',
-      autocomplete: 'off',
-      onsubmit: actions.submit
-    }, [
-      h('div', {}, h('span', {}, this.options.ui.title)),
-      ...createFields(state, this.options.ui.fields)
+    const createView = (state, actions) => h('div', {}, [
+      h('div', {
+        class: 'osjs-login-error',
+        style: {display: state.error ? 'block' : 'none'}
+      }, h('span', {}, state.error)),
+      h('div', {
+        class: 'osjs-login-header'
+      }, h('span', {}, this.options.ui.title)),
+      h('form', {
+        loading: false,
+        method: 'post',
+        action: '#',
+        autocomplete: 'off',
+        onsubmit: actions.submit
+      }, [
+        ...createFields(state, this.options.ui.fields, state.loading)
+      ])
     ]);
 
-    app(Object.assign({}, login), {
+    const a = app(Object.assign({}, login), {
+      setLoading: loading => state => ({loading}),
+      setError: error => state => ({error}),
       submit: ev => state => {
         ev.preventDefault();
+
+        if (state.loading) {
+          return;
+        }
 
         const values = Array.from(ev.target.elements)
           .filter(el => el.type !== 'submit')
@@ -135,6 +151,10 @@ export default class Auth {
         this.login(values);
       }
     }, createView, this.$container);
+
+    this.on('login:start', () => a.setLoading(true));
+    this.on('login:stop', () => a.setLoading(false));
+    this.on('login:error', err => a.setError(err));
   }
 
   /**
@@ -143,6 +163,8 @@ export default class Auth {
    * @return {Boolean}
    */
   async login(values) {
+    this.emit('login:start');
+
     const endpoint = this.core.url('/login');
 
     try {
@@ -150,7 +172,6 @@ export default class Auth {
         method: 'POST',
         body: JSON.stringify(values)
       }, 'json');
-
 
       this.onLogin(response);
 
@@ -160,9 +181,11 @@ export default class Auth {
         console.warn(e);
       }
 
-      alert('Login failed');
+      this.emit('login:error', 'Login failed');
 
       return false;
+    } finally {
+      this.emit('login:stop');
     }
   }
 
@@ -181,6 +204,16 @@ export default class Auth {
     }
 
     this.onLogout(response, reload);
+  }
+
+  /**
+   * Handle init
+   */
+  onInit() {
+    const login = this.core.configuration.login || {};
+    if (login.username && login.password) {
+      this.login(login);
+    }
   }
 
   /**

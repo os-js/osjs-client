@@ -33,7 +33,6 @@ import Window from './src/window';
 import Desktop from './src/desktop';
 import Application from './src/application';
 import Notification from './src/notification';
-import EventHandler from './src/event-handler';
 import WindowBehavior from './src/window-behavior';
 import Transport from './src/vfs/transport';
 
@@ -42,7 +41,6 @@ import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
 import ThemeServiceProvider from './src/providers/theme';
 import AuthServiceProvider from './src/providers/auth';
-import ServiceProvider from './src/service-provider';
 
 export {
   Core,
@@ -51,7 +49,6 @@ export {
   Desktop,
   Application,
   Notification,
-  EventHandler,
   WindowBehavior,
   Transport,
 
@@ -59,6 +56,5 @@ export {
   NotificationServiceProvider,
   VFSServiceProvider,
   ThemeServiceProvider,
-  AuthServiceProvider,
-  ServiceProvider
+  AuthServiceProvider
 };

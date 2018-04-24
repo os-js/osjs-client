@@ -29,8 +29,7 @@
  */
 
 import Application from './application';
-import EventHandler from './event-handler';
-import {resolveTreeByKey} from './utils/config';
+import {CoreBase} from '@osjs/common';
 import merge from 'deepmerge';
 
 import CoreServiceProvider from './providers/core';
@@ -124,33 +123,6 @@ const createConfiguration = configuration => {
   return result;
 };
 
-const loadProviders = async (providers, filter) => {
-  const list = providers
-    .filter(filter)
-    .map(({provider}) => provider);
-
-  console.log('Loading', list.length, 'providers');
-
-  try {
-    for (let i = 0; i < list.length; i++) {
-      try {
-        await list[i].init();
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-  } catch (e) {
-    console.error(e);
-    console.groupEnd();
-
-    return false;
-  }
-
-  list.forEach(p => p.start());
-
-  return true;
-};
-
 const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
@@ -164,7 +136,7 @@ const providerOptions = (name, defaults, opts = {}) => Object.assign({
  *
  * @desc Main class for OS.js service providers and bootstrapping.
  */
-export default class Core extends EventHandler {
+export default class Core extends CoreBase {
 
   /**
    * Create core instance
@@ -184,15 +156,9 @@ export default class Core extends EventHandler {
 
     super('Core');
 
-    this.providers = [];
-    this.registry = [];
-    this.instances = {};
     this.configuration = createConfiguration(config);
     this.user = null;
     this.ws = null;
-    this.booted = false;
-    this.started = false;
-    this.destroyed = false;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
@@ -221,16 +187,12 @@ export default class Core extends EventHandler {
     if (this.destroyed) {
       return;
     }
-    this.destroyed = true;
 
     this.emit('osjs/core:destroy');
 
     Application.getApplications().forEach(app => app.destroy());
 
-    this.providers.forEach(({provider}) => provider.destroy());
-
-    this.providers = [];
-    this.instances =  {};
+    super.destroy();
   }
 
   /**
@@ -240,11 +202,10 @@ export default class Core extends EventHandler {
     if (this.booted) {
       return;
     }
-    this.booted = true;
 
     console.group('Core::boot()');
 
-    await loadProviders(this.providers, ({options}) => options.before);
+    await super.boot();
 
     console.groupEnd();
   }
@@ -256,7 +217,6 @@ export default class Core extends EventHandler {
     if (this.started) {
       return;
     }
-    this.started = true;
 
     console.group('Core::start()');
 
@@ -266,8 +226,9 @@ export default class Core extends EventHandler {
 
     await this._createConnection();
 
-    const result = await loadProviders(this.providers, ({options}) => !options.before);
+    const result = await super.start();
     if (!result) {
+      console.groupEnd();
       return;
     }
 
@@ -330,108 +291,6 @@ export default class Core extends EventHandler {
         console.warn('Message with unknown reciever', message);
       }
     });
-  }
-
-  /**
-   * Gets a configuration entry by key
-   *
-   * @param {String} key The key to get the value from
-   * @param {*} [defaultValue] If result is undefined, return this instead
-   * @see {resolveTreeByKey}
-   * @return {*}
-   */
-  config(key, defaultValue) {
-    return resolveTreeByKey(this.configuration, key, defaultValue);
-  }
-
-  /**
-   * Register a service provider
-   *
-   * @param {Class} ref A class reference
-   * @param {Object} [options] Options for handling of provider
-   * @param {Boolean} [options.before] Load this provider early
-   * @param {Object} [options.args] Arguments to send to the constructor
-   */
-  register(ref, options = {}) {
-    try {
-      const instance = new ref(this, options.args);
-      this.providers.push({
-        options,
-        provider: instance
-      });
-    } catch (e) {
-      console.error('Core::register()', e);
-    }
-  }
-
-  /*
-   * Wrapper for registering a service provider
-   */
-  _registerMethod(name, singleton, callback) {
-    console.log(`Registering service provider: "${name}" (${singleton ? 'singleton' : 'instance'})`);
-
-    this.registry.push({
-      singleton,
-      name,
-      make(...args) {
-        return callback(...args);
-      }
-    });
-  }
-
-  /**
-   * Register a instanciator provider
-   *
-   * @param {String} name Provider name
-   * @param {Function} callback Callback that returns an instance
-   */
-  instance(name, callback) {
-    this._registerMethod(name, false, callback);
-  }
-
-  /**
-   * Register a singleton provider
-   *
-   * @param {String} name Provider name
-   * @param {Function} callback Callback that returns an instance
-   */
-  singleton(name, callback) {
-    this._registerMethod(name, true, callback);
-  }
-
-  /**
-   * Create an instance of a provided service
-   *
-   * @param {String} name Service name
-   * @param {*} args Constructor arguments
-   * @return {*} An instance of a service
-   */
-  make(name, ...args) {
-    const found = this.registry.find(p => p.name === name);
-    if (!found) {
-      throw new Error(`Provider '${name}' not found`);
-    }
-
-    if (!found.singleton) {
-      return found.make(...args);
-    }
-
-    if (!this.instances[name]) {
-      if (found) {
-        this.instances[name] = found.make(...args);
-      }
-    }
-
-    return this.instances[name];
-  }
-
-  /**
-   * Check if a service exists
-   * @param {String} name Provider name
-   * @return {Boolean}
-   */
-  has(name) {
-    return this.registry.findIndex(p => p.name === name) !== -1;
   }
 
   /**

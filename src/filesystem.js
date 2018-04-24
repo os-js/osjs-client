@@ -29,7 +29,7 @@
  */
 
 import * as VFS from './vfs';
-import EventHandler from './event-handler';
+import {EventHandler} from '@osjs/common';
 import SystemTransport from './vfs/transports/system';
 import merge from 'deepmerge';
 

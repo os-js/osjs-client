@@ -27,7 +27,7 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import EventHandler from './event-handler';
+import {EventHandler} from '@osjs/common';
 import {escapeHtml, createCssText} from './utils/dom';
 
 /**

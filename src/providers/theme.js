@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import ServiceProvider from '../service-provider';
+import {ServiceProvider} from '@osjs/common';
 import {style} from '../utils/dom';
 
 /**

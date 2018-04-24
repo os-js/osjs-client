@@ -29,7 +29,7 @@
  */
 
 import {h, app} from 'hyperapp';
-import EventHandler from './event-handler';
+import {EventHandler} from '@osjs/common';
 
 const createAttributes = (props, field, disabled) => {
   disabled = disabled ? 'disabled' : undefined;

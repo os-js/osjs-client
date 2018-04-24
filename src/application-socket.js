@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import EventHandler from './event-handler';
+import {EventHandler} from '@osjs/common';
 
 /**
  * Application Socket

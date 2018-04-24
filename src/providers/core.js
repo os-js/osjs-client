@@ -31,12 +31,12 @@
 import Application from '../application';
 import Window from '../window';
 import WindowBehavior from '../window-behavior';
-import ServiceProvider from '../service-provider';
-import EventHandler from '../event-handler';
 import Session from '../session';
 import Settings from '../settings';
 import Packages from '../packages';
 import Tray from '../tray';
+
+import {EventHandler, ServiceProvider} from '@osjs/common';
 
 /**
  * OS.js Core Service Provider

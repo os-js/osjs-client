@@ -30,7 +30,7 @@
 
 import Application from './application';
 import {CoreBase} from '@osjs/common';
-import merge from 'deepmerge';
+import {defaultConfiguration} from './config';
 
 import CoreServiceProvider from './providers/core';
 import DesktopServiceProvider from './providers/desktop';
@@ -38,90 +38,6 @@ import NotificationServiceProvider from './providers/notifications';
 import VFSServiceProvider from './providers/vfs';
 import ThemeServiceProvider from './providers/theme';
 import AuthServiceProvider from './providers/auth';
-
-const createConfiguration = configuration => {
-  const {port, hostname, pathname} = window.location;
-  const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
-  const defaults = {
-    development: true,
-    standalone: false,
-    public: path,
-    theme: 'Standard',
-    application: {
-      categories: {
-        development: {
-          label: 'Development',
-          icon: 'applications-development'
-        },
-        science: {
-          label: 'Science',
-          icon: 'applications-science'
-        },
-        games: {
-          label: 'Games',
-          icon: 'applications-games'
-        },
-        graphics: {
-          label: 'Graphics',
-          icon: 'applications-graphics'
-        },
-        network: {
-          label: 'Network',
-          icon: 'applications-internet'
-        },
-        multimedia: {
-          label: 'Multimedia',
-          icon: 'applications-multimedia'
-        },
-        office: {
-          label: 'Office',
-          icon: 'applications-office'
-        },
-        system: {
-          label: 'System',
-          icon: 'applications-system'
-        },
-        utilities: {
-          label: 'Utilities',
-          icon: 'applications-utilities'
-        },
-        other: {
-          label: 'Other',
-          icon: 'applications-other'
-        }
-      }
-    },
-    login: {
-      username: null,
-      password: null
-    },
-    ws: {
-      protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
-      port,
-      hostname,
-      path
-    },
-    vfs: {
-      defaultPath: 'osjs:/',
-      transports: {},
-      mountpoints: [{
-        name: 'osjs',
-        label: 'OS.js',
-        transport: 'system'
-      }, {
-        name: 'home',
-        label: 'Home',
-        transport: 'system'
-      }]
-    }
-  };
-
-  const result = merge(defaults, configuration);
-  console.log('Defaults', defaults);
-  console.log('Given', configuration);
-  console.log('Result', result);
-  return result;
-};
 
 const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
@@ -154,9 +70,8 @@ export default class Core extends CoreBase {
       root: document.body
     }, options);
 
-    super('Core');
+    super('Core', defaultConfiguration, config, options);
 
-    this.configuration = createConfiguration(config);
     this.user = null;
     this.ws = null;
     this.$root = options.root;

@@ -30,6 +30,11 @@
 
 import {resolveTreeByKey} from './utils/config';
 
+const defaultSettings = {
+  'osjs/session': core => ({}),
+  'osjs/settings': core => core.config('user.settings', {})
+};
+
 const localStorageAdapter = {
   save(settings) {
     Object.keys(settings).forEach((k) => {
@@ -103,7 +108,13 @@ export default class Settings {
    */
   load() {
     return new Promise((resolve) => {
-      this.settings = localStorageAdapter.load();
+      const defaults = Object.keys(defaultSettings)
+        .reduce((o, key) => Object.assign(o, {
+          [key]: defaultSettings[key](this.core)
+        }), {});
+
+      const loaded = localStorageAdapter.load();
+      this.settings = Object.assign({}, defaults, loaded);
       resolve();
     });
   }

@@ -109,9 +109,12 @@ export default class CoreServiceProvider extends ServiceProvider {
       config: (...args) => this.core.config(...args)
     }));
 
-    this.core.singleton('osjs/settings', () => {
-      return this.settings;
-    });
+    this.core.singleton('osjs/settings', () => ({
+      save: () => this.settings.save(),
+      load: () => this.settings.load(),
+      get: (...args) => this.settings.get(...args),
+      set: (...args) => this.settings.set(...args)
+    }));
 
     this.core.singleton('osjs/tray', () => ({
       create: (options, handler) => this.tray.create(options, handler),

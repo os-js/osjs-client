@@ -32,7 +32,6 @@ import Application from '../application';
 import Window from '../window';
 import WindowBehavior from '../window-behavior';
 import Session from '../session';
-import Settings from '../settings';
 import Packages from '../packages';
 import Tray from '../tray';
 

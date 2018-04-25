@@ -41,7 +41,8 @@ export default class SettingsServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    this.settings = new Settings(core);
+    const classRef = args.class || Settings;
+    this.settings = new classRef(core);
   }
 
   async init() {

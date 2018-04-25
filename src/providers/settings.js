@@ -1,4 +1,4 @@
-/*!
+/*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
  * Copyright (c) 2011-2018, Anders Evenrud <andersevenrud@gmail.com>
@@ -27,38 +27,32 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import Core from './src/core';
-import Auth from './src/auth';
-import Settings from './src/auth';
-import Window from './src/window';
-import Desktop from './src/desktop';
-import Application from './src/application';
-import Notification from './src/notification';
-import WindowBehavior from './src/window-behavior';
-import Transport from './src/vfs/transport';
 
-import DesktopServiceProvider from './src/providers/desktop';
-import NotificationServiceProvider from './src/providers/notifications';
-import VFSServiceProvider from './src/providers/vfs';
-import ThemeServiceProvider from './src/providers/theme';
-import AuthServiceProvider from './src/providers/auth';
-import SettingsServiceProvider from './src/providers/settings';
+import {ServiceProvider} from '@osjs/common';
+import Settings from '../settings';
 
-export {
-  Core,
-  Auth,
-  Settings,
-  Window,
-  Desktop,
-  Application,
-  Notification,
-  WindowBehavior,
-  Transport,
+/**
+ * OS.js Settings Service Provider
+ *
+ * @desc Provides services for settings
+ */
+export default class SettingsServiceProvider extends ServiceProvider {
 
-  DesktopServiceProvider,
-  NotificationServiceProvider,
-  VFSServiceProvider,
-  ThemeServiceProvider,
-  AuthServiceProvider,
-  SettingsServiceProvider
-};
+  constructor(core, args = {}) {
+    super(core);
+
+    this.settings = new Settings(core);
+  }
+
+  async init() {
+    this.core.singleton('osjs/settings', () => ({
+      save: () => this.settings.save(),
+      load: () => this.settings.load(),
+      get: (...args) => this.settings.get(...args),
+      set: (...args) => this.settings.set(...args)
+    }));
+
+    await this.settings.load();
+  }
+
+}

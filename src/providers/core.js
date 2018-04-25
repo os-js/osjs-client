@@ -45,7 +45,7 @@ import {EventHandler, ServiceProvider} from '@osjs/common';
  */
 export default class CoreServiceProvider extends ServiceProvider {
 
-  constructor(core) {
+  constructor(core, args = {}) {
     super(core);
 
     const getApplications = Application.getApplications().map(app => ({
@@ -71,7 +71,6 @@ export default class CoreServiceProvider extends ServiceProvider {
     });
 
     this.session = new Session(core);
-    this.settings = new Settings(core);
     this.tray = new Tray(core);
     this.pm = new Packages(core);
   }
@@ -109,13 +108,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       config: (...args) => this.core.config(...args)
     }));
 
-    this.core.singleton('osjs/settings', () => ({
-      save: () => this.settings.save(),
-      load: () => this.settings.load(),
-      get: (...args) => this.settings.get(...args),
-      set: (...args) => this.settings.set(...args)
-    }));
-
     this.core.singleton('osjs/tray', () => ({
       create: (options, handler) => this.tray.create(options, handler),
       list: () => this.tray.entries.map(e => Object.assign({}, e))
@@ -129,7 +121,6 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
 
     await this.pm.init();
-    await this.settings.load();
   }
 
   start() {

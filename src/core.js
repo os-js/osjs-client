@@ -38,6 +38,7 @@ import NotificationServiceProvider from './providers/notifications';
 import VFSServiceProvider from './providers/vfs';
 import ThemeServiceProvider from './providers/theme';
 import AuthServiceProvider from './providers/auth';
+import SettingsServiceProvider from './providers/settings';
 
 const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
@@ -89,6 +90,7 @@ export default class Core extends CoreBase {
       this.register(VFSServiceProvider, providerOptions('vfs', defaults));
       this.register(ThemeServiceProvider, providerOptions('theme', defaults));
       this.register(NotificationServiceProvider, providerOptions('notification', defaults));
+      this.register(SettingsServiceProvider, providerOptions('settings', defaults));
       this.register(AuthServiceProvider, providerOptions('auth', defaults, {
         before: true
       }));

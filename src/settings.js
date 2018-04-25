@@ -89,34 +89,50 @@ export default class Settings {
   }
 
   /**
+   * Wrapper for saving settings
+   *
+   * @desc Debounces saving so multiple requests do not occur at the
+   * same time
+   * @param {Function} fn A function that returns a promise
+   */
+  _save(fn) {
+    return new Promise((resolve, reject) => {
+      if (this.debounce) {
+        const [promise, timer] = this.debounce;
+        promise.resolve(false);
+        this.debounce = clearTimeout(timer);
+      }
+
+      this.debounce = [
+        {resolve, reject},
+        setTimeout(() => {
+          fn().then(resolve).catch(reject);
+        }, 100)
+      ];
+    });
+  }
+
+  /**
    * Saves Settings
    * @return {Promise<Boolean, Error>}
    */
-  save() {
-    return new Promise((resolve) => {
-      clearTimeout(this.debounce);
-      this.debounce = setTimeout(() => {
-        localStorageAdapter.save(this.settings);
-        resolve(true);
-      }, 100);
-    });
+  async save() {
+    const fn = () => Promise.resolve(localStorageAdapter.save(this.settings));
+    return this._save(fn);
   }
 
   /**
    * Loads Settings
    * @return {Promise<Boolean, Error>}
    */
-  load() {
-    return new Promise((resolve) => {
-      const defaults = Object.keys(defaultSettings)
-        .reduce((o, key) => Object.assign(o, {
-          [key]: defaultSettings[key](this.core)
-        }), {});
+  async load() {
+    const defaults = Object.keys(defaultSettings)
+      .reduce((o, key) => Object.assign(o, {
+        [key]: defaultSettings[key](this.core)
+      }), {});
 
-      const loaded = localStorageAdapter.load();
-      this.settings = Object.assign({}, defaults, loaded);
-      resolve();
-    });
+    const loaded = localStorageAdapter.load();
+    this.settings = Object.assign({}, defaults, loaded);
   }
 
   /**

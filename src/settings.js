@@ -117,7 +117,9 @@ export default class Settings {
    * @return {*}
    */
   get(key, defaultValue) {
-    return resolveTreeByKey(this.settings, key, defaultValue);
+    return key
+      ? resolveTreeByKey(this.settings, key, defaultValue)
+      : Object.assign({}, this.settings);
   }
 
   /**

@@ -35,6 +35,7 @@ export const defaultConfiguration = {
   standalone: false,
   public: path,
   theme: 'Standard',
+
   application: {
     categories: {
       development: {
@@ -79,16 +80,19 @@ export const defaultConfiguration = {
       }
     }
   },
+
   login: {
     username: null,
     password: null
   },
+
   ws: {
     protocol: window.location.protocol === 'https:' ? 'wss' : 'ws',
     port,
     hostname,
     path
   },
+
   vfs: {
     defaultPath: 'osjs:/',
     transports: {},
@@ -101,5 +105,30 @@ export const defaultConfiguration = {
       label: 'Home',
       transport: 'system'
     }]
+  },
+
+  user: {
+    settings: {
+      __revision__: 0,
+      panels: [],
+      widgets: [],
+      keybindings: [],
+      theme: {
+        name: 'Standard',
+        animations: false
+      },
+      font: 'Roboto',
+      locale: {
+        language: 'en'
+      },
+      background: {
+        src: require('./styles/wallpaper.png'),
+        color: '#572a79',
+        style: 'cover'
+      },
+      desktop: {
+        iconView: false
+      }
+    }
   }
 };

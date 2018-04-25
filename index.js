@@ -29,6 +29,7 @@
  */
 import Core from './src/core';
 import Auth from './src/auth';
+import Settings from './src/auth';
 import Window from './src/window';
 import Desktop from './src/desktop';
 import Application from './src/application';
@@ -45,6 +46,7 @@ import AuthServiceProvider from './src/providers/auth';
 export {
   Core,
   Auth,
+  Settings,
   Window,
   Desktop,
   Application,

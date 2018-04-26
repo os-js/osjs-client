@@ -28,34 +28,14 @@
  * @licence Simplified BSD License
  */
 
-import {h, app} from 'hyperapp';
-import {EventHandler} from '@osjs/common';
-
-const createAttributes = (props, field, disabled) => {
-  disabled = disabled ? 'disabled' : undefined;
-  if (field.tagName === 'input') {
-    if (field.attributes.type !== 'submit') {
-      return Object.assign({}, {
-        autocapitalize: 'off',
-        autocomplete: 'off',
-        disabled,
-        oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
-      }, field.attributes);
-    }
-  }
-
-  return Object.assign({disabled}, field.attributes);
-};
-
-const createFields = (props, fields, disabled) =>
-  fields.map(f => h('div', {}, h(f.tagName, createAttributes(props, f, disabled))));
+import Login from './login';
 
 /**
  * Authentication Handler
  *
  * @desc Handles Authentication
  */
-export default class Auth extends EventHandler {
+export default class Auth {
 
   /**
    * Create authentication handler
@@ -63,39 +43,14 @@ export default class Auth extends EventHandler {
    * @param {Core} core Core reference
    * @param {Object} [options] Options
    * @param {String} [options.ui] UI Options
-   * @param {String} [options.title] Login box title
-   * @param {Object[]} [options.fields] Login box fields
    */
   constructor(core, options = {}) {
-    super('Auth');
-
     this.core = core;
     this.options = Object.assign({
-      ui: {
-        title: 'Welcome to OS.js',
-        fields: [{
-          tagName: 'input',
-          attributes: {
-            name: 'username',
-            type: 'text',
-            placeholder: 'Username'
-          }
-        }, {
-          tagName: 'input',
-          attributes: {
-            name: 'password',
-            type: 'password',
-            placeholder: 'Password'
-          }
-        }, {
-          tagName: 'input',
-          attributes: {
-            type: 'submit',
-            value: 'Login'
-          }
-        }]
-      }
+      ui: {}
     }, options);
+
+    this.ui = new Login(core, this.options.ui);
   }
 
   /**
@@ -104,66 +59,28 @@ export default class Auth extends EventHandler {
    * @desc Shows the login screen etc
    */
   init() {
-    this.$container = document.createElement('div');
-    this.$container.className = 'osjs-login';
-    this.core.$root.appendChild(this.$container);
+    this.ui.on('login:post', values => this.login(values));
 
-    this.render();
+    this.ui.init();
 
-    this.onInit();
-  }
-
-  render() {
     const login = this.core.config('auth.login', {});
-    const createView = (state, actions) => h('div', {}, [
-      h('div', {
-        class: 'osjs-login-error',
-        style: {display: state.error ? 'block' : 'none'}
-      }, h('span', {}, state.error)),
-      h('div', {
-        class: 'osjs-login-header'
-      }, h('span', {}, this.options.ui.title)),
-      h('form', {
-        loading: false,
-        method: 'post',
-        action: '#',
-        autocomplete: 'off',
-        onsubmit: actions.submit
-      }, [
-        ...createFields(state, this.options.ui.fields, state.loading)
-      ])
-    ]);
-
-    const a = app(Object.assign({}, login), {
-      setLoading: loading => state => ({loading}),
-      setError: error => state => ({error}),
-      submit: ev => state => {
-        ev.preventDefault();
-
-        if (state.loading) {
-          return;
-        }
-
-        const values = Array.from(ev.target.elements)
-          .filter(el => el.type !== 'submit')
-          .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
-
-        this.login(values);
-      }
-    }, createView, this.$container);
-
-    this.on('login:start', () => a.setLoading(true));
-    this.on('login:stop', () => a.setLoading(false));
-    this.on('login:error', err => a.setError(err));
+    if (login.username && login.password) {
+      this.login(login);
+    }
   }
 
   async _login(fn) {
-    this.emit('login:start');
+    this.ui.emit('login:start');
 
     try {
       const response = await fn();
+      if (!response) {
+        return false;
+      }
 
-      this.onLogin(response);
+      this.ui.destroy();
+      this.core.user = response.user;
+      this.core.start();
 
       return true;
     } catch (e) {
@@ -171,17 +88,26 @@ export default class Auth extends EventHandler {
         console.warn(e);
       }
 
-      this.emit('login:error', 'Login failed');
+      this.ui.emit('login:error', 'Login failed');
 
       return false;
     } finally {
-      this.emit('login:stop');
+      this.ui.emit('login:stop');
     }
   }
 
   async _logout(fn, reload) {
     const response = await fn();
-    this.onLogout(response, reload);
+    if (!response) {
+      return;
+    }
+
+    this.core.destroy();
+
+    // FIXME
+    if (reload) {
+      setTimeout(() => window.location.reload(), 1);
+    }
   }
 
   /**
@@ -190,54 +116,8 @@ export default class Auth extends EventHandler {
    * @return {Boolean}
    */
   async login(values) {
-    this.emit('login:error', 'No login adapter');
+    this.ui.emit('login:error', 'No login adapter');
     return false;
-  }
-
-  /**
-   * Perform logout
-   * @param {Boolean} [reload=true] Reload OS.js
-   */
-  async logout(reload = true) {
-    this.onLogout(true, reload);
-  }
-
-  /**
-   * Handle init
-   */
-  onInit() {
-    const login = this.core.config('auth.login', {});
-    if (login.username && login.password) {
-      this.login(login);
-    }
-  }
-
-  /**
-   * Handle login request
-   * @param {Object} response The response
-   */
-  onLogin(response) {
-    if (this.$container) {
-      this.$container.remove();
-    }
-
-    this.core.user = response.user;
-
-    this.core.start();
-  }
-
-  /**
-   * Handle logout request
-   * @param {Object} response The response
-   * @param {Boolean} reload Reload OS.js
-   */
-  onLogout(response, reload) {
-    this.core.destroy();
-
-    // FIXME
-    if (reload) {
-      setTimeout(() => window.location.reload(), 1);
-    }
   }
 
 }

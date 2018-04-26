@@ -105,7 +105,7 @@ export default class Settings {
    */
   async _load(fn) {
     const settings = await fn();
-    this.settings = settings;
+    this.settings = Object.assign({}, defaultSettings, settings);
     return true;
   }
 

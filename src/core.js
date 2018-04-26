@@ -41,6 +41,7 @@ import AuthServiceProvider from './providers/auth';
 import SettingsServiceProvider from './providers/settings';
 
 const encodeQueryData = data => Object.keys(data)
+  .filter(k => typeof data[k] !== 'object')
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
 

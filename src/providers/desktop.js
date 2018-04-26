@@ -51,9 +51,9 @@ export default class DesktopServiceProvider extends ServiceProvider {
   async init() {
     this.desktop.init();
 
-    this.core.singleton('osjs/desktop', () => {
-      return this.desktop;
-    });
+    this.core.singleton('osjs/desktop', () => ({
+      getRect: () => this.desktop.getRect()
+    }));
   }
 
 }

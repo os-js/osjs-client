@@ -28,32 +28,29 @@
  * @licence Simplified BSD License
  */
 
-import {ServiceProvider} from '@osjs/common';
-import ServerAuth from '../auth/server';
+import Auth from '../auth';
 
 /**
- * OS.js Auth Service Provider
+ * Server Authentication Adapter
  *
- * @desc Creates the login prompt and handles authentication flow
+ * @desc Provides express server login handling
  */
-export default class AuthServiceProvider extends ServiceProvider {
+export default class ServerAuth extends Auth {
 
-  constructor(core, args = {}) {
-    super(core);
+  async login(values) {
+    const endpoint = this.core.url('/login');
 
-    const classRef = args.class || ServerAuth;
-    this.auth = new classRef(core);
+    return this._login(() => this.core.request(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(values)
+    }, 'json'));
   }
 
-  async init() {
-    this.core.singleton('osjs/auth', () => ({
-      login: () => this.auth.login(),
-      logout: () => this.auth.logout()
-    }));
-  }
+  async logout(reload = true) {
+    const endpoint = this.core.url('/logout');
 
-  start() {
-    this.auth.init();
+    return this._logout(() => this.core.request(endpoint, {
+      method: 'POST'
+    }, 'json'), reload);
   }
-
 }

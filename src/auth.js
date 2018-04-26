@@ -114,7 +114,7 @@ export default class Auth extends EventHandler {
   }
 
   render() {
-    const login = this.core.configuration.login || {};
+    const login = this.core.config('auth.login', {});
     const createView = (state, actions) => h('div', {}, [
       h('div', {
         class: 'osjs-login-error',
@@ -157,21 +157,11 @@ export default class Auth extends EventHandler {
     this.on('login:error', err => a.setError(err));
   }
 
-  /**
-   * Perform login
-   * @param {Object} values Values from form
-   * @return {Boolean}
-   */
-  async login(values) {
+  async _login(fn) {
     this.emit('login:start');
 
-    const endpoint = this.core.url('/login');
-
     try {
-      const response = await this.core.request(endpoint, {
-        method: 'POST',
-        body: JSON.stringify(values)
-      }, 'json');
+      const response = await fn();
 
       this.onLogin(response);
 
@@ -189,28 +179,34 @@ export default class Auth extends EventHandler {
     }
   }
 
+  async _logout(fn, reload) {
+    const response = await fn();
+    this.onLogout(response, reload);
+  }
+
+  /**
+   * Perform login
+   * @param {Object} values Values from form
+   * @return {Boolean}
+   */
+  async login(values) {
+    this.emit('login:error', 'No login adapter');
+    return false;
+  }
+
   /**
    * Perform logout
    * @param {Boolean} [reload=true] Reload OS.js
    */
   async logout(reload = true) {
-    const endpoint = this.core.url('/logout');
-    const response = await this.core.request(endpoint, {
-      method: 'POST'
-    }, 'json');
-
-    if (!response) {
-      return;
-    }
-
-    this.onLogout(response, reload);
+    this.onLogout(true, reload);
   }
 
   /**
    * Handle init
    */
   onInit() {
-    const login = this.core.configuration.login || {};
+    const login = this.core.config('auth.login', {});
     if (login.username && login.password) {
       this.login(login);
     }

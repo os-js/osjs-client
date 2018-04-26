@@ -89,7 +89,6 @@ export const defaultConfiguration = {
   },
 
   settings: {
-    adapter: 'localStorage'
   },
 
   ws: {

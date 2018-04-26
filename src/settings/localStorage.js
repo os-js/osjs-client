@@ -28,32 +28,38 @@
  * @licence Simplified BSD License
  */
 
-import {ServiceProvider} from '@osjs/common';
-import ServerAuth from '../auth/server';
+import Settings from '../settings';
 
 /**
- * OS.js Auth Service Provider
+ * LocalStorage Settings Adapter
  *
- * @desc Creates the login prompt and handles authentication flow
+ * @desc Provides a 'null' settings handling
  */
-export default class AuthServiceProvider extends ServiceProvider {
+export default class LocalStorageSettings extends Settings {
+  save() {
+    const fn = (settings) => {
+      Object.keys(settings).forEach((k) => {
+        localStorage.setItem(k, JSON.stringify(settings[k]));
+      });
 
-  constructor(core, args = {}) {
-    super(core);
+      return Promise.resolve(true);
+    };
 
-    const classRef = args.class || ServerAuth;
-    this.auth = new classRef(core);
+    return this._save(fn);
   }
 
-  async init() {
-    this.core.singleton('osjs/auth', () => ({
-      login: () => this.auth.login(),
-      logout: () => this.auth.logout()
-    }));
-  }
+  load() {
+    const fn = () => Promise.resolve(Object.keys(localStorage).reduce((o, v) => {
+      let value = localStorage.getItem(v);
+      try {
+        value = JSON.parse(value);
+      } catch (e) {
+        console.warn('localStorageAdapter parse error', e);
+      }
 
-  start() {
-    this.auth.init();
-  }
+      return Object.assign(o, {[v]: value});
+    }, {}));
 
+    return this._load(fn);
+  }
 }

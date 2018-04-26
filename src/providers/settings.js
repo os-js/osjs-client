@@ -29,7 +29,7 @@
  */
 
 import {ServiceProvider} from '@osjs/common';
-import Settings from '../settings';
+import LocalStorageSettings from '../settings/localStorage';
 
 /**
  * OS.js Settings Service Provider
@@ -41,12 +41,9 @@ export default class SettingsServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const classRef = args.class || Settings;
-    const classOptions = Object.assign({
-      adapter: core.config('settings.adapter')
-    }, args.config || {});
+    const classRef = args.class || LocalStorageSettings;
 
-    this.settings = new classRef(core, classOptions);
+    this.settings = new classRef(core, args);
   }
 
   async init() {

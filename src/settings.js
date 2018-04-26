@@ -35,45 +35,6 @@ const defaultSettings = {
   'osjs/settings': core => core.config('user.settings', {})
 };
 
-const localStorageAdapter = core => ({
-  save(settings) {
-    Object.keys(settings).forEach((k) => {
-      localStorage.setItem(k, JSON.stringify(settings[k]));
-    });
-
-    return Promise.resolve(true);
-  },
-
-  load() {
-    const result = Object.keys(localStorage).reduce((o, v) => {
-      let value = localStorage.getItem(v);
-      try {
-        value = JSON.parse(value);
-      } catch (e) {
-        console.warn('localStorageAdapter parse error', e);
-      }
-
-      return Object.assign(o, {[v]: value});
-    }, {});
-
-    return Promise.resolve(result);
-  }
-});
-
-const serverAdapter = core => ({
-  save(settings) {
-    return core.request(core.url('/settings'), {
-      method: 'post'
-    }, 'json');
-  },
-
-  load() {
-    return core.request(core.url('/settings'), {
-      method: 'get'
-    }, 'json');
-  }
-});
-
 /**
  * Settings Handler
  *
@@ -86,8 +47,6 @@ export default class Settings {
    *
    * @param {Core} core Core reference
    * @param {Map<string, Object>} Settings
-   * @param {Map<string, Function>} [options.adapters] A map of adapters
-   * @param {string} [options.adapter] The adapter to use
    */
   constructor(core, options) {
     /**
@@ -112,21 +71,7 @@ export default class Settings {
      * Options
      * @type {Object}
      */
-    this.options = Object.assign({}, {
-      adapters: {
-        localStorage: localStorageAdapter,
-        server: serverAdapter
-      },
-      adapter: 'localStorage'
-    }, options);
-
-    /**
-     * Our adapter
-     * @type {Map<string, Function>|null}
-     */
-    this.adapter = this.options.adapter
-      ? this.options.adapters[this.options.adapter](core)
-      : null;
+    this.options = options;
   }
 
   /**
@@ -147,33 +92,37 @@ export default class Settings {
       this.debounce = [
         {resolve, reject},
         setTimeout(() => {
-          fn().then(resolve).catch(reject);
+          fn(this.settings).then(resolve).catch(reject);
         }, 100)
       ];
     });
   }
 
   /**
+   * Wrapper for loading settings
+   *
+   * @param {Function} fn A function that returns a promise
+   */
+  async _load(fn) {
+    const settings = await fn();
+    this.settings = settings;
+    return true;
+  }
+
+  /**
    * Saves Settings
-   * @return {Promise<Boolean, Error>}
+   * @return {Boolean}
    */
   async save() {
-    const fn = () => Promise.resolve(this.adapter.save(this.settings));
-    return this._save(fn);
+    return false;
   }
 
   /**
    * Loads Settings
-   * @return {Promise<Boolean, Error>}
+   * @return {Boolean}
    */
   async load() {
-    const defaults = Object.keys(defaultSettings)
-      .reduce((o, key) => Object.assign(o, {
-        [key]: defaultSettings[key](this.core)
-      }), {});
-
-    const loaded = await this.adapter.load();
-    this.settings = Object.assign({}, defaults, loaded);
+    return false;
   }
 
   /**

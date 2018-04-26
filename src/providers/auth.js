@@ -29,6 +29,7 @@
  */
 
 import {ServiceProvider} from '@osjs/common';
+import LocalStorageAuth from '../auth/localStorage';
 import ServerAuth from '../auth/server';
 
 /**
@@ -41,7 +42,10 @@ export default class AuthServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const classRef = args.class || ServerAuth;
+    const classRef = core.config('standalone')
+      ? LocalStorageAuth
+      : args.class || ServerAuth;
+
     this.auth = new classRef(core);
   }
 

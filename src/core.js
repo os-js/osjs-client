@@ -231,7 +231,10 @@ export default class Core extends CoreBase {
    * @return {*}
    */
   async request(url, options = {}, type = null) {
-    // TODO: Check actual connection or standalone mode
+    if (this.config('standalone')) {
+      throw new Error('Cannot make requests in standalone mode.');
+    }
+
     options = Object.assign({}, {
       credentials: 'same-origin',
       method: 'get',

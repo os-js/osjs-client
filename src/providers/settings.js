@@ -41,7 +41,9 @@ export default class SettingsServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const classRef = args.class || LocalStorageSettings;
+    const classRef = core.config('standalone')
+      ? LocalStorageSettings
+      : args.class || LocalStorageSettings;
 
     this.settings = new classRef(core, args);
   }

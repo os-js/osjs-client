@@ -42,7 +42,11 @@ export default class SettingsServiceProvider extends ServiceProvider {
     super(core);
 
     const classRef = args.class || Settings;
-    this.settings = new classRef(core);
+    const classOptions = Object.assign({
+      adapter: core.config('settings.adapter')
+    }, args.config || {});
+
+    this.settings = new classRef(core, classOptions);
   }
 
   async init() {

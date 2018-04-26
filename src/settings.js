@@ -35,15 +35,17 @@ const defaultSettings = {
   'osjs/settings': core => core.config('user.settings', {})
 };
 
-const localStorageAdapter = {
+const localStorageAdapter = core => ({
   save(settings) {
     Object.keys(settings).forEach((k) => {
       localStorage.setItem(k, JSON.stringify(settings[k]));
     });
+
+    return Promise.resolve(true);
   },
 
   load() {
-    return Object.keys(localStorage).reduce((o, v) => {
+    const result = Object.keys(localStorage).reduce((o, v) => {
       let value = localStorage.getItem(v);
       try {
         value = JSON.parse(value);
@@ -53,8 +55,24 @@ const localStorageAdapter = {
 
       return Object.assign(o, {[v]: value});
     }, {});
+
+    return Promise.resolve(result);
   }
-};
+});
+
+const serverAdapter = core => ({
+  save(settings) {
+    return core.request(core.url('/settings'), {
+      method: 'post'
+    }, 'json');
+  },
+
+  load() {
+    return core.request(core.url('/settings'), {
+      method: 'get'
+    }, 'json');
+  }
+});
 
 /**
  * Settings Handler
@@ -67,8 +85,11 @@ export default class Settings {
    * Creates the Settings Handler
    *
    * @param {Core} core Core reference
+   * @param {Map<string, Object>} Settings
+   * @param {Map<string, Function>} [options.adapters] A map of adapters
+   * @param {string} [options.adapter] The adapter to use
    */
-  constructor(core) {
+  constructor(core, options) {
     /**
      * Core instance reference
      * @type {Core}
@@ -86,6 +107,26 @@ export default class Settings {
      * @type {Object}
      */
     this.settings = {};
+
+    /**
+     * Options
+     * @type {Object}
+     */
+    this.options = Object.assign({}, {
+      adapters: {
+        localStorage: localStorageAdapter,
+        server: serverAdapter
+      },
+      adapter: 'localStorage'
+    }, options);
+
+    /**
+     * Our adapter
+     * @type {Map<string, Function>|null}
+     */
+    this.adapter = this.options.adapter
+      ? this.options.adapters[this.options.adapter](core)
+      : null;
   }
 
   /**
@@ -117,7 +158,7 @@ export default class Settings {
    * @return {Promise<Boolean, Error>}
    */
   async save() {
-    const fn = () => Promise.resolve(localStorageAdapter.save(this.settings));
+    const fn = () => Promise.resolve(this.adapter.save(this.settings));
     return this._save(fn);
   }
 
@@ -131,7 +172,7 @@ export default class Settings {
         [key]: defaultSettings[key](this.core)
       }), {});
 
-    const loaded = localStorageAdapter.load();
+    const loaded = await this.adapter.load();
     this.settings = Object.assign({}, defaults, loaded);
   }
 

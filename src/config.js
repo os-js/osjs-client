@@ -81,9 +81,15 @@ export const defaultConfiguration = {
     }
   },
 
-  login: {
-    username: null,
-    password: null
+  auth: {
+    login: {
+      username: null,
+      password: null
+    },
+  },
+
+  settings: {
+    adapter: 'localStorage'
   },
 
   ws: {

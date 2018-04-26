@@ -90,7 +90,11 @@ export default class Core extends CoreBase {
       this.register(VFSServiceProvider, providerOptions('vfs', defaults));
       this.register(ThemeServiceProvider, providerOptions('theme', defaults));
       this.register(NotificationServiceProvider, providerOptions('notification', defaults));
-      this.register(SettingsServiceProvider, providerOptions('settings', defaults));
+
+      this.register(SettingsServiceProvider, providerOptions('settings', defaults, {
+        before: true
+      }));
+
       this.register(AuthServiceProvider, providerOptions('auth', defaults, {
         before: true
       }));
@@ -124,13 +128,28 @@ export default class Core extends CoreBase {
 
     await super.boot();
 
+    if (this.has('osjs/auth')) {
+      this.make('osjs/auth').show(async (user) => {
+        this.user = user;
+
+        if (this.has('osjs/settings')) {
+          await this.make('osjs/settings').load();
+        }
+
+        this.start();
+      });
+    } else {
+      console.warn('OS.js STARTED WITHOUT ANY AUTHENTICATION');
+      this.start();
+    }
+
     console.groupEnd();
   }
 
   /**
    * Starts all core services
    */
-  async start() {
+  async start(user) {
     if (this.started) {
       return;
     }

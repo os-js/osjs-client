@@ -55,8 +55,6 @@ export default class SettingsServiceProvider extends ServiceProvider {
       get: (...args) => this.settings.get(...args),
       set: (...args) => this.settings.set(...args)
     }));
-
-    await this.settings.load();
   }
 
 }

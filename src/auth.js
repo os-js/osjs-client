@@ -51,6 +51,7 @@ export default class Auth {
     }, options);
 
     this.ui = new Login(core, this.options.ui);
+    this.callback = function() {};
   }
 
   /**
@@ -58,7 +59,11 @@ export default class Auth {
    *
    * @desc Shows the login screen etc
    */
-  init() {
+  init(cb) {
+    if (typeof cb === 'function') {
+      this.callback = cb;
+    }
+
     this.ui.on('login:post', values => this.login(values));
 
     this.ui.init();
@@ -79,8 +84,7 @@ export default class Auth {
       }
 
       this.ui.destroy();
-      this.core.user = response.user;
-      this.core.start();
+      this.callback(response.user);
 
       return true;
     } catch (e) {

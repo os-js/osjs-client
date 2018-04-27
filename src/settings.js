@@ -92,7 +92,12 @@ export default class Settings {
       this.debounce = [
         {resolve, reject},
         setTimeout(() => {
-          fn(this.settings).then(resolve).catch(reject);
+          fn(this.settings)
+            .then((...args) => {
+              this.core.emit('osjs/settings:save');
+
+              resolve(...args);
+            }).catch(reject);
         }, 100)
       ];
     });
@@ -104,6 +109,8 @@ export default class Settings {
    * @param {Function} fn A function that returns a promise
    */
   async _load(fn) {
+    this.core.emit('osjs/settings:load');
+
     const settings = await fn();
     this.settings = Object.assign({}, defaultSettings, settings);
     return true;

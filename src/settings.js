@@ -30,11 +30,6 @@
 
 import {resolveTreeByKey} from './utils/config';
 
-const defaultSettings = {
-  'osjs/session': core => ({}),
-  'osjs/settings': core => core.config('user.settings', {})
-};
-
 /**
  * Settings Handler
  *
@@ -112,7 +107,8 @@ export default class Settings {
     this.core.emit('osjs/settings:load');
 
     const settings = await fn();
-    this.settings = Object.assign({}, defaultSettings, settings);
+    const defaults = this.core.config('settings.defaults', {});
+    this.settings = Object.assign({}, defaults, settings);
     return true;
   }
 

@@ -27,6 +27,15 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
+
+import CoreServiceProvider from './providers/core';
+import DesktopServiceProvider from './providers/desktop';
+import NotificationServiceProvider from './providers/notifications';
+import VFSServiceProvider from './providers/vfs';
+import ThemeServiceProvider from './providers/theme';
+import AuthServiceProvider from './providers/auth';
+import SettingsServiceProvider from './providers/settings';
+
 const {port, hostname, pathname} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
@@ -137,3 +146,33 @@ export const defaultConfiguration = {
     }
   }
 };
+
+export const defaultProviders = [{
+  class: CoreServiceProvider,
+  name: 'core'
+}, {
+  class: DesktopServiceProvider,
+  name: 'deskopt'
+}, {
+  class: VFSServiceProvider,
+  name: 'vfs'
+}, {
+  class: ThemeServiceProvider,
+  name: 'theme'
+}, {
+  class: NotificationServiceProvider,
+  name: 'notifications'
+}, {
+  class: SettingsServiceProvider,
+  name: 'settings',
+  options: {
+    before: true
+  }
+}, {
+  class: AuthServiceProvider,
+  name: 'auth',
+  options: {
+    before: true
+  }
+}];
+

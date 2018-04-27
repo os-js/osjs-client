@@ -30,24 +30,12 @@
 
 import Application from './application';
 import {CoreBase} from '@osjs/common';
-import {defaultConfiguration} from './config';
-
-import CoreServiceProvider from './providers/core';
-import DesktopServiceProvider from './providers/desktop';
-import NotificationServiceProvider from './providers/notifications';
-import VFSServiceProvider from './providers/vfs';
-import ThemeServiceProvider from './providers/theme';
-import AuthServiceProvider from './providers/auth';
-import SettingsServiceProvider from './providers/settings';
+import {defaultProviders, defaultConfiguration} from './config';
 
 const encodeQueryData = data => Object.keys(data)
   .filter(k => typeof data[k] !== 'object')
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
-
-const providerOptions = (name, defaults, opts = {}) => Object.assign({
-  args: defaults[name] ? defaults[name] : {}
-}, opts);
 
 /**
  * Core
@@ -72,34 +60,12 @@ export default class Core extends CoreBase {
       root: document.body
     }, options);
 
-    super('Core', defaultConfiguration, config, options);
+    super(defaultProviders, defaultConfiguration, config, options);
 
     this.user = null;
     this.ws = null;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
-
-    options.classNames.forEach(n => this.$root.classList.add(n));
-
-    if (options.registerDefault) {
-      const defaults = typeof options.registerDefault === 'object'
-        ? options.registerDefault || {}
-        : {};
-
-      this.register(CoreServiceProvider, providerOptions('core', defaults));
-      this.register(DesktopServiceProvider, providerOptions('desktop', defaults));
-      this.register(VFSServiceProvider, providerOptions('vfs', defaults));
-      this.register(ThemeServiceProvider, providerOptions('theme', defaults));
-      this.register(NotificationServiceProvider, providerOptions('notification', defaults));
-
-      this.register(SettingsServiceProvider, providerOptions('settings', defaults, {
-        before: true
-      }));
-
-      this.register(AuthServiceProvider, providerOptions('auth', defaults, {
-        before: true
-      }));
-    }
   }
 
   /**
@@ -128,6 +94,8 @@ export default class Core extends CoreBase {
     console.group('Core::boot()');
 
     await super.boot();
+
+    this.options.classNames.forEach(n => this.$root.classList.add(n));
 
     if (this.has('osjs/auth')) {
       this.make('osjs/auth').show(async (user) => {

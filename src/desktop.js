@@ -28,6 +28,9 @@
  * @licence Simplified BSD License
  */
 
+import merge from 'deepmerge';
+import {style} from './utils/dom';
+
 const TEMPLATE = subtract => `
   .osjs-window[data-maximized=true] {
     top: ${subtract.top}px !important;
@@ -53,6 +56,7 @@ export default class Desktop {
    */
   constructor(core) {
     this.core = core;
+    this.$theme = null;
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
     this.subtract = {
@@ -69,6 +73,9 @@ export default class Desktop {
   destroy() {
     this.$styles.remove();
     this.$styles = null;
+
+    this.$theme.remove();
+    this.$theme = null;
   }
 
   /**
@@ -85,6 +92,8 @@ export default class Desktop {
       this._updateCSS();
     });
 
+    this.core.on('osjs/desktop:apply', (settings) => this.applySettings(settings));
+
     this.core.$resourceRoot.appendChild(this.$styles);
   }
 
@@ -97,6 +106,48 @@ export default class Desktop {
     }
 
     this.$styles.innerHTML = TEMPLATE(this.subtract);
+  }
+
+  /**
+   * Applies settings and updates desktop
+   * @param {Object} [settings] Use this set instead of loading from settings
+   */
+  applySettings(settings) {
+    const newSettings = typeof settings === 'undefined' || !settings
+      ? this.core.make('osjs/settings').get('osjs/settings')
+      : merge(this.core.config('user.settings'), settings, {
+        arrayMerge: (dest, source) => source
+      });
+
+    const {font, background} = newSettings;
+
+    this.core.$root.style.fontFamily = `${font}, sans-serif`;
+
+    this.core.$root.style.backgroundSize = background.style === 'color'
+      ? 0
+      : background.style;
+
+    this.core.$root.style.backgroundColor = background.color;
+
+    this.core.$root.style.backgroundImage = background.style === 'color'
+      ? undefined
+      : `url(${background.src})`;
+
+    this.applyTheme(newSettings.theme.name);
+  }
+
+  /**
+   * Sets the current theme from settings
+   */
+  applyTheme() {
+    if (this.$theme) {
+      this.$theme.remove();
+    }
+
+    const basePath = this.core.config('public');
+    const name = this.core.config('theme');
+    const src = `${basePath}themes/${name}/index.css`; // FIXME
+    this.$theme = style(this.core.$resourceRoot, src);
   }
 
   /**

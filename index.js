@@ -45,7 +45,6 @@ import ServerAuth from './src/auth/server';
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
-import ThemeServiceProvider from './src/providers/theme';
 import AuthServiceProvider from './src/providers/auth';
 import SettingsServiceProvider from './src/providers/settings';
 
@@ -68,7 +67,6 @@ export {
   DesktopServiceProvider,
   NotificationServiceProvider,
   VFSServiceProvider,
-  ThemeServiceProvider,
   AuthServiceProvider,
   SettingsServiceProvider
 };

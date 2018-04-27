@@ -98,10 +98,10 @@ export const defaultConfiguration = {
 
   settings: {
     defaults: {
-      'osjs/session': {
+      'osjs/session': [
         // Don't use this to launch applications on startup
         // instead look at the launch method
-      },
+      ],
       'osjs/settings': {
         __revision__: 0,
         panels: [],

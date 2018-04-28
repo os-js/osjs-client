@@ -118,6 +118,11 @@
         &:not(:last-child) {
           margin-right: $base-margin / 4;
         }
+
+        & > div {
+          width: $base-margin;
+          height: $base-margin;
+        }
       }
     }
 

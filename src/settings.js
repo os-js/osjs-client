@@ -106,9 +106,17 @@ export default class Settings {
   async _load(fn) {
     this.core.emit('osjs/settings:load');
 
-    const settings = await fn();
     const defaults = this.core.config('settings.defaults', {});
-    this.settings = Object.assign({}, defaults, settings);
+
+    try {
+      const settings = await fn();
+
+      this.settings = Object.assign({}, defaults, settings);
+    } catch (e) {
+      console.warn('Failed to set settings', e);
+      this.settings = defaults;
+    }
+
     return true;
   }
 

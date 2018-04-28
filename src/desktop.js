@@ -94,6 +94,9 @@ export default class Desktop {
 
     this.core.on('osjs/desktop:apply', (settings) => this.applySettings(settings));
 
+    // Prevents background scrolling on iOS
+    this.core.$root.addEventListener('touchmove', e => e.preventDefault());
+
     this.core.$resourceRoot.appendChild(this.$styles);
   }
 

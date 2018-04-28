@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.0.0-alpha.13",
+  "version": "3.0.0-alpha.14",
   "description": "OS.js v3 client",
   "main": "index.js",
   "style": "index.scss",
@@ -15,7 +15,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.0-alpha.3",
+    "@osjs/common": "^3.0.0-alpha.4",
     "css-mediaquery": "^0.1.2",
     "deepmerge": "^2.1.0",
     "hyperapp": "^1.2.5"

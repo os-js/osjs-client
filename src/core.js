@@ -98,14 +98,16 @@ export default class Core extends CoreBase {
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 
     if (this.has('osjs/auth')) {
-      this.make('osjs/auth').show(async (user) => {
+      this.make('osjs/auth').show(user => {
         this.user = user;
 
         if (this.has('osjs/settings')) {
-          await this.make('osjs/settings').load();
+          this.make('osjs/settings').load()
+            .then(() => this.start())
+            .catch(() => this.start());
+        } else {
+          this.start();
         }
-
-        this.start();
       });
     } else {
       console.warn('OS.js STARTED WITHOUT ANY AUTHENTICATION');
@@ -118,7 +120,7 @@ export default class Core extends CoreBase {
   /**
    * Starts all core services
    */
-  async start(user) {
+  async start() {
     if (this.started) {
       return;
     }
@@ -129,13 +131,13 @@ export default class Core extends CoreBase {
 
     this._createListeners();
 
-    await this._createConnection();
-
     const result = await super.start();
     if (!result) {
       console.groupEnd();
       return;
     }
+
+    await this._createConnection();
 
     this.emit('osjs/core:started');
 

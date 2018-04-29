@@ -33,6 +33,16 @@ import {
   transformArrayBuffer
 } from '../utils/vfs';
 
+const createFileIter = stat => Object.assign({
+  isDirectory: false,
+  isFile: true,
+  mime: 'application/octet-stream',
+  size: -1,
+  path: null,
+  filename: null,
+  stat: {}
+}, stat);
+
 /**
  * Read a directory
  *
@@ -42,6 +52,7 @@ import {
  */
 export const readdir = adapter => (path, options = {}) =>
   adapter.readdir(path, options)
+    .then(result => result.map(stat => createFileIter(stat)))
     .then(result => transformReaddir(path, result, {
       filter: options.filter
     }));
@@ -129,7 +140,8 @@ export const exists = adapter => (path, options = {}) =>
  * @return {Object}
  */
 export const stat = adapter => (path, options = {}) =>
-  adapter.stat(path, options);
+  adapter.stat(path, options)
+    .then(stat => createFileIter(stat));
 
 /**
  * Gets an URL to a resource defined by file

@@ -173,6 +173,7 @@ export default class Core extends CoreBase {
         setTimeout(() => resolve(), 100);
       };
 
+      // TODO: Reconnect
       this.ws.onclose = (ev) => {
         reject();
 
@@ -181,6 +182,16 @@ export default class Core extends CoreBase {
           message: 'The websocket connection was lost...'
         });
         console.warn('Connection closed', ev);
+      };
+
+      this.ws.onmessage = (ev) => {
+        try {
+          const data = JSON.parse(ev.data);
+          console.debug('WebSocket message', data);
+          this.emit(data.name, data.params);
+        } catch (e) {
+          console.warn(e);
+        }
       };
     });
   }

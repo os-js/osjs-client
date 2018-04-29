@@ -136,15 +136,15 @@ export const defaultConfiguration = {
 
   vfs: {
     defaultPath: 'osjs:/',
-    transports: {},
+    adapters: {},
     mountpoints: [{
       name: 'osjs',
       label: 'OS.js',
-      transport: 'system'
+      adapter: 'system'
     }, {
       name: 'home',
       label: 'Home',
-      transport: 'system'
+      adapter: 'system'
     }]
   }
 };

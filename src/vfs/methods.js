@@ -40,8 +40,8 @@ import {
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
-export const readdir = transport => async (path, options = {}) => {
-  const result = await transport.readdir(path, options);
+export const readdir = adapter => async (path, options = {}) => {
+  const result = await adapter.readdir(path, options);
 
   return transformReaddir(path, result, {
     filter: options.filter
@@ -58,8 +58,8 @@ export const readdir = transport => async (path, options = {}) => {
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
-export const readfile = transport => async (path, type = 'string', options = {}) => {
-  const response = await transport.readfile(path, type, options);
+export const readfile = adapter => async (path, type = 'string', options = {}) => {
+  const response = await adapter.readfile(path, type, options);
   const result = await transformArrayBuffer(response.body, response.mime, type);
   return result;
 };
@@ -71,12 +71,12 @@ export const readfile = transport => async (path, type = 'string', options = {})
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = transport => async (path, data, options = {}) => {
+export const writefile = adapter => async (path, data, options = {}) => {
   const binary = (data instanceof ArrayBuffer || data instanceof Blob)
     ? data
     : new Blob([data], {type: 'application/octet-stream'});
 
-  return transport.writefile(path, binary, options);
+  return adapter.writefile(path, binary, options);
 };
 
 /**
@@ -86,8 +86,8 @@ export const writefile = transport => async (path, data, options = {}) => {
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const copy = transport => async (from, to, options = {}) =>
-  transport.copy(from, to, options);
+export const copy = adapter => async (from, to, options = {}) =>
+  adapter.copy(from, to, options);
 
 /**
  * Renames a file or directory (move)
@@ -96,8 +96,8 @@ export const copy = transport => async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const rename = transport => async (from, to, options = {}) =>
-  transport.rename(from, to, options);
+export const rename = adapter => async (from, to, options = {}) =>
+  adapter.rename(from, to, options);
 
 /**
  * Creates a directory
@@ -105,8 +105,8 @@ export const rename = transport => async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const mkdir = transport => async (path, options = {}) =>
-  transport.mkdir(path, options);
+export const mkdir = adapter => async (path, options = {}) =>
+  adapter.mkdir(path, options);
 
 /**
  * Removes a file or directory
@@ -114,8 +114,8 @@ export const mkdir = transport => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const unlink = transport => async (path, options = {}) =>
-  transport.unlink(path, options);
+export const unlink = adapter => async (path, options = {}) =>
+  adapter.unlink(path, options);
 
 /**
  * Checks if path exists
@@ -123,8 +123,8 @@ export const unlink = transport => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const exists = transport => async (path, options = {}) =>
-  transport.exists(path, options);
+export const exists = adapter => async (path, options = {}) =>
+  adapter.exists(path, options);
 
 /**
  * Gets the stats of the file or directory
@@ -132,8 +132,8 @@ export const exists = transport => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Object}
  */
-export const stat = transport => async (path, options = {}) =>
-  transport.stat(path, options);
+export const stat = adapter => async (path, options = {}) =>
+  adapter.stat(path, options);
 
 /**
  * Gets an URL to a resource defined by file
@@ -141,5 +141,5 @@ export const stat = transport => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {String}
  */
-export const url = transport => async (path, options = {}) =>
-  transport.url(path, options);
+export const url = adapter => async (path, options = {}) =>
+  adapter.url(path, options);

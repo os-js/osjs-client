@@ -41,7 +41,7 @@ export default class VFSServiceProvider extends ServiceProvider {
     super(core);
 
     this.fs = new Filesystem(core, {
-      transports: args.transports || {},
+      adapters: args.adapters || {},
       mounts: args.mounts || []
     });
   }

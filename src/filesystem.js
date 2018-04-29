@@ -28,16 +28,29 @@
  * @licence Simplified BSD License
  */
 
-import * as VFS from './vfs';
+import * as VFS from './vfs/methods';
 import {EventHandler} from '@osjs/common';
-import SystemTransport from './vfs/transports/system';
+import systemAdapter from './vfs/system';
 import merge from 'deepmerge';
+
+const defaultAdapter = ({
+  readdir: (path, options) => Promise.resolve([]),
+  readfile: (path, type, options) => Promise.resolve({body: null, mime: 'application/octet-stream'}),
+  writefile: (path, data, options) => Promise.resolve(-1),
+  copy: (from, to, options) => Promise.resolve(false),
+  rename: (from, to, options) => Promise.resolve(false),
+  mkdir: (path, options) => Promise.resolve(false),
+  unlink: (path, options) => Promise.resolve(false),
+  exists: (path, options) => Promise.resolve(false),
+  stat: (path, options) => Promise.resolve({}),
+  url: (path, options) => Promise.resolve(null)
+});
 
 /**
  * VFS Mountpoint
  * @param {String} name Name
  * @param {String} label Label
- * @param {String} transport Transport name
+ * @param {String} adapter Adater name
  * @typedef Mountpoint
  */
 
@@ -65,20 +78,20 @@ const getMountpointFromPath = (mounts, path) => {
 /*
  * Creates given mountpoint
  */
-const createMountpoint = (core, transports, props) => {
-  const name = props.transport || 'system'; // FIXME
-  const transport = new transports[name](core);
+const createMountpoint = (core, adapters, props) => {
+  const name = props.adapter || 'system'; // FIXME
+  const adapter = Object.assign({}, defaultAdapter, adapters[name](core));
 
   const result = merge({
     mounted: true,
-    transport: name,
+    adapter: name,
     attributes: {
       local: true,
       readOnly: false
     }
   }, props);
 
-  result._transport = transport;
+  result._adapter = adapter;
   if (!result.label) {
     result.label = result.name || name;
   }
@@ -98,12 +111,12 @@ export default class Filesystem extends EventHandler {
    *
    * @param {Core} core Core reference
    * @param {Object} [options] Options
-   * @param {Map<String,Transport>} [options.transports] Transport registry
+   * @param {Map<String,Adapter>} [options.adapters] Adapter registry
    * @param {Mountpoint[]} [options.mounts] Mountpoints
    */
   constructor(core, options = {}) {
     options = Object.assign({}, {
-      transports: {},
+      adapters: {},
       mounts: []
     }, options);
 
@@ -116,12 +129,12 @@ export default class Filesystem extends EventHandler {
     this.core = core;
 
     /**
-     * Transport registry
-     * @type {Map<String, Transport>}
+     * Adapter registry
+     * @type {Map<String, Adapter>}
      */
-    this.transports = Object.assign({}, {
-      system: SystemTransport
-    }, this.core.config('vfs.transports', {}), options.transports);
+    this.adapters = Object.assign({}, {
+      system: systemAdapter
+    }, this.core.config('vfs.adapters', {}), options.adapters);
 
     /**
      * Mountpoints
@@ -129,7 +142,7 @@ export default class Filesystem extends EventHandler {
      */
     this.mounts = this.core.config('vfs.mountpoints')
       .concat(options.mounts) // TODO: Unique
-      .map(mount => createMountpoint(this.core, this.transports, mount));
+      .map(mount => createMountpoint(this.core, this.adapters, mount));
 
     /**
      * A wrapper for VFS method requests
@@ -197,13 +210,13 @@ export default class Filesystem extends EventHandler {
    * @return {*}
    */
   _request(method, ...args) {
-    // TODO: 'rename' and 'copy' between transports
+    // TODO: 'rename' and 'copy' between adapters
     const [path] = args;
     const mount = getMountpointFromPath(this.mounts, path);
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 
-    return VFS[method](mount._transport)(...args);
+    return VFS[method](mount._adapter)(...args);
   }
 
   /**

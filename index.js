@@ -33,7 +33,6 @@ import Desktop from './src/desktop';
 import Application from './src/application';
 import Notification from './src/notification';
 import WindowBehavior from './src/window-behavior';
-import Transport from './src/vfs/transport';
 
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
@@ -48,7 +47,6 @@ export {
   Application,
   Notification,
   WindowBehavior,
-  Transport,
 
   DesktopServiceProvider,
   NotificationServiceProvider,

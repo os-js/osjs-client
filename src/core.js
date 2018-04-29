@@ -64,6 +64,8 @@ export default class Core extends CoreBase {
 
     this.user = null;
     this.ws = null;
+    this.connected = false;
+    this.reconnecting = false;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
   }
@@ -143,7 +145,34 @@ export default class Core extends CoreBase {
       return;
     }
 
-    await this._createConnection();
+    this.on('osjs/core:disconnect', ev => {
+      console.warn('Connection closed', ev);
+
+      this.make('osjs/notification', {
+        title: 'Connection lost',
+        message: 'The websocket connection was lost. Reconnecting...'
+      });
+    });
+
+    this.on('osjs/core:connect', (ev, reconnected) => {
+      console.info('Connection opened');
+
+      if (reconnected) {
+        this.make('osjs/notification', {
+          title: 'Connection restored',
+          message: 'The websocket connection was restored.'
+        });
+      }
+    });
+
+    const connect = () => new Promise((resolve, reject) => {
+      const valid = this._createConnection(error => error ? reject(error) : resolve());
+      if (!valid) {
+        reject('Already connecting...');
+      }
+    });
+
+    await connect();
 
     this.emit('osjs/core:started');
 
@@ -153,47 +182,54 @@ export default class Core extends CoreBase {
   /**
    * Creates the main connection to server
    */
-  _createConnection() {
-    if (this.configuration.standalone) {
-      return Promise.resolve();
+  _createConnection(cb) {
+    cb = cb || function() {};
+
+    if (this.configuration.standalone || this.connected) {
+      return false;
     }
 
-    return new Promise((resolve, reject) => {
-      const ws = this.configuration.ws;
-      const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
+    const ws = this.configuration.ws;
+    const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
 
-      console.log('Creating websocket connection on', uri);
+    console.log('Creating websocket connection on', uri);
 
-      this.ws = new WebSocket(uri);
-      this.ws.onopen = () => {
-        console.info('Connection opened');
+    this.ws = new WebSocket(uri);
+    this.ws.onopen = (ev) => {
+      const reconnected = !!this.reconnecting;
+      clearInterval(this.reconnecting);
+      this.connected = true;
+      this.reconnecting = false;
 
-        // Allow for some grace-time in case we close
-        // prematurely
-        setTimeout(() => resolve(), 100);
-      };
+      // Allow for some grace-time in case we close prematurely
+      setTimeout(() => cb(), 100);
 
-      // TODO: Reconnect
-      this.ws.onclose = (ev) => {
-        reject();
+      this.emit('osjs/core:connect', ev, reconnected);
+    };
 
-        this.make('osjs/notification', {
-          title: 'Connection lost',
-          message: 'The websocket connection was lost...'
-        });
-        console.warn('Connection closed', ev);
-      };
+    this.ws.onclose = (ev) => {
+      if (this.connected) {
+        this.reconnecting = setInterval(() => this._createConnection(), 5000);
+      }
 
-      this.ws.onmessage = (ev) => {
-        try {
-          const data = JSON.parse(ev.data);
-          console.debug('WebSocket message', data);
-          this.emit(data.name, data.params);
-        } catch (e) {
-          console.warn(e);
-        }
-      };
-    });
+      this.connected = false;
+
+      cb(new Error('Connection closed'));
+
+      this.emit('osjs/core:disconnect', ev);
+    };
+
+    this.ws.onmessage = (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        console.debug('WebSocket message', data);
+        this.emit(data.name, data.params);
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+
+    return true;
   }
 
   /**

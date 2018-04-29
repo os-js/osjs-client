@@ -71,10 +71,14 @@ export default class Desktop {
    * Destroy Desktop
    */
   destroy() {
-    this.$styles.remove();
+    if (this.$styles && this.$styles.parentNode) {
+      this.$styles.remove();
+    }
     this.$styles = null;
 
-    this.$theme.remove();
+    if (this.$theme && this.$theme.parentNode) {
+      this.$theme.remove();
+    }
     this.$theme = null;
   }
 

@@ -28,19 +28,12 @@
  * @licence Simplified BSD License
  */
 import Core from './src/core';
-import Auth from './src/auth';
-import Settings from './src/settings';
 import Window from './src/window';
 import Desktop from './src/desktop';
 import Application from './src/application';
 import Notification from './src/notification';
 import WindowBehavior from './src/window-behavior';
 import Transport from './src/vfs/transport';
-
-import LocalStorageSettings from './src/settings/localStorage';
-import ServerSettings from './src/settings/server';
-import LocalStorageAuth from './src/auth/localStorage';
-import ServerAuth from './src/auth/server';
 
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
@@ -50,19 +43,12 @@ import SettingsServiceProvider from './src/providers/settings';
 
 export {
   Core,
-  Auth,
-  Settings,
   Window,
   Desktop,
   Application,
   Notification,
   WindowBehavior,
   Transport,
-
-  LocalStorageSettings,
-  ServerSettings,
-  LocalStorageAuth,
-  ServerAuth,
 
   DesktopServiceProvider,
   NotificationServiceProvider,

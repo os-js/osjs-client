@@ -29,8 +29,28 @@
  */
 
 import {ServiceProvider} from '@osjs/common';
-import LocalStorageAuth from '../auth/localStorage';
-import ServerAuth from '../auth/server';
+import Login from '../login';
+
+const serverAuth = (core, options) => {
+  const request = (endpoint, params = {}) => core.request(endpoint, {
+    method: 'POST',
+    body: JSON.stringify(params)
+  }, 'json');
+
+  return {
+    login: (values) => request(core.url('/login'), values),
+    logout: () =>  request(core.url('/logout'))
+  };
+};
+
+const localStorageAuth = (core, options) => ({
+  login: (values) => Promise.resolve(values)
+});
+
+const defaultAdapters = {
+  server: serverAuth,
+  localStorage: localStorageAuth
+};
 
 /**
  * OS.js Auth Service Provider
@@ -40,21 +60,106 @@ import ServerAuth from '../auth/server';
 export default class AuthServiceProvider extends ServiceProvider {
 
   constructor(core, args = {}) {
+    args = Object.assign({
+      ui: {},
+      config: {}
+    }, args);
+
     super(core);
 
-    const classRef = core.config('standalone')
-      ? LocalStorageAuth
-      : args.class || ServerAuth;
+    const adapter = core.config('standalone')
+      ? localStorageAuth
+      : typeof args.adapter === 'function'
+        ? args.adapter
+        : defaultAdapters[args.adapter || 'server'];
 
-    this.auth = new classRef(core);
+    this.ui = new Login(core, args.ui);
+    this.adapter = Object.assign({
+      login: () => Promise.reject(new Error('Not implemented')),
+      logout: () => Promise.reject(new Error('Not implemented')),
+      init: () => Promise.resolve(true),
+      destroy: () => {}
+    }, adapter(core, args.config));
+
+    this.callback = function() {};
   }
 
+  /**
+   * Initializes authentication
+   */
   async init() {
     this.core.singleton('osjs/auth', () => ({
-      show: (cb) => this.auth.init(cb),
-      login: () => this.auth.login(),
-      logout: () => this.auth.logout()
+      show: (cb) => this.show(cb),
+      login: () => this.login(),
+      logout: (reload) => this.logout(reload)
     }));
+
+    this.ui.on('login:post', values => this.login(values));
+
+    await this.adapter.init();
+  }
+
+  /**
+   * Shows Login UI
+   */
+  show(cb) {
+    this.callback = cb;
+    this.ui.init();
+
+    const login = this.core.config('auth.login', {});
+    if (login.username && login.password) {
+      this.login(login);
+    }
+  }
+
+  /**
+   * Performs a login
+   */
+  async login(values) {
+    this.ui.emit('login:start');
+
+    try {
+      const response = await this.adapter.login(values);
+      if (!response) {
+        return false;
+      }
+
+      this.ui.destroy();
+      this.callback(response.user);
+
+      return true;
+    } catch (e) {
+      if (this.core.config('development')) {
+        console.warn(e);
+      }
+
+      this.ui.emit('login:error', 'Login failed');
+
+      return false;
+    } finally {
+      this.ui.emit('login:stop');
+    }
+  }
+
+  /**
+   * Performs a logout
+   */
+  async logout(reload = true) {
+    const response = await this.adapter.logout(reload);
+    if (!response) {
+      return;
+    }
+
+    try {
+      this.core.destroy();
+    } catch (e) {
+      console.warn(e);
+    }
+
+    // FIXME
+    if (reload) {
+      setTimeout(() => window.location.reload(), 1);
+    }
   }
 
 }

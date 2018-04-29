@@ -30,84 +30,63 @@
 
 const adapter = (core) => {
 
-  const request = async (fn, body, fetchOptions = {}, type) => {
-    const url = core.url(`/vfs/${fn}`);
-    const response = await core.request(url, Object.assign({
+  const request = (fn, body, fetchOptions = {}, type) =>
+    core.request(core.url(`/vfs/${fn}`), Object.assign({
       body
-    }, fetchOptions), type);
+    }, fetchOptions), type)
+      .then(response => {
+        if (type === 'json') {
+          return {mime: 'application/json', body: response};
+        }
 
-    if (type === 'json') {
-      return {mime: 'application/json', body: response};
-    }
+        const contentType = response.headers.get('content-type') || 'application/octet-stream';
 
-    const contentType = response.headers.get('content-type') || 'application/octet-stream';
-    const result = await response.arrayBuffer();
-
-    return {mime: contentType, body: result};
-  };
+        return response.arrayBuffer().then(result => ({
+          mime: contentType,
+          body: result
+        }));
+      });
 
   return {
-    readdir: async (path, options) => {
-      const response = await request('readdir', {
-        path,
-        options: {}
-      }, {}, 'json');
+    readdir: (path, options) => request('readdir', {
+      path,
+      options: {}
+    }, {}, 'json').then(({body}) => body),
 
-      return response.body;
-    },
+    readfile: (path, type, options) =>
+      request('readfile', {path, options}),
 
-    readfile: async (path, type, options) => {
-      const response = await request('readfile', {path, options});
-      return response;
-    },
-
-    writefile: async (path, data, options) => {
+    writefile: (path, data, options) => {
       const formData = new FormData();
       formData.append('upload', data);
       formData.append('path', path);
       formData.append('options', options);
 
-      const response = await request('writefile', formData, {
+      return request('writefile', formData, {
         method: 'post'
-      });
-
-      return response.body;
+      }).then(({body}) => body);
     },
 
-    copy: async (from, to, options) => {
-      const response = await request('copy', {from, to, options});
-      return response.body;
-    },
+    copy: async (from, to, options) =>
+      request('copy', {from, to, options}).then(({body}) => body),
 
-    rename: async (from, to, options) => {
-      const response = await request('rename', {from, to, options});
-      return response.body;
-    },
+    rename: async (from, to, options) =>
+      request('rename', {from, to, options}).then(({body}) => body),
 
-    mkdir: async (path, options) => {
-      const response = await request('mkdir', {path, options});
-      return response.body;
-    },
+    mkdir: async (path, options) =>
+      request('mkdir', {path, options}).then(({body}) => body),
 
-    unlink: async (path, options) => {
-      const response = await request('unlink', {path, options});
-      return response.body;
-    },
+    unlink: async (path, options) =>
+      request('unlink', {path, options}).then(({body}) => body),
 
-    exists: async (path, options) => {
-      const response = await request('exists', {path, options});
-      return response.body;
-    },
+    exists: async (path, options) =>
+      request('exists', {path, options}).then(({body}) => body),
 
-    stat: async (path, options) => {
-      const response = await request('stat', {path, options});
-      return response.body;
-    },
+    stat: async (path, options) =>
+      request('stat', {path, options}).then(({body}) => body),
 
-    url: async (path, options) => {
-      const url = `/vfs/readfile?path=` + encodeURIComponent(path);
-      return url;
-    }
+    url: (path, options) =>
+      Promise.resolve(`/vfs/readfile?path=` + encodeURIComponent(path))
   };
 
 };

@@ -40,13 +40,11 @@ import {
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
-export const readdir = adapter => async (path, options = {}) => {
-  const result = await adapter.readdir(path, options);
-
-  return transformReaddir(path, result, {
-    filter: options.filter
-  });
-};
+export const readdir = adapter => (path, options = {}) =>
+  adapter.readdir(path, options)
+    .then(result => transformReaddir(path, result, {
+      filter: options.filter
+    }));
 
 /**
  * Reads a file
@@ -58,11 +56,9 @@ export const readdir = adapter => async (path, options = {}) => {
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
-export const readfile = adapter => async (path, type = 'string', options = {}) => {
-  const response = await adapter.readfile(path, type, options);
-  const result = await transformArrayBuffer(response.body, response.mime, type);
-  return result;
-};
+export const readfile = adapter => (path, type = 'string', options = {}) =>
+  adapter.readfile(path, type, options)
+    .then(response => transformArrayBuffer(response.body, response.mime, type));
 
 /**
  * Writes a file
@@ -71,7 +67,7 @@ export const readfile = adapter => async (path, type = 'string', options = {}) =
  * @param {Object} [options] Options
  * @return {Number} File size
  */
-export const writefile = adapter => async (path, data, options = {}) => {
+export const writefile = adapter => (path, data, options = {}) => {
   const binary = (data instanceof ArrayBuffer || data instanceof Blob)
     ? data
     : new Blob([data], {type: 'application/octet-stream'});
@@ -86,7 +82,7 @@ export const writefile = adapter => async (path, data, options = {}) => {
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const copy = adapter => async (from, to, options = {}) =>
+export const copy = adapter => (from, to, options = {}) =>
   adapter.copy(from, to, options);
 
 /**
@@ -96,7 +92,7 @@ export const copy = adapter => async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const rename = adapter => async (from, to, options = {}) =>
+export const rename = adapter => (from, to, options = {}) =>
   adapter.rename(from, to, options);
 
 /**
@@ -105,7 +101,7 @@ export const rename = adapter => async (from, to, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const mkdir = adapter => async (path, options = {}) =>
+export const mkdir = adapter => (path, options = {}) =>
   adapter.mkdir(path, options);
 
 /**
@@ -114,7 +110,7 @@ export const mkdir = adapter => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const unlink = adapter => async (path, options = {}) =>
+export const unlink = adapter => (path, options = {}) =>
   adapter.unlink(path, options);
 
 /**
@@ -123,7 +119,7 @@ export const unlink = adapter => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Boolean}
  */
-export const exists = adapter => async (path, options = {}) =>
+export const exists = adapter => (path, options = {}) =>
   adapter.exists(path, options);
 
 /**
@@ -132,7 +128,7 @@ export const exists = adapter => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {Object}
  */
-export const stat = adapter => async (path, options = {}) =>
+export const stat = adapter => (path, options = {}) =>
   adapter.stat(path, options);
 
 /**
@@ -141,5 +137,5 @@ export const stat = adapter => async (path, options = {}) =>
  * @param {Object} [options] Options
  * @return {String}
  */
-export const url = adapter => async (path, options = {}) =>
+export const url = adapter => (path, options = {}) =>
   adapter.url(path, options);

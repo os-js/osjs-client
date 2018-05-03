@@ -47,7 +47,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const getApplications = Application.getApplications().map(app => ({
+    const getApplications = () => Application.getApplications().map(app => ({
       pid: app.pid,
       args: Object.assign({}, app.args),
       metadata: Object.assign({}, app.metadata),

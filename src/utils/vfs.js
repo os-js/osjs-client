@@ -210,3 +210,25 @@ export const transformArrayBuffer = async (ab, mime, type) => {
 
   return ab;
 };
+
+/**
+ * Gets an icon from file stat
+ * @param {Object} file The file stat object
+ * @return {String|Object}
+ */
+export const getFileIcon = map => {
+  const find = file => {
+    const found = Object.keys(map).find(re => {
+      const regexp = new RegExp(re);
+      return regexp.test(file.mime);
+    });
+
+    return found
+      ? map[found]
+      : {name: 'application-x-executable'};
+  };
+
+  return file => file.isDirectory
+    ? {name: 'folder'}
+    : find(file);
+};

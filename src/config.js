@@ -145,7 +145,23 @@ export const defaultConfiguration = {
       name: 'home',
       label: 'Home',
       adapter: 'system'
-    }]
+    }],
+    icons: {
+      '^application/zip': {name: 'package-x-generic'},
+      '^application/javascript': {name: 'text-x-script'},
+      '^application/json': {name: 'text-x-script'},
+      '^application/x-python': {name: 'text-x-script'},
+      '^application/php': {name: 'text-x-script'},
+      '^application/pdf': {name: 'x-office-document'},
+      '^text/css': {name: 'text-x-script'},
+      '^text/html': {name: 'text-html'},
+      '^text/xml': {name: 'text-html'},
+      '^application': {name: 'application-x-executable'},
+      '^text': {name: 'text-x-generic'},
+      '^audio': {name: 'audio-x-generic'},
+      '^video': {name: 'video-x-generic'},
+      '^image': {name: 'image-x-generic'}
+    }
   }
 };
 

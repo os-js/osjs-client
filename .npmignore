@@ -1,0 +1,9 @@
+/doc
+.swp
+.git
+.tern-*
+node_modules
+package-lock.json
+.eslintrc
+.gitignore
+.esdoc.json

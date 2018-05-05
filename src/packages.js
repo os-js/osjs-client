@@ -277,6 +277,11 @@ export default class Packages {
       throw new Error(`Metadata not found for ${name}. Is it in the manifest ?`);
     }
 
+    const foundIndex = this.packages.findIndex(pkg => pkg.metadata.name === name);
+    if (foundIndex !== -1) {
+      this.packages.splice(foundIndex, 1);
+    }
+
     this.packages.push({
       metadata,
       callback

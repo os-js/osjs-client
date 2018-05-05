@@ -172,7 +172,7 @@ export default class Application extends EventHandler {
       restore: {
         windows: this.windows.map(w => w.getSession())
       },
-      forcePreload: true
+      forcePreload: this.core.config('development')
     }));
 
     this.destroy();

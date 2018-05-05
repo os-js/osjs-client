@@ -145,26 +145,6 @@ export default class Core extends CoreBase {
       return;
     }
 
-    this.on('osjs/core:disconnect', ev => {
-      console.warn('Connection closed', ev);
-
-      this.make('osjs/notification', {
-        title: 'Connection lost',
-        message: 'The websocket connection was lost. Reconnecting...'
-      });
-    });
-
-    this.on('osjs/core:connect', (ev, reconnected) => {
-      console.info('Connection opened');
-
-      if (reconnected) {
-        this.make('osjs/notification', {
-          title: 'Connection restored',
-          message: 'The websocket connection was restored.'
-        });
-      }
-    });
-
     const connect = () => new Promise((resolve, reject) => {
       const valid = this._createConnection(error => error ? reject(error) : resolve());
       if (!valid) {

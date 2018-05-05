@@ -39,7 +39,7 @@ const {port, hostname, pathname, protocol} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
 export const defaultConfiguration = {
-  development: true,
+  development: !(process.env.NODE_ENV || '').match(/^prod/i),
   standalone: false,
   public: path,
   theme: 'Standard',

@@ -153,6 +153,38 @@ export default class CoreServiceProvider extends ServiceProvider {
       });
     });
 
+    this.core.on('osjs/core:disconnect', ev => {
+      console.warn('Connection closed', ev);
+
+      this.core.make('osjs/notification', {
+        title: 'Connection lost',
+        message: 'The websocket connection was lost. Reconnecting...'
+      });
+    });
+
+    this.core.on('osjs/core:connect', (ev, reconnected) => {
+      console.info('Connection opened');
+
+      if (reconnected) {
+        this.core.make('osjs/notification', {
+          title: 'Connection restored',
+          message: 'The websocket connection was restored.'
+        });
+      }
+    });
+
+    if (this.core.config('development')) {
+      this.core.on('osjs/packages:metadata:changed', () => {
+        this.pm.init();
+      });
+
+      this.core.on('osjs/packages:package:changed', name => {
+        Application.getApplications()
+          .filter(proc => proc.metadata.name === name)
+          .forEach(proc => proc.relaunch());
+      });
+    }
+
     this.core.on('destroy', () => tray.destroy());
   }
 

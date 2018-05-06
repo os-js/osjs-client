@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.19
+
+* Added npmignore
+* Added CHANGELOG
+
 ## v3.0.0-alpha.18
 
 * Added a method for getting file icon from stat

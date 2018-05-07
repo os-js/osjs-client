@@ -11,7 +11,8 @@
     "Promise": true,
     "ArrayBuffer": true,
     "File": true,
-    "Blob": true
+    "Blob": true,
+    "OSJS_VERSION": true
   },
   "extends": "eslint:recommended",
   "rules": {

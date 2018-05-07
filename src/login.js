@@ -46,7 +46,7 @@ export default class Login extends EventHandler {
     this.options = Object.assign({
       id: 'osjs-login',
       title: 'Welcome to OS.js',
-      stamp: window.OSJS_VERSION,
+      stamp: OSJS_VERSION,
       fields: [{
         tagName: 'input',
         attributes: {

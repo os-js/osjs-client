@@ -20,7 +20,7 @@ const createAttributes = (props, field, disabled) => {
 const createFields = (props, fields, disabled) =>
   fields.map(f => h('div', {
     class: 'osjs-login-field'
-  }, h(f.tagName, createAttributes(props, f, disabled))));
+  }, h(f.tagName, createAttributes(props, f, disabled)), f.children || []));
 
 
 /**

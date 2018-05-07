@@ -28,49 +28,122 @@
  * @licence Simplified BSD License
  */
 
+@mixin placeholder-effect {
+  color: #fff;
+  text-transform: uppercase;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.osjs-root.login {
+  &::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    content: '';
+    z-index: 1000;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.20) 0%,rgba(0, 0, 0, 0.65) 100%);
+  }
+}
+
 .osjs-login {
-  font-family: arial;
-  max-width: 80%;
-  min-width: 400px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  color: #000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   z-index: 99999;
+  transform: translate(-50%, -50%);
 
-  input {
+  .osjs-login-field {
+    position: relative;
+  }
+
+  input,
+  select,
+  button {
+    padding: $base-margin / 2;
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    border: 0 none;
+    font-family: inherit;
     font-size: inherit;
     color: inherit;
-    padding: 0.5em;
     box-sizing: border-box;
-
-    &:not([type="submit"]) {
-      display: block;
-      width: 100%;
-      border: 1px solid #e6e6e6;
-    }
   }
+
+  input[type=submit],
+  button {
+    cursor: pointer;
+  }
+}
+
+#osjs-login {
+  font-family: Roboto, sans-serif;
+  max-width: 80%;
+  min-width: 400px;
 
   .osjs-login-header {
     text-align: center;
+    font-weight: 300;
     font-weight: bold;
+    font-size: 2em;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 4px;
+  }
+
+  .osjs-login-field {
+    margin-top: $base-margin * 2;
   }
 
   .osjs-login-error {
-    background: #ff0000;
+    background: rgba(255, 0, 0, 0.8);
     color: #fff;
     text-align: center;
     text-decoration: uppercase;
+    padding: $base-margin;
+    margin-top: $base-margin * 2;
   }
 
-  div div {
-    padding: $base-margin / 2;
+  .osjs-login-stamp {
+    margin-top: $base-margin;
+    font-size: 80%;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.5);
+  }
 
-    &:last-child {
-      text-align: right;
-    }
+  input[type=submit],
+  button {
+    padding: $base-margin;
+    background-color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  input[type=password],
+  input[type=text] {
+    padding: $base-margin;
+    background: rgba(255, 255, 255, 0.5);
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  ::-webkit-input-placeholder {
+    @include placeholder-effect;
+  }
+
+  ::-moz-placeholder {
+    @include placeholder-effect;
+  }
+
+  :-ms-input-placeholder {
+    @include placeholder-effect;
+  }
+
+  :-moz-placeholder {
+    @include placeholder-effect;
   }
 }

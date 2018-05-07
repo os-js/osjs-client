@@ -7,7 +7,7 @@ const createAttributes = (props, field, disabled) => {
     if (field.attributes.type !== 'submit') {
       return Object.assign({}, {
         autocapitalize: 'off',
-        autocomplete: 'off',
+        autocomplete: 'new-' + field.attributes.name,
         disabled,
         oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
       }, field.attributes);
@@ -18,7 +18,9 @@ const createAttributes = (props, field, disabled) => {
 };
 
 const createFields = (props, fields, disabled) =>
-  fields.map(f => h('div', {}, h(f.tagName, createAttributes(props, f, disabled))));
+  fields.map(f => h('div', {
+    class: 'osjs-login-field'
+  }, h(f.tagName, createAttributes(props, f, disabled))));
 
 
 /**
@@ -42,7 +44,9 @@ export default class Login extends EventHandler {
     this.$container = null;
     this.core = core;
     this.options = Object.assign({
+      id: 'osjs-login',
       title: 'Welcome to OS.js',
+      stamp: window.OSJS_VERSION,
       fields: [{
         tagName: 'input',
         attributes: {
@@ -73,6 +77,7 @@ export default class Login extends EventHandler {
   init() {
     this.$container = document.createElement('div');
     this.$container.className = 'osjs-login';
+    this.core.$root.classList.add('login');
     this.core.$root.appendChild(this.$container);
 
     this.render();
@@ -82,6 +87,8 @@ export default class Login extends EventHandler {
    * Destroys the UI
    */
   destroy() {
+    this.core.$root.classList.remove('login');
+
     if (this.$container) {
       this.$container.remove();
     }
@@ -92,23 +99,35 @@ export default class Login extends EventHandler {
    */
   render() {
     const login = this.core.config('auth.login', {});
-    const createView = (state, actions) => h('div', {}, [
+    const fields = state => {
+      const result = createFields(state, this.options.fields, state.loading);
+
+      if (this.options.stamp) {
+        result.push(h('div', {
+          class: 'osjs-login-stamp'
+        }, this.options.stamp));
+      }
+
+      return result;
+    };
+
+    const createView = (state, actions) => h('div', {
+      id: this.options.id
+    }, [
+      h('div', {
+        class: 'osjs-login-header'
+      }, h('span', {}, this.options.title)),
       h('div', {
         class: 'osjs-login-error',
         style: {display: state.error ? 'block' : 'none'}
       }, h('span', {}, state.error)),
-      h('div', {
-        class: 'osjs-login-header'
-      }, h('span', {}, this.options.title)),
       h('form', {
         loading: false,
         method: 'post',
         action: '#',
         autocomplete: 'off',
         onsubmit: actions.submit
-      }, [
-        ...createFields(state, this.options.fields, state.loading)
-      ])
+      }, fields(state))
     ]);
 
     const a = app(Object.assign({}, login), {

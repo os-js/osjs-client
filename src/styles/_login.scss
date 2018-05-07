@@ -82,8 +82,8 @@
 
 #osjs-login {
   font-family: Roboto, sans-serif;
-  max-width: 80%;
-  min-width: 400px;
+  max-width: 400px;
+  width: 80%;
 
   .osjs-login-header {
     text-align: center;
@@ -93,6 +93,7 @@
     text-transform: uppercase;
     color: #fff;
     letter-spacing: 4px;
+    line-height: 1.5;
   }
 
   .osjs-login-field {
@@ -109,7 +110,7 @@
   }
 
   .osjs-login-stamp {
-    margin-top: $base-margin;
+    margin-top: $base-margin * 2;
     font-size: 80%;
     text-align: right;
     color: rgba(255, 255, 255, 0.5);

@@ -76,7 +76,8 @@ export default class Login extends EventHandler {
    */
   init() {
     this.$container = document.createElement('div');
-    this.$container.className = 'osjs-login';
+    this.$container.id = this.options.id;
+    this.$container.className = 'osjs-login-base';
     this.core.$root.classList.add('login');
     this.core.$root.appendChild(this.$container);
 
@@ -112,6 +113,7 @@ export default class Login extends EventHandler {
     };
 
     const createView = (state, actions) => h('div', {
+      class: 'osjs-login',
       id: this.options.id
     }, [
       h('div', {

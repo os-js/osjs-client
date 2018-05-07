@@ -61,7 +61,7 @@ export default class AuthServiceProvider extends ServiceProvider {
 
   constructor(core, args = {}) {
     args = Object.assign({
-      ui: {},
+      ui: core.config('auth.login.ui', {}),
       config: {}
     }, args);
 

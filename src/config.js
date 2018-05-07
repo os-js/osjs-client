@@ -91,6 +91,7 @@ export const defaultConfiguration = {
 
   auth: {
     login: {
+      ui: {},
       username: null,
       password: null
     },

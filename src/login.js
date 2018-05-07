@@ -17,10 +17,22 @@ const createAttributes = (props, field, disabled) => {
   return Object.assign({disabled}, field.attributes);
 };
 
-const createFields = (props, fields, disabled) =>
+const createFields = (props, fields, disabled) => {
+  const children = f => {
+    if (f.tagName === 'select' && f.choices) {
+      return f.choices.map(c => h('option', {
+        current: c.current ? 'current' : undefined,
+        value: c.value
+      }, c.label));
+    }
+
+    return [];
+  };
+
   fields.map(f => h('div', {
     class: 'osjs-login-field'
-  }, h(f.tagName, createAttributes(props, f, disabled)), f.children || []));
+  }, h(f.tagName, createAttributes(props, f, disabled)), children(f)));
+};
 
 
 /**

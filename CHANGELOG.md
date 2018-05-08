@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.20
+
+* Added Application#emitAll for event broadcasting
+
 ## 3.0.0-alpha.19
 
 * Added npmignore

@@ -3,6 +3,7 @@
 ## 3.0.0-alpha.20
 
 * Added Application#emitAll for event broadcasting
+* Improved login screen and customization options
 
 ## 3.0.0-alpha.19
 

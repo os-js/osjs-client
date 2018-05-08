@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.21
+
+* Fixed an issue relating to input form field generation
+
 ## 3.0.0-alpha.20
 
 * Added Application#emitAll for event broadcasting

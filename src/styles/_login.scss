@@ -100,6 +100,19 @@
     margin-top: $base-margin * 2;
   }
 
+  .osjs-login-field-select {
+    position: relative;
+
+    &::after {
+      content: '\21B4';
+      position: absolute;
+      top: 50%;
+      right: $base-margin / 2;
+      transform: translate(-50%, -50%);
+      color: #fff;
+    }
+  }
+
   .osjs-login-error {
     background: rgba(255, 0, 0, 0.8);
     color: #fff;
@@ -133,12 +146,23 @@
     text-transform: uppercase;
   }
 
+  select,
   input[type=password],
   input[type=text] {
     padding: $base-margin;
     background: rgba(255, 255, 255, 0.5);
     color: #fff;
     letter-spacing: 1px;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    option {
+      color: #000;
+    }
   }
 
   ::-webkit-input-placeholder {

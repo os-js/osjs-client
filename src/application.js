@@ -103,6 +103,12 @@ export default class Application extends EventHandler {
     this.windows = [];
 
     /**
+     * Worker instances
+     * @type {Worker[]}
+     */
+    this.workers = [];
+
+    /**
      * The application destruction state
      * @type {Boolean}
      */
@@ -144,19 +150,19 @@ export default class Application extends EventHandler {
     this.emit('destroy');
     this.core.emit('osjs/application:destroy', this);
 
-    try {
-      this.windows.forEach((window) => window.destroy());
-      this.windows = [];
-    } catch (e) {
-      console.warn(e);
-    }
+    const destroy = (list, fn) => {
+      try {
+        list.forEach(fn);
+      } catch (e) {
+        console.warn(e);
+      }
 
-    try {
-      this.sockets.forEach((ws) => ws.close());
-      this.sockets = [];
-    } catch (e) {
-      console.warn(e);
-    }
+      return [];
+    };
+
+    this.windows = destroy(this.windows, window => window.destroy());
+    this.sockets = destroy(this.sockets, ws => ws.close());
+    this.workers = destroy(this.workers, worker => worker.terminate());
 
     const foundIndex = applications.findIndex(a => a === this);
     if (foundIndex !== -1) {
@@ -243,16 +249,25 @@ export default class Application extends EventHandler {
     const ws = new ApplicationSocket(this.metadata.name, uri, options.socket);
 
     this.sockets.push(ws);
-    /*
-    const index = this.sockets.push(ws) - 1;
-    ws.on('close', () => {
-      if (!this.destroyed) {
-        this.sockets.splice(index)
-      }
-    });
-    */
 
     return ws;
+  }
+
+  /**
+   * Creates a new Worker
+   * @param {String} filename Worker filename
+   * @param {Object} [options] Worker options
+   * @return {Worker}
+   */
+  worker(filename, options = {}) {
+    const uri = this.resource(filename);
+    const worker =  new Worker(uri, Object.assign({
+      credentials: 'same-origin'
+    }, options));
+
+    this.workers.push(worker);
+
+    return worker;
   }
 
   /**

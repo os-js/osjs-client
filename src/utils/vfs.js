@@ -86,6 +86,7 @@ const createSpecials = path => {
       isDirectory: true,
       isFile: false,
       mime: null,
+      size: 0,
       stat: {},
       filename: '..',
       path: parentDirectory(path) || '/'

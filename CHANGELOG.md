@@ -1,5 +1,20 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.23
+
+* Added proper pathJoin method
+* Prevent navigating away when dropping files on desktop
+* Added 'showHiddenFiles' option for scandir transform
+* Update z-index for loading overlay in window
+* Add missing size property to special directory in vfs
+* Fixed an issue with parentDirectory() resolve
+* Added Application.destroyAll method
+* Promise-ified Application#request
+* Added proper mount/unmount in filesystem
+* Cleaned up some async code
+* Don't transform URIs in 'resource()' in application
+* Added 'worker()' method for creation in application
+
 ## 3.0.0-alpha.22
 
 * Remove 'registerDefault' from Core options

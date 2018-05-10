@@ -241,6 +241,8 @@ export default class Packages {
               this.running.splice(foundIndex, 1);
             }
           });
+        } else {
+          console.warn('The application', name, 'did not return an Application instance from registration');
         }
       } catch (e) {
         // TODO

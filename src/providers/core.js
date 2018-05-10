@@ -134,6 +134,10 @@ export default class CoreServiceProvider extends ServiceProvider {
         position: ev,
         menu: [
           {
+            label: 'Kill All',
+            onclick: () => Application.destroyAll()
+          },
+          {
             label: 'Applications',
             items: Application.getApplications().map(proc => ({
               label: `${proc.metadata.name} (${proc.pid})`,

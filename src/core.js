@@ -78,13 +78,7 @@ export default class Core extends CoreBase {
 
     this.emit('osjs/core:destroy');
 
-    Application.getApplications().forEach(app => {
-      try {
-        app.destroy();
-      } catch (e) {
-        console.warn(e);
-      }
-    });
+    Application.destroyAll();
 
     super.destroy();
   }

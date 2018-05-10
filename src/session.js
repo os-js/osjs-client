@@ -68,7 +68,7 @@ export default class Session {
    */
   load(fresh = false) {
     if (fresh) {
-      Application.getApplications().forEach(app => app.destroy());
+      Application.destroyAll();
     }
 
     const session = this.core.make('osjs/settings')

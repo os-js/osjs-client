@@ -141,7 +141,7 @@ export default class Application extends EventHandler {
   /**
    * Destroy application
    */
-  destroy() {
+  destroy(remove = true) {
     if (this.destroyed) {
       return;
     }
@@ -164,9 +164,11 @@ export default class Application extends EventHandler {
     this.sockets = destroy(this.sockets, ws => ws.close());
     this.workers = destroy(this.workers, worker => worker.terminate());
 
-    const foundIndex = applications.findIndex(a => a === this);
-    if (foundIndex !== -1) {
-      applications.splice(foundIndex, 1);
+    if (remove) {
+      const foundIndex = applications.findIndex(a => a === this);
+      if (foundIndex !== -1) {
+        applications.splice(foundIndex, 1);
+      }
     }
   }
 
@@ -381,6 +383,21 @@ export default class Application extends EventHandler {
    */
   static getApplications() {
     return applications;
+  }
+
+  /**
+   * Kills all running applications
+   */
+  static destroyAll() {
+    applications.forEach(proc => {
+      try {
+        proc.destroy(false);
+      } catch (e) {
+        console.warn(e);
+      }
+    });
+
+    applications.splice(0, applications.length);
   }
 
 }

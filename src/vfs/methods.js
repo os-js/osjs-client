@@ -54,6 +54,7 @@ export const readdir = adapter => (path, options = {}) =>
   adapter.readdir(path, options)
     .then(result => result.map(stat => createFileIter(stat)))
     .then(result => transformReaddir(path, result, {
+      showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));
 

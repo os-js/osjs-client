@@ -145,6 +145,7 @@ export const humanFileSize = (bytes, si = false) => {
  * @param {String} path The path to the readdir root
  * @param Object[] files An array of readdir results
  * @param {Object} options Options
+ * @param {Boolean} [options.showHiddenFiles=true] Show hidden files
  * @param {Function} [options.filter] A filter
  * @param {String} [options.sortBy='filename'] Sort by this attribute
  * @param {String} [options.sortDir='asc'] Sort in this direction
@@ -152,6 +153,7 @@ export const humanFileSize = (bytes, si = false) => {
  */
 export const transformReaddir = (path, files, options = {}) => {
   options = Object.assign({}, {
+    showHiddenFiles: false,
     sortBy: 'filename',
     sortDir: 'asc'
   }, options);
@@ -164,6 +166,10 @@ export const transformReaddir = (path, files, options = {}) => {
   if (['asc', 'desc'].indexOf(sortDir) === -1) {
     sortDir = 'asc';
   }
+
+  const filterHidden = options.showHiddenFiles
+    ? () => true
+    : file => file.filename.substr(0, 1) !== '.';
 
   const sorter = sortMap[sortBy]
     ? sortMap[sortBy]()
@@ -179,11 +185,13 @@ export const transformReaddir = (path, files, options = {}) => {
 
   const sortedDirectories = files.filter(file => file.isDirectory)
     .sort(sorter(sortBy, sortDir))
+    .filter(filterHidden)
     .filter(filter)
     .map(modify);
 
   const sortedFiles = files.filter(file => !file.isDirectory)
     .sort(sorter(sortBy, sortDir))
+    .filter(filterHidden)
     .filter(filter)
     .map(modify);
 

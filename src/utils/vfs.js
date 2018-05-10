@@ -32,6 +32,7 @@
  * Get parent directory
  */
 export const parentDirectory = path => path
+  .replace(/\/$/, '')
   .split('/')
   .filter((item, index, arr) => index < (arr.length - 1))
   .join('/')

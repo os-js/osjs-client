@@ -53,11 +53,11 @@ export default class Session {
   /**
    * Saves session
    */
-  async save() {
+  save() {
     const apps = Application.getApplications();
     const session = apps.map(app => app.getSession());
 
-    await this.core.make('osjs/settings')
+    return this.core.make('osjs/settings')
       .set('osjs/session', session)
       .save();
   }
@@ -66,12 +66,12 @@ export default class Session {
    * Loads session
    * @param {Boolean} [fresh=false] Kill all current applications first
    */
-  async load(fresh = false) {
+  load(fresh = false) {
     if (fresh) {
       Application.getApplications().forEach(app => app.destroy());
     }
 
-    const session = await this.core.make('osjs/settings')
+    const session = this.core.make('osjs/settings')
       .get('osjs/session');
 
     if (session) {
@@ -87,6 +87,8 @@ export default class Session {
 
       console.groupEnd();
     }
+
+    return Promise.resolve(true);
   }
 }
 

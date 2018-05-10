@@ -53,12 +53,9 @@ import {style, script} from './utils/dom';
 /*
  * Fetch package manifest
  */
-const fetchManifest = async (core) => {
-  const response = await fetch(core.url('/metadata.json'));
-  const metadata = await response.json();
-
-  return metadata;
-};
+const fetchManifest = core =>
+  fetch(core.url('/metadata.json'))
+    .then(response => response.json());
 
 /**
  * Package Manager
@@ -116,10 +113,13 @@ export default class Packages {
   /**
    * Initializes package manager
    */
-  async init() {
+  init() {
     console.debug('Packages::init()');
 
-    this.metadata = await fetchManifest(this.core);
+    return fetchManifest(this.core)
+      .then(metadata => {
+        this.metadata = metadata;
+      });
   }
 
   /**
@@ -128,7 +128,7 @@ export default class Packages {
    * @param {Boolean} [force=false] Force loading even though previously cached
    * @return {String[]} A list of failed resources
    */
-  async preload(list, force = false) {
+  preload(list, force = false) {
     const root = this.core.$resourceRoot;
 
     console.debug('Packages::preload()');
@@ -137,34 +137,34 @@ export default class Packages {
       ? entry + '?_time=' + (new Date()).getTime()
       : entry;
 
-    let failed = [];
-    for (let i = 0; i < list.length; i++) {
-      const entry = list[i];
-      const cached = this.loaded.find(src => src === entry);
-
-      if (!force && cached) {
-        continue;
-      }
-
+    const cached = entry => force ? false : this.loaded.find(src => src === entry);
+    const entries = list.filter(entry => !cached(entry));
+    const promises = entries.map(entry => {
       console.debug('Packages::preload()', entry);
 
-      try {
-        const el = entry.match(/\.js$/)
-          ? await script(root, getSource(entry))
-          : await style(root, getSource(entry));
+      const p = entry.match(/\.js$/)
+        ? script(root, getSource(entry))
+        : style(root, getSource(entry));
 
-        if (!cached) {
-          this.loaded.push(entry);
-        }
+      return p
+        .then(() => ({success: true, entry}))
+        .catch(error => ({success: false, entry, error}));
+    });
 
-        console.debug('=>', el);
-      } catch (e) {
-        failed.push(entry);
-        console.warn(e);
-      }
-    }
+    return Promise.all(promises)
+      .then(results => {
+        const successes = results.filter(res => res.success);
+        successes.forEach(entry => {
+          if (!cached(entry)) {
+            this.loaded.push(entry);
+          }
+        });
 
-    return failed;
+        const failed = results.filter(res => !res.success);
+        failed.forEach(failed => console.warn('Failed loading', failed.entry, failed.error));
+
+        return failed.map(failed => failed.entry);
+      });
   }
 
   /**
@@ -216,50 +216,56 @@ export default class Packages {
    * @param {Object} options Launch options
    * @return {Application}
    */
-  async _launch(name, metadata, args, options) {
+  _launch(name, metadata, args, options) {
     const fail = err => {
       this.core.emit('osjs/application:launched', name, false);
       throw new Error(err);
     };
 
     const basePath = this.core.config('public');
-    const errors = await this.preload(
-      metadata.files
-        .map(f => this.core.url(`${basePath}apps/${metadata._path}/${f}`)),
-      options.forcePreload === true
-    );
-    if (errors.length) {
-      fail(`Package Loading ${name} failed: ${errors.join(', ')}`);
-    }
 
-    const found = this.packages.find(pkg => pkg.metadata.name === name);
-    if (!found) {
-      fail(`Package Runtime ${name} not found`);
-    }
+    const preloads = metadata.files
+      .map(f => this.core.url(`${basePath}apps/${metadata._path}/${f}`));
 
-    let app;
+    const create = found => {
+      let app;
 
-    try {
-      console.group('Packages::_launch()');
-      app = found.callback(this.core, args, options, found.metadata);
+      try {
+        console.group('Packages::_launch()');
+        app = found.callback(this.core, args, options, found.metadata);
 
-      if (app instanceof Application) {
-        app.on('destroy', () => {
-          const foundIndex = this.running.findIndex(n => n === name);
-          if (foundIndex !== -1) {
-            this.running.splice(foundIndex, 1);
-          }
-        });
+        if (app instanceof Application) {
+          app.on('destroy', () => {
+            const foundIndex = this.running.findIndex(n => n === name);
+            if (foundIndex !== -1) {
+              this.running.splice(foundIndex, 1);
+            }
+          });
+        }
+      } catch (e) {
+        // TODO
+        console.warn(e);
+      } finally {
+        this.core.emit('osjs/application:launched', name, app);
+        console.groupEnd();
       }
-    } catch (e) {
-      // TODO
-      console.warn(e);
-    } finally {
-      this.core.emit('osjs/application:launched', name, app);
-      console.groupEnd();
-    }
 
-    return app;
+      return app;
+    };
+
+    return this.preload(preloads, options.forcePreload === true)
+      .then(errors => {
+        if (errors.length) {
+          fail(`Package Loading ${name} failed: ${errors.join(', ')}`);
+        }
+
+        const found = this.packages.find(pkg => pkg.metadata.name === name);
+        if (!found) {
+          fail(`Package Runtime ${name} not found`);
+        }
+
+        return create(found);
+      });
   }
 
   /**

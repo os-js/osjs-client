@@ -165,30 +165,3 @@ export const defaultConfiguration = {
     }
   }
 };
-
-export const defaultProviders = [{
-  class: CoreServiceProvider,
-  name: 'core'
-}, {
-  class: DesktopServiceProvider,
-  name: 'desktop'
-}, {
-  class: VFSServiceProvider,
-  name: 'vfs'
-}, {
-  class: NotificationServiceProvider,
-  name: 'notifications'
-}, {
-  class: SettingsServiceProvider,
-  name: 'settings',
-  options: {
-    before: true
-  }
-}, {
-  class: AuthServiceProvider,
-  name: 'auth',
-  options: {
-    before: true
-  }
-}];
-

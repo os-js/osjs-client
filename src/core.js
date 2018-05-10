@@ -30,7 +30,7 @@
 
 import Application from './application';
 import {CoreBase} from '@osjs/common';
-import {defaultProviders, defaultConfiguration} from './config';
+import {defaultConfiguration} from './config';
 
 const encodeQueryData = data => Object.keys(data)
   .filter(k => typeof data[k] !== 'object')
@@ -50,17 +50,15 @@ export default class Core extends CoreBase {
    * @param {Object} [options] Options
    * @param {Element} [options.root] The root DOM element for elements
    * @param {Element} [options.resourceRoot] The root DOM element for resources
-   * @param {Boolean|Map<string, Object>} [options.registerDefault=true] Register default provided service providers. Can also be a map with arguments to pass on to options.
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
   constructor(config, options = {}) {
     options = Object.assign({}, {
-      registerDefault: true,
       classNames: ['osjs-root'],
       root: document.body
     }, options);
 
-    super(defaultProviders, defaultConfiguration, config, options);
+    super(defaultConfiguration, config, options);
 
     this.user = null;
     this.ws = null;
@@ -82,7 +80,7 @@ export default class Core extends CoreBase {
 
     Application.getApplications().forEach(app => {
       try {
-        app.destroy()
+        app.destroy();
       } catch (e) {
         console.warn(e);
       }

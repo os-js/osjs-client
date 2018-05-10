@@ -34,6 +34,7 @@ import Application from './src/application';
 import Notification from './src/notification';
 import WindowBehavior from './src/window-behavior';
 
+import CoreServiceProvider from './src/providers/core';
 import DesktopServiceProvider from './src/providers/desktop';
 import NotificationServiceProvider from './src/providers/notifications';
 import VFSServiceProvider from './src/providers/vfs';
@@ -48,6 +49,7 @@ export {
   Notification,
   WindowBehavior,
 
+  CoreServiceProvider,
   DesktopServiceProvider,
   NotificationServiceProvider,
   VFSServiceProvider,

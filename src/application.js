@@ -190,6 +190,10 @@ export default class Application extends EventHandler {
    * @return {String} A complete URI
    */
   resource(path = '/') {
+    if (path.match(/^https?:/i)) {
+      return path;
+    }
+
     if (path.substr(0, 1) !== '/') {
       path = '/' + path;
     }

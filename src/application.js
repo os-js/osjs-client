@@ -209,28 +209,28 @@ export default class Application extends EventHandler {
    * @param {Object} [params] Parameters to pass on
    * @param {String} [method=post] HTTP Method
    * @param {Object} [options] HTTP Options
-   * @return {*} ArrayBuffer or JSON
+   * @return {Promise<*, Error>} ArrayBuffer or JSON
    */
-  async request(path = '/', params = {}, method = 'post', options = {}) {
+  request(path = '/', params = {}, method = 'post', options = {}) {
     const uri = this.resource(path);
     const body = method === 'get' ? null : params;
 
-    const response = await fetch(uri, {
+    return fetch(uri, {
       method,
       body: JSON.stringify(body),
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       }
+    }).then(response => {
+      const contentType = response.headers.get('content-type');
+
+      if (contentType && contentType.includes('application/json')) {
+        return response.json();
+      }
+
+      return response.arrayBuffer();
     });
-
-    const contentType = response.headers.get('content-type');
-
-    if (contentType && contentType.includes('application/json')) {
-      return response.json();
-    }
-
-    return response.arrayBuffer();
   }
 
   /**

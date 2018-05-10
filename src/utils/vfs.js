@@ -28,8 +28,10 @@
  * @licence Simplified BSD License
  */
 
-/*
+/**
  * Get parent directory
+ * @param {String} path Directory
+ * @return {String} Parent directory
  */
 export const parentDirectory = path => path
   .replace(/\/$/, '')
@@ -37,6 +39,15 @@ export const parentDirectory = path => path
   .filter((item, index, arr) => index < (arr.length - 1))
   .join('/')
   .replace(/\/?$/, '/');
+
+/**
+ * Joins paths
+ * @param {String[]} args paths
+ * @return {String}
+ */
+export const pathJoin = (...args) => args
+  .reduce((o, a, i) => o.concat([i > 0 ? a.replace(/\/$/, '') : a]), [])
+  .join('/');
 
 /*
  * Sorts an array of files

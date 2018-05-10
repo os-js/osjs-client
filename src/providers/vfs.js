@@ -30,7 +30,7 @@
 
 import {ServiceProvider} from '@osjs/common';
 import Filesystem from '../filesystem';
-import {getFileIcon} from '../utils/vfs';
+import * as utils from '../utils/vfs';
 
 /**
  * OS.js Virtual Filesystem Service Provider
@@ -51,9 +51,10 @@ export default class VFSServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/vfs', () => this.fs.request());
 
     const iconMap = this.core.config('vfs.icons', {});
-    const icon = getFileIcon(iconMap);
+    const icon = utils.getFileIcon(iconMap);
 
     this.core.singleton('osjs/fs', () => ({
+      pathJoin: (...args) => utils.pathJoin(...args),
       icon: icon,
       mountpoints: (...args) => this.fs.getMounts(...args),
       mount: (...args) => this.fs.mount(...args),

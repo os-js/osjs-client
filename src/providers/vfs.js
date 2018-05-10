@@ -47,7 +47,7 @@ export default class VFSServiceProvider extends ServiceProvider {
     });
   }
 
-  async init() {
+  init() {
     this.core.singleton('osjs/vfs', () => this.fs.request());
 
     const iconMap = this.core.config('vfs.icons', {});
@@ -60,6 +60,8 @@ export default class VFSServiceProvider extends ServiceProvider {
       unmount: (...args) => this.fs.unmount(...args),
       register: (...args) => this.fs.register(...args)
     }));
+
+    return this.fs.mountAll(false);
   }
 
 }

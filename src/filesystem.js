@@ -43,7 +43,9 @@ const defaultAdapter = ({
   unlink: (path, options) => Promise.resolve(false),
   exists: (path, options) => Promise.resolve(false),
   stat: (path, options) => Promise.resolve({}),
-  url: (path, options) => Promise.resolve(null)
+  url: (path, options) => Promise.resolve(null),
+  mount: options => Promise.resolve(true),
+  unmount: options => Promise.resolve(true)
 });
 
 /**
@@ -83,7 +85,7 @@ const createMountpoint = (core, adapters, props) => {
   const adapter = Object.assign({}, defaultAdapter, adapters[name](core));
 
   const result = merge({
-    mounted: true,
+    mounted: false,
     adapter: name,
     attributes: {
       local: true,
@@ -156,23 +158,66 @@ export default class Filesystem extends EventHandler {
   }
 
   /**
+   * Mounts all configured mountpoints
+   */
+  mountAll(stopOnError = true) {
+    const fn = m => stopOnError
+      ? this._mount(m)
+      : this._mount(m).catch(err => console.warn(err));
+
+    return Promise.all(this.mounts.map(fn));
+  }
+
+  /**
+   * Wrapper for mounting
+   * @param {Mountpoint} mountpoint The mountpoint
+   */
+  _mount(mountpoint) {
+    return mountpoint._adapter.mount()
+      .then(result => {
+        if (result) {
+          mountpoint.mounted = true;
+          this.emit('mounted', mountpoint);
+          this.core.emit('osjs/fs:mount');
+        }
+
+        return result;
+      });
+  }
+
+  /**
+   * Wrapper for unmounting
+   * @param {Mountpoint} mountpoint The mountpoint
+   */
+  _unmount(mountpoint) {
+    return mountpoint._adapter.unmount()
+      .then(result => {
+        if (result) {
+          mountpoint.mounted = false;
+          this.emit('unmounted', mountpoint);
+          this.core.emit('osjs/fs:unmount');
+        }
+
+        return result;
+      });
+  }
+
+  /**
    * Mount given filesystem
    * @param {String} name Filesystem name
    * @throws {Error} On invalid name or if already mounted
    */
-  async mount(name) {
-    const found = this.mounts.find(m => m.name === name);
-    if (!found) {
-      throw new Error(`Filesystem '${name}' not found`);
-    }
-    if (found.mounted) {
-      throw new Error(`Filesystem '${name}' already mounted`);
-    }
+  mount(name) {
+    return Promise.resolve(this.mounts.find(m => m.name === name))
+      .then(found => {
+        if (!found) {
+          throw new Error(`Filesystem '${name}' not found`);
+        } else if (found.mounted) {
+          throw new Error(`Filesystem '${name}' already mounted`);
+        }
 
-    // TODO
-    found.mounted = true;
-    this.emit('mounted', found);
-    this.core.emit('osjs/fs:mount');
+        return this._mount(found);
+      });
   }
 
   /**
@@ -180,19 +225,17 @@ export default class Filesystem extends EventHandler {
    * @param {String} name Filesystem name
    * @throws {Error} On invalid name or if already unmounted
    */
-  async unmount() {
-    const found = this.mounts.find(m => m.name === name);
-    if (!found) {
-      throw new Error(`Filesystem '${name}' not found`);
-    }
-    if (!found.mounted) {
-      throw new Error(`Filesystem '${name}' already unmounted`);
-    }
+  unmount(name) {
+    return Promise.resolve(this.mounts.find(m => m.name === name))
+      .then(found => {
+        if (!found) {
+          throw new Error(`Filesystem '${name}' not found`);
+        } else if (!found.mounted) {
+          throw new Error(`Filesystem '${name}' not mounted`);
+        }
 
-    // TODO
-    found.mounted = false;
-    this.emit('unmounted', found);
-    this.core.emit('osjs/fs:unmount');
+        return this._unmount(found);
+      });
   }
 
   /**

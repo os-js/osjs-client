@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.22
+
+* Remove 'registerDefault' from Core options
+
+This requires the distribution to manually register base providers.
+See 'index.js' in the base repository.
+
 ## 3.0.0-alpha.21
 
 * Fixed an issue relating to input form field generation

@@ -101,6 +101,14 @@ export default class Desktop {
     // Prevents background scrolling on iOS
     this.core.$root.addEventListener('touchmove', e => e.preventDefault());
 
+    // Handles dnd
+    this.core.$root.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+    this.core.$root.addEventListener('drop', e => {
+      e.preventDefault();
+    });
+
     this.core.$resourceRoot.appendChild(this.$styles);
   }
 

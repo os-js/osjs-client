@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.24
+
+* Added 'osjs/theme' service
+
 ## 3.0.0-alpha.23
 
 * Added proper pathJoin method

@@ -55,6 +55,19 @@ export default class DesktopServiceProvider extends ServiceProvider {
       applySettings: settings => this.desktop.applySettings(settings),
       getRect: () => this.desktop.getRect()
     }));
+
+
+    const basePath = this.core.config('public');
+
+    const resource = path => {
+      const theme = this.core.config('theme');
+      return `${basePath}themes/${theme}/${path}`; // FIXME
+    };
+
+    this.core.singleton('osjs/theme', () => ({
+      resource,
+      icon: name => resource(`icons/${name}`)
+    }));
   }
 
   start() {

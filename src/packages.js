@@ -199,6 +199,8 @@ export default class Packages {
           });
         });
       }
+    } else if (metadata.type === 'theme') {
+      throw new Error('Cannot launch a theme type package');
     }
 
     this.core.emit('osjs/application:launch', name, args, options);

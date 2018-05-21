@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.25
+
+* Updated Application resouce() and socket()
+
 ## 3.0.0-alpha.24
 
 * Added 'osjs/theme' service

@@ -42,10 +42,6 @@ const TEMPLATE = subtract => `
   }
 `;
 
-const mergeSettings = (a, b) => merge(a, b, {
-  arrayMerge: (dest, source) => source
-});
-
 /**
  * Desktop Class
  *
@@ -132,10 +128,12 @@ export default class Desktop {
    * @param {Object} [settings] Use this set instead of loading from settings
    */
   applySettings(settings = {}) {
-    const defaultSettings = this.core.config('user.settings', {});
-    const userSettings = this.core.make('osjs/settings').get('osjs/settings', {});
-    const baseSettings = mergeSettings(defaultSettings, userSettings);
-    const newSettings = mergeSettings(baseSettings, settings);
+    const userSettings = this.core.make('osjs/settings')
+      .get('osjs/settings', {});
+
+    const newSettings = merge(userSettings, settings, {
+      arrayMerge: (dest, source) => source
+    });
 
     const {font, background} = newSettings;
 
@@ -153,7 +151,9 @@ export default class Desktop {
 
     this.applyTheme(newSettings.theme.name);
 
-    this.core.make('osjs/panels').create({});
+    const pp = this.core.make('osjs/panels');
+    pp.removeAll();
+    newSettings.panels.forEach(item => pp.create(item));
   }
 
   /**

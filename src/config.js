@@ -105,7 +105,15 @@ export const defaultConfiguration = {
       ],
       'osjs/settings': {
         __revision__: 0,
-        panels: [],
+        panels: [{
+          position: 'top',
+          items: [
+            {name: 'menu'},
+            {name: 'windows'},
+            {name: 'tray'},
+            {name: 'clock'}
+          ]
+        }],
         widgets: [],
         keybindings: [],
         theme: {

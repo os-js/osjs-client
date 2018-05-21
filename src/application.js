@@ -188,11 +188,14 @@ export default class Application extends EventHandler {
 
   /**
    * Gets a URI to a resource for this application
+   *
+   * @desc If given path is an URI it will just return itself.
+   *
    * @param {String} path The path
    * @return {String} A complete URI
    */
   resource(path = '/') {
-    if (path.match(/^https?:/i)) {
+    if (path.match(/^(http|ws|ftp)s?:/i)) {
       return path;
     }
 
@@ -251,7 +254,10 @@ export default class Application extends EventHandler {
 
     const resource = this.resource(path);
     const {hostname, port, protocol} = options;
-    const uri = `${protocol}//${hostname}:${port}${resource}`;
+    const uri = resource.match(/^wss?:/)
+      ? resource
+      : `${protocol}//${hostname}:${port}${resource}`;
+
     const ws = new ApplicationSocket(this.metadata.name, uri, options.socket);
 
     this.sockets.push(ws);

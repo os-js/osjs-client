@@ -648,17 +648,10 @@ export default class Window extends EventHandler {
   /**
    * Get a list of all windows
    *
-   * Does not return a reference, but rather a serialized list
-   *
-   * @return {Object[]}
+   * @return {Window[]}
    */
   static getWindows() {
-    return windows.map(win => Object.assign({
-      maximize: () => win.maximize(),
-      raise: () => win.raise(),
-      restore: () => win.restore(),
-      close: () => win.close()
-    }, win.getSession()));
+    return windows;
   }
 
   /**

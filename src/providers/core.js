@@ -47,12 +47,21 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
+    const getWindow = win => ({
+      id: win.id,
+      state: Object.assign({}, win.state),
+      maximize: () => win.maximize(),
+      raise: () => win.raise(),
+      restore: () => win.restore(),
+      close: () => win.close()
+    });
+
     const getApplications = () => Application.getApplications().map(app => ({
       pid: app.pid,
       args: Object.assign({}, app.args),
       metadata: Object.assign({}, app.metadata),
       started: app.started,
-      windows: app.windows.map(win => win.getSession()),
+      windows: app.windows.map(getWindow),
       emit: (...args) => app.emit(...args),
       destroy: () => app.destroy(),
       relaunch: () => app.relaunch(),
@@ -65,8 +74,8 @@ export default class CoreServiceProvider extends ServiceProvider {
       open: (...args) => this.core.open(...args),
       make: (...args) => this.core.make(...args),
       request: (...args) => this.core.request(...args),
-      getWindows: () => Window.getWindows(),
-      getApplications
+      getApplications,
+      getWindows: () => Window.getWindows().map(getWindow)
     });
 
     this.session = new Session(core);

@@ -154,7 +154,6 @@ export default class Desktop {
     this.applyTheme(newSettings.theme.name);
 
     this.core.make('osjs/panels').create({});
-    console.error('xxx')
   }
 
   /**

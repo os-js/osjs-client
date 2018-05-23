@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.26
+
+* Added 'autostart' support for packages (#4)
+* Updated Window attributes (#5)
+* Panel init now takes place in desktop
+* Updated some public OSjs getters
+* Updated desktop applySettings
+* Removed mapping in Window.getWindows
+
 ## 3.0.0-alpha.25
 
 * Updated Application resouce() and socket()

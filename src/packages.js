@@ -116,6 +116,12 @@ export default class Packages {
   init() {
     console.debug('Packages::init()');
 
+    this.core.on('osjs/core:started', () => {
+      this.metadata
+        .filter(pkg => pkg.autostart === true)
+        .forEach(pkg => this.launch(pkg.name));
+    });
+
     return fetchManifest(this.core)
       .then(metadata => {
         this.metadata = metadata;

@@ -43,6 +43,8 @@ import {style, script} from './utils/dom';
  * @property {String} name The package name
  * @property {String} [category] Package category
  * @property {String} [icon] Package icon
+ * @property {Boolean} [singleton] If only one instance allowed
+ * @property {Boolean} [autostart] Autostart on boot
  * @property {String} [server] Server script filename
  * @property {String[]} [files] Files to preload
  * @property {Map<String, String>} title A map of locales and titles

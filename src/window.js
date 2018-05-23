@@ -76,7 +76,10 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [focused=false] If focused
  * @property {Boolean} [maximized=false] If maximized
  * @property {Boolean} [mimimized=false] If mimimized
+ * @property {Boolean} [closeable=true] If closeable
  * @property {Boolean} [modal=false] If modal
+ * @property {Boolean} [header=true] Show header
+ * @property {Boolean} [controls=true] Show controls
  * @property {number} [zIndex=1] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension
@@ -104,6 +107,9 @@ const createAttributes = (attrs) => Object.assign({
   maximizable: true,
   minimizable: true,
   sessionable: true,
+  closeable: true,
+  header: true,
+  controls: true,
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
@@ -384,6 +390,31 @@ export default class Window extends EventHandler {
 
     this.$content = this.$element.querySelector('.osjs-window-content');
     this.$header = this.$element.querySelector('.osjs-window-header');
+
+    if (!this.attributes.header) {
+      this.$header.style.display = 'none';
+    }
+
+    const hideButton = action =>
+      this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
+        .style.display = 'none';
+
+    if (this.attributes.controls) {
+      if (!this.attributes.maximizable) {
+        hideButton('maximize');
+      }
+
+      if (!this.attributes.minimizable) {
+        hideButton('minimize');
+      }
+
+      if (!this.attributes.closeable) {
+        hideButton('close');
+      }
+    } else {
+      Array.from(this.$header.querySelectorAll('.osjs-window-button'))
+        .forEach(el => el.style.display = 'none');
+    }
 
     this.setNextZindex();
     this._updateDOM();

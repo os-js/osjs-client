@@ -60,6 +60,9 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [focusable=true] If focusable
  * @property {Boolean} [maximizable=true] If window if maximizable
  * @property {Boolean} [minimizable=true] If minimizable
+ * @property {Boolean} [closeable=true] If closeable
+ * @property {Boolean} [header=true] Show header
+ * @property {Boolean} [controls=true] Show controls
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {Map<String,String>} [mediaQueries] A map of matchMedia to name
@@ -76,10 +79,7 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [focused=false] If focused
  * @property {Boolean} [maximized=false] If maximized
  * @property {Boolean} [mimimized=false] If mimimized
- * @property {Boolean} [closeable=true] If closeable
  * @property {Boolean} [modal=false] If modal
- * @property {Boolean} [header=true] Show header
- * @property {Boolean} [controls=true] Show controls
  * @property {number} [zIndex=1] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension

@@ -39,6 +39,7 @@
 .osjs-window {
   position: absolute;
   box-sizing: border-box;
+  user-select: none;
 
   &::after {
     content: '';
@@ -134,6 +135,7 @@
       height: 100%;
       max-width: 100%;
       flex: 1 1;
+      user-select: auto;
     }
 
     & > .osjs-window-resize {

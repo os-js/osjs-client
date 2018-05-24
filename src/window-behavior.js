@@ -224,7 +224,9 @@ export default class WindowBehavior {
     const maxDimension = Object.assign({}, win.attributes.maxDimension);
     const minDimension = Object.assign({}, win.attributes.minDimension);
     const resize = target.classList.contains('osjs-window-resize');
-    const move = target.classList.contains('osjs-window-header');
+    const move = ev.ctrlKey
+      ? win.$element.contains(target)
+      : target.classList.contains('osjs-window-header');
     const rect = this.core.has('osjs/desktop')
       ? this.core.make('osjs/desktop').getRect()
       : null;

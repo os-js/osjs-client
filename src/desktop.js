@@ -42,6 +42,20 @@ const TEMPLATE = subtract => `
   }
 `;
 
+const handleTabOnTextarea = ev => {
+  const input = ev.target;
+  let {selectionStart, selectionEnd, value} = input;
+
+  input.value = value.substring(0, selectionStart)
+    + '\t'
+    + value.substring(selectionEnd, value.length);
+
+  selectionStart++;
+
+  input.selectionStart = selectionStart;
+  input.selectionEnd = selectionStart;
+};
+
 /**
  * Desktop Class
  *
@@ -107,6 +121,28 @@ export default class Desktop {
     });
     this.core.$root.addEventListener('drop', e => {
       e.preventDefault();
+    });
+
+    // Handles tab-ing
+    // TODO: Handle this better
+    this.core.$root.addEventListener('keydown', e => {
+      if (!e.target) {
+        return;
+      }
+
+      const {type, tagName} = e.target;
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tagName) !== -1;
+
+      if (isInput && e.keyCode === 9) {
+        e.preventDefault();
+
+        const isTextfield = ['text', 'password', 'number', 'email'].indexOf(type) !== -1 ||
+          tagName === 'TEXTAREA';
+
+        if (isTextfield) {
+          handleTabOnTextarea(e);
+        }
+      }
     });
 
     this.core.$resourceRoot.appendChild(this.$styles);

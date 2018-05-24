@@ -220,14 +220,20 @@ export default class Application extends EventHandler {
     const uri = this.resource(path);
     const body = method === 'get' ? null : params;
 
-    return fetch(uri, {
+    const fetchOptions = {
       method,
       body: JSON.stringify(body),
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       }
-    }).then(response => {
+    };
+
+    if (method.toLowerCase() === 'get' && fetchOptions.body) {
+      delete fetchOptions.body;
+    }
+
+    return fetch(uri, fetchOptions).then(response => {
       const contentType = response.headers.get('content-type');
 
       if (contentType && contentType.includes('application/json')) {

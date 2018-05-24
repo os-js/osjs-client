@@ -265,6 +265,7 @@ export default class Core extends CoreBase {
 
     if (options.body && options.method === 'get') {
       url += '?' + encodeQueryData(options.body);
+      delete options.body;
     }
 
     const response = await fetch(url, options);

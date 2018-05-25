@@ -28,13 +28,6 @@
  * @licence Simplified BSD License
  */
 
-import CoreServiceProvider from './providers/core';
-import DesktopServiceProvider from './providers/desktop';
-import NotificationServiceProvider from './providers/notifications';
-import VFSServiceProvider from './providers/vfs';
-import AuthServiceProvider from './providers/auth';
-import SettingsServiceProvider from './providers/settings';
-
 const {port, hostname, pathname, protocol} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 

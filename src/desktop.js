@@ -101,12 +101,12 @@ export default class Desktop {
    */
   init() {
     this.core.on('osjs/panel:create', panel => {
-      this.subtract.top += panel.$element.offsetHeight;
+      this.subtract[panel.options.position] += panel.$element.offsetHeight;
       this._updateCSS();
     });
 
     this.core.on('osjs/panel:destroy', panel => {
-      this.subtract.top -= panel.$element.offsetHeight;
+      this.subtract[panel.options.position] -= panel.$element.offsetHeight;
       this._updateCSS();
     });
 

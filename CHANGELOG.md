@@ -1,5 +1,17 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.27
+
+* Updated desktop space based on panels
+* Ctrl+click can now move windows from any spot
+* Remove 'body' on fetch() requests when using GET
+* Added tab handling for text boxes etc.
+* Prevent user-select on window base elements
+* Allow window controls to overflow
+* Updated package metadata documentation
+* A small correction for some window documentation
+
+
 ## 3.0.0-alpha.26
 
 * Added 'autostart' support for packages (#4)

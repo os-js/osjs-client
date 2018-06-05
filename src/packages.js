@@ -45,6 +45,7 @@ import {style, script} from './utils/dom';
  * @property {String} [icon] Package icon
  * @property {Boolean} [singleton] If only one instance allowed
  * @property {Boolean} [autostart] Autostart on boot
+ * @property {Boolean} [hidden] Hide from launch menus etc.
  * @property {String} [server] Server script filename
  * @property {String[]} [files] Files to preload
  * @property {Map<String, String>} title A map of locales and titles

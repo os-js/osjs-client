@@ -190,8 +190,16 @@ export default class Desktop {
     this.applyTheme(newSettings.theme.name);
 
     const pp = this.core.make('osjs/panels');
-    pp.removeAll();
-    newSettings.panels.forEach(item => pp.create(item));
+    if (pp) {
+      pp.removeAll();
+      newSettings.panels.forEach(item => pp.create(item));
+    }
+
+    const wp = this.core.make('osjs/widgets');
+    if (wp) {
+      wp.removeAll();
+      newSettings.widgets.forEach(item => wp.create(item));
+    }
   }
 
   /**

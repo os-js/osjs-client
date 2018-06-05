@@ -176,14 +176,16 @@ export default class Application extends EventHandler {
    * Re-launch this application
    */
   relaunch() {
-    this.core.run(this.metadata.name, Object.assign({}, this.args), Object.assign({}, this.options, {
-      restore: {
-        windows: this.windows.map(w => w.getSession())
-      },
-      forcePreload: this.core.config('development')
-    }));
+    const windows = this.windows.map(w => w.getSession());
 
     this.destroy();
+
+    setTimeout(() => {
+      this.core.run(this.metadata.name, Object.assign({}, this.args), Object.assign({}, this.options, {
+        forcePreload: this.core.config('development'),
+        restore: {windows}
+      }));
+    }, 1);
   }
 
   /**

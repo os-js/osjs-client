@@ -103,11 +103,13 @@ export default class Desktop {
     this.core.on('osjs/panel:create', panel => {
       this.subtract[panel.options.position] += panel.$element.offsetHeight;
       this._updateCSS();
+      this.core.emit('osjs/desktop:transform', this.getRect());
     });
 
     this.core.on('osjs/panel:destroy', panel => {
       this.subtract[panel.options.position] -= panel.$element.offsetHeight;
       this._updateCSS();
+      this.core.emit('osjs/desktop:transform', this.getRect());
     });
 
     this.core.on('osjs/desktop:apply', (settings) => this.applySettings(settings));

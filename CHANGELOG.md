@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.28
+
+* Fixed reloading of singleton application (#7)
+* Updated package metadata documentation
+* Added preliminary widget support to desktop
+* Added 'osjs/desktop:transform' event when desktop rect changes
+* Removed some unused code from config.js
+
 ## 3.0.0-alpha.27
 
 * Updated desktop space based on panels

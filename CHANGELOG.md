@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.29
+
+* Fixed an issue relating to desktop settings (#8)
+
 ## 3.0.0-alpha.28
 
 * Fixed reloading of singleton application (#7)

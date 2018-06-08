@@ -92,40 +92,38 @@ export const defaultConfiguration = {
 
   settings: {
     defaults: {
-      'osjs/session': [
-        // Don't use this to launch applications on startup
-        // instead look at the launch method
-      ],
-      'osjs/settings': {
-        __revision__: 0,
-        panels: [{
-          position: 'top',
-          items: [
-            {name: 'menu'},
-            {name: 'windows'},
-            {name: 'tray'},
-            {name: 'clock'}
-          ]
-        }],
-        widgets: [],
-        keybindings: [],
-        theme: {
-          name: 'Standard',
-          animations: false
-        },
-        font: 'Roboto',
-        locale: {
-          language: 'en'
-        },
-        background: {
-          src: require('./styles/wallpaper.png'),
-          color: '#572a79',
-          style: 'cover'
-        },
-        desktop: {
-          iconView: false
-        }
-      }
+      'osjs/session': [],
+      'osjs/desktop': {}
+    }
+  },
+
+  desktop: {
+    panels: [{
+      position: 'top',
+      items: [
+        {name: 'menu'},
+        {name: 'windows'},
+        {name: 'tray'},
+        {name: 'clock'}
+      ]
+    }],
+    widgets: [],
+    keybindings: [],
+    theme: {
+      name: 'Standard',
+      animations: false
+    },
+    font: 'Roboto',
+    locale: {
+      language: 'en_EN'
+    },
+    background: {
+      src: require('./styles/wallpaper.png'),
+      color: '#572a79',
+      style: 'cover'
+    },
+    iconview: {
+      enabled: false
     }
   },
 
@@ -134,6 +132,10 @@ export const defaultConfiguration = {
     port,
     hostname,
     path
+  },
+
+  locale: {
+    language: 'en_EN'
   },
 
   vfs: {

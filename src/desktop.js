@@ -112,8 +112,6 @@ export default class Desktop {
       this.core.emit('osjs/desktop:transform', this.getRect());
     });
 
-    this.core.on('osjs/desktop:apply', (settings) => this.applySettings(settings));
-
     // Prevents background scrolling on iOS
     this.core.$root.addEventListener('touchmove', e => e.preventDefault());
 
@@ -165,11 +163,14 @@ export default class Desktop {
    * Applies settings and updates desktop
    * @param {Object} [settings] Use this set instead of loading from settings
    */
-  applySettings(settings = {}) {
-    const userSettings = this.core.make('osjs/settings')
-      .get('osjs/settings', {});
+  applySettings(settings) {
+    const defaultSettings = this.core.config('desktop');
 
-    const newSettings = merge(userSettings, settings, {
+    const userSettings = settings
+      ? settings
+      : this.core.make('osjs/settings').get('osjs/desktop', {});
+
+    const newSettings = merge(defaultSettings, userSettings, {
       arrayMerge: (dest, source) => source
     });
 

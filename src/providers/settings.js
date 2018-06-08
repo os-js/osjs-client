@@ -32,12 +32,6 @@ import merge from 'deepmerge';
 import {ServiceProvider} from '@osjs/common';
 import {resolveTreeByKey} from '../utils/config';
 
-const mergeSettings = (a, b) => merge(a, b, { // FIXME
-  arrayMerge: (dest, source) => a.__revision__ !== b.__revision__
-    ? source.length > 0 ? source : dest
-    : source.length === 0 && dest.length > 0 ? dest : source
-});
-
 const serverSettings = core => ({
   save: settings => core.request(core.url('/settings'), {
     method: 'post',
@@ -163,7 +157,9 @@ export default class SettingsServiceProvider extends ServiceProvider {
     try {
       const settings = await this.adapter.load();
 
-      this.settings = mergeSettings(defaults, settings);
+      this.settings = merge(defaults, settings, {
+        arrayMerge: (dest, source) => source
+      });
     } catch (e) {
       console.warn('Failed to set settings', e);
       this.settings = defaults;

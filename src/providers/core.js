@@ -35,7 +35,7 @@ import Session from '../session';
 import Packages from '../packages';
 import Tray from '../tray';
 import * as translations from '../locale';
-import {translatable} from '../utils/locale';
+import {translatable, translatableFlat} from '../utils/locale';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
 /**
@@ -124,7 +124,8 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.singleton('osjs/locale', () => ({
       translate: translatable(this.core)(translations),
-      translatable: translatable(this.core)
+      translatable: translatable(this.core),
+      translatableFlat: translatableFlat(this.core)
     }));
 
     this.core.on('osjs/core:started', () => {

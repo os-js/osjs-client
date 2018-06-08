@@ -38,6 +38,12 @@ const getDefaultLocale = core => core.config('locale.language');
 const getUserLocale = (core, defaultLocale) => core.make('osjs/settings')
   .get('osjs/desktop.locale.language');
 
+const getLocale = core => {
+  const defaultLocale = getDefaultLocale(core);
+  const userLocale = getUserLocale(core, defaultLocale);
+  return {defaultLocale, userLocale};
+};
+
 const getFromList = (list, ul, dl, k) => {
   const localizedList = list[ul] || list[dl];
   return localizedList[k] || k;
@@ -48,9 +54,13 @@ const translate = (list, ul, dl, k, ...args) => {
   return fmt.replace(sprintfRegex, sprintfMatcher(args));
 };
 
+export const translatableFlat = core => (list, defaultValue) => {
+  const {defaultLocale, userLocale} = getLocale(core);
+  return list[userLocale] || list[defaultLocale] || defaultValue;
+};
+
 export const translatable = core => list => {
-  const defaultLocale = getDefaultLocale(core);
-  const userLocale = getUserLocale(core, defaultLocale);
+  const {defaultLocale, userLocale} = getLocale(core);
 
   return (k, ...args) => translate(
     list,

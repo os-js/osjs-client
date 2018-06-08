@@ -142,8 +142,8 @@ const createState = (state, options, attrs) => Object.assign({
   zIndex: 1,
   styles: {},
   position: Object.assign({}, {
-    left: 0,
-    top: 0
+    left: null,
+    top: null
   }, options.position),
   dimension: Object.assign({}, {
     width: Math.max(attrs.minDimension.width, MINIMUM_WIDTH),

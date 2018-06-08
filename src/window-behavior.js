@@ -158,11 +158,11 @@ export default class WindowBehavior {
       : null;
 
     const {top, left} = getCascadePosition(win, rect);
-    if (win.state.position.top === 0) {
+    if (win.state.position.top === null) {
       win.state.position.top = top;
     }
 
-    if (win.state.position.left === 0) {
+    if (win.state.position.left === null) {
       win.state.position.left = left;
     }
 

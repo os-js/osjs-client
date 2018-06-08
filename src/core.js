@@ -93,7 +93,12 @@ export default class Core extends CoreBase {
 
     console.group('Core::boot()');
 
-    await super.boot();
+    try {
+      await super.boot();
+    } catch (e) {
+      console.error(e);
+      return;
+    }
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 

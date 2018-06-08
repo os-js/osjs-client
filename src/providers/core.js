@@ -38,6 +38,37 @@ import * as translations from '../locale';
 import {translatable, translatableFlat} from '../utils/locale';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
+const getWindow = win => ({
+  id: win.id,
+  state: Object.assign({}, win.state),
+  maximize: () => win.maximize(),
+  raise: () => win.raise(),
+  restore: () => win.restore(),
+  close: () => win.close()
+});
+
+const getApplications = () => Application.getApplications().map(app => ({
+  pid: app.pid,
+  args: Object.assign({}, app.args),
+  metadata: Object.assign({}, app.metadata),
+  started: app.started,
+  windows: app.windows.map(getWindow),
+  emit: (...args) => app.emit(...args),
+  destroy: () => app.destroy(),
+  relaunch: () => app.relaunch(),
+  session: app.getSession()
+}));
+
+const getPublicApi = core => Object.freeze({
+  url: (...args) => core.core.url(...args),
+  run: (...args) => core.core.run(...args),
+  open: (...args) => core.core.open(...args),
+  make: (...args) => core.core.make(...args),
+  request: (...args) => core.core.request(...args),
+  getWindows: () => Window.getWindows().map(getWindow),
+  getApplications
+});
+
 /**
  * OS.js Core Service Provider
  *
@@ -48,36 +79,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const getWindow = win => ({
-      id: win.id,
-      state: Object.assign({}, win.state),
-      maximize: () => win.maximize(),
-      raise: () => win.raise(),
-      restore: () => win.restore(),
-      close: () => win.close()
-    });
-
-    const getApplications = () => Application.getApplications().map(app => ({
-      pid: app.pid,
-      args: Object.assign({}, app.args),
-      metadata: Object.assign({}, app.metadata),
-      started: app.started,
-      windows: app.windows.map(getWindow),
-      emit: (...args) => app.emit(...args),
-      destroy: () => app.destroy(),
-      relaunch: () => app.relaunch(),
-      session: app.getSession()
-    }));
-
-    window.OSjs = Object.freeze({
-      url: (...args) => this.core.url(...args),
-      run: (...args) => this.core.run(...args),
-      open: (...args) => this.core.open(...args),
-      make: (...args) => this.core.make(...args),
-      request: (...args) => this.core.request(...args),
-      getApplications,
-      getWindows: () => Window.getWindows().map(getWindow)
-    });
+    window.OSjs = getPublicApi(this);
 
     this.session = new Session(core);
     this.tray = new Tray(core);
@@ -128,71 +130,17 @@ export default class CoreServiceProvider extends ServiceProvider {
       translatableFlat: translatableFlat(this.core)
     }));
 
+    this.core.singleton('osjs/packages', () => this.pm);
+    this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
+
     this.core.on('osjs/core:started', () => {
       this.session.load();
     });
-
-    this.core.singleton('osjs/packages', () => this.pm);
-    this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
 
     await this.pm.init();
   }
 
   start() {
-    if (!this.core.config('development')) {
-      return;
-    }
-
-    const tray = this.tray.create({
-      title: 'OS.js developer tools'
-    }, (ev) => {
-      this.core.make('osjs/contextmenu').show({
-        position: ev,
-        menu: [
-          {
-            label: 'Kill All',
-            onclick: () => Application.destroyAll()
-          },
-          {
-            label: 'Applications',
-            items: Application.getApplications().map(proc => ({
-              label: `${proc.metadata.name} (${proc.pid})`,
-              items: [
-                {
-                  label: 'Kill',
-                  onclick: () => proc.destroy()
-                },
-                {
-                  label: 'Reload',
-                  onclick: () => proc.relaunch()
-                }
-              ]
-            }))
-          }
-        ]
-      });
-    });
-
-    this.core.on('osjs/core:disconnect', ev => {
-      console.warn('Connection closed', ev);
-
-      this.core.make('osjs/notification', {
-        title: 'Connection lost',
-        message: 'The websocket connection was lost. Reconnecting...'
-      });
-    });
-
-    this.core.on('osjs/core:connect', (ev, reconnected) => {
-      console.info('Connection opened');
-
-      if (reconnected) {
-        this.core.make('osjs/notification', {
-          title: 'Connection restored',
-          message: 'The websocket connection was restored.'
-        });
-      }
-    });
-
     if (this.core.config('development')) {
       this.core.on('osjs/packages:metadata:changed', () => {
         this.pm.init();
@@ -204,8 +152,6 @@ export default class CoreServiceProvider extends ServiceProvider {
           .forEach(proc => proc.relaunch());
       });
     }
-
-    this.core.on('destroy', () => tray.destroy());
   }
 
 }

@@ -112,6 +112,59 @@ export default class Desktop {
       this.core.emit('osjs/desktop:transform', this.getRect());
     });
 
+    this.core.on('osjs/core:disconnect', ev => {
+      console.warn('Connection closed', ev);
+
+      this.core.make('osjs/notification', {
+        title: 'Connection lost',
+        message: 'The websocket connection was lost. Reconnecting...'
+      });
+    });
+
+    this.core.on('osjs/core:connect', (ev, reconnected) => {
+      console.info('Connection opened');
+
+      if (reconnected) {
+        this.core.make('osjs/notification', {
+          title: 'Connection restored',
+          message: 'The websocket connection was restored.'
+        });
+      }
+    });
+
+    // Creates tray
+    const tray = this.core.make('osjs/tray').create({
+      title: 'OS.js developer tools'
+    }, (ev) => {
+      this.core.make('osjs/contextmenu').show({
+        position: ev,
+        menu: [
+          {
+            label: 'Kill All',
+            onclick: () => Application.destroyAll()
+          },
+          {
+            label: 'Applications',
+            items: Application.getApplications().map(proc => ({
+              label: `${proc.metadata.name} (${proc.pid})`,
+              items: [
+                {
+                  label: 'Kill',
+                  onclick: () => proc.destroy()
+                },
+                {
+                  label: 'Reload',
+                  onclick: () => proc.relaunch()
+                }
+              ]
+            }))
+          }
+        ]
+      });
+    });
+
+    this.core.on('destroy', () => tray.destroy());
+
     // Prevents background scrolling on iOS
     this.core.$root.addEventListener('touchmove', e => e.preventDefault());
 

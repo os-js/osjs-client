@@ -190,20 +190,35 @@ export default class Packages {
   launch(name, args = {}, options = {}) {
     console.debug('Packages::launch()', name, args, options);
 
+    let signaled = false;
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
       throw new Error(`Package Metadata ${name} not found`);
     }
 
     if (metadata.singleton) {
+      const foundApp = Application.getApplications()
+        .find(app => app.metadata.name === metadata.name);
+
+      if (foundApp) {
+        foundApp.emit('attention', args, options);
+        signaled = true;
+
+        return Promise.resolve(foundApp);
+      }
+
       const found = this.running.filter(n => n === name);
 
       if (found.length > 0) {
         return new Promise((resolve, reject) => {
           this.core.on('osjs/application:launched', (n, a) => {
-            if (n === name) {
-              a.emit('attention', args, options);
+            if (signaled) {
               resolve(a);
+            } else {
+              if (n === name) {
+                a.emit('attention', args, options);
+                resolve(a);
+              }
             }
           });
         });

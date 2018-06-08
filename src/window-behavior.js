@@ -83,14 +83,22 @@ const getNewPosition = (diffX, diffY, start, rect) => {
 /*
  * Calculates a new initial position for window
  */
-const getCascadePosition = (win, rect) => {
+const getCascadePosition = (win, rect, pos) => {
   const startX = 10 + (rect ? rect.left : 0);
   const startY = 10 + (rect ? rect.top : 0);
   const distance = 10;
   const wrap = 20;
 
-  const top = startY + ((win.wid % wrap) * distance);
-  const left = startX + ((win.wid % wrap) * distance);
+  const newX = startX + ((win.wid % wrap) * distance);
+  const newY = startY + ((win.wid % wrap) * distance);
+
+  const top = typeof pos.top === 'number'
+    ? Math.max(rect.top, pos.top)
+    : newY;
+
+  const left = typeof pos.left === 'number'
+    ? Math.max(rect.left, pos.left)
+    : newX;
 
   return {top, left};
 };
@@ -157,14 +165,9 @@ export default class WindowBehavior {
       ? this.core.make('osjs/desktop').getRect()
       : null;
 
-    const {top, left} = getCascadePosition(win, rect);
-    if (win.state.position.top === null) {
-      win.state.position.top = top;
-    }
-
-    if (win.state.position.left === null) {
-      win.state.position.left = left;
-    }
+    const {top, left} = getCascadePosition(win, rect, win.state.position);
+    win.state.position.top = top;
+    win.state.position.left = left;
 
     win.state.media = getMediaQueryName(win);
   }

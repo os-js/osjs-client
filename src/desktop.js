@@ -28,6 +28,7 @@
  * @licence Simplified BSD License
  */
 
+import Application from './application';
 import merge from 'deepmerge';
 import {style} from './utils/dom';
 

@@ -35,7 +35,7 @@ import Session from '../session';
 import Packages from '../packages';
 import Tray from '../tray';
 import * as translations from '../locale';
-import {translatable, translatableFlat} from '../utils/locale';
+import {format, translatable, translatableFlat} from '../utils/locale';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
 const getWindow = win => ({
@@ -125,6 +125,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     }));
 
     this.core.singleton('osjs/locale', () => ({
+      format: format(this.core),
       translate: translatable(this.core)(translations),
       translatable: translatable(this.core),
       translatableFlat: translatableFlat(this.core)

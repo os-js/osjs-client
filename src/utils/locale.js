@@ -28,19 +28,21 @@
  * @licence Simplified BSD License
  */
 
+import dateformat from 'dateformat';
+
 const sprintfRegex = /\{(\d+)\}/g;
 
 const sprintfMatcher = args => (m, n) =>
   n in args ? args[n] : m;
 
-const getDefaultLocale = core => core.config('locale.language');
+const getDefaultLocale = (core, key) => core.config('locale.' + key);
 
-const getUserLocale = (core, defaultLocale) => core.make('osjs/settings')
-  .get('osjs/desktop.locale.language');
+const getUserLocale = (core, key, defaultLocale) => core.make('osjs/settings')
+  .get('osjs/locale.' + key, defaultLocale);
 
-const getLocale = core => {
-  const defaultLocale = getDefaultLocale(core);
-  const userLocale = getUserLocale(core, defaultLocale);
+const getLocale = (core, key) => {
+  const defaultLocale = getDefaultLocale(core, key);
+  const userLocale = getUserLocale(core, key, defaultLocale);
   return {defaultLocale, userLocale};
 };
 
@@ -54,13 +56,35 @@ const translate = (list, ul, dl, k, ...args) => {
   return fmt.replace(sprintfRegex, sprintfMatcher(args));
 };
 
+/**
+ * Translates a given flat list of locales
+ *
+ * @desc Automatically translates using user locale if available.
+ * @example
+ *  translatableFlat({en_EN: 'Hello World'}); // => 'Hello World'
+ *
+ * @param {Object} list The list
+ * @param {String} defaultValue Default value if none found
+ * @return {String}
+ */
 export const translatableFlat = core => (list, defaultValue) => {
-  const {defaultLocale, userLocale} = getLocale(core);
+  const {defaultLocale, userLocale} = getLocale(core, 'language');
   return list[userLocale] || list[defaultLocale] || defaultValue;
 };
 
+/**
+ * Translates a given list of locales
+ *
+ * @desc Automatically translates using user locale if available.
+ * @example
+ *  translatable({en_EN: {foo: 'Hello {0}'}})
+ *    ('foo', 'World'); // => 'Hello World'
+ * @param {String} k List key
+ * @param {...args} Format arguments
+ * @return {String}
+ */
 export const translatable = core => list => {
-  const {defaultLocale, userLocale} = getLocale(core);
+  const {defaultLocale, userLocale} = getLocale(core, 'language');
 
   return (k, ...args) => translate(
     list,
@@ -69,4 +93,18 @@ export const translatable = core => list => {
     k,
     ...args
   );
+};
+
+/**
+ * Formats a given Date to a format
+ * @desc Formats are 'shortDate', 'mediumDate', 'longDate', 'fullDate',
+ *       'shortTime' and 'longTime'
+ * @param {Date} date Date object
+ * @param {String} fmt Format
+ * @return {String}
+ */
+export const format = core => (date, fmt) => {
+  const {defaultLocale, userLocale} = getLocale(core, 'format.' + fmt);
+  const useFormat = userLocale || defaultLocale || fmt;
+  return dateformat(date, useFormat);
 };

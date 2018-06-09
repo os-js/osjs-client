@@ -93,7 +93,8 @@ export const defaultConfiguration = {
   settings: {
     defaults: {
       'osjs/session': [],
-      'osjs/desktop': {}
+      'osjs/desktop': {},
+      'osjs/locale': {}
     }
   },
 
@@ -114,9 +115,6 @@ export const defaultConfiguration = {
       animations: false
     },
     font: 'Roboto',
-    locale: {
-      language: 'en_EN'
-    },
     background: {
       src: require('./styles/wallpaper.png'),
       color: '#572a79',
@@ -135,7 +133,15 @@ export const defaultConfiguration = {
   },
 
   locale: {
-    language: 'en_EN'
+    language: 'en_EN',
+    format: {
+      shortDate: 'yyyy-mm-dd',
+      mediumDate: 'dS mmm yyyy',
+      longDate: 'dS mmmm yyyy',
+      fullDate: 'dddd dS mmmm yyyy',
+      shortTime: 'HH:mm',
+      longTime: 'HH:mm:ss'
+    }
   },
 
   vfs: {

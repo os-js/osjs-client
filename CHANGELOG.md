@@ -1,5 +1,20 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.30
+
+* Added application settings save/load
+* Added date/time localization support
+* Removed unused dependencies
+* Properly signal 'attention' on singleton applications
+* Better handling of window init position
+* Change default window position values to 'null'
+* Separated some code in desktop provider
+* Added translation support for flat dicts
+* Added translation provider and core implementation
+* Updated some settings management
+* Added a try/catch in core boot
+* Fix notification z-index (#9)
+
 ## 3.0.0-alpha.29
 
 * Fixed an issue relating to desktop settings (#8)

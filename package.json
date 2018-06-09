@@ -25,9 +25,5 @@
   "bugs": {
     "url": "https://github.com/os-js/osjs-client/issues"
   },
-  "homepage": "https://github.com/os-js/osjs-client#readme",
-  "devDependencies": {
-    "babel-register": "^6.26.0",
-    "mocha": "^5.1.0"
-  }
+  "homepage": "https://github.com/os-js/osjs-client#readme"
 }

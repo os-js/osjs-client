@@ -34,6 +34,9 @@ import Window from './window';
 const applications = [];
 let applicationCount = 0;
 
+const getSettingsKey = metadata =>
+  'osjs/application/' + metadata.name;
+
 /**
  * Application
  *
@@ -48,6 +51,7 @@ export default class Application extends EventHandler {
    * @param {Object} data Application data
    * @param {Map<String, *>} data.args Launch arguments
    * @param {Object} [data.options] Options
+   * @param {Object} [data.options.settings] Initial settings
    * @param {Object} [data.options.restore] Restore data
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
@@ -59,6 +63,10 @@ export default class Application extends EventHandler {
     }, data);
 
     console.log('Application::constructor()', data);
+
+    const defaultSettings = data.options.settings
+      ? Object.assign({}, data.options.settings)
+      : {};
 
     const name = data.metadata && data.metadata.name
       ? 'Application@' + data.metadata.name
@@ -118,7 +126,8 @@ export default class Application extends EventHandler {
      * Application settings
      * @type {Object}
      */
-    this.settings = {};
+    this.settings = core.make('osjs/settings')
+      .get(getSettingsKey(this.metadata), defaultSettings);
 
     /**
      * Application started time
@@ -388,6 +397,19 @@ export default class Application extends EventHandler {
 
     applications.filter(filterFn)
       .forEach(proc => proc.emit(name, ...args));
+  }
+
+  /**
+   * Saves settings
+   * @return {Promise<Boolean, Error>}
+   */
+  saveSettings() {
+    const service = this.core.make('osjs/settings');
+    const name = getSettingsKey(this.metadata);
+
+    service.set(name, Object.assign({}, this.settings));
+
+    return service.save();
   }
 
   /**

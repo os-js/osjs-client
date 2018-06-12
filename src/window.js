@@ -79,7 +79,7 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [focused=false] If focused
  * @property {Boolean} [maximized=false] If maximized
  * @property {Boolean} [mimimized=false] If mimimized
- * @property {Boolean} [modal=false] If modal
+ * @property {Boolean} [modal=false] If modal to the parent
  * @property {number} [zIndex=1] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension
@@ -100,6 +100,7 @@ let lastWindow = null;
  */
 const createAttributes = (attrs) => Object.assign({
   classNames: [],
+  modal: false,
   ontop: false,
   gravity: false,
   resizable: true,
@@ -138,7 +139,6 @@ const createState = (state, options, attrs) => Object.assign({
   focused: false,
   maximized: false,
   minimized: false,
-  modal: false,
   zIndex: 1,
   styles: {},
   position: Object.assign({}, {
@@ -420,6 +420,19 @@ export default class Window extends EventHandler {
     this._updateDOM();
 
     this.core.$root.appendChild(this.$element);
+
+    if (this.attributes.modal) {
+      if (this.parent) {
+        this.on('render', () => this.parent.setState('loading', true));
+
+        this.on('destroy', () => {
+          this.parent.setState('loading', false);
+          this.parent.focus();
+        });
+      }
+
+      // TODO: Global modal
+    }
 
     if (typeof callback === 'function') {
       callback(this.$content, this);
@@ -748,7 +761,7 @@ export default class Window extends EventHandler {
       focused: this.state.focused,
       maximized: this.state.maximized,
       minimized: this.state.minimized,
-      modal: this.state.modal,
+      modal: this.attributes.modal,
       ontop: this.attributes.ontop,
       resizable: this.attributes.resizable,
       maximizable: this.attributes.maximizable,

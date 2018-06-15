@@ -210,10 +210,12 @@ export default class Filesystem extends EventHandler {
   mount(name) {
     return Promise.resolve(this.mounts.find(m => m.name === name))
       .then(found => {
+        const _ = this.core.make('osjs/locale').translate;
+
         if (!found) {
-          throw new Error(`Filesystem '${name}' not found`);
-        } else if (found.mounted) {
-          throw new Error(`Filesystem '${name}' already mounted`);
+          throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND', name));
+        } else if (!found.mounted) {
+          throw new Error(_('ERR_VFS_MOUNT_ALREADY_MOUNTED', name));
         }
 
         return this._mount(found);
@@ -228,10 +230,12 @@ export default class Filesystem extends EventHandler {
   unmount(name) {
     return Promise.resolve(this.mounts.find(m => m.name === name))
       .then(found => {
+        const _ = this.core.make('osjs/locale').translate;
+
         if (!found) {
-          throw new Error(`Filesystem '${name}' not found`);
+          throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND', name));
         } else if (!found.mounted) {
-          throw new Error(`Filesystem '${name}' not mounted`);
+          throw new Error(_('ERR_VFS_MOUNT_NOT_MOUNTED', name));
         }
 
         return this._unmount(found);

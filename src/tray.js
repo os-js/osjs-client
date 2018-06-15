@@ -70,9 +70,12 @@ export default class Tray {
    * @return {TrayEntry}
    */
   create(options, handler) {
+    const defaultTitle = this.core.make('osjs/locale')
+      .translate('LBL_TRAY');
+
     const entry = Object.assign({}, {
       icon: require('./styles/logo-blue-32x32.png'),
-      title: 'Tray Entry',
+      title: defaultTitle,
       handler
     }, options);
 

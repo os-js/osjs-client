@@ -47,6 +47,9 @@ export default class Notification {
    * @param {number} [options.timeout=5000] Timeout value (0=infinite)
    */
   constructor(core, root, options = {}) {
+    const defaultLabel = core.make('osjs/locale')
+      .translate('LBL_NOTIFICATION');
+
     /**
      * Core instance reference
      * @type {Core}
@@ -77,8 +80,8 @@ export default class Notification {
      */
     this.options = Object.assign({
       icon: null,
-      title: 'Notification',
-      message: 'Notification',
+      title: defaultLabel,
+      message: defaultLabel,
       timeout: 5000
     }, options);
 

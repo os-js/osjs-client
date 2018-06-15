@@ -252,7 +252,10 @@ export default class Core extends CoreBase {
    */
   async request(url, options = {}, type = null) {
     if (this.config('standalone')) {
-      throw new Error('Cannot make requests in standalone mode.');
+      const msg = this.make('osjs/locale')
+        .translate('ERR_REQUEST_STANDALONE');
+
+      throw new Error(msg);
     }
 
     options = Object.assign({}, {

@@ -191,9 +191,10 @@ export default class Packages {
     console.debug('Packages::launch()', name, args, options);
 
     let signaled = false;
+    const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
-      throw new Error(`Package Metadata ${name} not found`);
+      throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
     }
 
     if (metadata.singleton) {
@@ -224,7 +225,7 @@ export default class Packages {
         });
       }
     } else if (metadata.type === 'theme') {
-      throw new Error('Cannot launch a theme type package');
+      throw new Error(_('ERR_PACKAGE_LAUNCH_THEME', name));
     }
 
     this.core.emit('osjs/application:launch', name, args, options);
@@ -248,6 +249,7 @@ export default class Packages {
       throw new Error(err);
     };
 
+    const _ = this.core.make('osjs/locale').translate;
     const basePath = this.core.config('public');
 
     const preloads = metadata.files
@@ -284,12 +286,12 @@ export default class Packages {
     return this.preload(preloads, options.forcePreload === true)
       .then(errors => {
         if (errors.length) {
-          fail(`Package Loading ${name} failed: ${errors.join(', ')}`);
+          fail(_('ERR_PACKAGE_LOAD', name, errors.join(', ')));
         }
 
         const found = this.packages.find(pkg => pkg.metadata.name === name);
         if (!found) {
-          fail(`Package Runtime ${name} not found`);
+          fail(_('ERR_PACKAGE_NO_RUNTIME', name));
         }
 
         return create(found);
@@ -306,9 +308,10 @@ export default class Packages {
   register(name, callback) {
     console.debug('Packages::register()', name);
 
+    const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
-      throw new Error(`Metadata not found for ${name}. Is it in the manifest ?`);
+      throw new Error(_('ERR_PACKAGE_NO_METADATA', name));
     }
 
     const foundIndex = this.packages.findIndex(pkg => pkg.metadata.name === name);

@@ -39,43 +39,43 @@ export const defaultConfiguration = {
   application: {
     categories: {
       development: {
-        label: 'Development',
+        label: 'LBL_APP_CAT_DEVELOPMENT',
         icon: 'applications-development'
       },
       science: {
-        label: 'Science',
+        label: 'LBL_APP_CAT_SCIENCE',
         icon: 'applications-science'
       },
       games: {
-        label: 'Games',
+        label: 'LBL_APP_CAT_GAMES',
         icon: 'applications-games'
       },
       graphics: {
-        label: 'Graphics',
+        label: 'LBL_APP_CAT_GRAPHICS',
         icon: 'applications-graphics'
       },
       network: {
-        label: 'Network',
+        label: 'LBL_APP_CAT_NETWORK',
         icon: 'applications-internet'
       },
       multimedia: {
-        label: 'Multimedia',
+        label: 'LBL_APP_CAT_MULTIMEDIA',
         icon: 'applications-multimedia'
       },
       office: {
-        label: 'Office',
+        label: 'LBL_APP_CAT_OFFICE',
         icon: 'applications-office'
       },
       system: {
-        label: 'System',
+        label: 'LBL_APP_CAT_SYSTEM',
         icon: 'applications-system'
       },
       utilities: {
-        label: 'Utilities',
+        label: 'LBL_APP_CAT_UTILITIES',
         icon: 'applications-utilities'
       },
       other: {
-        label: 'Other',
+        label: 'LBL_APP_CAT_OTHER',
         icon: 'applications-other'
       }
     }

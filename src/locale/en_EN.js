@@ -46,5 +46,15 @@ export default {
   LBL_CONNECTION_LOST: 'Connection Lost',
   LBL_CONNECTION_LOST_MESSAGE: 'The connection to the OS.js was lost. Reconnecting....',
   LBL_CONNECTION_RESTORED: 'Connection Restored',
-  LBL_CONNECTION_RESTORED_MESSAGE: 'The connection to the OS.js server was restored.'
+  LBL_CONNECTION_RESTORED_MESSAGE: 'The connection to the OS.js server was restored.',
+  LBL_APP_CAT_DEVELOPMENT: 'Development',
+  LBL_APP_CAT_SCIENCE: 'Science',
+  LBL_APP_CAT_GAMES: 'Games',
+  LBL_APP_CAT_GRAPHICS: 'Graphics',
+  LBL_APP_CAT_NETWORK: 'Network',
+  LBL_APP_CAT_MULTIMEDIA: 'Multimedia',
+  LBL_APP_CAT_OFFICE: 'Office',
+  LBL_APP_CAT_SYSTEM: 'System',
+  LBL_APP_CAT_UTILITIES: 'Utilities',
+  LBL_APP_CAT_OTHER: 'Other'
 };

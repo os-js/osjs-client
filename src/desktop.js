@@ -228,52 +228,47 @@ export default class Desktop {
       arrayMerge: (dest, source) => source
     });
 
-    const {font, background} = newSettings;
+    const applyOverlays = (test, list) => {
+      if (this.core.has(test)) {
+        const instance = this.core.make(test);
+        instance.removeAll();
+        list.forEach(item => instance.create(item));
+      }
+    };
 
-    this.core.$root.style.fontFamily = `${font}, sans-serif`;
+    const applyCss = ({font, background}) => {
+      this.core.$root.style.fontFamily = `${font}, sans-serif`;
 
-    this.core.$root.style.backgroundSize = background.style === 'color'
-      ? 0
-      : background.style;
+      this.core.$root.style.backgroundColor = background.color;
 
-    this.core.$root.style.backgroundColor = background.color;
+      this.core.$root.style.backgroundSize = background.style === 'color'
+        ? 0
+        : background.style;
 
-    this.core.$root.style.backgroundImage = background.style === 'color'
-      ? undefined
-      : `url(${background.src})`;
+      this.core.$root.style.backgroundImage = background.style === 'color'
+        ? undefined
+        : `url(${background.src})`;
+    };
 
-    this.applyTheme(newSettings.theme.name);
+    applyCss(newSettings);
+    applyOverlays('osjs/panels', newSettings.panels);
+    applyOverlays('osjs/widgets', newSettings.widgets);
 
-    const pp = this.core.has('osjs/panels')
-      ? this.core.make('osjs/panels')
-      : null;
-
-    if (pp) {
-      pp.removeAll();
-      newSettings.panels.forEach(item => pp.create(item));
-    }
-
-    const wp = this.core.has('osjs/widgets')
-      ? this.core.make('osjs/widgets')
-      : null;
-
-    if (wp) {
-      wp.removeAll();
-      newSettings.widgets.forEach(item => wp.create(item));
-    }
+    this.applyTheme(newSettings.theme);
   }
 
   /**
    * Sets the current theme from settings
    */
-  applyTheme() {
+  applyTheme(name) {
+    name = name || this.core.config('desktop.theme');
+
     if (this.$theme && this.$theme.parentNode) {
       this.$theme.remove();
     }
 
     const basePath = this.core.config('public');
-    const name = this.core.config('theme');
-    const src = `${basePath}themes/${name}/index.css`; // FIXME
+    const src = `${basePath}themes/${name}/index.css`;
     this.$theme = style(this.core.$resourceRoot, src);
   }
 

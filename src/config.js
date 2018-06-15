@@ -35,7 +35,6 @@ export const defaultConfiguration = {
   development: !(process.env.NODE_ENV || '').match(/^prod/i),
   standalone: false,
   public: path,
-  theme: 'Standard',
 
   application: {
     categories: {
@@ -99,6 +98,9 @@ export const defaultConfiguration = {
   },
 
   desktop: {
+    font: 'Roboto',
+    theme: 'Standard',
+    animations: false,
     panels: [{
       position: 'top',
       items: [
@@ -110,11 +112,6 @@ export const defaultConfiguration = {
     }],
     widgets: [],
     keybindings: [],
-    theme: {
-      name: 'Standard',
-      animations: false
-    },
-    font: 'Roboto',
     background: {
       src: require('./styles/wallpaper.png'),
       color: '#572a79',

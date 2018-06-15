@@ -59,19 +59,20 @@ const defaultAdapter = ({
 /*
  * Gets mountpoint from a path
  */
-const getMountpointFromPath = (mounts, path) => {
+const getMountpointFromPath = (core, mounts, path) => {
   const re = /^(\w+):(.*)/;
   const match = String(path).replace(/\+/g, '/').match(re);
   const [prefix] = Array.from(match || []).slice(1);
+  const _ = core.make('osjs/locale').translate;
 
   if (!prefix) {
-    throw new Error(`Given path '${path}' does not match 'name:/path'`);
+    throw new Error(_('ERR_VFS_PATH_FORMAT_INVALID', path));
   }
 
   const found = mounts.find(m => m.name === prefix);
 
   if (!found) {
-    throw new Error(`Mountpoint for '${prefix}:' not found`);
+    throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND_FOR', `${prefix}:`));
   }
 
   return found;
@@ -259,7 +260,7 @@ export default class Filesystem extends EventHandler {
   _request(method, ...args) {
     // TODO: 'rename' and 'copy' between adapters
     const [path] = args;
-    const mount = getMountpointFromPath(this.mounts, path);
+    const mount = getMountpointFromPath(this.core, this.mounts, path);
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 

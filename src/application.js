@@ -308,7 +308,10 @@ export default class Application extends EventHandler {
   createWindow(options = {}) {
     const found = this.windows.find(w => w.id === options.id);
     if (found) {
-      throw new Error(`Window with id '${options.id}' already exists`);
+      const msg = this.core.make('osjs/locale')
+        .translate('ERR_WINDOW_ID_EXISTS', options.id);
+
+      throw new Error(msg);
     }
 
     options.attributes = options.attributes || {

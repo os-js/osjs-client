@@ -116,9 +116,10 @@ export default class Desktop {
     this.core.on('osjs/core:disconnect', ev => {
       console.warn('Connection closed', ev);
 
+      const _ = this.core.make('osjs/locale').translate;
       this.core.make('osjs/notification', {
-        title: 'Connection lost',
-        message: 'The websocket connection was lost. Reconnecting...'
+        title: _('LBL_CONNECTION_LOST'),
+        message: _('LBL_CONNECTION_LOST_MESSAGE')
       });
     });
 
@@ -126,9 +127,10 @@ export default class Desktop {
       console.info('Connection opened');
 
       if (reconnected) {
+        const _ = this.core.make('osjs/locale').translate;
         this.core.make('osjs/notification', {
-          title: 'Connection restored',
-          message: 'The websocket connection was restored.'
+          title: _('LBL_CONNECTION_RESTORED'),
+          message: _('LBL_CONNECTION_RESTORED_MESSAGE')
         });
       }
     });

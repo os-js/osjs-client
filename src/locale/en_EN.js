@@ -31,13 +31,20 @@
 export default {
   ERR_REQUEST_STANDALONE: 'Cannot make requests in standalone mode.',
   ERR_VFS_MOUNT_NOT_FOUND: 'Filesystem \'{0}\' not found',
+  ERR_VFS_MOUNT_NOT_FOUND_FOR: 'Filesystem not found for \'{0}\'',
   ERR_VFS_MOUNT_NOT_MOUNTED: 'Filesystem \'{0}\' not mounted',
   ERR_VFS_MOUNT_ALREADY_MOUNTED: 'Filesystem \'{0}\' already mounted',
+  ERR_VFS_PATH_FORMAT_INVALID: 'Given path \'{0}\' does not match \'name:/path\'',
   ERR_PACKAGE_NOT_FOUND: 'Package Metadata \'{0}\' not found',
   ERR_PACKAGE_LAUNCH_THEME: 'Cannot launch a theme type package',
   ERR_PACKAGE_LOAD: 'Package Loading \'{0}\' failed: {1}',
   ERR_PACKAGE_NO_RUNTIME: 'Package Runtime \'{0}\' not found',
   ERR_PACKAGE_NO_METADATA: 'Metadata not found for \'{0}\'. Is it in the manifest?',
+  ERR_WINDOW_ID_EXISTS: 'Window with ID \'{0}\' already exists',
   LBL_NOTIFICATION: 'Notification',
-  LBL_TRAY: 'Tray Entry'
+  LBL_TRAY: 'Tray Entry',
+  LBL_CONNECTION_LOST: 'Connection Lost',
+  LBL_CONNECTION_LOST_MESSAGE: 'The connection to the OS.js was lost. Reconnecting....',
+  LBL_CONNECTION_RESTORED: 'Connection Restored',
+  LBL_CONNECTION_RESTORED_MESSAGE: 'The connection to the OS.js server was restored.'
 };

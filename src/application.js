@@ -376,27 +376,21 @@ export default class Application extends EventHandler {
   }
 
   /**
-   * Emits an event across all applications
+   * Emits an event across all (or filtered) applications
    *
-   * @desc The signature of this method differs from the regular emit,
-   * as you have to pass the arguments as an array. By default the filter is set
-   * to emit to everything except this instance. If you pass a string as a filter it
-   * will also check the application metadata name.
-   *
-   * @param {String} name Event name
-   * @param {Array} args Arguments to pass on
    * @param {Function} [filter] A method to filter what applications to send to
+   * @return {Function} Function with 'emit()' signature
    */
-  emitAll(name, args, filter) {
+  emitAll(filter) {
     const defaultFilter = proc => proc.pid !== this.pid;
     const filterFn = typeof filter === 'function'
       ? filter
       : typeof filter === 'string'
-        ? proc => defaultFilter(proc) && proc.name === filter
+        ? proc => defaultFilter(proc) && proc.metadata.name === filter
         : defaultFilter;
 
-    applications.filter(filterFn)
-      .forEach(proc => proc.emit(name, ...args));
+    return (name, ...args) => applications.filter(filterFn)
+      .map(proc => proc.emit(name, ...args));
   }
 
   /**

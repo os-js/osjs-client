@@ -108,3 +108,16 @@ export const format = core => (date, fmt) => {
   const useFormat = userLocale || defaultLocale || fmt;
   return dateformat(date, useFormat);
 };
+
+/**
+ * Get the browser locale
+ * @return {String}
+ */
+export const clientLocale = () => {
+  const nav = window.navigator || {};
+  const lang = nav.userLanguage ||
+    nav.navigator.language ||
+    '';
+
+  return lang.replace('-', '_');
+};

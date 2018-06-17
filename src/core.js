@@ -276,6 +276,10 @@ export default class Core extends CoreBase {
       delete options.body;
     }
 
+    if (typeof options.body !== 'undefined' && typeof options.body !== 'string') {
+      options.body = JSON.stringify(options.body);
+    }
+
     const response = await fetch(url, options);
 
     if (!response.ok) {

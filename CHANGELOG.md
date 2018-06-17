@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.31
+
+* Added util function for getting browser locale
+* Fix fetch() not posting data
+* Separated locale strings to language file
+* Updated emitAll() signature in application
+* Added parent window modal attribute support
+
 ## 3.0.0-alpha.30
 
 * Added application settings save/load

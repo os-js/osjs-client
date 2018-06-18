@@ -244,6 +244,9 @@ export default class Packages {
    * @return {Application}
    */
   _launch(name, metadata, args, options) {
+    const basePath = this.core.config('public');
+    const _ = this.core.make('osjs/locale').translate;
+
     const dialog = e => {
       if (this.core.has('osjs/dialog')) {
         this.core.make('osjs/dialog', 'confirm', {
@@ -261,9 +264,6 @@ export default class Packages {
 
       throw new Error(err);
     };
-
-    const _ = this.core.make('osjs/locale').translate;
-    const basePath = this.core.config('public');
 
     const preloads = metadata.files
       .map(f => this.core.url(`${basePath}apps/${metadata._path}/${f}`));

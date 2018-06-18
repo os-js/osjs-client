@@ -251,11 +251,12 @@ export default class Core extends CoreBase {
    * @return {*}
    */
   async request(url, options = {}, type = null) {
-    if (this.config('standalone')) {
-      const msg = this.make('osjs/locale')
-        .translate('ERR_REQUEST_STANDALONE');
+    const _ = this.has('osjs/locale')
+      ? this.make('osjs/locale').translate
+      : t => t;
 
-      throw new Error(msg);
+    if (this.config('standalone')) {
+      throw new Error(_('ERR_REQUEST_STANDALONE'));
     }
 
     options = Object.assign({}, {
@@ -283,7 +284,8 @@ export default class Core extends CoreBase {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error('An error occured:' + response.statusText); // TODO
+      // FIXME: Translate error codes here
+      throw new Error(_('ERR_REQUEST_NOT_OK', response.statusText));
     }
 
     if (type === 'json') {

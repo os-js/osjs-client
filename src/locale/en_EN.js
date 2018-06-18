@@ -30,6 +30,7 @@
 
 export default {
   ERR_REQUEST_STANDALONE: 'Cannot make requests in standalone mode.',
+  ERR_REQUEST_NOT_OK: 'An error occured while performing a request: {0}',
   ERR_VFS_MOUNT_NOT_FOUND: 'Filesystem \'{0}\' not found',
   ERR_VFS_MOUNT_NOT_FOUND_FOR: 'Filesystem not found for \'{0}\'',
   ERR_VFS_MOUNT_NOT_MOUNTED: 'Filesystem \'{0}\' not mounted',

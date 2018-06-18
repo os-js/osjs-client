@@ -343,4 +343,12 @@ export default class Core extends CoreBase {
     return false;
   }
 
+  /**
+   * Gets the current user
+   * @return {Map<string,*>} User object
+   */
+  getUser() {
+    return Object.assign({}, this.user);
+  }
+
 }

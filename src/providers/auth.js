@@ -91,7 +91,8 @@ export default class AuthServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/auth', () => ({
       show: (cb) => this.show(cb),
       login: () => this.login(),
-      logout: (reload) => this.logout(reload)
+      logout: (reload) => this.logout(reload),
+      user: () => this.core.getUser()
     }));
 
     this.ui.on('login:post', values => this.login(values));
@@ -125,7 +126,7 @@ export default class AuthServiceProvider extends ServiceProvider {
       }
 
       this.ui.destroy();
-      this.callback(response.user);
+      this.callback(response);
 
       return true;
     } catch (e) {

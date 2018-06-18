@@ -1,5 +1,19 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.32
+
+* Fixed custom post data in fetch()
+* Separated Settings from SettingsProvider
+* Added settings lock for desktop and settings manager (#3)
+* Implemented choice dialog for opening files (if avail)
+* Added PackageManager#getCompatiblePackages
+* Separated fetch() implementation
+* Updated some translation strings
+* Add error dialog in application launch failures
+* Added PackageManager#getPackages and more access control
+* Updated packagemanager service provider
+* Added Core#getUser
+
 ## 3.0.0-alpha.31
 
 * Added util function for getting browser locale

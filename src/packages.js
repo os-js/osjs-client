@@ -47,6 +47,7 @@ import {style, script} from './utils/dom';
  * @property {Boolean} [autostart] Autostart on boot
  * @property {Boolean} [hidden] Hide from launch menus etc.
  * @property {String} [server] Server script filename
+ * @property {String[]} [groups] Only available for users in this group
  * @property {String[]} [files] Files to preload
  * @property {Map<String, String>} title A map of locales and titles
  * @property {Map<String, String>} description A map of locales and titles

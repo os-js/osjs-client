@@ -324,4 +324,29 @@ export default class Packages {
       callback
     });
   }
+
+  /**
+   * Gets a list of packages (metadata)
+   * @param {Function} [filter] A filter function
+   * @return {PackageMetadata[]}
+   */
+  getPackages(filter) {
+    filter = filter || (() => true);
+
+    const user = this.core.getUser();
+    const metadata = this.metadata.map(m => Object.assign({}, m));
+
+    const filterGroups = iter => iter.groups instanceof Array
+      ? iter.groups.every(g => user.groups.indexOf(g) !== -1)
+      : true;
+
+    const filterBlacklist = iter => user.blacklist instanceof Array
+      ? user.blacklist.indexOf(iter.name) === -1
+      : true;
+
+    return metadata
+      .filter(filterGroups)
+      .filter(filterBlacklist)
+      .filter(filter);
+  }
 }

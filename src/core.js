@@ -31,11 +31,7 @@
 import Application from './application';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
-
-const encodeQueryData = data => Object.keys(data)
-  .filter(k => typeof data[k] !== 'object')
-  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-  .join('&');
+import {fetch} from './utils/fetch';
 
 /**
  * Core
@@ -259,40 +255,10 @@ export default class Core extends CoreBase {
       throw new Error(_('ERR_REQUEST_STANDALONE'));
     }
 
-    options = Object.assign({}, {
-      credentials: 'same-origin',
-      method: 'get',
-      headers: {}
-    }, options);
-
-    if (type === 'json') {
-      options.headers = Object.assign(options.headers, {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
+    return fetch(url, options, type)
+      .catch(error => {
+        throw new Error(_('ERR_REQUEST_NOT_OK', error));
       });
-    }
-
-    if (options.body && options.method === 'get') {
-      url += '?' + encodeQueryData(options.body);
-      delete options.body;
-    }
-
-    if (typeof options.body !== 'undefined' && typeof options.body !== 'string') {
-      options.body = JSON.stringify(options.body);
-    }
-
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      // FIXME: Translate error codes here
-      throw new Error(_('ERR_REQUEST_NOT_OK', response.statusText));
-    }
-
-    if (type === 'json') {
-      return response.json();
-    }
-
-    return response;
   }
 
   /**

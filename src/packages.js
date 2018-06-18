@@ -363,4 +363,29 @@ export default class Packages {
       .filter(filterBlacklist)
       .filter(filter);
   }
+
+  /**
+   * Gets a list of packages compatible with the given mime type
+   * @param {string} mimeType MIME Type
+   * @see PackageManager#getPackages
+   * @return {PackageMetadata[]}
+   */
+  getCompatiblePackages(mimeType) {
+    return this.getPackages(meta => {
+      if (meta.mimes) {
+        return !!meta.mimes.find(mime => {
+          try {
+            const re = new RegExp(mime);
+            return re.test(mimeType);
+          } catch (e) {
+            console.warn(e);
+          }
+
+          return mime === mimeType;
+        });
+      }
+
+      return false;
+    });
+  }
 }

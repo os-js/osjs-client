@@ -157,7 +157,6 @@ export default class AuthServiceProvider extends ServiceProvider {
       console.warn(e);
     }
 
-    // FIXME
     if (reload) {
       setTimeout(() => window.location.reload(), 1);
     }

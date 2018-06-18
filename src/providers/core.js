@@ -132,6 +132,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     }));
 
     this.core.singleton('osjs/packages', () => ({
+      getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),
       getPackages: (...args) => this.pm.getPackages(...args),
       register: (...args) => this.pm.register(...args),
       launch: (...args) => this.pm.launch(...args)

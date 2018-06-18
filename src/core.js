@@ -283,23 +283,9 @@ export default class Core extends CoreBase {
    * @return {Boolean|Application}
    */
   async open(file, options = {}) {
-    const pm = this.make('osjs/packages');
-    const compatible = pm.metadata.filter(meta => {
-      if (meta.mimes) {
-        return !!meta.mimes.find(mime => {
-          try {
-            const re = new RegExp(mime);
-            return re.test(file.mime);
-          } catch (e) {
-            console.warn(e);
-          }
-
-          return mime === file.mime;
-        });
-      }
-
-      return false;
-    }).map(meta => meta.name);
+    const compatible = this.make('osjs/packages')
+      .getCompatiblePackages(file.mime)
+      .map(meta => meta.name);
 
     if (compatible.length) {
       // FIXME

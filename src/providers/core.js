@@ -131,7 +131,12 @@ export default class CoreServiceProvider extends ServiceProvider {
       translatableFlat: translatableFlat(this.core)
     }));
 
-    this.core.singleton('osjs/packages', () => this.pm);
+    this.core.singleton('osjs/packages', () => ({
+      getPackages: (...args) => this.pm.getPackages(...args),
+      register: (...args) => this.pm.register(...args),
+      launch: (...args) => this.pm.launch(...args)
+    }));
+
     this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
 
     this.core.on('osjs/core:started', () => {

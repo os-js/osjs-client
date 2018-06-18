@@ -58,7 +58,10 @@ const createFetchOptions = (url, options, type) => {
     delete fetchOptions.body;
   }
 
-  if (typeof fetchOptions.body !== 'undefined' && typeof fetchOptions.body !== 'string') {
+  const hasBody = typeof fetchOptions.body !== 'undefined';
+  const stringBody = typeof fetchOptions.body === 'string';
+
+  if (type === 'json' && (hasBody && !stringBody)) {
     fetchOptions.body = JSON.stringify(fetchOptions.body);
   }
 

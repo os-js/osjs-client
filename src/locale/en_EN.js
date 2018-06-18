@@ -58,5 +58,7 @@ export default {
   LBL_APP_CAT_OFFICE: 'Office',
   LBL_APP_CAT_SYSTEM: 'System',
   LBL_APP_CAT_UTILITIES: 'Utilities',
-  LBL_APP_CAT_OTHER: 'Other'
+  LBL_APP_CAT_OTHER: 'Other',
+  LBL_LAUNCH_SELECT: 'Select application',
+  LBL_LAUNCH_SELECT_MESSAGE: 'Select application for \'{0}\'',
 };

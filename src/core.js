@@ -283,15 +283,27 @@ export default class Core extends CoreBase {
    * @return {Boolean|Application}
    */
   async open(file, options = {}) {
-    const compatible = this.make('osjs/packages')
-      .getCompatiblePackages(file.mime)
-      .map(meta => meta.name);
+    const _ = this.make('osjs/locale').translate;
 
-    if (compatible.length) {
-      // FIXME
-      return this.run(compatible[0], {
-        file
-      }, options);
+    const run = app => this.run(app, {file}, options);
+
+    const compatible = this.make('osjs/packages')
+      .getCompatiblePackages(file.mime);
+
+    if (compatible.length > 0) {
+      try {
+        this.make('osjs/dialog', 'choice', {
+          title: _('LBL_LAUNCH_SELECT'),
+          message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
+          choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {})
+        }, run);
+      } catch (e) {
+        console.warn(e);
+
+        run(compatible[0].name);
+      }
+
+      return true;
     }
 
     return false;

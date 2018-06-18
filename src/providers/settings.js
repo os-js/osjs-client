@@ -189,6 +189,11 @@ export default class SettingsServiceProvider extends ServiceProvider {
    * @return {Settings} This
    */
   set(key, value) {
+    const lock = this.core.config('settings.lock', []);
+    if (lock.indexOf(key) !== -1) {
+      return this;
+    }
+
     this.settings[key] = value;
 
     return this;

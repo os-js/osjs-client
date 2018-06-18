@@ -90,6 +90,8 @@ export const defaultConfiguration = {
   },
 
   settings: {
+    lock: [],
+
     defaults: {
       'osjs/session': [],
       'osjs/desktop': {},
@@ -98,27 +100,31 @@ export const defaultConfiguration = {
   },
 
   desktop: {
-    font: 'Roboto',
-    theme: 'Standard',
-    animations: false,
-    panels: [{
-      position: 'top',
-      items: [
-        {name: 'menu'},
-        {name: 'windows'},
-        {name: 'tray'},
-        {name: 'clock'}
-      ]
-    }],
-    widgets: [],
-    keybindings: [],
-    background: {
-      src: require('./styles/wallpaper.png'),
-      color: '#572a79',
-      style: 'cover'
-    },
-    iconview: {
-      enabled: false
+    lock: false,
+
+    settings: {
+      font: 'Roboto',
+      theme: 'Standard',
+      animations: false,
+      panels: [{
+        position: 'top',
+        items: [
+          {name: 'menu'},
+          {name: 'windows'},
+          {name: 'tray'},
+          {name: 'clock'}
+        ]
+      }],
+      widgets: [],
+      keybindings: [],
+      background: {
+        src: require('./styles/wallpaper.png'),
+        color: '#572a79',
+        style: 'cover'
+      },
+      iconview: {
+        enabled: false
+      }
     }
   },
 

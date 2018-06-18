@@ -220,15 +220,21 @@ export default class Desktop {
    * @param {Object} [settings] Use this set instead of loading from settings
    */
   applySettings(settings) {
-    const defaultSettings = this.core.config('desktop');
+    const lockSettings = this.core.config('desktop.lock');
+    const defaultSettings = this.core.config('desktop.settings');
+    let newSettings;
 
-    const userSettings = settings
-      ? settings
-      : this.core.make('osjs/settings').get('osjs/desktop', {});
+    if (lockSettings) {
+      newSettings = defaultSettings;
+    } else {
+      const userSettings = settings
+        ? settings
+        : this.core.make('osjs/settings').get('osjs/desktop', {});
 
-    const newSettings = merge(defaultSettings, userSettings, {
-      arrayMerge: (dest, source) => source
-    });
+      newSettings = merge(defaultSettings, userSettings, {
+        arrayMerge: (dest, source) => source
+      });
+    }
 
     const applyOverlays = (test, list) => {
       if (this.core.has(test)) {

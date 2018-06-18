@@ -40,6 +40,7 @@ export default {
   ERR_PACKAGE_LOAD: 'Package Loading \'{0}\' failed: {1}',
   ERR_PACKAGE_NO_RUNTIME: 'Package Runtime \'{0}\' not found',
   ERR_PACKAGE_NO_METADATA: 'Metadata not found for \'{0}\'. Is it in the manifest?',
+  ERR_PACKAGE_EXCEPTION: 'An exception occured in \'{0}\'',
   ERR_WINDOW_ID_EXISTS: 'Window with ID \'{0}\' already exists',
   LBL_NOTIFICATION: 'Notification',
   LBL_TRAY: 'Tray Entry',

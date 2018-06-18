@@ -244,8 +244,21 @@ export default class Packages {
    * @return {Application}
    */
   _launch(name, metadata, args, options) {
+    const dialog = e => {
+      if (this.core.has('osjs/dialog')) {
+        this.core.make('osjs/dialog', 'confirm', {
+          title: _('ERR_PACKAGE_EXCEPTION', name),
+          message: e.toString() + '\n\n' + (e.stack || 'no stack trace'),
+          buttons: ['ok']
+        }, () => { /* noop */});
+      }
+    };
+
     const fail = err => {
       this.core.emit('osjs/application:launched', name, false);
+
+      dialog(err);
+
       throw new Error(err);
     };
 
@@ -273,7 +286,8 @@ export default class Packages {
           console.warn('The application', name, 'did not return an Application instance from registration');
         }
       } catch (e) {
-        // TODO
+        dialog(e);
+
         console.warn(e);
       } finally {
         this.core.emit('osjs/application:launched', name, app);

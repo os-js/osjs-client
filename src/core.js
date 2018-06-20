@@ -296,7 +296,11 @@ export default class Core extends CoreBase {
           title: _('LBL_LAUNCH_SELECT'),
           message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
           choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {})
-        }, run);
+        }, (btn, value) => {
+          if (btn === 'ok' && value) {
+            run(value);
+          }
+        });
       } catch (e) {
         console.warn(e);
 

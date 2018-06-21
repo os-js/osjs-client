@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.33
+
+* Settings now uses namespaced tree
+* Added desktop contextmenu
+* Prevent blinking of window when gravitating on init
+* Updated launch choice dialog usage
+* Updated application metadata docs
+
 ## 3.0.0-alpha.32
 
 * Fixed custom post data in fetch()

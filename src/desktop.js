@@ -138,33 +138,7 @@ export default class Desktop {
     // Creates tray
     const tray = this.core.make('osjs/tray').create({
       title: 'OS.js developer tools'
-    }, (ev) => {
-      this.core.make('osjs/contextmenu').show({
-        position: ev,
-        menu: [
-          {
-            label: 'Kill All',
-            onclick: () => Application.destroyAll()
-          },
-          {
-            label: 'Applications',
-            items: Application.getApplications().map(proc => ({
-              label: `${proc.metadata.name} (${proc.pid})`,
-              items: [
-                {
-                  label: 'Kill',
-                  onclick: () => proc.destroy()
-                },
-                {
-                  label: 'Reload',
-                  onclick: () => proc.relaunch()
-                }
-              ]
-            }))
-          }
-        ]
-      });
-    });
+    }, (ev) => this.onDeveloperMenu(ev));
 
     this.core.on('destroy', () => tray.destroy());
 
@@ -198,6 +172,12 @@ export default class Desktop {
         if (isTextfield) {
           handleTabOnTextarea(e);
         }
+      }
+    });
+
+    this.core.$root.addEventListener('contextmenu', ev => {
+      if (ev.target === this.core.$root) {
+        this.onContextMenu(ev);
       }
     });
 
@@ -278,6 +258,83 @@ export default class Desktop {
     const basePath = this.core.config('public');
     const src = `${basePath}themes/${name}/index.css`;
     this.$theme = style(this.core.$resourceRoot, src);
+  }
+
+  onDeveloperMenu(ev) {
+    this.core.make('osjs/contextmenu').show({
+      position: ev,
+      menu: [
+        {
+          label: 'Kill All',
+          onclick: () => Application.destroyAll()
+        },
+        {
+          label: 'Applications',
+          items: Application.getApplications().map(proc => ({
+            label: `${proc.metadata.name} (${proc.pid})`,
+            items: [
+              {
+                label: 'Kill',
+                onclick: () => proc.destroy()
+              },
+              {
+                label: 'Reload',
+                onclick: () => proc.relaunch()
+              }
+            ]
+          }))
+        }
+      ]
+    });
+  }
+
+  onContextMenu(ev) {
+    const lockSettings = this.core.config('desktop.lock');
+    if (lockSettings) {
+      return;
+    }
+
+    const setWallpaper = f => this.core.make('osjs/vfs')
+      .url(f.path)
+      .then(src => this.applySettings({
+        background: {
+          src
+        }
+      }));
+
+    const setTheme = t => this.applySettings({
+      theme: t.name
+    });
+
+    const openWallpaperDialog = () => this.core.make('osjs/dialog', 'file', {
+      mime: ['^image']
+    }, (btn, filename) => {
+      if (btn === 'ok') {
+        setWallpaper(filename);
+      }
+    });
+
+    const themes = this.core.make('osjs/packages')
+      .getPackages(p => p.type === 'theme');
+
+    const _ = this.core.make('osjs/locale').translate;
+
+    this.core.make('osjs/contextmenu').show({
+      position: ev,
+      menu: [
+        {
+          label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
+          onclick: () => openWallpaperDialog()
+        },
+        {
+          label: _('LBL_DESKTOP_SELECT_THEME'),
+          items: themes.map(t => ({
+            label: t.name,
+            onclick: () => setTheme(t)
+          }))
+        }
+      ]
+    });
   }
 
   /**

@@ -61,4 +61,6 @@ export default {
   LBL_APP_CAT_OTHER: 'Other',
   LBL_LAUNCH_SELECT: 'Select application',
   LBL_LAUNCH_SELECT_MESSAGE: 'Select application for \'{0}\'',
+  LBL_DESKTOP_SELECT_WALLPAPER: 'Select wallpaper',
+  LBL_DESKTOP_SELECT_THEME: 'Select theme'
 };

@@ -404,7 +404,7 @@ export default class Application extends EventHandler {
     const service = this.core.make('osjs/settings');
     const name = getSettingsKey(this.metadata);
 
-    service.set(name, Object.assign({}, this.settings));
+    service.set(name, null, this.settings);
 
     return service.save();
   }

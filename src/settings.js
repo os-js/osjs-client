@@ -29,7 +29,7 @@
  */
 
 import merge from 'deepmerge';
-import {resolveTreeByKey} from './utils/config';
+import simplejsonconf from 'simplejsonconf';
 
 const serverSettings = core => ({
   save: settings => core.request(core.url('/settings'), {
@@ -156,30 +156,49 @@ export default class Settings {
   /**
    * Gets a settings entry by key
    *
-   * @param {String} key The key to get the value from
+   * @param {String} [ns] The namespace
+   * @param {String} [key] The key to get the value from
    * @param {*} [defaultValue] If result is undefined, return this instead
-   * @see {resolveTreeByKey}
    * @return {*}
    */
-  get(key, defaultValue) {
+  get(ns, key, defaultValue) {
+    if (typeof ns === 'undefined') {
+      return Object.assign({}, this.settings);
+    } else if (typeof this.settings[ns] === 'undefined') {
+      return {};
+    }
+
+    const tree = simplejsonconf(this.settings[ns]);
+
     return key
-      ? resolveTreeByKey(this.settings, key, defaultValue)
-      : Object.assign({}, this.settings);
+      ? tree.get(key, defaultValue)
+      : tree.get();
   }
 
   /**
    * Sets a settings entry by root key
-   * @param {String} key The key to set
+   * @param {String} ns The namespace
+   * @param {String} [key] The key to set
    * @param {*} value The value to set
    * @return {Settings} This
    */
-  set(key, value) {
+  set(ns, key, value) {
     const lock = this.core.config('settings.lock', []);
-    if (lock.indexOf(key) !== -1) {
+    if (lock.indexOf(ns) !== -1) {
       return this;
     }
 
-    this.settings[key] = value;
+    if (typeof this.settings[ns] === 'undefined') {
+      this.settings[ns] = {};
+    }
+
+    if (key) {
+      const sjc = simplejsonconf(this.settings[ns]);
+      sjc.set(key, value);
+      this.settings[ns] = sjc.get();
+    } else {
+      this.settings[ns] = Object.assign({}, value);
+    }
 
     return this;
   }

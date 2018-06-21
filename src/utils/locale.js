@@ -38,7 +38,7 @@ const sprintfMatcher = args => (m, n) =>
 const getDefaultLocale = (core, key) => core.config('locale.' + key);
 
 const getUserLocale = (core, key, defaultLocale) => core.make('osjs/settings')
-  .get('osjs/locale.' + key, defaultLocale);
+  .get('osjs/locale', key, defaultLocale);
 
 const getLocale = (core, key) => {
   const defaultLocale = getDefaultLocale(core, key);

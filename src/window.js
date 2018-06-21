@@ -438,13 +438,11 @@ export default class Window extends EventHandler {
       callback(this.$content, this);
     }
 
-    setTimeout(() => {
-      this.emit('render', this);
+    if (!this._preventDefaultPosition) {
+      this.gravitate(this.attributes.gravity);
+    }
 
-      if (!this._preventDefaultPosition) {
-        this.gravitate(this.attributes.gravity);
-      }
-    }, 1);
+    setTimeout(() => this.emit('render', this));
 
     return this;
   }

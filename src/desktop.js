@@ -209,7 +209,7 @@ export default class Desktop {
     } else {
       const userSettings = settings
         ? settings
-        : this.core.make('osjs/settings').get('osjs/desktop', {});
+        : this.core.make('osjs/settings').get('osjs/desktop');
 
       newSettings = merge(defaultSettings, userSettings, {
         arrayMerge: (dest, source) => source
@@ -294,17 +294,16 @@ export default class Desktop {
       return;
     }
 
+    const applySettings = (k, v) => this.core.make('osjs/settings')
+      .set('osjs/desktop', k, v)
+      .save()
+      .then(() => this.applySettings());
+
     const setWallpaper = f => this.core.make('osjs/vfs')
       .url(f.path)
-      .then(src => this.applySettings({
-        background: {
-          src
-        }
-      }));
+      .then(src => applySettings('background.src', src));
 
-    const setTheme = t => this.applySettings({
-      theme: t.name
-    });
+    const setTheme = t => applySettings('theme', t.name);
 
     const openWallpaperDialog = () => this.core.make('osjs/dialog', 'file', {
       mime: ['^image']

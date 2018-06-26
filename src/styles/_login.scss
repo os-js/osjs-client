@@ -55,6 +55,7 @@
   left: 50%;
   z-index: 99999;
   transform: translate(-50%, -50%);
+  display: flex;
 
   .osjs-login-field {
     position: relative;
@@ -94,6 +95,46 @@
     color: #fff;
     letter-spacing: 4px;
     line-height: 1.5;
+  }
+
+  .osjs-login-logo {
+    min-width: 1em;
+    min-height: 1em;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    &[data-position=bottom],
+    &[data-position=top],
+    &[data-position=middle] {
+      min-height: 4em;
+    }
+
+    &[data-position=left],
+    &[data-position=right] {
+      min-width: 4em;
+    }
+
+    &[data-position=bottom] {
+      margin-top: 2em;
+    }
+  }
+
+  & > div {
+    &[data-position=left] {
+      margin-right: 2em;
+    }
+    &[data-position=right] {
+      margin-left: 2em;
+    }
+  }
+
+  .osjs-login-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .osjs-login-field {

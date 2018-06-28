@@ -59,13 +59,18 @@ const defaultAdapters = {
  */
 export default class AuthServiceProvider extends ServiceProvider {
 
+  /**
+   * @param {Object} core OS.js Core
+   * @param {Object} [args] Arguments
+   * @param {Object} [args.ui] Options for default login UI adapter
+   * @param {Function} [args.adapter] Custom login adapter
+   * @param {Function} [args.login] Custom UI
+   * @param {Object} [args.config] Configuration object to be passed on
+   */
   constructor(core, args = {}) {
-    args = Object.assign({
-      ui: core.config('auth.login.ui', {}),
-      config: {}
-    }, args);
-
     super(core);
+
+    const defaultUi = core.config('auth.login.ui', {});
 
     const adapter = core.config('standalone')
       ? localStorageAuth
@@ -73,13 +78,16 @@ export default class AuthServiceProvider extends ServiceProvider {
         ? args.adapter
         : defaultAdapters[args.adapter || 'server'];
 
-    this.ui = new Login(core, args.ui);
+    this.ui = args.login
+      ? args.login(core, args.config || {})
+      : new Login(core, args.ui || defaultUi);
+
     this.adapter = Object.assign({
       login: () => Promise.reject(new Error('Not implemented')),
       logout: () => Promise.reject(new Error('Not implemented')),
       init: () => Promise.resolve(true),
       destroy: () => {}
-    }, adapter(core, args.config));
+    }, adapter(core, args.config || {}));
 
     this.callback = function() {};
   }

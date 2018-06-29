@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.34
+
+* Add support for custom login ui via provider (#6)
+* Added logo support to login (#11)
+* Prevent window destroy observation event on application destroy
+
+
 ## 3.0.0-alpha.33
 
 * Settings now uses namespaced tree

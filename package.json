@@ -20,7 +20,7 @@
     "dateformat": "^3.0.3",
     "deepmerge": "^2.1.0",
     "hyperapp": "^1.2.5",
-    "simplejsonconf": "^2.0.3"
+    "simplejsonconf": "^2.0.4"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",

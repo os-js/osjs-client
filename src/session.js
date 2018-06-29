@@ -58,7 +58,7 @@ export default class Session {
     const session = apps.map(app => app.getSession());
 
     return this.core.make('osjs/settings')
-      .set('osjs/session', session)
+      .set('osjs/session', null, session)
       .save();
   }
 
@@ -71,8 +71,12 @@ export default class Session {
       Application.destroyAll();
     }
 
-    const session = this.core.make('osjs/settings')
+    let session = this.core.make('osjs/settings')
       .get('osjs/session');
+
+    if (session && !(session instanceof Array)) {
+      session = Object.values(session);
+    }
 
     if (session) {
       console.group('Session::load()');

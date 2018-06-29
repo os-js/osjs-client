@@ -193,9 +193,13 @@ export default class Settings {
     }
 
     if (key) {
-      const sjc = simplejsonconf(this.settings[ns]);
-      sjc.set(key, value);
-      this.settings[ns] = sjc.get();
+      try {
+        const sjc = simplejsonconf(this.settings[ns]);
+        sjc.set(key, value);
+        this.settings[ns] = sjc.get();
+      } catch (e) {
+        console.warn(e);
+      }
     } else {
       this.settings[ns] = Object.assign({}, value);
     }

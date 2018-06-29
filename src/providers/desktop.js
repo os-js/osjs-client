@@ -71,7 +71,6 @@ export default class DesktopServiceProvider extends ServiceProvider {
   }
 
   start() {
-    console.error('xxx')
     this.desktop.applySettings();
   }
 

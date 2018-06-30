@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.35
+
+* Only show choice selector when > 1 apps
+* Removed unwanted console message
+
 ## 3.0.0-alpha.34
 
 * Add support for custom login ui via provider (#6)

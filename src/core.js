@@ -291,21 +291,25 @@ export default class Core extends CoreBase {
       .getCompatiblePackages(file.mime);
 
     if (compatible.length > 0) {
-      try {
-        this.make('osjs/dialog', 'choice', {
-          title: _('LBL_LAUNCH_SELECT'),
-          message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
-          choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {})
-        }, (btn, value) => {
-          if (btn === 'ok' && value) {
-            run(value);
-          }
-        });
-      } catch (e) {
-        console.warn(e);
+      if (compatible.length > 1) {
+        try {
+          this.make('osjs/dialog', 'choice', {
+            title: _('LBL_LAUNCH_SELECT'),
+            message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
+            choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {})
+          }, (btn, value) => {
+            if (btn === 'ok' && value) {
+              run(value);
+            }
+          });
 
-        run(compatible[0].name);
+          return true;
+        } catch (e) {
+          console.warn(e);
+        }
       }
+
+      run(compatible[0].name);
 
       return true;
     }

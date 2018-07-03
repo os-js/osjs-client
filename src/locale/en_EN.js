@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-export default {
+export const en_EN = {
   ERR_REQUEST_STANDALONE: 'Cannot make requests in standalone mode.',
   ERR_REQUEST_NOT_OK: 'An error occured while performing a request: {0}',
   ERR_VFS_MOUNT_NOT_FOUND: 'Filesystem \'{0}\' not found',

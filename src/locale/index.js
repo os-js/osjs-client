@@ -28,6 +28,4 @@
  * @licence Simplified BSD License
  */
 
-import en_EN from './en_EN';
-
-export {en_EN};
+export * from './en_EN';

@@ -220,16 +220,16 @@ export const transformReaddir = (path, files, options = {}) => {
  * @param {String} type Transform to this type
  * @return {DOMString|String|Blob|ArrayBuffer}
  */
-export const transformArrayBuffer = async (ab, mime, type) => {
+export const transformArrayBuffer = (ab, mime, type) => {
   if (type === 'string') {
     return createFileReader('readAsText', ab, mime);
   } else if (type === 'uri') {
     return createFileReader('readAsDataURL', ab, mime);
   } else if (type === 'blob') {
-    return new Blob([ab], {type: mime});
+    return Promise.resolve(new Blob([ab], {type: mime}));
   }
 
-  return ab;
+  return Promise.resolve(ab);
 };
 
 /**

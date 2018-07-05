@@ -246,13 +246,13 @@ export default class Core extends CoreBase {
    * @param {String} [type] Request / Response type
    * @return {*}
    */
-  async request(url, options = {}, type = null) {
+  request(url, options = {}, type = null) {
     const _ = this.has('osjs/locale')
       ? this.make('osjs/locale').translate
       : t => t;
 
     if (this.config('standalone')) {
-      throw new Error(_('ERR_REQUEST_STANDALONE'));
+      return Promise.reject(new Error(_('ERR_REQUEST_STANDALONE')));
     }
 
     return fetch(url, options, type)
@@ -270,7 +270,7 @@ export default class Core extends CoreBase {
    * @see {Packages}
    * @return {Application}
    */
-  async run(name, args = {}, options = {}) {
+  run(name, args = {}, options = {}) {
     console.log('Core::run()', name, args, options);
 
     return this.make('osjs/package', name, args, options);
@@ -282,7 +282,7 @@ export default class Core extends CoreBase {
    * @param {Object} [options] Options
    * @return {Boolean|Application}
    */
-  async open(file, options = {}) {
+  open(file, options = {}) {
     const _ = this.make('osjs/locale').translate;
 
     const run = app => this.run(app, {file}, options);
@@ -311,10 +311,10 @@ export default class Core extends CoreBase {
 
       run(compatible[0].name);
 
-      return true;
+      return Promise.resolve(true);
     }
 
-    return false;
+    return Promise.reject(false);
   }
 
   /**

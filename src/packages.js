@@ -157,7 +157,7 @@ export default class Packages {
         : style(root, getSource(entry));
 
       return p
-        .then(() => ({success: true, entry}))
+        .then(el => ({success: true, entry, el}))
         .catch(error => ({success: false, entry, error}));
     });
 
@@ -173,7 +173,12 @@ export default class Packages {
         const failed = results.filter(res => !res.success);
         failed.forEach(failed => console.warn('Failed loading', failed.entry, failed.error));
 
-        return failed.map(failed => failed.entry);
+        return {
+          errors: failed.map(failed => failed.entry),
+          elements: successes.reduce((result, iter) => {
+            return Object.assign({}, result, {[iter.entry]: iter.el});
+          }, {})
+        };
       });
   }
 
@@ -299,7 +304,7 @@ export default class Packages {
     };
 
     return this.preload(preloads, options.forcePreload === true)
-      .then(errors => {
+      .then(({errors}) => {
         if (errors.length) {
           fail(_('ERR_PACKAGE_LOAD', name, errors.join(', ')));
         }

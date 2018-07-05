@@ -67,22 +67,22 @@ const adapter = (core) => {
       }).then(({body}) => body);
     },
 
-    copy: async (from, to, options) =>
+    copy: (from, to, options) =>
       request('copy', {from, to, options}).then(({body}) => body),
 
-    rename: async (from, to, options) =>
+    rename: (from, to, options) =>
       request('rename', {from, to, options}).then(({body}) => body),
 
-    mkdir: async (path, options) =>
+    mkdir: (path, options) =>
       request('mkdir', {path, options}).then(({body}) => body),
 
-    unlink: async (path, options) =>
+    unlink: (path, options) =>
       request('unlink', {path, options}).then(({body}) => body),
 
-    exists: async (path, options) =>
+    exists: (path, options) =>
       request('exists', {path, options}).then(({body}) => body),
 
-    stat: async (path, options) =>
+    stat: (path, options) =>
       request('stat', {path, options}).then(({body}) => body),
 
     url: (path, options) =>

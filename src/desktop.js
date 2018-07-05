@@ -257,7 +257,9 @@ export default class Desktop {
 
     const basePath = this.core.config('public');
     const src = `${basePath}themes/${name}/index.css`;
-    this.$theme = style(this.core.$resourceRoot, src);
+
+    this.$theme = style(this.core.$resourceRoot, src)
+      .then(el => (this.$theme = el));
   }
 
   onDeveloperMenu(ev) {

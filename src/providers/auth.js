@@ -95,7 +95,7 @@ export default class AuthServiceProvider extends ServiceProvider {
   /**
    * Initializes authentication
    */
-  async init() {
+  init() {
     this.core.singleton('osjs/auth', () => ({
       show: (cb) => this.show(cb),
       login: () => this.login(),
@@ -105,7 +105,7 @@ export default class AuthServiceProvider extends ServiceProvider {
 
     this.ui.on('login:post', values => this.login(values));
 
-    await this.adapter.init();
+    return this.adapter.init();
   }
 
   /**

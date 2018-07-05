@@ -48,7 +48,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
     this.desktop = this.desktop.destroy();
   }
 
-  async init() {
+  init() {
     this.desktop.init();
 
     this.core.singleton('osjs/desktop', () => ({

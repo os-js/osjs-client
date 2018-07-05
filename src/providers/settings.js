@@ -46,7 +46,7 @@ export default class SettingsServiceProvider extends ServiceProvider {
     }, args));
   }
 
-  async init() {
+  init() {
     this.core.singleton('osjs/settings', () => ({
       save: () => this.settings.save(),
       load: () => this.settings.load(),
@@ -54,6 +54,6 @@ export default class SettingsServiceProvider extends ServiceProvider {
       set: (...args) => this.settings.set(...args)
     }));
 
-    await this.settings.init();
+    return this.settings.init();
   }
 }

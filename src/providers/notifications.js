@@ -49,7 +49,7 @@ export default class NotificationServiceProvider extends ServiceProvider {
     this.$element = null;
   }
 
-  async init() {
+  init() {
     this.core.instance('osjs/notification', (options) => {
       const notification = new Notification(this.core, this.$element, options);
       notification.render();

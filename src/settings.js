@@ -102,8 +102,8 @@ export default class Settings {
     this.core = core;
   }
 
-  async init() {
-    await this.adapter.init();
+  init() {
+    return this.adapter.init();
   }
 
   /**
@@ -134,23 +134,24 @@ export default class Settings {
   /**
    * Loads settings
    */
-  async load() {
+  load() {
     this.core.emit('osjs/settings:load');
 
     const defaults = this.core.config('settings.defaults', {});
 
-    try {
-      const settings = await this.adapter.load();
+    return this.adapter.load()
+      .then(settings => {
+        this.settings = merge(defaults, settings, {
+          arrayMerge: (dest, source) => source
+        });
 
-      this.settings = merge(defaults, settings, {
-        arrayMerge: (dest, source) => source
+        return true;
+      }).catch(e => {
+        console.warn('Failed to set settings', e);
+        this.settings = defaults;
+
+        return false;
       });
-    } catch (e) {
-      console.warn('Failed to set settings', e);
-      this.settings = defaults;
-    }
-
-    return true;
   }
 
   /**

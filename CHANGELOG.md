@@ -1,5 +1,16 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.36
+
+* Added 'ping' to server based on cookie lifetime
+* Themes now supports scripts and launching
+* Better theme handling
+* Refactored some async/await to promises
+* Expose 'preload' to packages provider
+* Package preload now returns element map
+* Changed login logo to contain
+* Better import/export pattern for locales
+
 ## 3.0.0-alpha.35
 
 * Only show choice selector when > 1 apps

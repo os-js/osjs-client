@@ -28,9 +28,9 @@
  * @licence Simplified BSD License
  */
 
+import {EventHandler} from '@osjs/common';
 import Application from './application';
 import merge from 'deepmerge';
-import {style} from './utils/dom';
 
 const TEMPLATE = subtract => `
   .osjs-window[data-maximized=true] {
@@ -62,7 +62,7 @@ const handleTabOnTextarea = ev => {
  *
  * @desc Handles the Desktop
  */
-export default class Desktop {
+export default class Desktop extends EventHandler {
 
   /**
    * Create Desktop
@@ -70,8 +70,10 @@ export default class Desktop {
    * @param {Core} core Core reference
    */
   constructor(core) {
+    super('Desktop');
+
     this.core = core;
-    this.$theme = null;
+    this.$theme = [];
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
     this.subtract = {
@@ -91,10 +93,7 @@ export default class Desktop {
     }
     this.$styles = null;
 
-    if (this.$theme && this.$theme.parentNode) {
-      this.$theme.remove();
-    }
-    this.$theme = null;
+    this._removeTheme();
   }
 
   /**
@@ -105,12 +104,14 @@ export default class Desktop {
       this.subtract[panel.options.position] += panel.$element.offsetHeight;
       this._updateCSS();
       this.core.emit('osjs/desktop:transform', this.getRect());
+      this.emit('theme:panel:create', panel);
     });
 
     this.core.on('osjs/panel:destroy', panel => {
       this.subtract[panel.options.position] -= panel.$element.offsetHeight;
       this._updateCSS();
       this.core.emit('osjs/desktop:transform', this.getRect());
+      this.emit('theme:panel:destroy', panel);
     });
 
     this.core.on('osjs/core:disconnect', ev => {
@@ -133,6 +134,18 @@ export default class Desktop {
           message: _('LBL_CONNECTION_RESTORED_MESSAGE')
         });
       }
+    });
+
+    this.core.on('osjs/window:create', win => {
+      this.emit('theme:window:create', win);
+    });
+
+    this.core.on('osjs/window:render', win => {
+      this.emit('theme:window:render', win);
+    });
+
+    this.core.on('osjs/window:destroy', win => {
+      this.emit('theme:window:destroy', win);
     });
 
     // Creates tray
@@ -246,20 +259,52 @@ export default class Desktop {
   }
 
   /**
+   * Removes current theme from DOM
+   */
+  _removeTheme() {
+    this.emit('theme:destroy');
+
+    this.off([
+      'theme:init',
+      'theme:destroy'
+    ]);
+
+    this.$theme.forEach(el => {
+      if (el && el.parentNode) {
+        el.remove();
+      }
+    });
+
+    this.$theme = [];
+  }
+
+  /**
    * Sets the current theme from settings
    */
   applyTheme(name) {
     name = name || this.core.config('desktop.theme');
 
-    if (this.$theme && this.$theme.parentNode) {
-      this.$theme.remove();
-    }
+    return this.core.make('osjs/packages')
+      .launch(name)
+      .then(({elements, errors, callback, metadata}) => {
+        if (errors.length) {
+          console.error(errors);
+        }
 
-    const basePath = this.core.config('public');
-    const src = `${basePath}themes/${name}/index.css`;
+        this._removeTheme();
 
-    this.$theme = style(this.core.$resourceRoot, src)
-      .then(el => (this.$theme = el));
+        if (callback && metadata) {
+          try {
+            callback(this.core, this, {}, metadata);
+          } catch (e) {
+            console.warn(e);
+          }
+        }
+
+        this.$theme = Object.values(elements);
+
+        this.emit('theme:init');
+      });
   }
 
   onDeveloperMenu(ev) {

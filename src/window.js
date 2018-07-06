@@ -442,7 +442,10 @@ export default class Window extends EventHandler {
       this.gravitate(this.attributes.gravity);
     }
 
-    setTimeout(() => this.emit('render', this));
+    setTimeout(() => {
+      this.emit('render', this);
+      this.core.emit('osjs/window:render', this);
+    }, 1);
 
     return this;
   }

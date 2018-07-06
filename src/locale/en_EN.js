@@ -37,7 +37,6 @@ export const en_EN = {
   ERR_VFS_MOUNT_ALREADY_MOUNTED: 'Filesystem \'{0}\' already mounted',
   ERR_VFS_PATH_FORMAT_INVALID: 'Given path \'{0}\' does not match \'name:/path\'',
   ERR_PACKAGE_NOT_FOUND: 'Package Metadata \'{0}\' not found',
-  ERR_PACKAGE_LAUNCH_THEME: 'Cannot launch a theme type package',
   ERR_PACKAGE_LOAD: 'Package Loading \'{0}\' failed: {1}',
   ERR_PACKAGE_NO_RUNTIME: 'Package Runtime \'{0}\' not found',
   ERR_PACKAGE_NO_METADATA: 'Metadata not found for \'{0}\'. Is it in the manifest?',

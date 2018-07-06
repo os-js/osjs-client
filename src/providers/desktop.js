@@ -68,10 +68,10 @@ export default class DesktopServiceProvider extends ServiceProvider {
       resource,
       icon: name => resource(`icons/${name}`)
     }));
-  }
 
-  start() {
-    this.desktop.applySettings();
+    this.core.on('osjs/core:started', () => {
+      this.desktop.applySettings();
+    });
   }
 
 }

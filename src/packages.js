@@ -203,6 +203,10 @@ export default class Packages {
       throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
     }
 
+    if (metadata.type === 'theme') {
+      return this._launchTheme(name);
+    }
+
     if (metadata.singleton) {
       const foundApp = Application.getApplications()
         .find(app => app.metadata.name === metadata.name);
@@ -230,8 +234,6 @@ export default class Packages {
           });
         });
       }
-    } else if (metadata.type === 'theme') {
-      throw new Error(_('ERR_PACKAGE_LAUNCH_THEME', name));
     }
 
     this.core.emit('osjs/application:launch', name, args, options);
@@ -239,6 +241,42 @@ export default class Packages {
     this.running.push(name);
 
     return this._launch(name, metadata, args, options);
+  }
+
+  /**
+   * Launches a (theme) package
+   *
+   * @param {String} name Package name
+   * @param {Object} [options] Launch options
+   * @param {Boolean} [options.forcePreload=false] Force preload reloading
+   * @throws {Error}
+   * @return {Promise<Object, Error>}
+   */
+  _launchTheme(name) {
+    console.log('Packages::_launchTheme()', name);
+
+    const _ = this.core.make('osjs/locale').translate;
+    const basePath = this.core.config('public');
+
+    const metadata = this
+      .getPackages(iter => iter.type === 'theme')
+      .find(pkg => pkg.name === name);
+
+    if (!metadata) {
+      throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
+    }
+
+    const preloads = metadata.files
+      .map(f => this.core.url(`${basePath}themes/${metadata._path}/${f}`));
+
+    return this.preload(preloads)
+      .then(result => {
+        return Object.assign(
+          {elements: {}},
+          result,
+          this.packages.find(pkg => pkg.metadata.name === name) || {}
+        );
+      });
   }
 
   /**

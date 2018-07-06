@@ -86,7 +86,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.pm = new Packages(core);
   }
 
-  async init() {
+  init() {
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);
     });
@@ -103,13 +103,13 @@ export default class CoreServiceProvider extends ServiceProvider {
       return new WindowBehavior(this.core);
     });
 
-    this.core.instance('osjs/request', async (...args) => {
+    this.core.instance('osjs/request', (...args) => {
       return this.core.request(...args);
     });
 
     this.core.singleton('osjs/session', () => ({
-      save: async () => this.session.save(),
-      load: async (fresh = true) => this.session.load(fresh)
+      save: () => this.session.save(),
+      load: (fresh = true) => this.session.load(fresh)
     }));
 
     this.core.singleton('osjs/core', () => ({
@@ -145,7 +145,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       this.session.load();
     });
 
-    await this.pm.init();
+    return this.pm.init();
   }
 
   start() {

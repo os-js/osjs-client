@@ -160,6 +160,9 @@ export default class WindowBehavior {
     win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
+    win.$element.addEventListener('transitionend', (ev) => {
+      this.core.emit('osjs/window:transitionend', ev, win);
+    });
 
     const rect = this.core.has('osjs/desktop')
       ? this.core.make('osjs/desktop').getRect()

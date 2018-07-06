@@ -40,6 +40,7 @@
   position: absolute;
   box-sizing: border-box;
   user-select: none;
+  visibility: visible;
 
   &::after {
     content: '';
@@ -53,7 +54,8 @@
   }
 
   &[data-minimized=true] {
-    display: none !important;
+    display: none;
+    visibility: hidden;
   }
 
   &[data-focused=false] iframe {

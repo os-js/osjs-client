@@ -267,6 +267,12 @@ export default class Window extends EventHandler {
     this.destroyed = false;
 
     /**
+     * The window rendered state
+     * @type {Boolean}
+     */
+    this.rendered = false;
+
+    /**
      * The window attributes
      * @type {WindowAttributes}
      */
@@ -416,8 +422,11 @@ export default class Window extends EventHandler {
         .forEach(el => el.style.display = 'none');
     }
 
-    this.setNextZindex();
     this._updateDOM();
+
+    if (!this._preventDefaultPosition) {
+      this.gravitate(this.attributes.gravity);
+    }
 
     this.core.$root.appendChild(this.$element);
 
@@ -438,9 +447,8 @@ export default class Window extends EventHandler {
       callback(this.$content, this);
     }
 
-    if (!this._preventDefaultPosition) {
-      this.gravitate(this.attributes.gravity);
-    }
+    this.rendered = true;
+    this.setNextZindex();
 
     setTimeout(() => {
       this.emit('render', this);
@@ -726,7 +734,7 @@ export default class Window extends EventHandler {
       return false;
     }
 
-    console.debug('Window::_toggleState()', name, value, eventName);
+    console.debug('Window::_toggleState()', name, value, eventName, update);
 
     this.state[name] = value;
     this.emit(eventName, this);

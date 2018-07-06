@@ -104,14 +104,12 @@ export default class Desktop extends EventHandler {
       this.subtract[panel.options.position] += panel.$element.offsetHeight;
       this._updateCSS();
       this.core.emit('osjs/desktop:transform', this.getRect());
-      this.emit('theme:panel:create', panel);
     });
 
     this.core.on('osjs/panel:destroy', panel => {
       this.subtract[panel.options.position] -= panel.$element.offsetHeight;
       this._updateCSS();
       this.core.emit('osjs/desktop:transform', this.getRect());
-      this.emit('theme:panel:destroy', panel);
     });
 
     this.core.on('osjs/core:disconnect', ev => {
@@ -136,16 +134,12 @@ export default class Desktop extends EventHandler {
       }
     });
 
-    this.core.on('osjs/window:create', win => {
-      this.emit('theme:window:create', win);
+    this.core.on('osjs/window:transitionend', (...args) => {
+      this.emit('theme:window:transitionend', ...args);
     });
 
-    this.core.on('osjs/window:render', win => {
-      this.emit('theme:window:render', win);
-    });
-
-    this.core.on('osjs/window:destroy', win => {
-      this.emit('theme:window:destroy', win);
+    this.core.on('osjs/window:change', (...args) => {
+      this.emit('theme:window:change', ...args);
     });
 
     // Creates tray
@@ -266,7 +260,9 @@ export default class Desktop extends EventHandler {
 
     this.off([
       'theme:init',
-      'theme:destroy'
+      'theme:destroy',
+      'theme:window:change',
+      'theme:window:transitionend'
     ]);
 
     this.$theme.forEach(el => {

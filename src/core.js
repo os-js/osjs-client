@@ -82,48 +82,70 @@ export default class Core extends CoreBase {
   /**
    * Boots up OS.js
    */
-  async boot() {
+  boot() {
+    const done = e => {
+      if (e) {
+        console.error(e);
+      }
+
+      console.groupEnd();
+
+      return this.start();
+    };
+
     if (this.booted) {
-      return;
+      return Promise.resolve(false);
     }
 
     console.group('Core::boot()');
 
-    try {
-      await super.boot();
-    } catch (e) {
-      console.error(e);
-      return;
-    }
+    return super.boot()
+      .then(() => {
+        this.options.classNames.forEach(n => this.$root.classList.add(n));
 
-    this.options.classNames.forEach(n => this.$root.classList.add(n));
+        if (this.has('osjs/auth')) {
+          this.make('osjs/auth').show(user => {
+            this.user = user;
 
-    if (this.has('osjs/auth')) {
-      this.make('osjs/auth').show(user => {
-        this.user = user;
-
-        if (this.has('osjs/settings')) {
-          this.make('osjs/settings').load()
-            .then(() => this.start())
-            .catch(() => this.start());
+            if (this.has('osjs/settings')) {
+              this.make('osjs/settings').load()
+                .then(() => done())
+                .catch(() => done());
+            } else {
+              done();
+            }
+          });
         } else {
-          this.start();
+          console.warn('OS.js STARTED WITHOUT ANY AUTHENTICATION');
         }
-      });
-    } else {
-      console.warn('OS.js STARTED WITHOUT ANY AUTHENTICATION');
-      this.start();
-    }
 
-    console.groupEnd();
+        return done();
+      }).catch(done);
   }
 
   /**
    * Starts all core services
    */
-  async start() {
+  start() {
+    const connect = () => new Promise((resolve, reject) => {
+      const valid = this._createConnection(error => error ? reject(error) : resolve());
+      if (!valid) {
+        reject('Already connecting...');
+      }
+    });
+
+    const done = (err) => {
+      if (err) {
+        console.warn(err);
+      }
+
+      console.groupEnd();
+
+      return !!err;
+    };
+
     if (this.started) {
-      return;
+      return Promise.resolve();
     }
 
     console.group('Core::start()');
@@ -132,24 +154,21 @@ export default class Core extends CoreBase {
 
     this._createListeners();
 
-    const result = await super.start();
-    if (!result) {
-      console.groupEnd();
-      return;
-    }
+    return super.start()
+      .then(result => {
+        console.groupEnd();
 
-    const connect = () => new Promise((resolve, reject) => {
-      const valid = this._createConnection(error => error ? reject(error) : resolve());
-      if (!valid) {
-        reject('Already connecting...');
-      }
-    });
+        if (result) {
+          return connect()
+            .then(() => {
+              this.emit('osjs/core:started');
+              done();
+            })
+            .catch(done);
+        }
 
-    await connect();
-
-    this.emit('osjs/core:started');
-
-    console.groupEnd();
+        return false;
+      }).catch(done);
   }
 
   /**

@@ -60,6 +60,7 @@ export default class Core extends CoreBase {
     this.ws = null;
     this.connected = false;
     this.reconnecting = false;
+    this.ping = null;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
   }
@@ -73,6 +74,8 @@ export default class Core extends CoreBase {
     }
 
     this.emit('osjs/core:destroy');
+
+    this.ping = clearInterval(this.ping);
 
     Application.destroyAll();
 
@@ -152,6 +155,16 @@ export default class Core extends CoreBase {
 
     this.emit('osjs/core:start');
 
+    this.on('osjs/core:connected', config => {
+      const pingTime = config.cookie.maxAge / 2;
+
+      this.ping = setInterval(() => {
+        if (this.connected && !this.reconnecting) {
+          this.request('/ping').catch(e => console.warn(e));
+        }
+      }, pingTime);
+    });
+
     this._createListeners();
 
     return super.start()
@@ -215,7 +228,7 @@ export default class Core extends CoreBase {
       try {
         const data = JSON.parse(ev.data);
         console.debug('WebSocket message', data);
-        this.emit(data.name, data.params);
+        this.emit(data.name, ...data.params);
       } catch (e) {
         console.warn(e);
       }

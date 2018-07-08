@@ -227,8 +227,10 @@ export default class Core extends CoreBase {
     this.ws.onmessage = (ev) => {
       try {
         const data = JSON.parse(ev.data);
+        const params = data.params || [];
+
         console.debug('WebSocket message', data);
-        this.emit(data.name, ...data.params);
+        this.emit(data.name, ...params);
       } catch (e) {
         console.warn(e);
       }

@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.37
+
+* Updated some settings handling
+* Ensure 'params' from websocket message<Paste>
+
 ## 3.0.0-alpha.36
 
 * Added 'ping' to server based on cookie lifetime

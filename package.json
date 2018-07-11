@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.0.0-alpha.36",
+  "version": "3.0.0-alpha.37",
   "description": "OS.js v3 client",
   "main": "index.js",
   "style": "index.scss",
@@ -15,7 +15,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.0-alpha.7",
+    "@osjs/common": "^3.0.0-alpha.10",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
     "deepmerge": "^2.1.0",

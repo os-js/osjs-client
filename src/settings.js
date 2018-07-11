@@ -166,14 +166,14 @@ export default class Settings {
     if (typeof ns === 'undefined') {
       return Object.assign({}, this.settings);
     } else if (typeof this.settings[ns] === 'undefined') {
-      return {};
+      return defaultValue || {};
     }
 
     const tree = simplejsonconf(this.settings[ns]);
 
     return key
       ? tree.get(key, defaultValue)
-      : tree.get();
+      : tree.get() || defaultValue;
   }
 
   /**

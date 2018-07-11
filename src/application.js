@@ -127,7 +127,7 @@ export default class Application extends EventHandler {
      * @type {Object}
      */
     this.settings = core.make('osjs/settings')
-      .get(getSettingsKey(this.metadata), defaultSettings);
+      .get(getSettingsKey(this.metadata), null, defaultSettings);
 
     /**
      * Application started time

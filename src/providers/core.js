@@ -36,6 +36,7 @@ import Packages from '../packages';
 import Tray from '../tray';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
+import {style, script} from '../utils/dom';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
 const getWindow = win => ({
@@ -110,6 +111,11 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/session', () => ({
       save: () => this.session.save(),
       load: (fresh = true) => this.session.load(fresh)
+    }));
+
+    this.core.singleton('osjs/dom', () => ({
+      script,
+      style
     }));
 
     this.core.singleton('osjs/core', () => ({

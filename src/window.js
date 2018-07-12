@@ -63,6 +63,7 @@ import {escapeHtml, createCssText} from './utils/dom';
  * @property {Boolean} [closeable=true] If closeable
  * @property {Boolean} [header=true] Show header
  * @property {Boolean} [controls=true] Show controls
+ * @property {String} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {Map<String,String>} [mediaQueries] A map of matchMedia to name
@@ -111,6 +112,7 @@ const createAttributes = (attrs) => Object.assign({
   closeable: true,
   header: true,
   controls: true,
+  visibility: 'global',
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',

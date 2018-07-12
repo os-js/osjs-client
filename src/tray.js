@@ -79,6 +79,8 @@ export default class Tray {
       handler
     }, options);
 
+    console.debug('Created new tray entry', entry);
+
     this.entries.push(entry);
 
     this.core.emit('osjs/tray:create', entry);

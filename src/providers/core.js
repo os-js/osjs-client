@@ -87,6 +87,25 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.pm = new Packages(core);
   }
 
+  /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/application',
+      'osjs/window',
+      'osjs/event-handler',
+      'osjs/window-behaviour',
+      'osjs/request',
+      'osjs/dom',
+      'osjs/core',
+      'osjs/tray',
+      'osjs/locale',
+      'osjs/packages',
+      'osjs/package'
+    ];
+  }
+
   init() {
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);

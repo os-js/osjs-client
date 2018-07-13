@@ -47,6 +47,16 @@ export default class VFSServiceProvider extends ServiceProvider {
     });
   }
 
+  /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/vfs',
+      'osjs/fs'
+    ];
+  }
+
   init() {
     this.core.singleton('osjs/vfs', () => this.fs.request());
 

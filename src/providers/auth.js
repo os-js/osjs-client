@@ -109,6 +109,15 @@ export default class AuthServiceProvider extends ServiceProvider {
   }
 
   /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/auth'
+    ];
+  }
+
+  /**
    * Shows Login UI
    */
   show(cb) {

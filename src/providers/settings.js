@@ -46,6 +46,15 @@ export default class SettingsServiceProvider extends ServiceProvider {
     }, args));
   }
 
+  /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/settings'
+    ];
+  }
+
   init() {
     this.core.singleton('osjs/settings', () => ({
       save: () => this.settings.save(),

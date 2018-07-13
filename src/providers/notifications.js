@@ -49,6 +49,15 @@ export default class NotificationServiceProvider extends ServiceProvider {
     this.$element = null;
   }
 
+  /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/notification'
+    ];
+  }
+
   init() {
     this.core.instance('osjs/notification', (options) => {
       const notification = new Notification(this.core, this.$element, options);

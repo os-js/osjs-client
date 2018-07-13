@@ -48,6 +48,16 @@ export default class DesktopServiceProvider extends ServiceProvider {
     this.desktop = this.desktop.destroy();
   }
 
+  /**
+   * Get a list of services this provider registers
+   */
+  provides() {
+    return [
+      'osjs/desktop',
+      'osjs/theme'
+    ];
+  }
+
   init() {
     this.desktop.init();
 

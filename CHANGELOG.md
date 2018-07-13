@@ -1,9 +1,18 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.38
+
+* VFS api now uses objects instead of strings for input paths
+* Moved a vfs util method
+* Added #provides to all providers
+* Updated vfs mounting process
+* Added 'osjs/dom' provider
+* Added 'visiblity' attribute to Window
+
 ## 3.0.0-alpha.37
 
 * Updated some settings handling
-* Ensure 'params' from websocket message<Paste>
+* Ensure 'params' from websocket message
 
 ## 3.0.0-alpha.36
 

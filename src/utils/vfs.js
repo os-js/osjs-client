@@ -153,7 +153,7 @@ export const humanFileSize = (bytes, si = false) => {
 
 /**
  * Transforms a readdir result
- * @param {String} path The path to the readdir root
+ * @param {Object} root The path to the readdir root
  * @param Object[] files An array of readdir results
  * @param {Object} options Options
  * @param {Boolean} [options.showHiddenFiles=true] Show hidden files
@@ -162,7 +162,7 @@ export const humanFileSize = (bytes, si = false) => {
  * @param {String} [options.sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
-export const transformReaddir = (path, files, options = {}) => {
+export const transformReaddir = ({path}, files, options = {}) => {
   options = Object.assign({}, {
     showHiddenFiles: false,
     sortBy: 'filename',
@@ -266,5 +266,8 @@ export const createFileIter = stat => Object.assign({
   size: -1,
   path: null,
   filename: null,
-  stat: {}
+  label: null,
+  stat: {},
+  id: null,
+  parent_id: null
 }, stat);

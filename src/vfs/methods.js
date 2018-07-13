@@ -34,17 +34,22 @@ import {
   createFileIter
 } from '../utils/vfs';
 
+// Makes sure our input paths are object(s)
+const pathToObject = path => Object.assign({
+  id: null,
+}, typeof path === 'string' ? {path} : path);
+
 /**
  * Read a directory
  *
- * @param {String} path The path to read
+ * @param {Object|String} path The path to read
  * @param {Object} [options] Options
  * @return {Object[]} A list of files
  */
 export const readdir = adapter => (path, options = {}) =>
-  adapter.readdir(path, options)
+  adapter.readdir(pathToObject(path), options)
     .then(result => result.map(stat => createFileIter(stat)))
-    .then(result => transformReaddir(path, result, {
+    .then(result => transformReaddir(pathToObject(path), result, {
       showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));
@@ -54,18 +59,18 @@ export const readdir = adapter => (path, options = {}) =>
  *
  * Available types are 'arraybuffer', 'blob', 'uri' and 'string'
  *
- * @param {String} path The path to read
+ * @param {Object|String} path The path to read
  * @param {String} [type=string] Return this content type
  * @param {Object} [options] Options
  * @return {ArrayBuffer}
  */
 export const readfile = adapter => (path, type = 'string', options = {}) =>
-  adapter.readfile(path, type, options)
+  adapter.readfile(pathToObject(path), type, options)
     .then(response => transformArrayBuffer(response.body, response.mime, type));
 
 /**
  * Writes a file
- * @param {String} path The path to write
+ * @param {Object|String} path The path to write
  * @param {ArrayBuffer|Blob|String} data The data
  * @param {Object} [options] Options
  * @return {Number} File size
@@ -75,71 +80,71 @@ export const writefile = adapter => (path, data, options = {}) => {
     ? data
     : new Blob([data], {type: 'application/octet-stream'});
 
-  return adapter.writefile(path, binary, options);
+  return adapter.writefile(pathToObject(path), binary, options);
 };
 
 /**
  * Copies a file or directory (move)
- * @param {String} from The source (from)
- * @param {String} to The destination (to)
+ * @param {Object|String} from The source (from)
+ * @param {Object|String} to The destination (to)
  * @param {Object} [options] Options
  * @return {Boolean}
  */
 export const copy = adapter => (from, to, options = {}) =>
-  adapter.copy(from, to, options);
+  adapter.copy(pathToObject(from), pathToObject(to), options);
 
 /**
  * Renames a file or directory (move)
- * @param {String} from The source (from)
- * @param {String} to The destination (to)
+ * @param {Object|String} from The source (from)
+ * @param {Object|String} to The destination (to)
  * @param {Object} [options] Options
  * @return {Boolean}
  */
 export const rename = adapter => (from, to, options = {}) =>
-  adapter.rename(from, to, options);
+  adapter.rename(pathToObject(from), pathToObject(to), options);
 
 /**
  * Creates a directory
- * @param {String} path The path to new directory
+ * @param {Object|String} path The path to new directory
  * @param {Object} [options] Options
  * @return {Boolean}
  */
 export const mkdir = adapter => (path, options = {}) =>
-  adapter.mkdir(path, options);
+  adapter.mkdir(pathToObject(path), options);
 
 /**
  * Removes a file or directory
- * @param {String} path The path to remove
+ * @param {Object|String} path The path to remove
  * @param {Object} [options] Options
  * @return {Boolean}
  */
 export const unlink = adapter => (path, options = {}) =>
-  adapter.unlink(path, options);
+  adapter.unlink(pathToObject(path), options);
 
 /**
  * Checks if path exists
- * @param {String} path The path to check
+ * @param {Object|String} path The path to check
  * @param {Object} [options] Options
  * @return {Boolean}
  */
 export const exists = adapter => (path, options = {}) =>
-  adapter.exists(path, options);
+  adapter.exists(pathToObject(path), options);
 
 /**
  * Gets the stats of the file or directory
- * @param {String} path The path to check
+ * @param {Object|String} path The path to check
  * @param {Object} [options] Options
  * @return {Object}
  */
 export const stat = adapter => (path, options = {}) =>
-  adapter.stat(path, options)
+  adapter.stat(pathToObject(path), options)
     .then(stat => createFileIter(stat));
 
 /**
  * Gets an URL to a resource defined by file
- * @param {String} path The file
+ * @param {Object|String} path The file
  * @param {Object} [options] Options
  * @return {String}
  */
 export const url = adapter => (path, options = {}) =>
-  adapter.url(path, options);
+  adapter.url(pathToObject(path), options);

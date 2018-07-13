@@ -48,15 +48,15 @@ const adapter = (core) => {
       });
 
   return {
-    readdir: (path, options) => request('readdir', {
+    readdir: ({path}, options) => request('readdir', {
       path,
       options: {}
     }, {}, 'json').then(({body}) => body),
 
-    readfile: (path, type, options) =>
+    readfile: ({path}, type, options) =>
       request('readfile', {path, options}),
 
-    writefile: (path, data, options) => {
+    writefile: ({path}, data, options) => {
       const formData = new FormData();
       formData.append('upload', data);
       formData.append('path', path);
@@ -68,24 +68,24 @@ const adapter = (core) => {
     },
 
     copy: (from, to, options) =>
-      request('copy', {from, to, options}).then(({body}) => body),
+      request('copy', {from: from.path, to: to.path, options}).then(({body}) => body),
 
     rename: (from, to, options) =>
-      request('rename', {from, to, options}).then(({body}) => body),
+      request('rename', {from: from.path, to: to.path, options}).then(({body}) => body),
 
-    mkdir: (path, options) =>
+    mkdir: ({path}, options) =>
       request('mkdir', {path, options}).then(({body}) => body),
 
-    unlink: (path, options) =>
+    unlink: ({path}, options) =>
       request('unlink', {path, options}).then(({body}) => body),
 
-    exists: (path, options) =>
+    exists: ({path}, options) =>
       request('exists', {path, options}).then(({body}) => body),
 
-    stat: (path, options) =>
+    stat: ({path}, options) =>
       request('stat', {path, options}).then(({body}) => body),
 
-    url: (path, options) =>
+    url: ({path}, options) =>
       Promise.resolve(`/vfs/readfile?path=` + encodeURIComponent(path))
   };
 

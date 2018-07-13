@@ -59,7 +59,7 @@ const defaultAdapter = ({
 /*
  * Gets mountpoint from a path
  */
-const getMountpointFromPath = (core, mounts, path) => {
+const getMountpointFromPath = (core, mounts, {path}) => {
   const re = /^(\w+):(.*)/;
   const match = String(path).replace(/\+/g, '/').match(re);
   const [prefix] = Array.from(match || []).slice(1);
@@ -275,8 +275,8 @@ export default class Filesystem extends EventHandler {
    */
   _request(method, ...args) {
     // TODO: 'rename' and 'copy' between adapters
-    const [path] = args;
-    const mount = getMountpointFromPath(this.core, this.mounts, path);
+    const [file] = args;
+    const mount = getMountpointFromPath(this.core, this.mounts, file);
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 

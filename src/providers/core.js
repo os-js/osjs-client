@@ -41,6 +41,7 @@ import {EventHandler, ServiceProvider} from '@osjs/common';
 
 const getWindow = win => ({
   id: win.id,
+  attributes: Object.assign({}, win.attributes),
   state: Object.assign({}, win.state),
   maximize: () => win.maximize(),
   raise: () => win.raise(),

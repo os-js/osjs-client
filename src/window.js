@@ -172,6 +172,25 @@ const getActiveElement = (root) => {
 };
 
 /*
+ * Check if we have to set next zindex
+ */
+const checkNextZindex = ({wid, attributes, state}) => {
+  const {ontop} = attributes;
+  const {zIndex} = state;
+
+  const windexes = windows
+    .filter(w => w.attributes.ontop === ontop)
+    .filter(w => w.wid !== wid)
+    .map(w => w.state.zIndex);
+
+  const max = windexes.length > 0
+    ? Math.max.apply(null, windexes)
+    : 0;
+
+  return zIndex < max;
+};
+
+/*
  * Default window template
  */
 const TEMPLATE = `<div class="osjs-window-inner">
@@ -450,7 +469,7 @@ export default class Window extends EventHandler {
     }
 
     this.rendered = true;
-    this.setNextZindex();
+    this.setNextZindex(true);
 
     setTimeout(() => {
       this.emit('render', this);
@@ -636,11 +655,15 @@ export default class Window extends EventHandler {
 
   /**
    * Sets the Window to next z index
+   * @param {boolean} [force] Force next index
    */
-  setNextZindex() {
-    this.setZindex(nextZindex);
+  setNextZindex(force) {
+    const setNext = force || checkNextZindex(this);
 
-    nextZindex++;
+    if (setNext) {
+      this.setZindex(nextZindex);
+      nextZindex++;
+    }
   }
 
   /**

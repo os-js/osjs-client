@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.39
+
+* Added missing 'attributes' property from global getWindows() method
+
 ## 3.0.0-alpha.38
 
 * VFS api now uses objects instead of strings for input paths

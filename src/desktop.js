@@ -30,6 +30,7 @@
 
 import {EventHandler} from '@osjs/common';
 import Application from './application';
+import Window from './window';
 import merge from 'deepmerge';
 
 const TEMPLATE = subtract => `
@@ -158,6 +159,22 @@ export default class Desktop extends EventHandler {
     });
     this.core.$root.addEventListener('drop', e => {
       e.preventDefault();
+    });
+
+    // Forward keypress events
+    const isVisible = w => w &&
+      !w.getState('minimized') &&
+      w.getState('focused');
+
+    const forwardKeyEvent = (n, e) => {
+      const w = Window.lastWindow();
+      if (isVisible(w)) {
+        w.emit(n, e);
+      }
+    };
+
+    ['keydown', 'keyup', 'keypress'].forEach(n => {
+      this.core.$root.addEventListener(n, e => forwardKeyEvent(n, e));
     });
 
     // Handles tab-ing

@@ -689,8 +689,20 @@ export default class Window extends EventHandler {
   }
 
   /**
+   * Gets a astate
+   * @return {*}
+   */
+  getState(n) {
+    const value = this.state[n];
+
+    return ['position', 'dimension', 'styles'].indexOf(n) !== -1
+      ? Object.assign({}, value)
+      : value;
+  }
+
+  /**
    * Get a snapshot of the Window session
-   * @return Object
+   * @return {Object}
    */
   getSession() {
     return this.attributes.sessionable === false ? null : {
@@ -707,6 +719,14 @@ export default class Window extends EventHandler {
    */
   static getWindows() {
     return windows;
+  }
+
+  /**
+   * Gets the lastly focused Window
+   * @return {Window}
+   */
+  static lastWindow() {
+    return lastWindow;
   }
 
   /**

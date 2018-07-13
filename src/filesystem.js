@@ -143,10 +143,13 @@ export default class Filesystem extends EventHandler {
      * Mountpoints
      * @type {Mountpoint[]}
      */
-    this.mounts = this.core.config('vfs.mountpoints')
-      .concat(options.mounts) // TODO: Unique
-      .map(mount => createMountpoint(this.core, this.adapters, mount));
+    this.mounts = [];
 
+    /**
+     * Options
+     * @type {Object}
+     */
+    this.options = {};
     /**
      * A wrapper for VFS method requests
      * @type {Map<String, Function>}
@@ -162,6 +165,19 @@ export default class Filesystem extends EventHandler {
    * Mounts all configured mountpoints
    */
   mountAll(stopOnError = true) {
+    this.mounts = this.core.config('vfs.mountpoints')
+      .concat(this.options.mounts || []) // TODO: Unique
+      .map(mount => {
+        try {
+          return createMountpoint(this.core, this.adapters, mount);
+        } catch (e) {
+          console.warn(e);
+        }
+
+        return null;
+      })
+      .filter(mount => mount !== null);
+
     const fn = m => stopOnError
       ? this._mount(m)
       : this._mount(m).catch(err => console.warn(err));

@@ -246,6 +246,7 @@ export default class Core extends CoreBase {
     window.addEventListener('message', ev => {
       const message = ev.data || {};
       if (message) {
+        // FIXME: This might actually collide with something... need to check more.
         if (message.pid >= 0) {
           const proc = Application.getApplications().find(p => p.pid === message.pid);
           if (proc) {
@@ -254,8 +255,6 @@ export default class Core extends CoreBase {
             return;
           }
         }
-
-        console.warn('Message with unknown reciever', message);
       }
     });
   }

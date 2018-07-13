@@ -253,3 +253,18 @@ export const getFileIcon = map => {
     ? {name: 'folder'}
     : find(file);
 };
+
+/**
+ * Creates a file iter for scandir
+ * @param {Object} stat file stat
+ * @return {Object}
+ */
+export const createFileIter = stat => Object.assign({
+  isDirectory: false,
+  isFile: true,
+  mime: 'application/octet-stream',
+  size: -1,
+  path: null,
+  filename: null,
+  stat: {}
+}, stat);

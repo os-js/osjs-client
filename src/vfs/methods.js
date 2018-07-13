@@ -30,18 +30,9 @@
 
 import {
   transformReaddir,
-  transformArrayBuffer
+  transformArrayBuffer,
+  createFileIter
 } from '../utils/vfs';
-
-const createFileIter = stat => Object.assign({
-  isDirectory: false,
-  isFile: true,
-  mime: 'application/octet-stream',
-  size: -1,
-  path: null,
-  filename: null,
-  stat: {}
-}, stat);
 
 /**
  * Read a directory

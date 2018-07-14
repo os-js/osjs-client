@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.40
+
+* Hide login UI if autologin is set (prevent blink)
+* Added missing return statement
+* Prevent crash on startup when app meta not found for restore
+* Fixed text selection on non-webit browsers
+* Updated zIndex handling of windows
+
+
 ## 3.0.0-alpha.39
 
 * Added missing 'attributes' property from global getWindows() method

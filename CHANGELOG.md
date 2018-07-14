@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.42
+
+* Updated @osjs/common dependency
+* Added CSS to force acceleration in certain browsers
+* Flatten som styles in _window.scss
+
 ## 3.0.0-alpha.41
 
 * Hotfix for auth ui login submission

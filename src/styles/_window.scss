@@ -71,91 +71,90 @@
     display: block;
   }
 
-  & > .osjs-window-inner {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    flex-direction: column;
-
-    & > .osjs-window-header {
-      display: flex;
-      position: relative;
-      box-sizing: border-box;
-      flex: 0 0;
-      min-height: 2.2em;
-
-      & > div {
-        height: 100%;
-      }
-
-      & > .osjs-window-icon {
-        & > div {
-          width: $base-margin;
-          height: $base-margin;
-          background: url('~@osjs/client/src/styles/logo-blue-32x32.png') no-repeat 50% 50%;
-          background-size: cover;
-        }
-      }
-
-      & > .osjs-window-title {
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        pointer-events: none;
-      }
-
-      & > .osjs-window-button {
-        cursor: pointer;
-        min-width: 1em;
-        position: relative;
-        flex-basis: 1em;
-
-        * {
-          pointer-events: none;
-        }
-
-        &:not(:last-child) {
-          margin-right: $base-margin / 4;
-        }
-
-        & > div {
-          width: $base-margin;
-          height: $base-margin;
-        }
-      }
-    }
-
-    & > .osjs-window-content {
-      box-sizing: border-box;
-      position: relative;
-      z-index: 1;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      flex: 1 1;
-      user-select: auto;
-    }
-
-    & > .osjs-window-resize {
-      z-index: 10;
-      position: absolute;
-      bottom: -0.5em;
-      right: -0.5em;
-      width: 1em;
-      height: 1em;
-      cursor: se-resize;
-    }
-  }
-
   &[data-minimizable=false] .osjs-window-button[data-action=minimize],
   &[data-maximizable=false] .osjs-window-button[data-action=maximize],
   &[data-closable=false] .osjs-window-button[data-action=close],
   &[data-resizable=false] .osjs-window-resize {
     display: none;
   }
+}
 
+.osjs-window-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+
+.osjs-window-header {
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0;
+  min-height: 2.2em;
+
+  & > div {
+    height: 100%;
+  }
+}
+
+.osjs-window-icon {
+  & > div {
+    width: $base-margin;
+    height: $base-margin;
+    background: url('~@osjs/client/src/styles/logo-blue-32x32.png') no-repeat 50% 50%;
+    background-size: cover;
+  }
+}
+
+.osjs-window-title {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.osjs-window-button {
+  cursor: pointer;
+  min-width: 1em;
+  position: relative;
+  flex-basis: 1em;
+
+  * {
+    pointer-events: none;
+  }
+
+  &:not(:last-child) {
+    margin-right: $base-margin / 4;
+  }
+
+  & > div {
+    width: $base-margin;
+    height: $base-margin;
+  }
+}
+
+.osjs-window-content {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  flex: 1 1;
+  user-select: auto;
+}
+
+.osjs-window-resize {
+  z-index: 10;
+  position: absolute;
+  bottom: -0.5em;
+  right: -0.5em;
+  width: 1em;
+  height: 1em;
+  cursor: se-resize;
 }

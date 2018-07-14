@@ -121,11 +121,13 @@ export default class AuthServiceProvider extends ServiceProvider {
    * Shows Login UI
    */
   show(cb) {
-    this.callback = cb;
-    this.ui.init();
-
     const login = this.core.config('auth.login', {});
-    if (login.username && login.password) {
+    const autologin = login.username && login.password;
+
+    this.callback = cb;
+    this.ui.init(autologin);
+
+    if (autologin) {
       this.login(login);
     }
   }

@@ -119,14 +119,14 @@ export default class Login extends EventHandler {
   /**
    * Initializes the UI
    */
-  init() {
+  init(startHidden) {
     this.$container = document.createElement('div');
     this.$container.id = this.options.id;
     this.$container.className = 'osjs-login-base';
     this.core.$root.classList.add('login');
     this.core.$root.appendChild(this.$container);
 
-    this.render();
+    this.render(startHidden);
   }
 
   /**
@@ -143,7 +143,7 @@ export default class Login extends EventHandler {
   /**
    * Renders the UI
    */
-  render() {
+  render(startHidden) {
     const {src, position} = this.options.logo;
     const login = this.core.config('auth.login', {});
 
@@ -217,13 +217,16 @@ export default class Login extends EventHandler {
 
       return h('div', {
         class: 'osjs-login',
-        id: this.options.id
+        id: this.options.id,
+        style: {display: state.hidden ? 'none' : undefined}
       }, [left(), middle(), right()].filter(el => !!el));
     };
 
-    const a = app(Object.assign({}, login), {
+    const a = app(Object.assign({
+      hidden: startHidden
+    }, login), {
       setLoading: loading => state => ({loading}),
-      setError: error => state => ({error}),
+      setError: error => state => ({error, hidden: false}),
       submit: ev => state => {
         ev.preventDefault();
 
@@ -235,7 +238,8 @@ export default class Login extends EventHandler {
           .filter(el => el.type !== 'submit')
           .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
 
-        this.emit('login:post', values);
+        this.emit('login:post', {username: 'xxxx', password: 'xxxx'});
+        //this.emit('login:post', values);
       }
     }, createView, this.$container);
 

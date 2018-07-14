@@ -107,7 +107,7 @@ export default class Core extends CoreBase {
         this.options.classNames.forEach(n => this.$root.classList.add(n));
 
         if (this.has('osjs/auth')) {
-          this.make('osjs/auth').show(user => {
+          return this.make('osjs/auth').show(user => {
             this.user = user;
 
             if (this.has('osjs/settings')) {

@@ -238,8 +238,7 @@ export default class Login extends EventHandler {
           .filter(el => el.type !== 'submit')
           .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
 
-        this.emit('login:post', {username: 'xxxx', password: 'xxxx'});
-        //this.emit('login:post', values);
+        this.emit('login:post', values);
       }
     }, createView, this.$container);
 

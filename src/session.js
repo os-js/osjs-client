@@ -82,11 +82,15 @@ export default class Session {
       console.group('Session::load()');
 
       session.forEach(app => {
-        this.core.run(app.name, app.args, {
-          restore: {
-            windows: app.windows
-          }
-        });
+        try {
+          this.core.run(app.name, app.args, {
+            restore: {
+              windows: app.windows
+            }
+          });
+        } catch (e) {
+          console.warn(e);
+        }
       });
 
       console.groupEnd();

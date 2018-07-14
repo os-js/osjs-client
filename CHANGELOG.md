@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.41
+
+* Hotfix for auth ui login submission
+
 ## 3.0.0-alpha.40
 
 * Hide login UI if autologin is set (prevent blink)

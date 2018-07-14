@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.0.0-alpha.40",
+  "version": "3.0.0-alpha.41",
   "description": "OS.js v3 client",
   "main": "index.js",
   "style": "index.scss",

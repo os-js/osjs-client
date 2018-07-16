@@ -71,6 +71,40 @@ const getPublicApi = core => Object.freeze({
   getApplications
 });
 
+class Clipboard {
+
+  constructor() {
+    this.value = undefined;
+    this.clear();
+  }
+
+  clear() {
+    this.value = Promise.resolve();
+  }
+
+  set(v) {
+    this.value = v;
+  }
+
+  get(clear) {
+    const v = typeof this.value === 'function'
+      ? v()
+      : v;
+
+    const done = ret => {
+      if (clear) {
+        this.clear();
+      }
+
+      return ret;
+    };
+
+    return Promise.resolve(v)
+      .then(done)
+      .catch(done);
+  }
+}
+
 /**
  * OS.js Core Service Provider
  *
@@ -86,6 +120,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.session = new Session(core);
     this.tray = new Tray(core);
     this.pm = new Packages(core);
+    this.clipboard = new Clipboard();
   }
 
   /**
@@ -166,6 +201,12 @@ export default class CoreServiceProvider extends ServiceProvider {
     }));
 
     this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
+
+    this.core.instance('osjs/clipboard', () => ({
+      set: v => this.clipboard.set(v),
+      get: clear => this.clipboard.get(clear),
+      clear: () => this.clipboard.clear()
+    }));
 
     this.core.on('osjs/core:started', () => {
       this.session.load();

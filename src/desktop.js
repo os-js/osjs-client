@@ -77,6 +77,7 @@ export default class Desktop extends EventHandler {
     this.$theme = [];
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
+    this.contextmenuEntries = [];
     this.subtract = {
       left: 0,
       top: 0,
@@ -219,6 +220,10 @@ export default class Desktop extends EventHandler {
     this.$styles.innerHTML = TEMPLATE(this.subtract);
   }
 
+  addContextMenu(entries) {
+    this.contextmenuEntries = this.contextmenuEntries.concat(entries);
+  }
+
   /**
    * Applies settings and updates desktop
    * @param {Object} [settings] Use this set instead of loading from settings
@@ -267,6 +272,8 @@ export default class Desktop extends EventHandler {
     applyOverlays('osjs/widgets', newSettings.widgets);
 
     this.applyTheme(newSettings.theme);
+
+    return Object.assign({}, newSettings);
   }
 
   /**
@@ -378,21 +385,27 @@ export default class Desktop extends EventHandler {
 
     const _ = this.core.make('osjs/locale').translate;
 
+    const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
+
+    const menu = [
+      {
+        label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
+        onclick: () => openWallpaperDialog()
+      },
+      {
+        label: _('LBL_DESKTOP_SELECT_THEME'),
+        items: themes.map(t => ({
+          label: t.name,
+          onclick: () => setTheme(t)
+        }))
+      },
+
+      ...extras
+    ];
+
     this.core.make('osjs/contextmenu').show({
-      position: ev,
-      menu: [
-        {
-          label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
-          onclick: () => openWallpaperDialog()
-        },
-        {
-          label: _('LBL_DESKTOP_SELECT_THEME'),
-          items: themes.map(t => ({
-            label: t.name,
-            onclick: () => setTheme(t)
-          }))
-        }
-      ]
+      menu,
+      position: ev
     });
   }
 

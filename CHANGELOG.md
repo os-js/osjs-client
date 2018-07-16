@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.43
+
+* Support registering custom contextmenu items on desktop
+
 ## 3.0.0-alpha.42
 
 * Updated @osjs/common dependency

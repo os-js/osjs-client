@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.44
+
+* Added 'download' for system vfs
+* Added native 'download' support in VFS
+* Better notifications, added icon support
+* Added basic clipboard provider
+
 ## 3.0.0-alpha.43
 
 * Support registering custom contextmenu items on desktop

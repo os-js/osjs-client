@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import {h, app} from 'hyperapp';
+
 /**
  * Notification
  *
@@ -108,11 +110,18 @@ export default class Notification {
    * Render notification
    */
   render() {
-    const template = `<div class="title">${this.options.title}</div>
-<div class="message">${this.options.message}</div>`;
+    const view = state => h('div', {
+      class: 'osjs-notification-wrapper',
+      'data-has-icon': !!state.icon,
+      style: {
+        backgroundImage: state.icon ? `url(${state.icon})` : undefined
+      }
+    }, [
+      h('div', {class: 'osjs-notification-title'}, state.title),
+      h('div', {class: 'osjs-notification-message'}, state.message),
+    ]);
 
     this.$element.classList.add('osjs-notification');
-    this.$element.innerHTML = template;
 
     if (this.options.timeout) {
       setTimeout(() => this.destroy(), this.options.timeout);
@@ -121,6 +130,8 @@ export default class Notification {
     this.$element.addEventListener('click', () => this.destroy());
 
     this.$root.appendChild(this.$element);
+
+    app(this.options, {}, view, this.$element);
   }
 
 }

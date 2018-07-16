@@ -38,12 +38,21 @@
   height: 100%;
   max-height: 100%;
   z-index: 16777272;
+}
 
-  & > .osjs-notification {
-    padding: $base-margin;
-    box-sizing: border-box;
-    pointer-events: all;
-    min-width: 200px;
-    margin-bottom: $base-margin;
+ .osjs-notification {
+  padding: $base-margin;
+  box-sizing: border-box;
+  pointer-events: all;
+  min-width: 200px;
+  margin-bottom: $base-margin;
+}
+
+.osjs-notification-wrapper {
+  background-size: 3em;
+  background-repeat: no-repeat;
+
+  &[data-has-icon=true] {
+    padding-left: calc(3em + #{$base-margin});
   }
 }

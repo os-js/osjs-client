@@ -86,7 +86,16 @@ const adapter = (core) => {
       request('stat', {path, options}).then(({body}) => body),
 
     url: ({path}, options) =>
-      Promise.resolve(`/vfs/readfile?path=` + encodeURIComponent(path))
+      Promise.resolve(`/vfs/readfile?path=` + encodeURIComponent(path)),
+
+    download: ({path}, options = {}) => {
+      const json = encodeURIComponent(JSON.stringify({download: true}));
+
+      return Promise.resolve(`/vfs/readfile?options=${json}&path=` + encodeURIComponent(path))
+        .then(url => {
+          return (options.target || window).open(url);
+        });
+    }
   };
 
 };

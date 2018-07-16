@@ -156,7 +156,7 @@ export const url = adapter => (path, options = {}) =>
  * @return {String}
  */
 export const download = adapter => (path, options = {}) =>
-  typeof adapter.download === 'function'
+  typeof adapter.download === 'function' && options.readfile !== true
     ? adapter.download(pathToObject(path), options)
     : readfile(adapter)(path, 'blob')
       .then(body => {

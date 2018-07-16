@@ -148,3 +148,31 @@ export const stat = adapter => (path, options = {}) =>
  */
 export const url = adapter => (path, options = {}) =>
   adapter.url(pathToObject(path), options);
+
+/**
+ * Initiates a native browser download of the file
+ * @param {Object|String} path The file
+ * @param {Object} [options] Options
+ * @return {String}
+ */
+export const download = adapter => (path, options = {}) =>
+  typeof adapter.download === 'function'
+    ? adapter.download(pathToObject(path), options)
+    : readfile(adapter)(path, 'blob')
+      .then(body => {
+        const filename = pathToObject(path).path.split('/').splice(-1)[0];
+        const url = window.URL.createObjectURL(body);
+
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+
+        a.click();
+
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          a.remove();
+        }, 1);
+      });

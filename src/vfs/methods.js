@@ -39,6 +39,14 @@ const pathToObject = path => Object.assign({
   id: null,
 }, typeof path === 'string' ? {path} : path);
 
+// Handles directory listing result(s)
+const handleDirectoryList = (path, options) => result =>
+  Promise.resolve(result.map(stat => createFileIter(stat)))
+    .then(result => transformReaddir(pathToObject(path), result, {
+      showHiddenFiles: options.showHiddenFiles !== false,
+      filter: options.filter
+    }));
+
 /**
  * Read a directory
  *
@@ -48,11 +56,7 @@ const pathToObject = path => Object.assign({
  */
 export const readdir = adapter => (path, options = {}) =>
   adapter.readdir(pathToObject(path), options)
-    .then(result => result.map(stat => createFileIter(stat)))
-    .then(result => transformReaddir(pathToObject(path), result, {
-      showHiddenFiles: options.showHiddenFiles !== false,
-      filter: options.filter
-    }));
+    .then(handleDirectoryList(path, options));
 
 /**
  * Reads a file
@@ -176,3 +180,14 @@ export const download = adapter => (path, options = {}) =>
           a.remove();
         }, 1);
       });
+
+/**
+ * Searches for files and folders
+ * @param {Object|String} root The root
+ * @param {String} pattern Search pattern
+ * @param {Object} [options] Options
+ * @return {String}
+ */
+export const search = adapter => (root, pattern, options = {}) =>
+  adapter.search(pathToObject(root), pattern, options)
+    .then(handleDirectoryList(root, options));

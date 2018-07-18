@@ -88,6 +88,10 @@ const adapter = (core) => {
     url: ({path}, options) =>
       Promise.resolve(`/vfs/readfile?path=` + encodeURIComponent(path)),
 
+    search: ({path}, pattern, options) =>
+      request('search', {root: path, pattern, options}, {}, 'json')
+        .then(({body}) => body),
+
     download: ({path}, options = {}) => {
       const json = encodeURIComponent(JSON.stringify({download: true}));
 

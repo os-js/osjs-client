@@ -45,7 +45,8 @@ const defaultAdapter = ({
   stat: (path, options) => Promise.resolve({}),
   url: (path, options) => Promise.resolve(null),
   mount: options => Promise.resolve(true),
-  unmount: options => Promise.resolve(true)
+  unmount: options => Promise.resolve(true),
+  search: (root, pattern, options) => Promise.resolve(true)
 });
 
 /**

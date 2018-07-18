@@ -13,6 +13,8 @@
 
 This is the main client core component of OS.js.
 
+[![Build Status](https://travis-ci.org/os-js/osjs-client.svg?branch=master)](https://travis-ci.org/os-js/osjs-client)
+
 Contains base services, virtual filesystem, panels and other core services required for operation.
 
 **PLEASE NOTE THAT THIS IS AN ALPHA PRE-RELEASE AND SUBJECT TO CHANGE WITHOUT NOTICE**

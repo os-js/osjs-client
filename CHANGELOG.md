@@ -1,5 +1,15 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.45
+
+* Fixed using VFS paths with strings only
+* Added VFS search() method
+* Added travis-ci badge to README
+* Lint pass
+* Added initial travis-ci config
+* Added stylelintrc
+
+
 ## 3.0.0-alpha.44
 
 * Added 'download' for system vfs

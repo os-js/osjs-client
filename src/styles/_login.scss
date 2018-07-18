@@ -42,10 +42,9 @@
     bottom: 0;
     right: 0;
     left: 0;
-
     content: '';
     z-index: 1000;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.20) 0%,rgba(0, 0, 0, 0.65) 100%);
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.65) 100%);
   }
 }
 
@@ -126,6 +125,7 @@
     &[data-position=left] {
       margin-right: 2em;
     }
+
     &[data-position=right] {
       margin-left: 2em;
     }

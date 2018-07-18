@@ -28,70 +28,14 @@
  * @licence Simplified BSD License
  */
 
-.osjs-root[data-window-action="true"] {
-  .osjs-window {
-    * {
-      pointer-events: none;
-    }
-  }
-}
-
-.osjs-window {
+.osjs-window-resize {
+  z-index: 10;
   position: absolute;
-  box-sizing: border-box;
-  user-select: none;
-  visibility: visible;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999999999;
-    display: none;
-  }
-
-  &[data-minimized=true] {
-    display: none;
-    visibility: hidden;
-  }
-
-  &[data-focused=false] iframe {
-    pointer-events: none;
-  }
-
-  &[data-resizing=true],
-  &[data-moving=true] {
-    cursor: move;
-  }
-
-  &[data-loading=true]::after {
-    display: block;
-  }
-
-  &[data-minimizable=false] .osjs-window-button[data-action=minimize],
-  &[data-maximizable=false] .osjs-window-button[data-action=maximize],
-  &[data-closable=false] .osjs-window-button[data-action=close],
-  &[data-resizable=false] .osjs-window-resize {
-    display: none;
-  }
-}
-
-/* This actually increases performance */
-.osjs-window {
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  backface-visibility: hidden;
-
-  -webkit-perspective: 1000;
-  -moz-perspective: 1000;
-  perspective: 1000;
+  bottom: -0.5em;
+  right: -0.5em;
+  width: 1em;
+  height: 1em;
+  cursor: se-resize;
 }
 
 .osjs-window-inner {
@@ -164,12 +108,64 @@
   user-select: auto;
 }
 
-.osjs-window-resize {
-  z-index: 10;
+.osjs-window {
   position: absolute;
-  bottom: -0.5em;
-  right: -0.5em;
-  width: 1em;
-  height: 1em;
-  cursor: se-resize;
+  box-sizing: border-box;
+  user-select: none;
+  visibility: visible;
+
+  /* This actually increases performance */
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  perspective: 1000;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999999999;
+    display: none;
+  }
+
+  &[data-minimized=true] {
+    display: none;
+    visibility: hidden;
+  }
+
+  &[data-focused=false] iframe {
+    pointer-events: none;
+  }
+
+  &[data-resizing=true],
+  &[data-moving=true] {
+    cursor: move;
+  }
+
+  &[data-loading=true]::after {
+    display: block;
+  }
+
+  &[data-minimizable=false] .osjs-window-button[data-action=minimize],
+  &[data-maximizable=false] .osjs-window-button[data-action=maximize],
+  &[data-closable=false] .osjs-window-button[data-action=close],
+  &[data-resizable=false] .osjs-window-resize {
+    display: none;
+  }
+}
+
+.osjs-root[data-window-action="true"] {
+  .osjs-window {
+    * {
+      pointer-events: none;
+    }
+  }
 }

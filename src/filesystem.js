@@ -60,7 +60,8 @@ const defaultAdapter = ({
 /*
  * Gets mountpoint from a path
  */
-const getMountpointFromPath = (core, mounts, {path}) => {
+const getMountpointFromPath = (core, mounts, file) => {
+  const path = typeof file === 'string' ? file : file.path;
   const re = /^(\w+):(.*)/;
   const match = String(path).replace(/\+/g, '/').match(re);
   const [prefix] = Array.from(match || []).slice(1);

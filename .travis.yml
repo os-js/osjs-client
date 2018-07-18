@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 8
+install:
+  - npm install
+  - npm install --no-save eslint stylelint stylelint-config-standard stylelint-scss
+script:
+  - npx eslint index.js src/**/*.js
+  - npx stylelint index.scss src/**/*.scss

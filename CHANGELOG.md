@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.46
+
+* Updated @osjs/common dependency
+
 ## 3.0.0-alpha.45
 
 * Fixed using VFS paths with strings only

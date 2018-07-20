@@ -1,5 +1,17 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.47
+
+* Window 'position' option can now alias as 'gravity' (Fixes #13)
+* Added all gravity positions (#13)
+* Prevent a debug message from spamming console
+* Added 'move' alias for 'rename' in VFS
+* Support copy/move between different adapters in VFS
+* Add the 'root' attribute for mountpoints
+* Added mountpoint icon support
+* Added VFS search UI
+* Updated eslintrc
+
 ## 3.0.0-alpha.46
 
 * Updated @osjs/common dependency

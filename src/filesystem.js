@@ -91,6 +91,7 @@ const createMountpoint = (core, adapters, props) => {
     mounted: false,
     adapter: name,
     attributes: {
+      visibility: 'global',
       local: true,
       readOnly: false
     }
@@ -313,6 +314,7 @@ export default class Filesystem extends EventHandler {
     return this.mounts
       .filter(m => all || m.mounted)
       .map(m => ({
+        attributes: Object.assign({}, m.attributes),
         icon: icon(m.icon),
         name: m.name,
         label: m.label,

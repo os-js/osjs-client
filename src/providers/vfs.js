@@ -74,5 +74,4 @@ export default class VFSServiceProvider extends ServiceProvider {
 
     return this.fs.mountAll(false);
   }
-
 }

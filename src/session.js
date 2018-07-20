@@ -99,4 +99,3 @@ export default class Session {
     return Promise.resolve(true);
   }
 }
-

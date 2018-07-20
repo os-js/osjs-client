@@ -31,6 +31,7 @@
 import {EventHandler} from '@osjs/common';
 import Application from './application';
 import Window from './window';
+import Search from './search';
 import merge from 'deepmerge';
 
 const TEMPLATE = subtract => `
@@ -78,6 +79,7 @@ export default class Desktop extends EventHandler {
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
     this.contextmenuEntries = [];
+    this.search = new Search(core);
     this.subtract = {
       left: 0,
       top: 0,
@@ -90,6 +92,8 @@ export default class Desktop extends EventHandler {
    * Destroy Desktop
    */
   destroy() {
+    this.search = this.search.destroy();
+
     if (this.$styles && this.$styles.parentNode) {
       this.$styles.remove();
     }
@@ -178,13 +182,19 @@ export default class Desktop extends EventHandler {
       this.core.$root.addEventListener(n, e => forwardKeyEvent(n, e));
     });
 
-    // Handles tab-ing
-    // TODO: Handle this better
     this.core.$root.addEventListener('keydown', e => {
+      if (e.keyCode === 114) { // F3
+        e.preventDefault();
+        this.search.show();
+        return;
+      }
+
       if (!e.target) {
         return;
       }
 
+      // Handles tab-ing and o
+      // TODO: Handle this better
       const {type, tagName} = e.target;
       const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tagName) !== -1;
 
@@ -207,6 +217,10 @@ export default class Desktop extends EventHandler {
     });
 
     this.core.$resourceRoot.appendChild(this.$styles);
+  }
+
+  start() {
+    this.search.init();
   }
 
   /**

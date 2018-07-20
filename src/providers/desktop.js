@@ -67,7 +67,6 @@ export default class DesktopServiceProvider extends ServiceProvider {
       getRect: () => this.desktop.getRect()
     }));
 
-
     const basePath = this.core.config('public');
 
     const resource = path => {
@@ -85,4 +84,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
     });
   }
 
+  start() {
+    this.desktop.start();
+  }
 }

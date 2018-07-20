@@ -153,11 +153,13 @@ export const defaultConfiguration = {
     mountpoints: [{
       name: 'osjs',
       label: 'OS.js',
-      adapter: 'system'
+      adapter: 'system',
+      icon: require('./styles/logo-blue-32x32.png')
     }, {
       name: 'home',
       label: 'Home',
-      adapter: 'system'
+      adapter: 'system',
+      icon: {name: 'user-home'}
     }],
     icons: {
       '^application/zip': {name: 'package-x-generic'},

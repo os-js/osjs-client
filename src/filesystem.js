@@ -46,7 +46,7 @@ const defaultAdapter = ({
   url: (path, options) => Promise.resolve(null),
   mount: options => Promise.resolve(true),
   unmount: options => Promise.resolve(true),
-  search: (root, pattern, options) => Promise.resolve(true)
+  search: (root, pattern, options) => Promise.resolve([])
 });
 
 /**
@@ -290,9 +290,15 @@ export default class Filesystem extends EventHandler {
    * @return {Object[]}
    */
   getMounts(all = false) {
+    const theme = this.core.make('osjs/theme');
+    const icon = str => str
+      ? (typeof str === 'string' ? str : theme.icon(str.name))
+      : theme.icon('drive-harddisk');
+
     return this.mounts
       .filter(m => all || m.mounted)
       .map(m => ({
+        icon: icon(m.icon),
         name: m.name,
         label: m.label
       }));

@@ -76,7 +76,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
 
     this.core.singleton('osjs/theme', () => ({
       resource,
-      icon: name => resource(`icons/${name}`)
+      icon: name => resource(`icons/${name.replace(/(\.png)?$/, '.png')}`)
     }));
 
     this.core.on('osjs/core:started', () => {

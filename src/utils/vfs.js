@@ -263,6 +263,7 @@ export const createFileIter = stat => Object.assign({
   isDirectory: false,
   isFile: true,
   mime: 'application/octet-stream',
+  icon: null,
   size: -1,
   path: null,
   filename: null,

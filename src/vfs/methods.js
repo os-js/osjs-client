@@ -108,6 +108,15 @@ export const rename = adapter => (from, to, options = {}) =>
   adapter.rename(pathToObject(from), pathToObject(to), options);
 
 /**
+ * Alias of 'readme'
+ * @param {Object|String} from The source (from)
+ * @param {Object|String} to The destination (to)
+ * @param {Object} [options] Options
+ * @return {Boolean}
+ */
+export const move = rename;
+
+/**
  * Creates a directory
  * @param {Object|String} path The path to new directory
  * @param {Object} [options] Options

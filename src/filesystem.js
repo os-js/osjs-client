@@ -275,7 +275,7 @@ export default class Filesystem extends EventHandler {
    * @return {*}
    */
   _request(method, ...args) {
-    if (['rename', 'copy'].indexOf(method) !== -1) {
+    if (['rename', 'move', 'copy'].indexOf(method) !== -1) {
       const [src, dest] = args;
       const srcMount = getMountpointFromPath(this.core, this.mounts, src);
       const destMount = getMountpointFromPath(this.core, this.mounts, dest);

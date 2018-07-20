@@ -96,12 +96,11 @@ const createMountpoint = (core, adapters, props) => {
     }
   }, props);
 
-  result._adapter = adapter;
-  if (!result.label) {
-    result.label = result.name || name;
-  }
-
-  return result;
+  return Object.assign({
+    _adapter: adapter,
+    label: name,
+    root: `${result.name || name}:/`
+  }, result);
 };
 
 /**
@@ -300,7 +299,8 @@ export default class Filesystem extends EventHandler {
       .map(m => ({
         icon: icon(m.icon),
         name: m.name,
-        label: m.label
+        label: m.label,
+        root: m.root
       }));
   }
 

@@ -154,7 +154,7 @@ export const defaultConfiguration = {
       name: 'osjs',
       label: 'OS.js',
       adapter: 'system',
-      icon: require('./styles/logo-blue-32x32.png')
+      icon: {name: 'folder-publicshare'}
     }, {
       name: 'home',
       label: 'Home',

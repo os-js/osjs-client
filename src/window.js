@@ -231,7 +231,7 @@ export default class Window extends EventHandler {
    * @param {String} [options.title] Window Title
    * @param {String} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
-   * @param {WindowPosition} [options.position] Window position
+   * @param {WindowPosition|String} [options.position] Window position
    * @param {WindowDimension} [options.dimension] Window dimension
    * @param {WindowAttributes} [options.attributes] Apply Window attributes
    * @param {WindowState} [options.state] Apply Window state
@@ -250,6 +250,11 @@ export default class Window extends EventHandler {
     console.log('Window::constructor()', options);
 
     super('Window@' + options.id);
+
+    if (typeof options.position === 'string') {
+      options.attributes.gravity = options.position;
+      options.position = {};
+    }
 
     /**
      * The Window ID
@@ -705,7 +710,7 @@ export default class Window extends EventHandler {
     if (gravity === 'center') {
       left = (rect.width / 2) - (this.state.dimension.width / 2);
       top = (rect.height / 2) - (this.state.dimension.height / 2);
-    } else {
+    } else if (gravity) {
       if (gravity.match(/top/)) {
         top = rect.top;
       } else if (gravity.match(/bottom/)) {

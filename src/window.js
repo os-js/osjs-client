@@ -759,10 +759,14 @@ export default class Window extends EventHandler {
    * @param {Boolean} [update=true] Update the DOM
    */
   _setState(name, value, update = true) {
+    const oldValue = this.state[name];
     this.state[name] = value;
 
     if (update) {
-      console.debug('Window::_setState()', name, value);
+      if (oldValue !== value) {
+        console.debug('Window::_setState()', name, value);
+      }
+
       this._updateDOM();
     }
   }

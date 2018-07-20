@@ -320,6 +320,10 @@ export default class Core extends CoreBase {
 
     const run = app => this.run(app, {file}, options);
 
+    if (file.mime === 'osjs/application') {
+      return this.run(file.path.split('/').pop());
+    }
+
     const compatible = this.make('osjs/packages')
       .getCompatiblePackages(file.mime);
 

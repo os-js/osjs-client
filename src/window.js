@@ -55,7 +55,7 @@ import {escapeHtml, createCssText} from './utils/dom';
  *
  * @property {String[]} [classNames=[]] A list of class names
  * @property {Boolean} [ontop=false] If always on top
- * @property {String} [gravity] Gravity (center/top/left/right/bottom)
+ * @property {String} [gravity] Gravity (center/top/left/right/bottom or any combination)
  * @property {Boolean} [resizable=true] If resizable
  * @property {Boolean} [focusable=true] If focusable
  * @property {Boolean} [maximizable=true] If window if maximizable
@@ -695,7 +695,6 @@ export default class Window extends EventHandler {
    * @param {String} gravity Gravity
    */
   gravitate(gravity) {
-    // TODO: Add more directions
     if (!this.core.has('osjs/desktop')) {
       return;
     }
@@ -706,6 +705,18 @@ export default class Window extends EventHandler {
     if (gravity === 'center') {
       left = (rect.width / 2) - (this.state.dimension.width / 2);
       top = (rect.height / 2) - (this.state.dimension.height / 2);
+    } else {
+      if (gravity.match(/top/)) {
+        top = rect.top;
+      } else if (gravity.match(/bottom/)) {
+        top = rect.height - (this.state.dimension.height) + rect.top;
+      }
+
+      if (gravity.match(/left/)) {
+        left = rect.left;
+      } else if (gravity.match(/right/)) {
+        left = rect.width - (this.state.dimension.width);
+      }
     }
 
     this.setPosition({left, top});

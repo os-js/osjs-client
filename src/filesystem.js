@@ -275,7 +275,23 @@ export default class Filesystem extends EventHandler {
    * @return {*}
    */
   _request(method, ...args) {
-    // TODO: 'rename' and 'copy' between adapters
+    if (['rename', 'copy'].indexOf(method) !== -1) {
+      const [src, dest] = args;
+      const srcMount = getMountpointFromPath(this.core, this.mounts, src);
+      const destMount = getMountpointFromPath(this.core, this.mounts, dest);
+      const sameAdapter = srcMount.adapter === destMount.adapter;
+
+      if (!sameAdapter) {
+        return VFS.readfile(srcMount._adapter)(src)
+          .then(ab => VFS.writefile(destMount._adapter)(dest, ab))
+          .then(result => {
+            return method === 'rename'
+              ? VFS.unlink(srcMount._adapter)(src).then(() => result)
+              : result;
+          });
+      }
+    }
+
     const [file] = args;
     const mount = getMountpointFromPath(this.core, this.mounts, file);
 

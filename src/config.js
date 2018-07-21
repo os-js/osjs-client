@@ -151,6 +151,15 @@ export const defaultConfiguration = {
     defaultPath: 'osjs:/',
     adapters: {},
     mountpoints: [{
+      name: 'apps',
+      label: 'Applications',
+      adapter: 'apps',
+      icon: require('./styles/logo-blue-32x32.png'),
+      attributes: {
+        visibility: 'restricted',
+        readOnly: true
+      }
+    }, {
       name: 'osjs',
       label: 'OS.js',
       adapter: 'system',

@@ -31,6 +31,7 @@
 import * as VFS from './vfs/methods';
 import {EventHandler} from '@osjs/common';
 import systemAdapter from './vfs/system';
+import appsAdapter from './vfs/apps';
 import merge from 'deepmerge';
 
 const defaultAdapter = ({
@@ -138,7 +139,8 @@ export default class Filesystem extends EventHandler {
      * @type {Map<String, Adapter>}
      */
     this.adapters = Object.assign({}, {
-      system: systemAdapter
+      system: systemAdapter,
+      apps: appsAdapter
     }, this.core.config('vfs.adapters', {}), options.adapters);
 
     /**

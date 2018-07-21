@@ -206,16 +206,7 @@ export default class Application extends EventHandler {
    * @return {String} A complete URI
    */
   resource(path = '/') {
-    if (path.match(/^(http|ws|ftp)s?:/i)) {
-      return path;
-    }
-
-    if (path.substr(0, 1) !== '/') {
-      path = '/' + path;
-    }
-
-    const basePath = this.core.config('public');
-    return `${basePath}apps/${this.metadata._path}${path}`;
+    return this.core.url(path, this.metadata);
   }
 
   /**

@@ -262,11 +262,31 @@ export default class Core extends CoreBase {
   /**
    * Creates an URL based on configured public path
    *
+   * @desc If you give a metadata object, the URL will be resolved
+   * to the correct subdirectory.
+   *
    * @param {String} [endpoint=/] Endpoint
+   * @param {Object} [metadata] Metadata
    * @return {String}
    */
-  url(endpoint = '/') {
-    return this.configuration.public + endpoint.replace(/^\/+/, '');
+  url(endpoint = '/', metadata = null) {
+    const basePath = this.configuration.public;
+
+    if (typeof endpoint !== 'string') {
+      return basePath;
+    }
+
+    if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
+      return endpoint;
+    }
+
+    if (metadata) {
+      const path = endpoint.replace(/^\/?/, '/');
+      const type = metadata.type === 'theme' ? 'themes' : 'apps';
+      return `${basePath}${type}/${metadata._path}${path}`;
+    }
+
+    return basePath + endpoint.replace(/^\/+/, '');
   }
 
   /**

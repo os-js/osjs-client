@@ -1,5 +1,17 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.48
+
+* Added http server configuration options
+* Mountpoint passed on in VFS adapter methods
+* Added 'enabled' option for mountpoints
+* Added 'apps' VFS adapter and mountpoint
+* Core#url can now resolve package files as well
+* Added 'icon' property to file stat object
+* Added 'visibility' mountpoint attribute
+* Updated configuration
+* Support 'osjs/application' as mime for open()
+
 ## 3.0.0-alpha.47
 
 * Window 'position' option can now alias as 'gravity' (Fixes #13)

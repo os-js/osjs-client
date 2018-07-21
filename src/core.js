@@ -270,23 +270,23 @@ export default class Core extends CoreBase {
    * @return {String}
    */
   url(endpoint = '/', metadata = null) {
-    const basePath = this.configuration.public;
-
     if (typeof endpoint !== 'string') {
-      return basePath;
+      return this.configuration.public;
     }
 
     if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
       return endpoint;
     }
 
+    const root = this.configuration.http.path;
+
     if (metadata) {
       const path = endpoint.replace(/^\/?/, '/');
       const type = metadata.type === 'theme' ? 'themes' : 'apps';
-      return `${basePath}${type}/${metadata._path}${path}`;
+      return `${root}${type}/${metadata._path}${path}`;
     }
 
-    return basePath + endpoint.replace(/^\/+/, '');
+    return root + endpoint.replace(/^\/+/, '');
   }
 
   /**

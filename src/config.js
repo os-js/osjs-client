@@ -132,6 +132,7 @@ export const defaultConfiguration = {
     hostname,
     protocol,
     port,
+    path
   },
 
   ws: {

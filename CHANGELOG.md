@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.49
+
+* Separate server root and client root
+
 ## 3.0.0-alpha.48
 
 * Added http server configuration options

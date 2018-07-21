@@ -89,6 +89,7 @@ const createMountpoint = (core, adapters, props) => {
   const adapter = Object.assign({}, defaultAdapter, adapters[name](core));
 
   const result = merge({
+    enabled: true,
     mounted: false,
     adapter: name,
     attributes: {
@@ -315,6 +316,7 @@ export default class Filesystem extends EventHandler {
 
     return this.mounts
       .filter(m => all || m.mounted)
+      .filter(m => m.enabled !== false)
       .map(m => ({
         attributes: Object.assign({}, m.attributes),
         icon: icon(m.icon),

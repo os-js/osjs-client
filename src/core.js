@@ -308,6 +308,13 @@ export default class Core extends CoreBase {
       return Promise.reject(new Error(_('ERR_REQUEST_STANDALONE')));
     }
 
+    if (!url.match(/^(http|ws|ftp)s?:/i)) {
+      const {protocol, port, hostname} = this.config('http');
+      const prefix = protocol + `//${hostname}` + (port ? `:${port}` : '');
+
+      url = prefix + url;
+    }
+
     return fetch(url, options, type)
       .catch(error => {
         throw new Error(_('ERR_REQUEST_NOT_OK', error));

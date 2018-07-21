@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-const {port, hostname, pathname, protocol} = window.location;
+const {href, port, hostname, pathname, protocol} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
 export const defaultConfiguration = {
@@ -126,6 +126,12 @@ export const defaultConfiguration = {
         enabled: false
       }
     }
+  },
+
+  http: {
+    hostname,
+    protocol,
+    port,
   },
 
   ws: {

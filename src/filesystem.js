@@ -195,7 +195,7 @@ export default class Filesystem extends EventHandler {
    * @param {Mountpoint} mountpoint The mountpoint
    */
   _mount(mountpoint) {
-    return mountpoint._adapter.mount()
+    return mountpoint._adapter.mount({}, mountpoint)
       .then(result => {
         if (result) {
           mountpoint.mounted = true;
@@ -212,7 +212,7 @@ export default class Filesystem extends EventHandler {
    * @param {Mountpoint} mountpoint The mountpoint
    */
   _unmount(mountpoint) {
-    return mountpoint._adapter.unmount()
+    return mountpoint._adapter.unmount({}, mountpoint)
       .then(result => {
         if (result) {
           mountpoint.mounted = false;
@@ -286,11 +286,11 @@ export default class Filesystem extends EventHandler {
       const sameAdapter = srcMount.adapter === destMount.adapter;
 
       if (!sameAdapter) {
-        return VFS.readfile(srcMount._adapter)(src)
-          .then(ab => VFS.writefile(destMount._adapter)(dest, ab))
+        return VFS.readfile(srcMount._adapter, srcMount)(src)
+          .then(ab => VFS.writefile(destMount._adapter, destMount)(dest, ab))
           .then(result => {
             return method === 'rename'
-              ? VFS.unlink(srcMount._adapter)(src).then(() => result)
+              ? VFS.unlink(srcMount._adapter, srcMount)(src).then(() => result)
               : result;
           });
       }
@@ -301,7 +301,7 @@ export default class Filesystem extends EventHandler {
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 
-    return VFS[method](mount._adapter)(...args);
+    return VFS[method](mount._adapter, mount)(...args);
   }
 
   /**

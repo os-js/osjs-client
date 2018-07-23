@@ -87,7 +87,7 @@ export default class Login extends EventHandler {
     this.options = Object.assign({
       id: 'osjs-login',
       title: 'Welcome to OS.js',
-      stamp: OSJS_VERSION,
+      stamp: core.config('version'),
       logo: {
         position: 'top',
         src: null

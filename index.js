@@ -27,6 +27,8 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
+import './index.scss';
+
 import Core from './src/core';
 import Window from './src/window';
 import Desktop from './src/desktop';

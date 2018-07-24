@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.51
+
+* Removed a gitignore file leading to missing files in npm package
+
 ## 3.0.0-alpha.50
 
 * Prebuild npm package

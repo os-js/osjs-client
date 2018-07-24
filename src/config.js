@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-const {href, port, hostname, pathname, protocol} = window.location;
+const {port, hostname, pathname, protocol} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
 export const defaultConfiguration = {

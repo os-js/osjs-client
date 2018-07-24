@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.50
+
+* Prebuild npm package
+
 ## 3.0.0-alpha.49
 
 * Separate server root and client root

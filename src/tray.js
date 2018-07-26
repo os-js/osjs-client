@@ -66,16 +66,22 @@ export default class Tray {
    * @param {Object} options Options
    * @param {String} [options.icon] Icon source
    * @param {String} [options.title] The title and tooltip
-   * @param {Function} handler The callback function
+   * @param {Function} [options.onclick] The callback function for clicks
+   * @param {Function} [options.oncontextmenu] The callback function for contextmenu
+   * @param {Function} [handler] The callback function for all events
    * @return {TrayEntry}
    */
   create(options, handler) {
     const defaultTitle = this.core.make('osjs/locale')
       .translate('LBL_TRAY');
 
+    handler = handler || (() => {});
+
     const entry = Object.assign({}, {
       icon: require('./styles/logo-blue-32x32.png'),
       title: defaultTitle,
+      onclick: handler,
+      oncontextmenu: handler,
       handler
     }, options);
 

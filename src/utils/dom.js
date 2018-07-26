@@ -90,3 +90,32 @@ export const createCssText = (obj) => Object.keys(obj)
   .map(k => [k, k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()])
   .map(k => `${k[1]}: ${obj[k[0]]}`)
   .join(';');
+
+/**
+ * Inserts a tab in the given event target
+ * @param {Event} ev DOM Event
+ */
+export const handleTabOnTextarea = ev => {
+  const input = ev.target;
+  let {selectionStart, selectionEnd, value} = input;
+
+  input.value = value.substring(0, selectionStart)
+    + '\t'
+    + value.substring(selectionEnd, value.length);
+
+  selectionStart++;
+
+  input.selectionStart = selectionStart;
+  input.selectionEnd = selectionStart;
+};
+
+/*
+ * Get active element if belonging to root
+ * @param {Element} root DOM Element
+ * @return {Element|null}
+ */
+export const getActiveElement = (root) => {
+  const ae = document.activeElement;
+  return root.contains(ae) ? ae : null;
+};
+

@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import {EventHandler} from '@osjs/common';
-import {escapeHtml, createCssText} from './utils/dom';
+import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
 
 /**
  * Window dimension definition
@@ -161,14 +161,6 @@ const createWindowId = (win) => {
   windowCount++;
   windows.push(win);
   return id;
-};
-
-/*
- * Get active element if belonging to root
- */
-const getActiveElement = (root) => {
-  const ae = document.activeElement;
-  return root.contains(ae) ? ae : null;
 };
 
 /*

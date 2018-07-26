@@ -30,6 +30,7 @@
 
 import {EventHandler} from '@osjs/common';
 import Application from './application';
+import {handleTabOnTextarea} from './utils/dom';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
@@ -44,20 +45,6 @@ const TEMPLATE = subtract => `
     height: calc(100% - ${subtract.top + subtract.bottom}px) !important;
   }
 `;
-
-const handleTabOnTextarea = ev => {
-  const input = ev.target;
-  let {selectionStart, selectionEnd, value} = input;
-
-  input.value = value.substring(0, selectionStart)
-    + '\t'
-    + value.substring(selectionEnd, value.length);
-
-  selectionStart++;
-
-  input.selectionStart = selectionStart;
-  input.selectionEnd = selectionStart;
-};
 
 /**
  * Desktop Class

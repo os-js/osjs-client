@@ -60,6 +60,10 @@ export default class NotificationServiceProvider extends ServiceProvider {
 
   init() {
     this.core.instance('osjs/notification', (options) => {
+      if (!options) {
+        throw new Error('Notification options not given');
+      }
+
       const notification = new Notification(this.core, this.$element, options);
       notification.render();
       return notification;

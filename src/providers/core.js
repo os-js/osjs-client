@@ -61,15 +61,31 @@ const getApplications = () => Application.getApplications().map(app => ({
   session: app.getSession()
 }));
 
-const getPublicApi = core => Object.freeze({
-  url: (...args) => core.core.url(...args),
-  run: (...args) => core.core.run(...args),
-  open: (...args) => core.core.open(...args),
-  make: (...args) => core.core.make(...args),
-  request: (...args) => core.core.request(...args),
-  getWindows: () => Window.getWindows().map(getWindow),
-  getApplications
-});
+const getPublicApi = core => {
+  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme'];
+
+  const make = (...args) => {
+    if (!core.config('development')) {
+      if (core.has(args[0])) {
+        if (allowed.indexOf(args[0]) === -1) {
+          throw new Error(`You cannot use ${args[0]} via global API in production mode`);
+        }
+      }
+    }
+
+    return core.make(...args);
+  };
+
+  return Object.freeze({
+    url: (...args) => core.url(...args),
+    run: (...args) => core.run(...args),
+    open: (...args) => core.open(...args),
+    make,
+    request: (...args) => core.request(...args),
+    getWindows: () => Window.getWindows().map(getWindow),
+    getApplications
+  });
+};
 
 class Clipboard {
 
@@ -115,7 +131,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    window.OSjs = getPublicApi(this);
+    window.OSjs = getPublicApi(core);
 
     this.session = new Session(core);
     this.tray = new Tray(core);

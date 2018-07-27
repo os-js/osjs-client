@@ -41,6 +41,7 @@ import {EventHandler, ServiceProvider} from '@osjs/common';
 
 const getWindow = win => ({
   id: win.id,
+  wid: win.wid,
   attributes: Object.assign({}, win.attributes),
   state: Object.assign({}, win.state),
   maximize: () => win.maximize(),
@@ -238,6 +239,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       });
 
       this.core.on('osjs/packages:package:changed', name => {
+        // TODO: Reload themes as well
         Application.getApplications()
           .filter(proc => proc.metadata.name === name)
           .forEach(proc => proc.relaunch());

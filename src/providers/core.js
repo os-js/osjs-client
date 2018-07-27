@@ -197,10 +197,18 @@ export default class CoreServiceProvider extends ServiceProvider {
       config: (...args) => this.core.config(...args)
     }));
 
-    this.core.singleton('osjs/tray', () => ({
+    const trayApi = {
       create: (options, handler) => this.tray.create(options, handler),
       list: () => this.tray.entries.map(e => Object.assign({}, e))
-    }));
+    };
+
+    this.core.instance('osjs/tray', (options) => {
+      if (typeof options !== 'undefined') {
+        return trayApi.create(options);
+      }
+
+      return trayApi;
+    });
 
     this.core.singleton('osjs/locale', () => ({
       format: format(this.core),

@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.0.0-alpha.52",
+  "version": "3.0.0-alpha.53",
   "description": "OS.js v3 client",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -20,7 +20,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "stylelint": "stylelint index.scss src/**/*.scss",
-    "prepublishOnly": "npm run eslint && npm run stylelint && rm ./dist/* && npm run build"
+    "prepublishOnly": "npm run eslint && npm run stylelint && rm ./dist/* && NODE_ENV=production npm run build"
   },
   "repository": {
     "type": "git",

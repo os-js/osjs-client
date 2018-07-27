@@ -1,5 +1,15 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.52
+
+* Added missing 'wid' for global window getter API
+* Add some restrictions to OSjs global object in prod mode
+* Moved some util methods to util files
+* Removed unused file
+* Updated tray creation options
+* Throw Error on invalid notification creation
+* Fixed eslint comment warnings
+
 ## 3.0.0-alpha.51
 
 * Removed a gitignore file leading to missing files in npm package

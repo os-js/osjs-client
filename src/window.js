@@ -28,6 +28,7 @@
  * @licence Simplified BSD License
  */
 import {EventHandler} from '@osjs/common';
+import {droppable} from './utils/dnd';
 import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
 
 /**
@@ -396,6 +397,15 @@ export default class Window extends EventHandler {
 
     this.inited = true;
     this.emit('init', this);
+
+    const d = droppable(this.$element, {
+      ondragenter: (...args) => this.emit('dragenter', ...args),
+      ondragover: (...args) => this.emit('dragover', ...args),
+      ondragleave: (...args) => this.emit('dragleave', ...args),
+      ondrop: (...args) => this.emit('drop', ...args)
+    });
+
+    this.on('destroy', () => d.destroy());
   }
 
   /**

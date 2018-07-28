@@ -144,7 +144,6 @@ export const droppable = (el, options = {}) => {
 
     const inside = el.contains(ev.target);
 
-    console.log('over', inside);
     if (!inside) {
       el.classList.remove('osjs__drop');
       return false;

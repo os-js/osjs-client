@@ -155,6 +155,10 @@
     display: block;
   }
 
+  &.osjs__drop {
+    outline: 2px solid #000;
+  }
+
   &[data-minimizable=false] .osjs-window-button[data-action=minimize],
   &[data-maximizable=false] .osjs-window-button[data-action=maximize],
   &[data-closable=false] .osjs-window-button[data-action=close],

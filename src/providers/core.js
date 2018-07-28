@@ -37,6 +37,7 @@ import Tray from '../tray';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
 import {style, script} from '../utils/dom';
+import * as dnd from '../utils/dnd';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
 const getWindow = win => ({
@@ -184,6 +185,8 @@ export default class CoreServiceProvider extends ServiceProvider {
       save: () => this.session.save(),
       load: (fresh = true) => this.session.load(fresh)
     }));
+
+    this.core.singleton('osjs/dnd', () => dnd);
 
     this.core.singleton('osjs/dom', () => ({
       script,

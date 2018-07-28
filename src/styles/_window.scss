@@ -113,6 +113,7 @@
   box-sizing: border-box;
   user-select: none;
   visibility: visible;
+  touch-action: none;
 
   /* This actually increases performance */
   -webkit-transform: translate3d(0, 0, 0);

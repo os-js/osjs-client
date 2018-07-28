@@ -45,6 +45,8 @@ const getWindow = win => ({
   wid: win.wid,
   attributes: Object.assign({}, win.attributes),
   state: Object.assign({}, win.state),
+  focus: () => win.focus(),
+  blur: () => win.blur(),
   maximize: () => win.maximize(),
   raise: () => win.raise(),
   restore: () => win.restore(),

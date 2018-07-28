@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.54
+
+* Added some missing events to global window getter
+* Added DnD to Windows
+* Added DnD utils + provider
+* Added some native touch gesture prevention
+* Add shortcut of making tray entries<Paste>
+
 ## 3.0.0-alpha.52
 
 * Added missing 'wid' for global window getter API

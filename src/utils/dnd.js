@@ -38,13 +38,13 @@
  * @return {Object} An object with a destructor
  */
 export const draggable = (el, options = {}) => {
-  const {type, effect, data, ondragstart, ondragend, setDragImage} = Object.assign(options, {
+  const {type, effect, data, ondragstart, ondragend, setDragImage} = Object.assign({}, {
     type: 'application/json',
     effect: 'move',
     ondragstart: () => true,
     ondragend: () => true,
     setDragImage: null
-  });
+  }, options);
 
   const hasDragImage = typeof setDragImage === 'function';
   const transferData = type === 'application/json'
@@ -109,14 +109,14 @@ export const draggable = (el, options = {}) => {
  * @return {Object} An object with a destructor
  */
 export const droppable = (el, options = {}) => {
-  const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = Object.assign(options, {
+  const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = Object.assign({}, {
     type: 'application/json',
     effect: 'move',
     ondragenter: () => true,
     ondragover: () => true,
     ondragleave: () => true,
     ondrop: () => true
-  });
+  }, options);
 
   const retval = (fn, ...args) => {
     try {
@@ -157,10 +157,13 @@ export const droppable = (el, options = {}) => {
   };
 
   const drop = ev => {
-    let data, files;
+    let data;
+    let files = [];
 
     if (ev.dataTransfer) {
-      files = ev.dataTransfer.files;
+      files = ev.dataTransfer.files
+        ? Array.from(ev.dataTransfer.files)
+        : [];
 
       try {
         const transfer = ev.dataTransfer.getData(type);

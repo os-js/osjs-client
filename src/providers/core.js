@@ -247,6 +247,26 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   start() {
     if (this.core.config('development')) {
+      this.core.on('osjs/dist:changed', filename => {
+        const url = this.core.url(filename).replace(/^\//, '');
+        const found = this.core.$resourceRoot.querySelectorAll('link[rel=stylesheet]');
+        const map = Array.from(found).reduce((result, item) => {
+          const src = item.getAttribute('href').split('?')[0].replace(/^\//, '');
+          return Object.assign({
+            [src]: item
+          }, result);
+        }, {});
+
+        if (map[url]) {
+          console.info('Hot-reloading', url);
+
+          const suffix = '?_time=' + (new Date()).getTime();
+          setTimeout(() => {
+            map[url].setAttribute('href', url + suffix);
+          }, 100);
+        }
+      });
+
       this.core.on('osjs/packages:metadata:changed', () => {
         this.pm.init();
       });

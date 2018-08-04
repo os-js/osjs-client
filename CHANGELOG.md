@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.55
+
+* Hot-reload CSS changes in dev mode
+* Update @osjs/common
+
 ## 3.0.0-alpha.54
 
 * Added some missing events to global window getter

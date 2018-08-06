@@ -141,8 +141,6 @@ export default class Packages {
   preload(list, force = false) {
     const root = this.core.$resourceRoot;
 
-    console.debug('Packages::preload()');
-
     const getSource = entry => this.core.config('development')
       ? entry + '?_time=' + (new Date()).getTime()
       : entry;
@@ -252,8 +250,6 @@ export default class Packages {
    * @return {Promise<Object, Error>}
    */
   _launchTheme(name, type) {
-    console.log('Packages::_launchTheme()', name, type);
-
     const _ = this.core.make('osjs/locale').translate;
     const folder = type === 'icons' ? 'icons' : 'themes';
     const basePath = this.core.config('public');
@@ -364,7 +360,7 @@ export default class Packages {
    * @throws {Error}
    */
   register(name, callback) {
-    console.debug('Packages::register()', name);
+    console.info('Packages::register()', name);
 
     const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);

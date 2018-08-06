@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.56
+
+* Support icon theme type packages
+
 ## 3.0.0-alpha.55
 
 * Hot-reload CSS changes in dev mode

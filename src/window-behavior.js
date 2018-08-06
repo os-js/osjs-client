@@ -28,7 +28,11 @@
  * @licence Simplified BSD License
  */
 
+import {supportsPassive} from './utils/dom.js';
 import * as mediaQuery from 'css-mediaquery';
+
+const isPassive = supportsPassive();
+const touchArg = isPassive ? {passive: true} : false;
 
 /*
  * Map of available "actions"
@@ -156,7 +160,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   init(win) {
-    win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win));
+    win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win), touchArg);
     win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
     win.$element.addEventListener('click', (ev) => this.click(ev, win));
     win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
@@ -240,7 +244,9 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const mousemove = (ev) => {
-      ev.preventDefault();
+      if (!isPassive) {
+        ev.preventDefault();
+      }
 
       const transformedEvent = getEvent(ev);
       const diffX = transformedEvent.clientX - clientX;
@@ -283,8 +289,8 @@ export default class WindowBehavior {
 
     const mouseup = () => {
       if (touch) {
-        document.removeEventListener('touchmove', mousemove);
-        document.removeEventListener('touchend', mouseup);
+        document.removeEventListener('touchmove', mousemove, touchArg);
+        document.removeEventListener('touchend', mouseup, touchArg);
       } else {
         document.removeEventListener('mousemove', mousemove);
         document.removeEventListener('mouseup', mouseup);
@@ -310,8 +316,8 @@ export default class WindowBehavior {
 
     if (move || resize) {
       if (touch) {
-        document.addEventListener('touchmove', mousemove);
-        document.addEventListener('touchend', mouseup);
+        document.addEventListener('touchmove', mousemove, touchArg);
+        document.addEventListener('touchend', mouseup, touchArg);
       } else {
         document.addEventListener('mousemove', mousemove);
         document.addEventListener('mouseup', mouseup);

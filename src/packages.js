@@ -203,8 +203,8 @@ export default class Packages {
       throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
     }
 
-    if (metadata.type === 'theme') {
-      return this._launchTheme(name);
+    if (['theme', 'icons'].indexOf(metadata.type) !== -1) {
+      return this._launchTheme(name, metadata.type);
     }
 
     if (metadata.singleton) {
@@ -247,19 +247,19 @@ export default class Packages {
    * Launches a (theme) package
    *
    * @param {String} name Package name
-   * @param {Object} [options] Launch options
-   * @param {Boolean} [options.forcePreload=false] Force preload reloading
+   * @param {String} type Package type
    * @throws {Error}
    * @return {Promise<Object, Error>}
    */
-  _launchTheme(name) {
-    console.log('Packages::_launchTheme()', name);
+  _launchTheme(name, type) {
+    console.log('Packages::_launchTheme()', name, type);
 
     const _ = this.core.make('osjs/locale').translate;
+    const folder = type === 'icons' ? 'icons' : 'themes';
     const basePath = this.core.config('public');
 
     const metadata = this
-      .getPackages(iter => iter.type === 'theme')
+      .getPackages(iter => ['theme', 'icons'].indexOf(iter.type) !== -1)
       .find(pkg => pkg.name === name);
 
     if (!metadata) {
@@ -267,7 +267,7 @@ export default class Packages {
     }
 
     const preloads = metadata.files
-      .map(f => this.core.url(`${basePath}themes/${metadata._path}/${f}`));
+      .map(f => this.core.url(`${basePath}${folder}/${metadata._path}/${f}`));
 
     return this.preload(preloads)
       .then(result => {

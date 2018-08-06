@@ -63,6 +63,7 @@ export default class Desktop extends EventHandler {
 
     this.core = core;
     this.$theme = [];
+    this.$icons = [];
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
     this.contextmenuEntries = [];
@@ -86,6 +87,7 @@ export default class Desktop extends EventHandler {
     }
     this.$styles = null;
 
+    this._removeIconTheme();
     this._removeTheme();
   }
 
@@ -273,12 +275,13 @@ export default class Desktop extends EventHandler {
     applyOverlays('osjs/widgets', newSettings.widgets);
 
     this.applyTheme(newSettings.theme);
+    this.applyIcons(newSettings.icons);
 
     return Object.assign({}, newSettings);
   }
 
   /**
-   * Removes current theme from DOM
+   * Removes current style theme from DOM
    */
   _removeTheme() {
     this.emit('theme:destroy');
@@ -300,18 +303,42 @@ export default class Desktop extends EventHandler {
   }
 
   /**
-   * Sets the current theme from settings
+   * Removes current icon theme from DOM
+   */
+  _removeIcons() {
+    this.$icons.forEach(el => {
+      if (el && el.parentNode) {
+        el.remove();
+      }
+    });
+
+    this.$icons = [];
+  }
+
+  /**
+   * Sets the current icon theme from settings
+   */
+  applyIcons(name) {
+    name = name || this.core.config('desktop.icons');
+
+    return this._applyTheme(name)
+      .then(({elements, errors, callback, metadata}) => {
+        this._removeIcons();
+
+        this.$icons = Object.values(elements);
+
+        this.emit('icons:init');
+      });
+  }
+
+  /**
+   * Sets the current style theme from settings
    */
   applyTheme(name) {
     name = name || this.core.config('desktop.theme');
 
-    return this.core.make('osjs/packages')
-      .launch(name)
+    return this._applyTheme(name)
       .then(({elements, errors, callback, metadata}) => {
-        if (errors.length) {
-          console.error(errors);
-        }
-
         this._removeTheme();
 
         if (callback && metadata) {
@@ -325,6 +352,18 @@ export default class Desktop extends EventHandler {
         this.$theme = Object.values(elements);
 
         this.emit('theme:init');
+      });
+  }
+
+  _applyTheme(name, cb) {
+    return this.core.make('osjs/packages')
+      .launch(name)
+      .then(result => {
+        if (result.errors.length) {
+          console.error(result.errors);
+        }
+
+        return result;
       });
   }
 

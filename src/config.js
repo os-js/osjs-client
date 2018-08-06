@@ -105,6 +105,7 @@ export const defaultConfiguration = {
     settings: {
       font: 'Roboto',
       theme: 'Standard',
+      icons: 'Gnome',
       animations: false,
       panels: [{
         position: 'top',

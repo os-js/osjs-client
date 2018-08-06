@@ -70,13 +70,20 @@ export default class DesktopServiceProvider extends ServiceProvider {
     const basePath = this.core.config('public');
 
     const resource = path => {
-      const theme = this.core.config('theme');
-      return `${basePath}themes/${theme}/${path}`; // FIXME
+      const defaultTheme = this.core.config('desktop.settings.theme');
+      const theme = this.core.make('osjs/settings').get('osjs/desktop', 'theme', defaultTheme);
+      return `${basePath}themes/${theme}/${path}`;
+    };
+
+    const icon = path => {
+      const defaultTheme = this.core.config('desktop.settings.icons');
+      const theme = this.core.make('osjs/settings').get('osjs/desktop', 'icons', defaultTheme);
+      return `${basePath}icons/${theme}/icons/${path}`;
     };
 
     this.core.singleton('osjs/theme', () => ({
       resource,
-      icon: name => resource(`icons/${name.replace(/(\.png)?$/, '.png')}`)
+      icon: name => icon(name.replace(/(\.png)?$/, '.png'))
     }));
 
     this.core.on('osjs/core:started', () => {

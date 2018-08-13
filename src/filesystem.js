@@ -47,7 +47,8 @@ const defaultAdapter = ({
   url: (path, options) => Promise.resolve(null),
   mount: options => Promise.resolve(true),
   unmount: options => Promise.resolve(true),
-  search: (root, pattern, options) => Promise.resolve([])
+  search: (root, pattern, options) => Promise.resolve([]),
+  touch: (path, options) => Promise.resolve([])
 });
 
 /**

@@ -92,6 +92,9 @@ const adapter = (core) => {
       request('search', {root: path, pattern, options}, {}, 'json')
         .then(({body}) => body),
 
+    touch: ({path}, options) =>
+      request('touch', {path, options}, {method: 'post'}).then(({body}) => body),
+
     download: ({path}, options = {}) => {
       const json = encodeURIComponent(JSON.stringify({download: true}));
 

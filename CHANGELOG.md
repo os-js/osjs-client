@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.57
+
+* Updated some VFS method exposure
+* Updated some VFS method HTTP methods
+* Some minor fixes to internal fetch() wrapper
+* Added 'touch' VFS endpoint
+* Support 'passive' touch events on Windows
+* Updated some logging messages
+
 ## 3.0.0-alpha.56
 
 * Support icon theme type packages

@@ -30,10 +30,13 @@
 
 const adapter = (core) => {
 
-  const request = (fn, body, fetchOptions = {}, type) =>
-    core.request(core.url(`/vfs/${fn}`), Object.assign({
-      body
-    }, fetchOptions), type)
+  const getters = ['exists', 'stat', 'readdir', 'readfile'];
+
+  const request = (fn, body, type) =>
+    core.request(core.url(`/vfs/${fn}`), {
+      body,
+      method: getters.indexOf(fn) !== -1 ? 'get' : 'post'
+    }, type)
       .then(response => {
         if (type === 'json') {
           return {mime: 'application/json', body: response};
@@ -51,7 +54,7 @@ const adapter = (core) => {
     readdir: ({path}, options) => request('readdir', {
       path,
       options: {}
-    }, {}, 'json').then(({body}) => body),
+    }, 'json').then(({body}) => body),
 
     readfile: ({path}, type, options) =>
       request('readfile', {path, options}),
@@ -62,9 +65,7 @@ const adapter = (core) => {
       formData.append('path', path);
       formData.append('options', options);
 
-      return request('writefile', formData, {
-        method: 'post'
-      }).then(({body}) => body);
+      return request('writefile', formData).then(({body}) => body);
     },
 
     copy: (from, to, options) =>
@@ -74,7 +75,7 @@ const adapter = (core) => {
       request('rename', {from: from.path, to: to.path, options}).then(({body}) => body),
 
     mkdir: ({path}, options) =>
-      request('mkdir', {path, options}).then(({body}) => body),
+      request('mkdir', {path, options}, 'json').then(({body}) => body),
 
     unlink: ({path}, options) =>
       request('unlink', {path, options}).then(({body}) => body),
@@ -89,11 +90,11 @@ const adapter = (core) => {
       Promise.resolve(`/vfs/readfile?path=${encodeURIComponent(path)}`),
 
     search: ({path}, pattern, options) =>
-      request('search', {root: path, pattern, options}, {}, 'json')
+      request('search', {root: path, pattern, options}, 'json')
         .then(({body}) => body),
 
     touch: ({path}, options) =>
-      request('touch', {path, options}, {method: 'post'}).then(({body}) => body),
+      request('touch', {path, options}).then(({body}) => body),
 
     download: ({path}, options = {}) => {
       const json = encodeURIComponent(JSON.stringify({download: true}));

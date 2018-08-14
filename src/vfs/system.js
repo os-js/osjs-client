@@ -69,22 +69,22 @@ const adapter = (core) => {
     },
 
     copy: (from, to, options) =>
-      request('copy', {from: from.path, to: to.path, options}).then(({body}) => body),
+      request('copy', {from: from.path, to: to.path, options}, 'json').then(({body}) => body),
 
     rename: (from, to, options) =>
-      request('rename', {from: from.path, to: to.path, options}).then(({body}) => body),
+      request('rename', {from: from.path, to: to.path, options}, 'json').then(({body}) => body),
 
     mkdir: ({path}, options) =>
       request('mkdir', {path, options}, 'json').then(({body}) => body),
 
     unlink: ({path}, options) =>
-      request('unlink', {path, options}).then(({body}) => body),
+      request('unlink', {path, options}, 'json').then(({body}) => body),
 
     exists: ({path}, options) =>
-      request('exists', {path, options}).then(({body}) => body),
+      request('exists', {path, options}, 'json').then(({body}) => body),
 
     stat: ({path}, options) =>
-      request('stat', {path, options}).then(({body}) => body),
+      request('stat', {path, options}, 'json').then(({body}) => body),
 
     url: ({path}, options) =>
       Promise.resolve(`/vfs/readfile?path=${encodeURIComponent(path)}`),
@@ -94,7 +94,7 @@ const adapter = (core) => {
         .then(({body}) => body),
 
     touch: ({path}, options) =>
-      request('touch', {path, options}).then(({body}) => body),
+      request('touch', {path, options}, 'json').then(({body}) => body),
 
     download: ({path}, options = {}) => {
       const json = encodeURIComponent(JSON.stringify({download: true}));

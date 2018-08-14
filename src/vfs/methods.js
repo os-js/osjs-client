@@ -200,3 +200,11 @@ export const download = (adapter, mount) => (path, options = {}) =>
 export const search = (adapter, mount) => (root, pattern, options = {}) =>
   adapter.search(pathToObject(root), pattern, options, mount)
     .then(handleDirectoryList(root, options));
+
+/**
+ * Touches a file
+ * @param {Object|String} path File path
+ * @return {String}
+ */
+export const touch = (adapter, mount) => (path, options = {}) =>
+  adapter.touch(pathToObject(path), options, mount);

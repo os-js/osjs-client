@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.58
+
+* Hotfix for chrome behavioural change
+
 ## 3.0.0-alpha.57
 
 * Updated some VFS method exposure

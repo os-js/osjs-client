@@ -854,7 +854,7 @@ export default class Window extends EventHandler {
 
     const $icon = this.$element.querySelector('.osjs-window-icon > div');
     if ($icon) {
-      $icon.style.cssText = `background-image: url(${this.state.icon})`;
+      $icon.style.backgroundImage = `url(${this.state.icon})`;
     }
 
     this.$element.style.cssText = createCssText(Object.assign({

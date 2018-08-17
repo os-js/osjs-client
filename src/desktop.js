@@ -163,7 +163,7 @@ export default class Desktop extends EventHandler {
     const forwardKeyEvent = (n, e) => {
       const w = Window.lastWindow();
       if (isVisible(w)) {
-        w.emit(n, e);
+        w.emit(n, w, e);
       }
     };
 

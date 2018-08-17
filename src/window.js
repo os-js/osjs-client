@@ -361,7 +361,7 @@ export default class Window extends EventHandler {
 
     console.debug('Window::destroy()');
 
-    this.emit('destroy');
+    this.emit('destroy', this);
     this.core.emit('osjs/window:destroy', this);
 
     this.children.forEach(w => w.destroy());

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.59
+
+* Fixed custom login UI configuration
+
 ## 3.0.0-alpha.58
 
 * Hotfix for chrome behavioural change

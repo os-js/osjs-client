@@ -82,8 +82,8 @@ export const defaultConfiguration = {
   },
 
   auth: {
+    ui: {},
     login: {
-      ui: {},
       username: null,
       password: null
     },

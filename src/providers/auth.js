@@ -70,7 +70,7 @@ export default class AuthServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    const defaultUi = core.config('auth.login.ui', {});
+    const defaultUi = core.config('auth.ui', {});
 
     const adapter = core.config('standalone')
       ? localStorageAuth

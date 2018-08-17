@@ -29,6 +29,7 @@
  */
 
 export const en_EN = {
+  // Core
   ERR_REQUEST_STANDALONE: 'Cannot make requests in standalone mode.',
   ERR_REQUEST_NOT_OK: 'An error occured while performing a request: {0}',
   ERR_VFS_MOUNT_NOT_FOUND: 'Filesystem \'{0}\' not found',
@@ -48,6 +49,8 @@ export const en_EN = {
   LBL_CONNECTION_LOST_MESSAGE: 'The connection to the OS.js was lost. Reconnecting....',
   LBL_CONNECTION_RESTORED: 'Connection Restored',
   LBL_CONNECTION_RESTORED_MESSAGE: 'The connection to the OS.js server was restored.',
+
+  // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'Development',
   LBL_APP_CAT_SCIENCE: 'Science',
   LBL_APP_CAT_GAMES: 'Games',
@@ -58,8 +61,55 @@ export const en_EN = {
   LBL_APP_CAT_SYSTEM: 'System',
   LBL_APP_CAT_UTILITIES: 'Utilities',
   LBL_APP_CAT_OTHER: 'Other',
+
+  // UI
   LBL_LAUNCH_SELECT: 'Select application',
   LBL_LAUNCH_SELECT_MESSAGE: 'Select application for \'{0}\'',
   LBL_DESKTOP_SELECT_WALLPAPER: 'Select wallpaper',
-  LBL_DESKTOP_SELECT_THEME: 'Select theme'
+  LBL_DESKTOP_SELECT_THEME: 'Select theme',
+  LBL_SEARCH_TOOLTOP: 'Search Filesystem ({0})',
+  LBL_SEARCH_PLACEHOLDER: 'Search filesystems...',
+  LBL_SEARCH_WAIT: 'Searching...',
+  LBL_SEARCH_RESULT: 'Showing {0} results',
+
+  // FS
+  LBL_FS_B: 'B',
+  LBL_FS_M: 'M',
+  LBL_FS_G: 'G',
+  LBL_FS_KIB: 'KiB',
+  LBL_FS_MIB: 'MiB',
+  LBL_FS_GIB: 'GiB',
+
+  // Generic
+  LBL_FILE: 'File',
+  LBL_NEW: 'New',
+  LBL_OPEN: 'Open',
+  LBL_SAVE: 'Save',
+  LBL_SAVEAS: 'Save As',
+  LBL_OK: 'OK',
+  LBL_ABORT: 'Abort',
+  LBL_CANCEL: 'Cancel',
+  LBL_CLOSE: 'Close',
+  LBL_QUIT: 'Quit',
+  LBL_YES: 'Yes',
+  LBL_NO: 'No',
+  LBL_GO: 'Go',
+  LBL_MKDIR: 'Create new directory',
+  LBL_COPY: 'Copy',
+  LBL_PASTE: 'Paste',
+  LBL_CUT: 'Cut',
+  LBL_MOVE: 'Move',
+  LBL_RENAME: 'Rename',
+  LBL_DELETE: 'Delete',
+  LBL_DOWNLOAD: 'Download',
+  LBL_REFRESH: 'Refresh',
+  LBL_RELOAD: 'Reload',
+  LBL_HOME: 'Home',
+  LBL_VIEW: 'View',
+  LBL_HELP: 'Help',
+  LBL_ABOUT: 'About',
+  LBL_APPLICATION: 'Application',
+  LBL_APPLICATIONS: 'Applications',
+  LBL_KILL: 'Kill',
+  LBL_KILL_ALL: 'Kill all'
 };

@@ -368,24 +368,25 @@ export default class Desktop extends EventHandler {
   }
 
   onDeveloperMenu(ev) {
+    const _ = this.core.make('osjs/locale').translate;
     this.core.make('osjs/contextmenu').show({
       position: ev,
       menu: [
         {
-          label: 'Kill All',
+          label: _('LBL_KILL_ALL'),
           onclick: () => Application.destroyAll()
         },
         {
-          label: 'Applications',
+          label: _('LBL_APPLICATIONS'),
           items: Application.getApplications().map(proc => ({
             label: `${proc.metadata.name} (${proc.pid})`,
             items: [
               {
-                label: 'Kill',
+                label: _('LBL_KILL'),
                 onclick: () => proc.destroy()
               },
               {
-                label: 'Reload',
+                label: _('LBL_RELOAD'),
                 onclick: () => proc.relaunch()
               }
             ]

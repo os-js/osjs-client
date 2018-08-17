@@ -43,9 +43,10 @@ export default class Search {
 
   init() {
     const {icon} = this.core.make('osjs/theme');
+    const _ = this.core.make('osjs/locale').translate;
 
     this.core.make('osjs/tray').create({
-      title: 'Search Filesystem (F3)',
+      title: _('LBL_SEARCH_TOOLTOP', 'F3'),
       icon: icon('system-search.png')
     }, ev => this.show());
 
@@ -74,6 +75,7 @@ export default class Search {
   createApp() {
     const fs = this.core.make('osjs/fs');
     const {icon} = this.core.make('osjs/theme');
+    const _ = this.core.make('osjs/locale').translate;
 
     const resultView = ({results, index}, actions) => results.map((r, i) => h('li', {
       onclick: () => actions.open(i),
@@ -99,7 +101,7 @@ export default class Search {
     }, [
       h('input', {
         type: 'text',
-        placeholder: 'Search...',
+        placeholder: _('LBL_SEARCH_PLACEHOLDER'),
         class: 'osjs-search-input',
         value: state.query,
         onblur: () => actions.toggle(false),
@@ -152,7 +154,7 @@ export default class Search {
           .then(results => actions.setResults(results))
           .catch(error => actions.setError(error));
 
-        return {status: 'Searching...'};
+        return {status: _('LBL_SEARCH_WAIT')};
       },
       open: index => (state, actions) => {
         const iter = state.results[index];
@@ -179,7 +181,7 @@ export default class Search {
       setResults: results => () => ({
         results,
         index: -1,
-        status: `Showing ${results.length} results`
+        status: _('LBL_SEARCH_RESULT', results.length),
       }),
       setQuery: query => () => ({
         query

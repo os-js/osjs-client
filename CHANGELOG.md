@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.60
+
+* Updated some window event signatures
+
 ## 3.0.0-alpha.59
 
 * Fixed custom login UI configuration

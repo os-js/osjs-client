@@ -43,6 +43,7 @@ export const nb_NO = {
   ERR_PACKAGE_NO_METADATA: 'Metadata ikke funnet for \'{0}\'. Er den i manifestet?',
   ERR_PACKAGE_EXCEPTION: 'En unntaksfeil oppstod i \'{0}\'',
   ERR_WINDOW_ID_EXISTS: 'Vindu med ID \'{0}\' eksisterer allerede',
+  ERR_INVALID_LOCALE: 'Ugyldig lokalisering \'{0}\'',
   LBL_CONNECTION_LOST: 'Tilkobling tapt',
   LBL_CONNECTION_LOST_MESSAGE: 'Tilkobling til OS.js var tapt. Kobler til på nytt....',
   LBL_CONNECTION_RESTORED: 'Tilkobling gjenopprettet',
@@ -79,6 +80,7 @@ export const nb_NO = {
   LBL_FS_GIB: 'GiB',
 
   // Generic
+  LBL_MENU: 'Meny',
   LBL_ERROR: 'Feil',
   LBL_INFO: 'Info',
   LBL_MESSAGE: 'Melding',

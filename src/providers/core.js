@@ -215,12 +215,20 @@ export default class CoreServiceProvider extends ServiceProvider {
       return trayApi;
     });
 
-    this.core.singleton('osjs/locale', () => ({
+    const localeApi = {
       format: format(this.core),
       translate: translatable(this.core)(translations),
       translatable: translatable(this.core),
-      translatableFlat: translatableFlat(this.core)
-    }));
+      translatableFlat: translatableFlat(this.core),
+      setLocale: name => name in translations
+        ? this.core.make('osjs/settings')
+          .set('osjs/locale', 'language', name)
+          .save()
+          .then(() => this.core.emit('osjs/locale:change', name))
+        : Promise.reject(localeApi.translate('ERR_INVALID_LOCALE', name))
+    };
+
+    this.core.singleton('osjs/locale', () => localeApi);
 
     this.core.singleton('osjs/packages', () => ({
       getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),

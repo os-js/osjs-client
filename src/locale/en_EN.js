@@ -43,6 +43,7 @@ export const en_EN = {
   ERR_PACKAGE_NO_METADATA: 'Metadata not found for \'{0}\'. Is it in the manifest?',
   ERR_PACKAGE_EXCEPTION: 'An exception occured in \'{0}\'',
   ERR_WINDOW_ID_EXISTS: 'Window with ID \'{0}\' already exists',
+  ERR_INVALID_LOCALE: 'Invalid locale \'{0}\'',
   LBL_CONNECTION_LOST: 'Connection Lost',
   LBL_CONNECTION_LOST_MESSAGE: 'The connection to the OS.js was lost. Reconnecting....',
   LBL_CONNECTION_RESTORED: 'Connection Restored',
@@ -79,6 +80,7 @@ export const en_EN = {
   LBL_FS_GIB: 'GiB',
 
   // Generic
+  LBL_MENU: 'Menu',
   LBL_ERROR: 'Error',
   LBL_INFO: 'Info',
   LBL_MESSAGE: 'Message',

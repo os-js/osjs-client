@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.61
+
+* Focus the first created application window (#12)
+* Updated locales
+* Added 'setLocale' and change event
+* Added nb_NO locales
+
 ## 3.0.0-alpha.60
 
 * Updated some window event signatures

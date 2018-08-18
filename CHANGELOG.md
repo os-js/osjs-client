@@ -1,11 +1,16 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.62
+
+* Updated error dialog in package manager
+* Removed unused favicon.png
+
 ## 3.0.0-alpha.61
 
 * Focus the first created application window (#12)
 * Updated locales
 * Added 'setLocale' and change event
-* Added nb_NO locales
+* Added 'nb_NO' locales
 
 ## 3.0.0-alpha.60
 

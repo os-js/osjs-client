@@ -29,3 +29,4 @@
  */
 
 export * from './en_EN';
+export * from './nb_NO';

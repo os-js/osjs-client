@@ -51,6 +51,82 @@ const actionMap = {
   }
 };
 
+/**
+ * Calculates both new dimensions and positions for a window resize
+ */
+const getNewPositionsAndDimensions = (targetClassList, diffX, diffY, min, max, startPosition, startDimension) => {
+  var width, height, top, left;
+  
+  const getDimension = (diff, min, max, start) => {
+    const newDimension = Math.max(min, start + diff);
+    return max === -1
+          ? newDimension
+          : Math.min(max, newDimension);
+  }
+
+  const getPosition = (diff, startPosition, minDimension, maxDimension, startDimension) => {
+    const newPosition = startPosition + Math.min(startDimension - minDimension, diff);
+    return maxDimension === -1
+            ? newPosition
+            : Math.max(startPosition - (maxDimension - startDimension), newPosition);
+  }
+
+  if (targetClassList.contains('osjs-window-resize-se')) {
+    width = getDimension(diffX, min.width, max.width, startDimension.width);
+    height = getDimension(diffY, min.height, max.height, startDimension.height);
+    top = startPosition.top;
+    left = startPosition.left;
+  } else if (targetClassList.contains('osjs-window-resize-sw')) {
+    height = getDimension(diffY, min.height, max.height, startDimension.height);
+    width = getDimension(-diffX, min.width, max.width, startDimension.width);
+    left = getPosition(diffX, startPosition.left, min.width, max.width, startDimension.width);
+    top = startPosition.top;
+  } else if (targetClassList.contains('osjs-window-resize-ne')) {
+    width = getDimension(diffX, min.width, max.width, startDimension.width);
+    height = getDimension(-diffY, min.height, max.height, startDimension.height);
+    top = getPosition(diffY, startPosition.top, min.height, max.height, startDimension.height);
+    left = startPosition.left;
+
+  } else if (targetClassList.contains('osjs-window-resize-nw')) {
+    height = getDimension(-diffY, min.height, max.height, startDimension.height);
+    width = getDimension(-diffX, min.width, max.width, startDimension.width);
+    left = getPosition(diffX, startPosition.left, min.width, max.width, startDimension.width);
+    top = getPosition(diffY, startPosition.top, min.height, max.height, startDimension.height);
+  } else if (targetClassList.contains('osjs-window-resize-n')) {
+    height = getDimension(-diffY, min.height, max.height, startDimension.height);
+    width = startDimension.width;
+    left = startPosition.left;
+    top = getPosition(diffY, startPosition.top, min.height, max.height, startDimension.height);
+  } else if (targetClassList.contains('osjs-window-resize-s')) {
+    height = getDimension(diffY, min.height, max.height, startDimension.height);
+    width = startDimension.width;
+    left = startPosition.left;
+    top = startPosition.top;
+  } else if (targetClassList.contains('osjs-window-resize-e')) {
+    height = startDimension.height;
+    width = getDimension(diffX, min.width, max.width, startDimension.width);
+    left = startPosition.left;
+    top = startPosition.top;
+  } else if (targetClassList.contains('osjs-window-resize-w')) {
+    height = startDimension.height;
+    width = getDimension(-diffX, min.width, max.width, startDimension.width);
+    left = getPosition(diffX, startPosition.left, min.width, max.width, startDimension.width);
+    top = startPosition.top;
+  }
+
+  return {
+    dimension: {
+      width: width,
+      height: height,
+    },
+    position: {
+      top: top,
+      left: left
+    }
+  };
+};
+
+
 /*
  * Calculates new dimension for a window resize
  */
@@ -255,12 +331,14 @@ export default class WindowBehavior {
       if (resize) {
         this.wasResized = true;
         win._setState('resizing', true, false);
-        win.setDimension(getNewDimensions(
+        win.resizeWindow(getNewPositionsAndDimensions(
+          target.classList,
           diffX,
           diffY,
           minDimension,
           maxDimension,
-          startDimension
+          startPosition,
+          startDimension,
         ));
       } else if (move) {
         this.wasMoved = true;

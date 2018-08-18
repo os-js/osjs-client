@@ -28,14 +28,65 @@
  * @licence Simplified BSD License
  */
 
-.osjs-window-resize {
+ .osjs-window-resize {
   z-index: 10;
-  position: absolute;
-  bottom: -0.5em;
-  right: -0.5em;
   width: 1em;
   height: 1em;
+  position: absolute;
+}
+.osjs-window-resize-se {
   cursor: se-resize;
+  bottom: -0.5em;
+  right: -0.5em;
+}
+.osjs-window-resize-sw {
+  cursor: sw-resize;
+  bottom: -0.5em;
+  left: -0.5em;
+}
+.osjs-window-resize-nw {
+  cursor: nw-resize;
+  top: -0.5em;
+  left: -0.5em;
+}
+.osjs-window-resize-ne {
+  cursor: ne-resize;
+  top: -0.5em;
+  right: -0.5em;
+}
+.osjs-window-resize-s {
+  cursor: s-resize;
+  left: 0.5em;
+  width: 95%;
+  margin: auto;
+}
+.osjs-window-resize-e {
+  cursor: e-resize;
+  top: -1em;
+  height: 95%;
+  margin: auto;
+}
+.osjs-window-resize-n {
+  cursor: e-resize;
+  left: -0.5em; 
+  top: 0.5em;
+  height: 95%;
+  margin: 0;
+}
+.osjs-window-resize-w {
+  cursor: e-resize;
+  left: -0.5em; 
+  top: 0.5em;
+  height: 95%;
+  margin: 0;
+}
+.osjs-window-resize-n {
+  cursor: n-resize;
+  top: -0.5em;
+  left: 1em;
+  height: 0.5em;
+  width: 95%;
+  margin: 0;
 }
 
 .osjs-window-inner {

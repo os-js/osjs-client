@@ -204,7 +204,21 @@ const TEMPLATE = `<div class="osjs-window-inner">
   </div>
   <div class="osjs-window-content">
   </div>
-  <div class="osjs-window-resize">
+  <div class="osjs-window-resize osjs-window-resize-se">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-sw">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-ne">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-nw">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-s">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-e">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-w">
+  </div>
+  <div class="osjs-window-resize osjs-window-resize-n">
   </div>
 </div>`.replace(/\n\s+/g, '').trim();
 
@@ -616,6 +630,22 @@ export default class Window extends EventHandler {
     this._updateDOM();
 
     this.core.emit('osjs/window:change', this, 'title', title);
+  }
+
+  /**
+   * Resize the window, affecting both the dimenions and positions
+   * @param {*} attribute The new dimensions and positions of the new
+   */
+  resizeWindow(attribute) {
+    const {width, height} = Object.assign(this.state.dimension, attribute.dimension || {});
+    this.state.dimension.width = width;
+    this.state.dimension.height = height;
+
+    const {left, top} = Object.assign(this.state.position, attribute.position || {});
+    this.state.position.top = top;
+    this.state.position.left = left;
+
+    this._updateDOM();
   }
 
   /**

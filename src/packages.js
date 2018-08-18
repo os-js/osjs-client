@@ -289,11 +289,14 @@ export default class Packages {
 
     const dialog = e => {
       if (this.core.has('osjs/dialog')) {
-        this.core.make('osjs/dialog', 'confirm', {
+        this.core.make('osjs/dialog', 'alert', {
+          type: 'error',
           title: _('ERR_PACKAGE_EXCEPTION', name),
-          message: e.toString() + '\n\n' + (e.stack || 'no stack trace'),
-          buttons: ['ok']
+          message: _('ERR_PACKAGE_EXCEPTION', name),
+          error: e
         }, () => { /* noop */});
+      } else {
+        alert(`${_('ERR_PACKAGE_EXCEPTION', name)}: ${e.stack || e}`);
       }
     };
 

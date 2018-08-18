@@ -53,6 +53,7 @@ export default class Application extends EventHandler {
    * @param {Object} [data.options] Options
    * @param {Object} [data.options.settings] Initial settings
    * @param {Object} [data.options.restore] Restore data
+   * @param {Boolean} [data.options.windowAutoFocus=true] Auto-focus first created window
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
@@ -96,7 +97,9 @@ export default class Application extends EventHandler {
      * Application options
      * @type {Object}
      */
-    this.options = data.options;
+    this.options = Object.assign({
+      windowAutoFocus: true
+    }, data.options);
 
     /**
      * Application metadata
@@ -312,6 +315,7 @@ export default class Application extends EventHandler {
     const instance = new Window(this.core, options);
     instance.init();
 
+    let restored;
     if (this.options.restore) {
       const windows = this.options.restore.windows || [];
       const found = windows.findIndex(r => r.id === instance.id);
@@ -322,6 +326,7 @@ export default class Application extends EventHandler {
         instance.setDimension(restore.dimension);
 
         this.options.restore.windows.splice(found, 1);
+        restored = true;
       }
     }
 
@@ -338,6 +343,10 @@ export default class Application extends EventHandler {
 
       this.emit('destroy-window', instance);
     });
+
+    if (!restored && this.options.windowAutoFocus) {
+      instance.focus();
+    }
 
     return instance;
   }

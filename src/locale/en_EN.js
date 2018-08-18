@@ -80,6 +80,10 @@ export const en_EN = {
   LBL_FS_GIB: 'GiB',
 
   // Generic
+  LBL_TOP: 'Top',
+  LBL_LEFT: 'Left',
+  LBL_RIGHT: 'Right',
+  LBL_BOTTOM: 'Bottom',
   LBL_MENU: 'Menu',
   LBL_ERROR: 'Error',
   LBL_INFO: 'Info',

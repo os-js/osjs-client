@@ -80,6 +80,10 @@ export const nb_NO = {
   LBL_FS_GIB: 'GiB',
 
   // Generic
+  LBL_TOP: 'Topp',
+  LBL_LEFT: 'Venstre',
+  LBL_RIGHT: 'Høyre',
+  LBL_BOTTOM: 'Bunn',
   LBL_MENU: 'Meny',
   LBL_ERROR: 'Feil',
   LBL_INFO: 'Info',

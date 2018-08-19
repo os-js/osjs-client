@@ -33,7 +33,7 @@ import {EventHandler} from '@osjs/common';
 /**
  * Application Socket
  *
- * @desc Handles Websocket for an Application
+ * @desc Handles Websockets
  */
 export default class Websocket extends EventHandler {
 
@@ -49,7 +49,7 @@ export default class Websocket extends EventHandler {
 
     /**
      * The Websocket
-     * @type {Websocket}
+     * @type {WebSocket}
      */
     this.connection = new WebSocket(uri);
 

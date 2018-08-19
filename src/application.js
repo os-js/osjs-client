@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import {EventHandler} from '@osjs/common';
-import ApplicationSocket from './application-socket';
+import Websocket from './websocket';
 import Window from './window';
 
 const applications = [];
@@ -140,7 +140,7 @@ export default class Application extends EventHandler {
 
     /**
      * Application WebSockets
-     * @type {ApplicationSocket[]}
+     * @type {Websocket[]}
      */
     this.sockets = [];
 
@@ -250,10 +250,10 @@ export default class Application extends EventHandler {
   }
 
   /**
-   * Creates a new WebSocket
+   * Creates a new Websocket
    * @param {String} [path=/socket] Append this to endpoint
    * @param {Object} [options] Connection options
-   * @return {ApplicationSocket}
+   * @return {Websocket}
    */
   socket(path = '/socket', options = {}) {
     options = Object.assign({}, {
@@ -269,7 +269,7 @@ export default class Application extends EventHandler {
       ? resource
       : `${protocol}//${hostname}:${port}${resource}`;
 
-    const ws = new ApplicationSocket(this.metadata.name, uri, options.socket);
+    const ws = new Websocket(this.metadata.name, uri, options.socket);
 
     this.sockets.push(ws);
 

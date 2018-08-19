@@ -33,23 +33,23 @@ import {EventHandler} from '@osjs/common';
 /**
  * Application Socket
  *
- * @desc Handles WebSocket for an Application
+ * @desc Handles Websocket for an Application
  */
-export default class ApplicationSocket extends EventHandler {
+export default class Websocket extends EventHandler {
 
   /**
-   * Create a new WebSocket
+   * Create a new Websocket
    * @param {String} uri Connection URI
    * @param {Object} options Websocket options
    */
   constructor(name, uri, options = {}) {
-    console.debug('ApplicationSocket::constructor()', name, uri);
+    console.debug('Websocket::constructor()', name, uri);
 
-    super('ApplicationSocket@' + name);
+    super('Websocket@' + name);
 
     /**
-     * The WebSocket
-     * @type {WebSocket}
+     * The Websocket
+     * @type {Websocket}
      */
     this.connection = new WebSocket(uri);
 

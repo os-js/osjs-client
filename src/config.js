@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import {clientLocale} from './utils/locale.js';
+
 const {port, hostname, pathname, protocol} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
 
@@ -144,7 +146,7 @@ export const defaultConfiguration = {
   },
 
   locale: {
-    language: 'en_EN',
+    language: clientLocale('en_EN'),
     format: {
       shortDate: 'yyyy-mm-dd',
       mediumDate: 'dS mmm yyyy',

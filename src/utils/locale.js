@@ -30,6 +30,10 @@
 
 import dateformat from 'dateformat';
 
+const prefixMap = {
+  nb: 'nb_NO'
+};
+
 const sprintfRegex = /\{(\d+)\}/g;
 
 const sprintfMatcher = args => (m, n) =>
@@ -111,13 +115,20 @@ export const format = core => (date, fmt) => {
 
 /**
  * Get the browser locale
+ * @param {string} [defaultLocale=en_EN] Default locale if none found
  * @return {String}
  */
-export const clientLocale = () => {
+export const clientLocale = (function() {
   const nav = window.navigator || {};
-  const lang = nav.userLanguage ||
-    nav.navigator.language ||
-    '';
+  const browserLanguage = nav.userLanguage || nav.language || '';
+  const get = l => prefixMap[l] ? prefixMap[l] : (l.match(/_/)
+    ? l
+    : (l ? `${l}_${l.toUpperCase()}` : ''));
 
-  return lang.replace('-', '_');
-};
+  const langs = (nav.languages || [browserLanguage])
+    .map(l => get(l.replace('-', '_')));
+
+  const lang = langs[langs.length - 1];
+
+  return (defaultLocale = 'en_EN') => (lang || defaultLocale);
+})();

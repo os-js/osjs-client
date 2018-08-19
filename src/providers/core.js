@@ -34,6 +34,7 @@ import WindowBehavior from '../window-behavior';
 import Session from '../session';
 import Packages from '../packages';
 import Tray from '../tray';
+import Websocket from '../websocket';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
 import {style, script} from '../utils/dom';
@@ -153,16 +154,22 @@ export default class CoreServiceProvider extends ServiceProvider {
       'osjs/event-handler',
       'osjs/window-behaviour',
       'osjs/request',
+      'osjs/dnd',
       'osjs/dom',
       'osjs/core',
       'osjs/tray',
       'osjs/locale',
       'osjs/packages',
-      'osjs/package'
+      'osjs/package',
+      'osjs/websocket'
     ];
   }
 
   init() {
+    this.core.instance('osjs/websocket', (...args) => {
+      return new Websocket(...args);
+    });
+
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);
     });

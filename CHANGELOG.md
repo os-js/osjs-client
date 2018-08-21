@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.63
+
+* Removed deprecated '_path' attribute in metadata
+* Updated WebSocket esdoc
+* Added Websocket to provider
+* Renamed 'ApplicationSocket' to 'Websocket'
+* Use browser locale by default
+
 ## 3.0.0-alpha.62
 
 * Updated error dialog in package manager

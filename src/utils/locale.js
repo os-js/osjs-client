@@ -30,6 +30,8 @@
 
 import dateformat from 'dateformat';
 
+const FALLBACK_LOCALE = 'en_EN';
+
 const prefixMap = {
   nb: 'nb_NO'
 };
@@ -51,7 +53,7 @@ const getLocale = (core, key) => {
 };
 
 const getFromList = (list, ul, dl, k) => {
-  const localizedList = list[ul] || list[dl];
+  const localizedList = list[ul] || list[dl] || list[FALLBACK_LOCALE] || {};
   return localizedList[k] || k;
 };
 
@@ -73,7 +75,7 @@ const translate = (list, ul, dl, k, ...args) => {
  */
 export const translatableFlat = core => (list, defaultValue) => {
   const {defaultLocale, userLocale} = getLocale(core, 'language');
-  return list[userLocale] || list[defaultLocale] || defaultValue;
+  return list[userLocale] || list[defaultLocale] || list[FALLBACK_LOCALE] || defaultValue;
 };
 
 /**

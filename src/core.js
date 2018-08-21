@@ -283,7 +283,7 @@ export default class Core extends CoreBase {
     if (metadata) {
       const path = endpoint.replace(/^\/?/, '/');
       const type = metadata.type === 'theme' ? 'themes' : 'apps';
-      return `${root}${type}/${metadata._path}${path}`;
+      return `${root}${type}/${metadata.name}${path}`;
     }
 
     return root + endpoint.replace(/^\/+/, '');

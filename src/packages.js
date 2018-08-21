@@ -263,7 +263,7 @@ export default class Packages {
     }
 
     const preloads = metadata.files
-      .map(f => this.core.url(`${basePath}${folder}/${metadata._path}/${f}`));
+      .map(f => this.core.url(`${basePath}${folder}/${metadata.name}/${f}`));
 
     return this.preload(preloads)
       .then(result => {
@@ -309,7 +309,7 @@ export default class Packages {
     };
 
     const preloads = metadata.files
-      .map(f => this.core.url(`${basePath}apps/${metadata._path}/${f}`));
+      .map(f => this.core.url(`${basePath}apps/${metadata.name}/${f}`));
 
     const create = found => {
       let app;

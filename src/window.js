@@ -204,8 +204,14 @@ const TEMPLATE = `<div class="osjs-window-inner">
   </div>
   <div class="osjs-window-content">
   </div>
-  <div class="osjs-window-resize">
-  </div>
+  <div class="osjs-window-resize" data-direction="n"></div>
+  <div class="osjs-window-resize" data-direction="nw"></div>
+  <div class="osjs-window-resize" data-direction="w"></div>
+  <div class="osjs-window-resize" data-direction="sw"></div>
+  <div class="osjs-window-resize" data-direction="s"></div>
+  <div class="osjs-window-resize" data-direction="se"></div>
+  <div class="osjs-window-resize" data-direction="e"></div>
+  <div class="osjs-window-resize" data-direction="ne"></div>
 </div>`.replace(/\n\s+/g, '').trim();
 
 /**

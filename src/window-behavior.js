@@ -31,6 +31,8 @@
 import {supportsPassive} from './utils/dom.js';
 import * as mediaQuery from 'css-mediaquery';
 
+const CASCADE_DISTANCE = 10;
+
 const isPassive = supportsPassive();
 const touchArg = isPassive ? {passive: true} : false;
 
@@ -38,60 +40,79 @@ const touchArg = isPassive ? {passive: true} : false;
  * Map of available "actions"
  */
 const actionMap = {
-  maximize(win) {
-    if (!win.maximize()) {
-      win.restore();
-    }
-  },
-  minimize(win) {
-    win.minimize();
-  },
-  close(win) {
-    win.close();
-  }
+  maximize: (win) => win.maximize() ? null : win.restore(),
+  minimize: (win) => win.minimize(),
+  close: (win) => win.close()
 };
 
 /*
- * Calculates new dimension for a window resize
+ * Creates a clamper for resize/move
  */
-const getNewDimensions = (diffX, diffY, min, max, start) => {
-  const newWidth = Math.max(min.width, start.width + diffX);
-  const newHeight = Math.max(min.height, start.height + diffY);
+const clamper = win => {
+  const {maxDimension, minDimension} = win.attributes;
+  const {position, dimension} = win.state;
 
-  return {
-    width: max.width === -1
-      ? newWidth
-      : Math.min(max.height, newWidth),
+  const maxPosition = {
+    left: position.left + dimension.width - minDimension.width,
+    top: position.top + dimension.height - minDimension.height
+  };
 
-    height: max.height === -1
-      ? newHeight
-      : Math.min(max.height, newHeight)
+  const clamp = (min, max, current) => {
+    const value = min === -1 ? current : Math.max(min, current);
+    return max === -1 ? value : Math.min(max, value);
+  };
+
+  return (width, height, top, left) => ({
+    width: clamp(minDimension.width, maxDimension.width, width),
+    height: clamp(minDimension.height, maxDimension.height, height),
+    top: clamp(-1, maxPosition.top, top),
+    left: clamp(-1, maxPosition.left, left)
+  });
+};
+
+/*
+ * Creates a resize handler
+ */
+const resizer = (win, handle) => {
+  const clamp = clamper(win);
+  const {position, dimension} = win.state;
+  const directions = handle.getAttribute('data-direction').split('');
+  const going = dir => directions.indexOf(dir) !== -1;
+  const xDir = going('e') ? 1 : (going('w') ? -1 : 0);
+  const yDir = going('s') ? 1 : (going('n') ? -1 : 0);
+
+  return (diffX, diffY) => {
+    const width = dimension.width + (diffX * xDir);
+    const height = dimension.height + (diffY * yDir);
+    const top = yDir === -1 ? position.top + diffY : position.top;
+    const left = xDir === -1 ? position.left + diffX : position.left;
+
+    return clamp(width, height, top, left);
   };
 };
 
 /*
- * Calculates new position for a window movement
+ * Creates a movement handler
  */
-const getNewPosition = (diffX, diffY, start, rect) => {
-  let top = start.top + diffY;
-  let left = start.left + diffX;
+const mover = (win, rect) => {
+  const {position} = win.state;
 
-  if (rect) {
-    // In case we have panels etc around, we want to stop when we hit these areas
-    top = Math.max(rect.top, top);
-  }
+  return (diffX, diffY) => {
+    const top = Math.max(position.top + diffY, rect.top);
+    const left = position.left + diffX;
 
-  return {top, left};
+    return {top, left};
+  };
 };
 
 /*
  * Calculates a new initial position for window
  */
 const getCascadePosition = (win, rect, pos) => {
-  const startX = 10 + (rect ? rect.left : 0);
-  const startY = 10 + (rect ? rect.top : 0);
-  const distance = 10;
-  const wrap = 20;
+  const startX = CASCADE_DISTANCE + rect.left;
+  const startY = CASCADE_DISTANCE + rect.top;
+  const distance = CASCADE_DISTANCE;
+  const wrap = CASCADE_DISTANCE * 2;
 
   const newX = startX + ((win.wid % wrap) * distance);
   const newY = startY + ((win.wid % wrap) * distance);
@@ -151,8 +172,8 @@ export default class WindowBehavior {
    */
   constructor(core) {
     this.core = core;
-    this.wasMoved = false;
-    this.wasResized = false;
+
+    this.lastAction = null;
   }
 
   /**
@@ -170,7 +191,7 @@ export default class WindowBehavior {
 
     const rect = this.core.has('osjs/desktop')
       ? this.core.make('osjs/desktop').getRect()
-      : null;
+      : {top: 0, left: 0};
 
     const {top, left} = getCascadePosition(win, rect, win.state.position);
     win.state.position.top = top;
@@ -185,7 +206,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   click(ev, win) {
-    if (this.wasMoved || this.wasResized) {
+    if (this.lastAction) {
       return;
     }
 
@@ -204,7 +225,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   dblclick(ev, win) {
-    if (this.wasMoved || this.wasResized) {
+    if (this.lastAction) {
       return;
     }
 
@@ -228,20 +249,25 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   mousedown(ev, win) {
+    let attributeSet = false;
+
     const {clientX, clientY, touch, target} = getEvent(ev);
-    const startPosition = Object.assign({}, win.state.position);
-    const startDimension = Object.assign({}, win.state.dimension);
-    const maxDimension = Object.assign({}, win.attributes.maxDimension);
-    const minDimension = Object.assign({}, win.attributes.minDimension);
-    const resize = target.classList.contains('osjs-window-resize');
-    const move = ev.ctrlKey
+
+    const checkMove = ev.ctrlKey
       ? win.$element.contains(target)
       : target.classList.contains('osjs-window-header');
+
     const rect = this.core.has('osjs/desktop')
       ? this.core.make('osjs/desktop').getRect()
+      : {top: 0, left: 0};
+
+    const resize = target.classList.contains('osjs-window-resize')
+      ? resizer(win, target)
       : null;
 
-    let attributeSet = false;
+    const move = checkMove
+      ? mover(win, rect)
+      : null;
 
     const mousemove = (ev) => {
       if (!isPassive) {
@@ -249,37 +275,29 @@ export default class WindowBehavior {
       }
 
       const transformedEvent = getEvent(ev);
-      const diffX = transformedEvent.clientX - clientX;
-      const diffY = transformedEvent.clientY - clientY;
+      const posX = resize ? Math.max(rect.left, transformedEvent.clientX) : transformedEvent.clientX;
+      const posY = resize ? Math.max(rect.top, transformedEvent.clientY) : transformedEvent.clientY;
+      const diffX = posX - clientX;
+      const diffY = posY - clientY;
 
       if (resize) {
-        this.wasResized = true;
-        win._setState('resizing', true, false);
-        win.setDimension(getNewDimensions(
-          diffX,
-          diffY,
-          minDimension,
-          maxDimension,
-          startDimension
-        ));
-      } else if (move) {
-        this.wasMoved = true;
-        win._setState('moving', true, false);
-        win.setPosition(getNewPosition(
-          diffX,
-          diffY,
-          startPosition,
-          rect
-        ));
+        const {width, height, top, left} = resize(diffX, diffY);
 
-        /* TODO: Might give better performance, but need to set actual position
-         * on mouseup. Also, need to clamp the diffX and diffY with respect of
-         * rect.
-        win.$element.style.transform = `translate(${diffX}px, ${diffY}px)`;
-        */
+        win._setState('dimension', {width, height}, false);
+        win._setState('position', {top, left}, false);
+
+        this.lastAction = 'resize';
+      } else if (move) {
+        const position = move(diffX, diffY);
+
+        win._setState('position', position, false);
+
+        this.lastAction = 'move';
       }
 
-      if (resize || move) {
+      if (this.lastAction) {
+        win._setState(this.lastAction === 'move' ? 'moving' : 'resizing', true); // NOTE: This also updates DOM!
+
         if (!attributeSet) {
           this.core.$root.setAttribute('data-window-action', String(true));
           attributeSet = true;
@@ -298,10 +316,10 @@ export default class WindowBehavior {
 
       win._setState('media', getMediaQueryName(win), false);
 
-      if (this.wasMoved) {
+      if (this.lastAction === 'move') {
         win.emit('moved', Object.assign({}, win.state.position), win);
         win._setState('moving', false);
-      } else if (this.wasResized) {
+      } else if (this.lastAction === 'resize') {
         win.emit('resized', Object.assign({}, win.state.dimension), win);
         win._setState('resizing', false);
       }
@@ -324,8 +342,7 @@ export default class WindowBehavior {
       }
     }
 
-    this.wasResized = false;
-    this.wasMoved = false;
+    this.lastAction = null;
 
     if (this.core.has('osjs/contextmenu')) {
       this.core.make('osjs/contextmenu').hide();

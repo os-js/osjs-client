@@ -31,11 +31,68 @@
 .osjs-window-resize {
   z-index: 10;
   position: absolute;
-  bottom: -0.5em;
-  right: -0.5em;
-  width: 1em;
-  height: 1em;
-  cursor: se-resize;
+  min-width: 1em;
+  min-height: 1em;
+
+  &[data-direction^="n"] {
+    top: -$resize-handle-size;
+  }
+
+  &[data-direction^="s"] {
+    bottom: -$resize-handle-size;
+  }
+
+  &[data-direction$="w"] {
+    left: -$resize-handle-size;
+  }
+
+  &[data-direction$="e"] {
+    right: -$resize-handle-size;
+  }
+
+  &[data-direction="nw"] {
+    cursor: nw-resize;
+  }
+
+  &[data-direction="sw"] {
+    cursor: sw-resize;
+  }
+
+  &[data-direction="ne"] {
+    cursor: ne-resize;
+  }
+
+  &[data-direction="se"] {
+    cursor: se-resize;
+  }
+
+  &[data-direction="n"] {
+    cursor: n-resize;
+  }
+
+  &[data-direction="s"] {
+    cursor: s-resize;
+  }
+
+  &[data-direction="w"] {
+    cursor: w-resize;
+  }
+
+  &[data-direction="e"] {
+    cursor: e-resize;
+  }
+
+  &[data-direction="s"],
+  &[data-direction="n"] {
+    left: $resize-handle-size;
+    right: $resize-handle-size;
+  }
+
+  &[data-direction="e"],
+  &[data-direction="w"] {
+    top: $resize-handle-size;
+    bottom: $resize-handle-size;
+  }
 }
 
 .osjs-window-inner {
@@ -135,6 +192,12 @@
     bottom: 0;
     z-index: 9999999999;
     display: none;
+  }
+
+  &[data-maximized=true] {
+    .osjs-window-resize {
+      cursor: inherit !important;
+    }
   }
 
   &[data-minimized=true] {

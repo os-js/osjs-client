@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.65
+
+* Added configuration to disable search feature
+* Added proper fallback in locale functions
+
 ## 3.0.0-alpha.64
 
 * Tiny fix for package manager metadata loading"

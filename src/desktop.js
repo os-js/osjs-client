@@ -67,7 +67,7 @@ export default class Desktop extends EventHandler {
     this.$styles = document.createElement('style');
     this.$styles.setAttribute('type', 'text/css');
     this.contextmenuEntries = [];
-    this.search = new Search(core);
+    this.search = core.config('search.enabled') ? new Search(core) : null;
     this.subtract = {
       left: 0,
       top: 0,
@@ -80,7 +80,9 @@ export default class Desktop extends EventHandler {
    * Destroy Desktop
    */
   destroy() {
-    this.search = this.search.destroy();
+    if (this.search) {
+      this.search = this.search.destroy();
+    }
 
     if (this.$styles && this.$styles.parentNode) {
       this.$styles.remove();
@@ -174,7 +176,10 @@ export default class Desktop extends EventHandler {
     this.core.$root.addEventListener('keydown', e => {
       if (e.keyCode === 114) { // F3
         e.preventDefault();
-        this.search.show();
+
+        if (this.search) {
+          this.search.show();
+        }
         return;
       }
 
@@ -209,7 +214,9 @@ export default class Desktop extends EventHandler {
   }
 
   start() {
-    this.search.init();
+    if (this.search) {
+      this.search.init();
+    }
   }
 
   /**

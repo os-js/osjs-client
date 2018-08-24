@@ -101,6 +101,10 @@ export const defaultConfiguration = {
     }
   },
 
+  search: {
+    enabled: true
+  },
+
   desktop: {
     lock: false,
 

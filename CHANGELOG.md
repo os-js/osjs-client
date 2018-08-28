@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.66
+
+* Fixed preloading of external resources in metadata
+
 ## 3.0.0-alpha.65
 
 * Added configuration to disable search feature

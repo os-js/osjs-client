@@ -31,6 +31,11 @@
 import Application from './application';
 import {style, script} from './utils/dom';
 
+const createUrl = (basePath, folder, metadata, filename) =>
+  filename.match(/^https?:/)
+    ? filename
+    : `${basePath}${folder}/${metadata.name}/${filename}`;
+
 /**
  * A registered package reference
  * @property {Object} metadata Package metadata
@@ -263,7 +268,7 @@ export default class Packages {
     }
 
     const preloads = metadata.files
-      .map(f => this.core.url(`${basePath}${folder}/${metadata.name}/${f}`));
+      .map(f => this.core.url(createUrl(basePath, folder, metadata, f)));
 
     return this.preload(preloads)
       .then(result => {
@@ -309,7 +314,7 @@ export default class Packages {
     };
 
     const preloads = metadata.files
-      .map(f => this.core.url(`${basePath}apps/${metadata.name}/${f}`));
+      .map(f => this.core.url(createUrl(basePath, 'apps', metadata, f)));
 
     const create = found => {
       let app;

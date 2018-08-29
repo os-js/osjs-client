@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.67
+
+* Updated dependencies
+* Added vi_VN locales (#15)
+* Windows now resizable from all corners (#14)
+* Removed '?_time=...' query parameter from preloads
+
 ## 3.0.0-alpha.66
 
 * Fixed preloading of external resources in metadata

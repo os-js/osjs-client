@@ -28,11 +28,11 @@
  * @licence Simplified BSD License
  */
 
-import {supportsPassive} from './utils/dom.js';
+import { supportsPassive } from './utils/dom.js';
 import * as mediaQuery from 'css-mediaquery';
 
 const isPassive = supportsPassive();
-const touchArg = isPassive ? {passive: true} : false;
+const touchArg = isPassive ? { passive: true } : false;
 
 /*
  * Map of available "actions"
@@ -51,21 +51,56 @@ const actionMap = {
   }
 };
 
-/*
- * Calculates new dimension for a window resize
+/**
+ * Calculates both new dimensions and positions for a window resize
  */
-const getNewDimensions = (diffX, diffY, min, max, start) => {
-  const newWidth = Math.max(min.width, start.width + diffX);
-  const newHeight = Math.max(min.height, start.height + diffY);
+const getNewPositionsAndDimensions = (targetAttribute, diffX, diffY, min, max, startPosition, startDimension) => {
+  let width, height, top, left;
+
+  const getDimension = (diff, min, max, start) => {
+    const newDimension = Math.max(min, start + diff);
+    return max === -1
+      ? newDimension
+      : Math.min(max, newDimension);
+  };
+
+  const getPosition = (diff, startPosition, minDimension, maxDimension, startDimension) => {
+    const newPosition = startPosition + Math.min(startDimension - minDimension, diff);
+    return maxDimension === -1
+      ? newPosition
+      : Math.max(startPosition - (maxDimension - startDimension), newPosition);
+  };
+
+  const firstDir = targetAttribute.substr(19, 1);
+  const secDir = targetAttribute.substr(20, 1);
+
+  const yDir = firstDir === 's' ? 1 : -1;
+  height = firstDir === 'n' || firstDir === 's'
+    ? getDimension(diffY * yDir, min.height, max.height, startDimension.height)
+    : startDimension.height;
+
+  const xDir = firstDir === 'e' || secDir === 'e' ? 1 : -1;
+  width = secDir === '' && (firstDir === 's' || firstDir === 'n')
+    ? startDimension.width
+    : getDimension(diffX * xDir, min.width, max.width, startDimension.width);
+
+  left = secDir === 'e' || (firstDir !== 'w' && secDir === '')
+    ? startPosition.left
+    : getPosition(diffX, startPosition.left, min.width, max.width, startDimension.width);
+
+  top = firstDir === 'n'
+    ? getPosition(diffY, startPosition.top, min.height, max.height, startDimension.height)
+    : startPosition.top;
 
   return {
-    width: max.width === -1
-      ? newWidth
-      : Math.min(max.height, newWidth),
-
-    height: max.height === -1
-      ? newHeight
-      : Math.min(max.height, newHeight)
+    dimension: {
+      width: width,
+      height: height,
+    },
+    position: {
+      top: top,
+      left: left
+    }
   };
 };
 
@@ -81,7 +116,7 @@ const getNewPosition = (diffX, diffY, start, rect) => {
     top = Math.max(rect.top, top);
   }
 
-  return {top, left};
+  return { top, left };
 };
 
 /*
@@ -104,14 +139,14 @@ const getCascadePosition = (win, rect, pos) => {
     ? Math.max(rect.left, pos.left)
     : newX;
 
-  return {top, left};
+  return { top, left };
 };
 
 /*
  * Normalizes event input (position)
  */
 const getEvent = (ev) => {
-  let {clientX, clientY, target} = ev;
+  let { clientX, clientY, target } = ev;
   const touch = ev.touches || ev.changedTouches || [];
 
   if (touch.length) {
@@ -119,7 +154,7 @@ const getEvent = (ev) => {
     clientY = touch[0].clientY;
   }
 
-  return {clientX, clientY, touch: touch.length > 0, target};
+  return { clientX, clientY, touch: touch.length > 0, target };
 };
 
 const getScreenOrientation = screen => screen && screen.orientation
@@ -172,7 +207,7 @@ export default class WindowBehavior {
       ? this.core.make('osjs/desktop').getRect()
       : null;
 
-    const {top, left} = getCascadePosition(win, rect, win.state.position);
+    const { top, left } = getCascadePosition(win, rect, win.state.position);
     win.state.position.top = top;
     win.state.position.left = left;
 
@@ -193,7 +228,7 @@ export default class WindowBehavior {
     const hitButton = target.classList.contains('osjs-window-button');
 
     if (hitButton) {
-      const action =  ev.target.getAttribute('data-action');
+      const action = ev.target.getAttribute('data-action');
       actionMap[action](win);
     }
   }
@@ -228,7 +263,7 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   mousedown(ev, win) {
-    const {clientX, clientY, touch, target} = getEvent(ev);
+    const { clientX, clientY, touch, target } = getEvent(ev);
     const startPosition = Object.assign({}, win.state.position);
     const startDimension = Object.assign({}, win.state.dimension);
     const maxDimension = Object.assign({}, win.attributes.maxDimension);
@@ -255,12 +290,14 @@ export default class WindowBehavior {
       if (resize) {
         this.wasResized = true;
         win._setState('resizing', true, false);
-        win.setDimension(getNewDimensions(
+        win.resizeWindow(getNewPositionsAndDimensions(
+          target.getAttribute('class').substring(19),
           diffX,
           diffY,
           minDimension,
           maxDimension,
-          startDimension
+          startPosition,
+          startDimension,
         ));
       } else if (move) {
         this.wasMoved = true;

@@ -275,9 +275,8 @@ export default class CoreServiceProvider extends ServiceProvider {
         if (map[url]) {
           console.info('Hot-reloading', url);
 
-          const suffix = '?_time=' + (new Date()).getTime();
           setTimeout(() => {
-            map[url].setAttribute('href', url + suffix);
+            map[url].setAttribute('href', url);
           }, 100);
         }
       });

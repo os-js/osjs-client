@@ -145,19 +145,14 @@ export default class Packages {
    */
   preload(list, force = false) {
     const root = this.core.$resourceRoot;
-
-    const getSource = entry => this.core.config('development')
-      ? entry + '?_time=' + (new Date()).getTime()
-      : entry;
-
     const cached = entry => force ? false : this.loaded.find(src => src === entry);
     const entries = list.filter(entry => !cached(entry));
     const promises = entries.map(entry => {
       console.debug('Packages::preload()', entry);
 
       const p = entry.match(/\.js$/)
-        ? script(root, getSource(entry))
-        : style(root, getSource(entry));
+        ? script(root, entry)
+        : style(root, entry);
 
       return p
         .then(el => ({success: true, entry, el}))

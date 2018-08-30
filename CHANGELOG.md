@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.68
+
+* Added 'onerror' handler to Websocket class
+
 ## 3.0.0-alpha.67
 
 * Updated dependencies

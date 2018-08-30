@@ -33,7 +33,9 @@ import {EventHandler} from '@osjs/common';
 /**
  * Application Socket
  *
- * @desc Handles Websockets
+ * @desc This is just an abstraction above the standard browser provided `WebSocket` class.
+ * Since this class implements the EventHandler, use the `.on('event')` pattern instead of `.onevent`.
+ *
  */
 export default class Websocket extends EventHandler {
 
@@ -56,6 +58,7 @@ export default class Websocket extends EventHandler {
     this.connection.onopen = (...args) => this.emit('open', ...args);
     this.connection.onclose = (...args) => this.emit('close', ...args);
     this.connection.onmessage = (...args) => this.emit('message', ...args);
+    this.connection.onerror = (...args) => this.emit('error', ...args);
   }
 
   /**

@@ -153,15 +153,14 @@ export default class CoreServiceProvider extends ServiceProvider {
       'osjs/window',
       'osjs/event-handler',
       'osjs/window-behaviour',
-      'osjs/request',
       'osjs/dnd',
       'osjs/dom',
-      'osjs/core',
+      'osjs/clipboard',
       'osjs/tray',
       'osjs/locale',
       'osjs/packages',
-      'osjs/package',
-      'osjs/websocket'
+      'osjs/websocket',
+      'osjs/session'
     ];
   }
 
@@ -186,10 +185,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       return new WindowBehavior(this.core);
     });
 
-    this.core.instance('osjs/request', (...args) => {
-      return this.core.request(...args);
-    });
-
     this.core.singleton('osjs/session', () => ({
       save: () => this.session.save(),
       load: (fresh = true) => this.session.load(fresh)
@@ -200,13 +195,6 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/dom', () => ({
       script,
       style
-    }));
-
-    this.core.singleton('osjs/core', () => ({
-      url: (...args) => this.core.url(...args),
-      run: (...args) => this.core.run(...args),
-      open: (...args) => this.core.open(...args),
-      config: (...args) => this.core.config(...args)
     }));
 
     const trayApi = {
@@ -244,8 +232,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       launch: (...args) => this.pm.launch(...args),
       preload: (...args) => this.pm.preload(...args)
     }));
-
-    this.core.instance('osjs/package', (...args) => this.pm.launch(...args));
 
     this.core.instance('osjs/clipboard', () => ({
       set: v => this.clipboard.set(v),

@@ -333,7 +333,7 @@ export default class Core extends CoreBase {
   run(name, args = {}, options = {}) {
     console.log('Core::run()', name, args, options);
 
-    return this.make('osjs/package', name, args, options);
+    return this.make('osjs/packages').launch(name, args, options);
   }
 
   /**

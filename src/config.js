@@ -38,6 +38,12 @@ export const defaultConfiguration = {
   standalone: false,
   public: path,
 
+  languages: {
+    en_EN: 'English',
+    nb_NO: 'Norwegian, Norsk (bokmål)',
+    vi_VN: 'Vietnamese, Vietnamese'
+  },
+
   application: {
     categories: {
       development: {

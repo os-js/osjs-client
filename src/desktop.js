@@ -272,6 +272,20 @@ export default class Desktop extends EventHandler {
         ? 0
         : background.style;
 
+      if (background.style === 'color' || background.src === undefined) {
+        this.core.$root.style.backgroundImage = undefined;
+      } else {
+        const applyBackground = src => this.core.$root.style.backgroundImage = `url(${src})`;
+
+        if (typeof background.src === 'string') {
+          applyBackground(background.src);
+        } else {
+          this.core.make('osjs/vfs').url(background.src)
+            .then(applyBackground)
+            .catch(error => console.warn(error));
+        }
+      }
+
       this.core.$root.style.backgroundImage = background.style === 'color'
         ? undefined
         : `url(${background.src})`;
@@ -414,17 +428,13 @@ export default class Desktop extends EventHandler {
       .save()
       .then(() => this.applySettings());
 
-    const setWallpaper = f => this.core.make('osjs/vfs')
-      .url(f.path)
-      .then(src => applySettings('background.src', src));
-
     const setTheme = t => applySettings('theme', t.name);
 
     const openWallpaperDialog = () => this.core.make('osjs/dialog', 'file', {
       mime: ['^image']
-    }, (btn, filename) => {
+    }, (btn, file) => {
       if (btn === 'ok') {
-        setWallpaper(filename);
+        applySettings('background.src', file);
       }
     });
 

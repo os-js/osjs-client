@@ -86,7 +86,7 @@ const getMountpointFromPath = (core, mounts, file) => {
  * Creates given mountpoint
  */
 const createMountpoint = (core, adapters, props) => {
-  const name = props.adapter || 'system'; // FIXME
+  const name = props.adapter || core.config('vfs.defaultAdapter');
   const adapter = Object.assign({}, defaultAdapter, adapters[name](core));
 
   const result = merge({

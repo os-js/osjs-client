@@ -169,6 +169,7 @@ export const defaultConfiguration = {
 
   vfs: {
     defaultPath: 'osjs:/',
+    defaultAdapter: 'system',
     adapters: {},
     mountpoints: [{
       name: 'apps',

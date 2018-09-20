@@ -55,6 +55,8 @@ const getWindow = win => ({
   close: () => win.close()
 });
 
+const getWindows = () => Window.getWindows().map(getWindow);
+
 const getApplications = () => Application.getApplications().map(app => ({
   pid: app.pid,
   args: Object.assign({}, app.args),
@@ -69,6 +71,7 @@ const getApplications = () => Application.getApplications().map(app => ({
 
 const getPublicApi = core => {
   const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme'];
+  const register = (...args) => core.make('osjs/packages').register(...args);
 
   const make = (...args) => {
     if (!core.config('development')) {
@@ -83,13 +86,14 @@ const getPublicApi = core => {
   };
 
   return Object.freeze({
+    make,
+    register,
+    getWindows,
+    getApplications,
     url: (...args) => core.url(...args),
     run: (...args) => core.run(...args),
     open: (...args) => core.open(...args),
-    make,
-    request: (...args) => core.request(...args),
-    getWindows: () => Window.getWindows().map(getWindow),
-    getApplications
+    request: (...args) => core.request(...args)
   });
 };
 

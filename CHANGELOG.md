@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.70
+
+* Improved background setting and options on desktop
+* Desktop wallpaper can now be VFS File object
+* Added languages to config
+
 ## 3.0.0-alpha.69
 
 * Removed some deprecated services in core

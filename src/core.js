@@ -382,6 +382,18 @@ export default class Core extends CoreBase {
   }
 
   /**
+   * Removes an event handler
+   * @see EventHandler#off
+   */
+  off(name, callback = null, force = false) {
+    if (name.match(/^osjs\//) && typeof callback !== 'function') {
+      throw new TypeError('The callback must be a function');
+    }
+
+    return super.off(name, callback, force);
+  }
+
+  /**
    * Gets the current user
    * @return {Map<string,*>} User object
    */

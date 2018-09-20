@@ -35,6 +35,7 @@ import Session from '../session';
 import Packages from '../packages';
 import Tray from '../tray';
 import Websocket from '../websocket';
+import Clipboard from '../clipboard';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
 import {style, script} from '../utils/dom';
@@ -91,40 +92,6 @@ const getPublicApi = core => {
     getApplications
   });
 };
-
-class Clipboard {
-
-  constructor() {
-    this.value = undefined;
-    this.clear();
-  }
-
-  clear() {
-    this.value = Promise.resolve();
-  }
-
-  set(v) {
-    this.value = v;
-  }
-
-  get(clear) {
-    const v = typeof this.value === 'function'
-      ? v()
-      : v;
-
-    const done = ret => {
-      if (clear) {
-        this.clear();
-      }
-
-      return ret;
-    };
-
-    return Promise.resolve(v)
-      .then(done)
-      .catch(done);
-  }
-}
 
 /**
  * OS.js Core Service Provider

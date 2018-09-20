@@ -46,6 +46,42 @@ const TEMPLATE = subtract => `
   }
 `;
 
+/*
+ * Creates a set of styles based on background settings
+ */
+const applyBackgroundStyles = (core, background) => {
+  const {$root} = core;
+
+  const styles = {
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50% 50%',
+    backgroundSize: 'auto',
+    backgroundColor: background.color,
+    backgroundImage: 'none'
+  };
+
+  if (background.style === 'cover' || background.style === 'contain') {
+    styles.backgroundSize = background.style;
+  } else if (background.style === 'repeat') {
+    styles.backgroundRepeat = 'repeat';
+  }
+
+  if (background.style !== 'color') {
+    if (typeof background.src === 'string') {
+      styles.backgroundImage = `url(${background.src})`;
+    } else {
+      core.make('osjs/vfs')
+        .url(background.src)
+        .then(src => {
+          setTimeout(() => ($root.style.backgroundImage = `url(${src})`), 1);
+        })
+        .catch(error => console.warn(error));
+    }
+  }
+
+  Object.keys(styles).forEach(k => ($root.style[k] = styles[k]));
+};
+
 /**
  * Desktop Class
  *
@@ -266,29 +302,7 @@ export default class Desktop extends EventHandler {
     const applyCss = ({font, background}) => {
       this.core.$root.style.fontFamily = `${font}, sans-serif`;
 
-      this.core.$root.style.backgroundColor = background.color;
-
-      this.core.$root.style.backgroundSize = background.style === 'color'
-        ? 0
-        : background.style;
-
-      if (background.style === 'color' || background.src === undefined) {
-        this.core.$root.style.backgroundImage = undefined;
-      } else {
-        const applyBackground = src => this.core.$root.style.backgroundImage = `url(${src})`;
-
-        if (typeof background.src === 'string') {
-          applyBackground(background.src);
-        } else {
-          this.core.make('osjs/vfs').url(background.src)
-            .then(applyBackground)
-            .catch(error => console.warn(error));
-        }
-      }
-
-      this.core.$root.style.backgroundImage = background.style === 'color'
-        ? undefined
-        : `url(${background.src})`;
+      applyBackgroundStyles(this.core, background);
     };
 
     applyCss(newSettings);

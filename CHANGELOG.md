@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.71
+
+* Added default VFS adapter config
+* Added OSjs.register shortcut for package registration
+* Split out some code from core service provider
+* Updated @osjs/common dependency
+* Restrict removal of core events
+
+
 ## 3.0.0-alpha.70
 
 * Improved background setting and options on desktop

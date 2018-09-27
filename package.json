@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.0.0-alpha.73",
+  "version": "3.0.0-alpha.74",
   "description": "OS.js v3 client",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -41,7 +41,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime": "^7.0.0",
-    "@osjs/common": "^3.0.0-alpha.19",
+    "@osjs/common": "^3.0.0-alpha.20",
     "babel-loader": "^8.0.3",
     "css-loader": "^1.0.0",
     "css-mediaquery": "^0.1.2",

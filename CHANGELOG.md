@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.72
+
+* Updated dependencies
+
 ## 3.0.0-alpha.71
 
 * Added default VFS adapter config

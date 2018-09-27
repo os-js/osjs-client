@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.73
+
+* Updated @osjs/common
+
 ## 3.0.0-alpha.72
 
 * Updated dependencies

@@ -41,7 +41,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime": "^7.0.0",
-    "@osjs/common": "^3.0.0-alpha.20",
+    "@osjs/common": "^3.0.0-alpha.21",
     "babel-loader": "^8.0.3",
     "css-loader": "^1.0.0",
     "css-mediaquery": "^0.1.2",

@@ -137,3 +137,51 @@ export const supportsPassive = (function() {
 
   return () => supportsPassive;
 })();
+
+/**
+ * Plays a sound
+ * @param {string} src Sound source
+ * @param {Object} [options] Options
+ * @return {HTMLAudioElement}
+ */
+export const playSound = (src, options = {}) => {
+  const opts = Object.assign({
+    volume: 1.0
+  }, options);
+
+  const audio = new Audio();
+  audio.voule = opts.volume;
+  audio.src = src;
+  audio.play();
+
+  return audio;
+};
+
+/**
+ * Gets supported media types
+ * @return {object}
+ */
+export const supportedMedia = () => {
+  const videoFormats = {
+    mp4: 'video/mp4',
+    ogv: 'video/ogg'
+  };
+
+  const audioFormats = {
+    mp3: 'audio/mpeg',
+    mp4: 'audio/mp4',
+    oga: 'audio/ogg'
+  };
+
+  const reduce = (list, elem) => Object.keys(list)
+    .reduce((result, format) => {
+      return Object.assign({
+        [format]: elem.canPlayType(list[format]) === 'probably'
+      }, result);
+    }, {});
+
+  return {
+    audio: reduce(audioFormats, document.createElement('audio')),
+    video: reduce(videoFormats, document.createElement('video'))
+  };
+};

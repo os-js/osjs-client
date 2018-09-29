@@ -29,6 +29,7 @@
  */
 
 import {ServiceProvider} from '@osjs/common';
+import {supportedMedia, playSound} from '../utils/dom';
 import Desktop from '../desktop';
 
 /**
@@ -54,12 +55,15 @@ export default class DesktopServiceProvider extends ServiceProvider {
   provides() {
     return [
       'osjs/desktop',
-      'osjs/theme'
+      'osjs/theme',
+      'osjs/sounds'
     ];
   }
 
   init() {
     this.desktop.init();
+
+    const media = supportedMedia();
 
     this.core.singleton('osjs/desktop', () => ({
       addContextMenuEntries: entries => this.desktop.addContextMenu(entries),
@@ -69,10 +73,33 @@ export default class DesktopServiceProvider extends ServiceProvider {
 
     const basePath = this.core.config('public');
 
-    const resource = path => {
+    const themeResource = path => {
       const defaultTheme = this.core.config('desktop.settings.theme');
       const theme = this.core.make('osjs/settings').get('osjs/desktop', 'theme', defaultTheme);
       return `${basePath}themes/${theme}/${path}`;
+    };
+
+    const soundResource = path => {
+      if (!path.match(/\.([a-z]+)$/)) {
+        const defaultExtension = 'mp3';
+        const checkExtensions = ['oga', 'mp3'];
+        const found = checkExtensions.find(str => media.audio[str] === true);
+        const use = found || defaultExtension;
+
+        path += '.' + use;
+      }
+
+      const defaultTheme = this.core.config('desktop.settings.sounds.name');
+      const theme = this.core.make('osjs/settings').get('osjs/desktop', 'sounds.name', defaultTheme);
+
+      return `${basePath}sounds/${theme}/${path}`;
+    };
+
+    const soundsEnabled = () => {
+      const defaultState = this.core.config('desktop.settings.sounds.enabled');
+
+      return this.core.make('osjs/settings')
+        .get('osjs/desktop', 'sounds.enabled', defaultState);
     };
 
     const icon = path => {
@@ -82,8 +109,23 @@ export default class DesktopServiceProvider extends ServiceProvider {
     };
 
     this.core.singleton('osjs/theme', () => ({
-      resource,
+      resource: themeResource,
       icon: name => icon(name.replace(/(\.png)?$/, '.png'))
+    }));
+
+    this.core.singleton('osjs/sounds', () => ({
+      resource: soundResource,
+      play: (src, options = {}) => {
+        if (soundsEnabled) {
+          const absoluteSrc = src.match(/^(\/|https?:)/)
+            ? src
+            : soundResource(src);
+
+          return playSound(absoluteSrc, options);
+        }
+
+        return false;
+      }
     }));
 
     this.core.on('osjs/core:started', () => {

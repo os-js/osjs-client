@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.75
+
+* Updated @osjs/common usage
+
 ## 3.0.0-alpha.74
 
 * Updated @osjs/common for breaking Babel change

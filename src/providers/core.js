@@ -70,7 +70,7 @@ const getApplications = () => Application.getApplications().map(app => ({
 }));
 
 const getPublicApi = core => {
-  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme'];
+  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme', 'osjs/sounds'];
   const register = (...args) => core.make('osjs/packages').register(...args);
 
   const make = (...args) => {

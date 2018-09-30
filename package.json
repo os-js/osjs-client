@@ -54,7 +54,7 @@
     "node-sass": "^4.9.2",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "sass-loader": "^7.0.3",
-    "simplejsonconf": "^2.0.4",
+    "simplejsonconf": "^2.0.5",
     "stylelint": "^9.6.0",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-scss": "^3.3.1",

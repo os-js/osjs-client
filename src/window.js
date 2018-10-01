@@ -114,6 +114,7 @@ const createAttributes = (attrs) => Object.assign({
   header: true,
   controls: true,
   visibility: 'global',
+  shadowDOM: false,
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
@@ -439,6 +440,28 @@ export default class Window extends EventHandler {
       this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
         .style.display = 'none';
 
+    const renderCallback = () => {
+      if (typeof callback === 'function') {
+        if (this.attributes.shadowDOM) {
+          try {
+            const mode = typeof this.attributes.shadowDOM === 'string'
+              ? this.attributes.shadowDOM
+              : 'open';
+
+            const shadow = this.$content.attachShadow({mode});
+
+            callback(shadow, this);
+
+            return;
+          } catch (e) {
+            console.warn('Shadow DOM not supported?', e);
+          }
+        }
+
+        callback(this.$content, this);
+      }
+    };
+
     if (this.attributes.controls) {
       if (!this.attributes.maximizable) {
         hideButton('maximize');
@@ -477,9 +500,7 @@ export default class Window extends EventHandler {
       // TODO: Global modal
     }
 
-    if (typeof callback === 'function') {
-      callback(this.$content, this);
-    }
+    renderCallback();
 
     this.rendered = true;
     this.setNextZindex(true);

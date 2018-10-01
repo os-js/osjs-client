@@ -52,7 +52,7 @@ export default class Core extends CoreBase {
     options = Object.assign({}, {
       classNames: ['osjs-root'],
       root: document.body
-    }, options);
+    }, options || {});
 
     super(defaultConfiguration, config, options);
 

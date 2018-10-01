@@ -38,10 +38,13 @@ import Websocket from '../websocket';
 import Clipboard from '../clipboard';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
-import {style, script} from '../utils/dom';
+import {style, script, supportedMedia, playSound} from '../utils/dom';
 import * as dnd from '../utils/dnd';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
+/*
+ * Returns an immutable window object
+ */
 const getWindow = win => ({
   id: win.id,
   wid: win.wid,
@@ -55,8 +58,14 @@ const getWindow = win => ({
   close: () => win.close()
 });
 
+/*
+ * Gets an immutable list of windows
+ */
 const getWindows = () => Window.getWindows().map(getWindow);
 
+/*
+ * Gets an immutable list of applications
+ */
 const getApplications = () => Application.getApplications().map(app => ({
   pid: app.pid,
   args: Object.assign({}, app.args),
@@ -69,6 +78,9 @@ const getApplications = () => Application.getApplications().map(app => ({
   session: app.getSession()
 }));
 
+/*
+ * Gets the public facting API object
+ */
 const getPublicApi = core => {
   const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme', 'osjs/sounds'];
   const register = (...args) => core.make('osjs/packages').register(...args);
@@ -95,6 +107,51 @@ const getPublicApi = core => {
     open: (...args) => core.open(...args),
     request: (...args) => core.request(...args)
   });
+};
+
+/*
+ * Resolves various resources
+ */
+const resourceResolver = (core) => {
+  const media = supportedMedia();
+  const basePath = core.config('public');
+
+  const themeResource = path => {
+    const defaultTheme = core.config('desktop.settings.theme');
+    const theme = core.make('osjs/settings').get('osjs/desktop', 'theme', defaultTheme);
+    return `${basePath}themes/${theme}/${path}`;
+  };
+
+  const soundResource = path => {
+    if (!path.match(/\.([a-z]+)$/)) {
+      const defaultExtension = 'mp3';
+      const checkExtensions = ['oga', 'mp3'];
+      const found = checkExtensions.find(str => media.audio[str] === true);
+      const use = found || defaultExtension;
+
+      path += '.' + use;
+    }
+
+    const defaultTheme = core.config('desktop.settings.sounds.name');
+    const theme = core.make('osjs/settings').get('osjs/desktop', 'sounds.name', defaultTheme);
+
+    return `${basePath}sounds/${theme}/${path}`;
+  };
+
+  const soundsEnabled = () => {
+    const defaultState = core.config('desktop.settings.sounds.enabled');
+
+    return core.make('osjs/settings')
+      .get('osjs/desktop', 'sounds.enabled', defaultState);
+  };
+
+  const icon = path => {
+    const defaultTheme = core.config('desktop.settings.icons');
+    const theme = core.make('osjs/settings').get('osjs/desktop', 'icons', defaultTheme);
+    return `${basePath}icons/${theme}/icons/${path}`;
+  };
+
+  return {themeResource, soundResource, soundsEnabled, icon};
 };
 
 /**
@@ -131,11 +188,15 @@ export default class CoreServiceProvider extends ServiceProvider {
       'osjs/locale',
       'osjs/packages',
       'osjs/websocket',
-      'osjs/session'
+      'osjs/session',
+      'osjs/theme',
+      'osjs/sounds'
     ];
   }
 
   init() {
+    const {themeResource, soundResource, soundsEnabled, icon} = resourceResolver(this.core);
+
     this.core.instance('osjs/websocket', (...args) => {
       return new Websocket(...args);
     });
@@ -213,6 +274,26 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.on('osjs/core:started', () => {
       this.session.load();
     });
+
+    this.core.singleton('osjs/theme', () => ({
+      resource: themeResource,
+      icon: name => icon(name.replace(/(\.png)?$/, '.png'))
+    }));
+
+    this.core.singleton('osjs/sounds', () => ({
+      resource: soundResource,
+      play: (src, options = {}) => {
+        if (soundsEnabled) {
+          const absoluteSrc = src.match(/^(\/|https?:)/)
+            ? src
+            : soundResource(src);
+
+          return playSound(absoluteSrc, options);
+        }
+
+        return false;
+      }
+    }));
 
     return this.pm.init();
   }

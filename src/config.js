@@ -111,6 +111,10 @@ export const defaultConfiguration = {
     enabled: true
   },
 
+  notifications: {
+    native: false
+  },
+
   desktop: {
     lock: false,
 

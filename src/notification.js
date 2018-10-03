@@ -30,6 +30,41 @@
 
 import {h, app} from 'hyperapp';
 
+const supportsNativeNotification = 'Notification' in window;
+
+const createNativeNotification = (options, onclick) => {
+  const Notif = window.Notification;
+
+  const create = () => {
+    const notification = new Notif(
+      options.title,
+      {
+        body: options.message,
+        icon: options.icon
+      }
+    );
+
+    notification.onclick = onclick;
+
+    return notification;
+  };
+
+  if (supportsNativeNotification) {
+    if (Notif.permission === 'granted') {
+      return Promise.resolve(create());
+    } else if (Notif.permission !== 'denied') {
+      return new Promise((resolve, reject) => {
+        Notif.requestPermission(permission => {
+          return permission === 'granted' ? resolve(true) : reject(permission);
+        });
+      }).then(create);
+    }
+  }
+
+  return Promise.reject('Unsupported');
+};
+
+
 /**
  * Notification
  *
@@ -84,7 +119,8 @@ export default class Notification {
       icon: null,
       title: defaultLabel,
       message: defaultLabel,
-      timeout: 5000
+      timeout: 5000,
+      native: core.config('notifications.native', false)
     }, options);
 
     this.core.emit('osjs/notification:create', this);
@@ -110,28 +146,42 @@ export default class Notification {
    * Render notification
    */
   render() {
-    const view = state => h('div', {
-      class: 'osjs-notification-wrapper',
-      'data-has-icon': !!state.icon,
-      style: {
-        backgroundImage: state.icon ? `url(${state.icon})` : undefined
+    const onclick = () => this.destroy();
+
+    const renderCustom = () => {
+      const view = state => h('div', {
+        class: 'osjs-notification-wrapper',
+        'data-has-icon': !!state.icon,
+        style: {
+          backgroundImage: state.icon ? `url(${state.icon})` : undefined
+        }
+      }, [
+        h('div', {class: 'osjs-notification-title'}, state.title),
+        h('div', {class: 'osjs-notification-message'}, state.message),
+      ]);
+
+      this.$element.classList.add('osjs-notification');
+
+      if (this.options.timeout) {
+        setTimeout(() => this.destroy(), this.options.timeout);
       }
-    }, [
-      h('div', {class: 'osjs-notification-title'}, state.title),
-      h('div', {class: 'osjs-notification-message'}, state.message),
-    ]);
 
-    this.$element.classList.add('osjs-notification');
+      this.$element.addEventListener('click', onclick);
 
-    if (this.options.timeout) {
-      setTimeout(() => this.destroy(), this.options.timeout);
+      this.$root.appendChild(this.$element);
+
+      app(this.options, {}, view, this.$element);
+    };
+
+    if (this.options.native) {
+      createNativeNotification(this.options, onclick)
+        .catch(err => {
+          console.warn(err);
+          renderCustom();
+        });
+    } else {
+      renderCustom();
     }
-
-    this.$element.addEventListener('click', () => this.destroy());
-
-    this.$root.appendChild(this.$element);
-
-    app(this.options, {}, view, this.$element);
   }
 
 }

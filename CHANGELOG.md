@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.77
+
+* Added some more exports to library
+* Notification now supports native APIs
+* Windows now supports Shadow DOM
+* Moved some core provider services
+
 ## 3.0.0-alpha.76
 
 * Updated dependencies

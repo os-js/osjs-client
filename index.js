@@ -36,6 +36,8 @@ import Desktop from './src/desktop';
 import Application from './src/application';
 import Notification from './src/notification';
 import WindowBehavior from './src/window-behavior';
+import Login from './src/login';
+import Websocket from './src/websocket';
 
 import CoreServiceProvider from './src/providers/core';
 import DesktopServiceProvider from './src/providers/desktop';
@@ -51,6 +53,8 @@ export {
   Application,
   Notification,
   WindowBehavior,
+  Login,
+  Websocket,
 
   CoreServiceProvider,
   DesktopServiceProvider,

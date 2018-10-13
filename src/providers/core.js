@@ -82,7 +82,7 @@ const getApplications = () => Application.getApplications().map(app => ({
  * Gets the public facting API object
  */
 const getPublicApi = core => {
-  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme', 'osjs/sounds'];
+  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme', 'osjs/sounds', 'osjs/dialog'];
   const register = (...args) => core.make('osjs/packages').register(...args);
 
   const make = (...args) => {

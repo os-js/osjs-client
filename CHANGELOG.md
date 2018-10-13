@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.78
+
+* Changed 'ev' in event signatures for window
+
 ## 3.0.0-alpha.77
 
 * Added some more exports to library

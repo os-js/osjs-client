@@ -406,10 +406,10 @@ export default class Window extends EventHandler {
     this.emit('init', this);
 
     const d = droppable(this.$element, {
-      ondragenter: (...args) => this.emit('dragenter', this, ...args),
-      ondragover: (...args) => this.emit('dragover', this, ...args),
-      ondragleave: (...args) => this.emit('dragleave', this, ...args),
-      ondrop: (...args) => this.emit('drop', this, ...args)
+      ondragenter: (...args) => this.emit('dragenter', ...args, this),
+      ondragover: (...args) => this.emit('dragover', ...args, this),
+      ondragleave: (...args) => this.emit('dragleave', ...args, this),
+      ondrop: (...args) => this.emit('drop', ...args, this)
     });
 
     this.on('destroy', () => d.destroy());

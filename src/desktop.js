@@ -225,16 +225,14 @@ export default class Desktop extends EventHandler {
 
       // Handles tab-ing and o
       // TODO: Handle this better
-      const {type, tagName} = e.target;
+      const {tagName} = e.target;
       const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tagName) !== -1;
 
+      // FIXME: Handle tab on focused windows only
       if (isInput && e.keyCode === 9) {
         e.preventDefault();
 
-        const isTextfield = ['text', 'password', 'number', 'email'].indexOf(type) !== -1 ||
-          tagName === 'TEXTAREA';
-
-        if (isTextfield) {
+        if (tagName === 'TEXTAREA') {
           handleTabOnTextarea(e);
         }
       }

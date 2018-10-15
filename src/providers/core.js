@@ -82,15 +82,19 @@ const getApplications = () => Application.getApplications().map(app => ({
  * Gets the public facting API object
  */
 const getPublicApi = core => {
-  const allowed = ['osjs/packages', 'osjs/package', 'osjs/themes', 'osjs/theme', 'osjs/sounds', 'osjs/dialog'];
+  const globalBlacklist = core.config('providers.globalBlacklist', []);
+  const globalWhitelist = core.config('providers.globalWhitelist', []);
   const register = (...args) => core.make('osjs/packages').register(...args);
 
   const make = (...args) => {
-    if (!core.config('development')) {
-      if (core.has(args[0])) {
-        if (allowed.indexOf(args[0]) === -1) {
-          throw new Error(`You cannot use ${args[0]} via global API in production mode`);
-        }
+    const [name] = args;
+
+    if (core.has(name)) {
+      const blacklisted = globalBlacklist.length > 0 && globalBlacklist.indexOf(name) !== -1;
+      const notWhitelisted = globalWhitelist.length > 0 && globalWhitelist.indexOf(name) === -1;
+
+      if (blacklisted || notWhitelisted) {
+        throw new Error(`The provider '${name}' cannot be used via global scope`);
       }
     }
 

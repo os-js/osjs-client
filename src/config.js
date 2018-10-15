@@ -215,5 +215,14 @@ export const defaultConfiguration = {
       '^video': {name: 'video-x-generic'},
       '^image': {name: 'image-x-generic'}
     }
+  },
+
+  providers: {
+    globalBlacklist: [
+      'osjs/websocket',
+      'osjs/clipboard',
+      'osjs/gapi'
+    ],
+    globalWhitelist: []
   }
 };

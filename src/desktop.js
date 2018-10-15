@@ -214,24 +214,21 @@ export default class Desktop extends EventHandler {
     });
 
     this.core.$root.addEventListener('keydown', e => {
+      if (!e.target) {
+        return;
+      }
+
       if (e.keyCode === 114) { // F3
         e.preventDefault();
 
         if (this.search) {
           this.search.show();
         }
-        return;
-      }
-
-      if (!e.target) {
-        return;
-      }
-
-      const {tagName} = e.target;
-      const isInput = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].indexOf(tagName) !== -1;
-
-      if (e.keyCode === 9) {
+      } else if (e.keyCode === 9) { // Tab
+        const {tagName} = e.target;
+        const isInput = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].indexOf(tagName) !== -1;
         const w = Window.lastWindow();
+
         if (isWithinWindow(w, e.target)) {
           if (isInput) {
             if (tagName === 'TEXTAREA') {

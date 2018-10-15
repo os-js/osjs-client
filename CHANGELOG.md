@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.79
+
+* Configuration of allowed global provider access
+* Some minor opimizations in keydown handler
+* Don't allow tabbing of elements outside active window
+* Prevent tab character in text fields
+* Updated globally exposed providers
+
 ## 3.0.0-alpha.78
 
 * Changed 'ev' in event signatures for window

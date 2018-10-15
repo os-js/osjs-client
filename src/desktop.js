@@ -205,6 +205,10 @@ export default class Desktop extends EventHandler {
       }
     };
 
+    const isWithinWindow = (w, target) => {
+      return w && w.$element.contains(target);
+    };
+
     ['keydown', 'keyup', 'keypress'].forEach(n => {
       this.core.$root.addEventListener(n, e => forwardKeyEvent(n, e));
     });
@@ -223,17 +227,21 @@ export default class Desktop extends EventHandler {
         return;
       }
 
-      // Handles tab-ing and o
-      // TODO: Handle this better
       const {tagName} = e.target;
-      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(tagName) !== -1;
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].indexOf(tagName) !== -1;
 
-      // FIXME: Handle tab on focused windows only
-      if (isInput && e.keyCode === 9) {
-        e.preventDefault();
-
-        if (tagName === 'TEXTAREA') {
-          handleTabOnTextarea(e);
+      if (e.keyCode === 9) {
+        const w = Window.lastWindow();
+        if (isWithinWindow(w, e.target)) {
+          if (isInput) {
+            if (tagName === 'TEXTAREA') {
+              handleTabOnTextarea(e);
+            }
+          } else {
+            e.preventDefault();
+          }
+        } else {
+          e.preventDefault();
         }
       }
     });

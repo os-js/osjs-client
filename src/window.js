@@ -185,6 +185,19 @@ const checkNextZindex = ({wid, attributes, state}) => {
 };
 
 /*
+ * Clamps position to viewport
+ */
+const clampPosition = (rect, {dimension, position}) => {
+  const maxLeft = rect.width - dimension.width;
+  const maxTop = rect.height - dimension.height + rect.top;
+
+  return {
+    left: Math.min(maxLeft, position.left),
+    top: Math.min(maxTop, position.top)
+  };
+};
+
+/*
  * Default window template
  */
 const TEMPLATE = `<div class="osjs-window-inner">
@@ -494,6 +507,10 @@ export default class Window extends EventHandler {
     if (!this._preventDefaultPosition) {
       this.gravitate(this.attributes.gravity);
     }
+
+    // Clamp the initial window position to viewport
+    const rect = this.core.make('osjs/desktop').getRect();
+    Object.assign(this.state.position, clampPosition(rect, this.state));
 
     this.core.$root.appendChild(this.$element);
 

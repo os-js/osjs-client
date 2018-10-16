@@ -439,7 +439,7 @@ export default class Window extends EventHandler {
    */
   render(callback = function() {}) {
     if (this.rendered) {
-      return;
+      return this;
     } else if (!this.inited) {
       this.init();
     }
@@ -677,7 +677,7 @@ export default class Window extends EventHandler {
    * @param {WindowDimension} dimension The dimension
    */
   setDimension(dimension) {
-    const {width, height} = Object.assign(this.state.dimension, dimension || {});
+    const {width, height} = Object.assign({}, this.state.dimension, dimension || {});
 
     this.state.dimension.width = width;
     this.state.dimension.height = height;
@@ -691,7 +691,7 @@ export default class Window extends EventHandler {
    * @param {Boolean} [preventDefault=false] Prevents any future position setting in init procedure
    */
   setPosition(position, preventDefault = false) {
-    const {left, top} = Object.assign(this.state.position, position || {});
+    const {left, top} = Object.assign({}, this.state.position, position || {});
 
     this.state.position.top = top;
     this.state.position.left = left;

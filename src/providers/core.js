@@ -64,21 +64,6 @@ const getWindow = win => ({
 const getWindows = () => Window.getWindows().map(getWindow);
 
 /*
- * Gets an immutable list of applications
- */
-const getApplications = () => Application.getApplications().map(app => ({
-  pid: app.pid,
-  args: Object.assign({}, app.args),
-  metadata: Object.assign({}, app.metadata),
-  started: app.started,
-  windows: app.windows.map(getWindow),
-  emit: (...args) => app.emit(...args),
-  destroy: () => app.destroy(),
-  relaunch: () => app.relaunch(),
-  session: app.getSession()
-}));
-
-/*
  * Gets the public facting API object
  */
 const getPublicApi = core => {
@@ -105,7 +90,6 @@ const getPublicApi = core => {
     make,
     register,
     getWindows,
-    getApplications,
     url: (...args) => core.url(...args),
     run: (...args) => core.run(...args),
     open: (...args) => core.open(...args),

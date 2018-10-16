@@ -43,27 +43,6 @@ import * as dnd from '../utils/dnd';
 import {EventHandler, ServiceProvider} from '@osjs/common';
 
 /*
- * Returns an immutable window object
- */
-const getWindow = win => ({
-  id: win.id,
-  wid: win.wid,
-  attributes: Object.assign({}, win.attributes),
-  state: Object.assign({}, win.state),
-  focus: () => win.focus(),
-  blur: () => win.blur(),
-  maximize: () => win.maximize(),
-  raise: () => win.raise(),
-  restore: () => win.restore(),
-  close: () => win.close()
-});
-
-/*
- * Gets an immutable list of windows
- */
-const getWindows = () => Window.getWindows().map(getWindow);
-
-/*
  * Gets the public facting API object
  */
 const getPublicApi = core => {
@@ -89,7 +68,6 @@ const getPublicApi = core => {
   return Object.freeze({
     make,
     register,
-    getWindows,
     url: (...args) => core.url(...args),
     run: (...args) => core.run(...args),
     open: (...args) => core.open(...args),

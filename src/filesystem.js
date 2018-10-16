@@ -172,7 +172,7 @@ export default class Filesystem extends EventHandler {
    */
   mountAll(stopOnError = true) {
     this.mounts = this.core.config('vfs.mountpoints')
-      .concat(this.options.mounts || []) // TODO: Unique
+      .concat(this.options.mounts || [])
       .map(mount => {
         try {
           return createMountpoint(this.core, this.adapters, mount);
@@ -181,6 +181,15 @@ export default class Filesystem extends EventHandler {
         }
 
         return null;
+      })
+      .filter((mount, pos, arr) => {
+        const index = arr.findIndex(item => item.label === mount.label || item.root === mount.label);
+        if (index === pos) {
+          return true;
+        }
+
+        console.warn('Removed duplicate mountpoint', mount);
+        return false;
       })
       .filter(mount => mount !== null);
 

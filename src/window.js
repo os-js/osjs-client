@@ -397,6 +397,10 @@ export default class Window extends EventHandler {
    * Initialize window
    */
   init() {
+    if (this.inited) {
+      return;
+    }
+
     const behavior = this.core.make('osjs/window-behavior');
     if (behavior) {
       behavior.init(this);
@@ -421,6 +425,10 @@ export default class Window extends EventHandler {
    * @return {Window} this instance
    */
   render(callback = function() {}) {
+    if (!this.inited) {
+      this.init();
+    }
+
     this.$element.innerHTML = TEMPLATE;
 
     ['osjs-window', ...this.attributes.classNames]

@@ -425,7 +425,9 @@ export default class Window extends EventHandler {
    * @return {Window} this instance
    */
   render(callback = function() {}) {
-    if (!this.inited) {
+    if (this.rendered) {
+      return;
+    } else if (!this.inited) {
       this.init();
     }
 

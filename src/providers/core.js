@@ -183,6 +183,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     return [
       'osjs/application',
       'osjs/window',
+      'osjs/windows',
       'osjs/event-handler',
       'osjs/window-behaviour',
       'osjs/dnd',
@@ -201,6 +202,10 @@ export default class CoreServiceProvider extends ServiceProvider {
   init() {
     const {themeResource, soundResource, soundsEnabled, icon} = resourceResolver(this.core);
 
+    const createWindow = (options = {}) => {
+      return new Window(this.core, options);
+    };
+
     this.core.instance('osjs/websocket', (...args) => {
       return new Websocket(...args);
     });
@@ -209,9 +214,12 @@ export default class CoreServiceProvider extends ServiceProvider {
       return new Application(this.core, data);
     });
 
-    this.core.instance('osjs/window', (options = {}) => {
-      return new Window(this.core, options);
-    });
+    this.core.instance('osjs/window', createWindow);
+
+    this.core.singleton('osjs/windows', () => ({
+      create: createWindow,
+      list: () => Window.getWindows()
+    }));
 
     this.core.instance('osjs/event-handler', (...args) => {
       return new EventHandler(...args);

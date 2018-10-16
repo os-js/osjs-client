@@ -1,5 +1,16 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.80
+
+* Don't mount similar mountpoints (duplicates)
+* Removed 'getWindows' from global OSjs namespace
+* Removed 'getApplications' from global OSjs namespace
+* Added 'osjs/windows' provider
+* Some minor assignment updates for certain window attributes
+* Clamp initial window position if outside viewport
+* Don't allow multiple render() in window
+* Run init() on window in render() if not inited
+
 ## 3.0.0-alpha.79
 
 * Configuration of allowed global provider access

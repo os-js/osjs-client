@@ -411,7 +411,7 @@ export default class Window extends EventHandler {
    */
   init() {
     if (this.inited) {
-      return;
+      return this;
     }
 
     const behavior = this.core.make('osjs/window-behavior');
@@ -430,6 +430,8 @@ export default class Window extends EventHandler {
     });
 
     this.on('destroy', () => d.destroy());
+
+    return this;
   }
 
   /**

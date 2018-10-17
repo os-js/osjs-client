@@ -88,6 +88,11 @@ const resourceResolver = (core) => {
     return `${basePath}themes/${theme}/${path}`;
   };
 
+  const getSoundThemeName = () => {
+    const defaultTheme = core.config('desktop.settings.sounds');
+    return core.make('osjs/settings').get('osjs/desktop', 'sounds', defaultTheme);
+  };
+
   const soundResource = path => {
     if (!path.match(/\.([a-z]+)$/)) {
       const defaultExtension = 'mp3';
@@ -98,18 +103,12 @@ const resourceResolver = (core) => {
       path += '.' + use;
     }
 
-    const defaultTheme = core.config('desktop.settings.sounds.name');
-    const theme = core.make('osjs/settings').get('osjs/desktop', 'sounds.name', defaultTheme);
+    const theme = getSoundThemeName();
 
-    return `${basePath}sounds/${theme}/${path}`;
+    return theme ? `${basePath}sounds/${theme}/${path}` : null;
   };
 
-  const soundsEnabled = () => {
-    const defaultState = core.config('desktop.settings.sounds.enabled');
-
-    return core.make('osjs/settings')
-      .get('osjs/desktop', 'sounds.enabled', defaultState);
-  };
+  const soundsEnabled = () => !!getSoundThemeName();
 
   const icon = path => {
     const defaultTheme = core.config('desktop.settings.icons');
@@ -257,12 +256,14 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/sounds', () => ({
       resource: soundResource,
       play: (src, options = {}) => {
-        if (soundsEnabled) {
+        if (soundsEnabled()) {
           const absoluteSrc = src.match(/^(\/|https?:)/)
             ? src
             : soundResource(src);
 
-          return playSound(absoluteSrc, options);
+          if (absoluteSrc) {
+            return playSound(absoluteSrc, options);
+          }
         }
 
         return false;

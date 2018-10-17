@@ -121,10 +121,7 @@ export const defaultConfiguration = {
     settings: {
       font: 'Roboto',
       theme: 'Standard',
-      sounds: {
-        enabled: true,
-        name: 'FreedesktopSounds'
-      },
+      sounds: 'FreedesktopSounds',
       icons: 'Gnome',
       animations: false,
       panels: [{

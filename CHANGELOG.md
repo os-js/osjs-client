@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.81
+
+* Updated sound configurations
+
 ## 3.0.0-alpha.80
 
 * Don't mount similar mountpoints (duplicates)

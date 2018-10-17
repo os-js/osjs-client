@@ -177,6 +177,7 @@ export default class AuthServiceProvider extends ServiceProvider {
     }
 
     if (reload) {
+      // TODO: Reload, not refresh
       setTimeout(() => window.location.reload(), 1);
     }
   }

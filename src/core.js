@@ -102,6 +102,18 @@ export default class Core extends CoreBase {
 
     console.group('Core::boot()');
 
+    this.on('osjs/core:started', () => {
+      if (this.has('osjs/sounds')) {
+        this.make('osjs/sounds').play('service-login');
+      }
+    });
+
+    this.on('osjs/core:destroy', () => {
+      if (this.has('osjs/sounds')) {
+        this.make('osjs/sounds').play('service-logout');
+      }
+    });
+
     return super.boot()
       .then(() => {
         this.options.classNames.forEach(n => this.$root.classList.add(n));

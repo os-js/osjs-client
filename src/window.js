@@ -244,6 +244,7 @@ export default class Window extends EventHandler {
    * @param {String} [options.title] Window Title
    * @param {String} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
+   * @param {String|Function} [options.template] The Window HTML template (or function with signature (el, win) for programatic construction)
    * @param {WindowPosition|String} [options.position] Window position
    * @param {WindowDimension} [options.dimension] Window dimension
    * @param {WindowAttributes} [options.attributes] Apply Window attributes
@@ -254,6 +255,7 @@ export default class Window extends EventHandler {
       id: null,
       title: null,
       parent: null,
+      template: null,
       attributes: {},
       position: {},
       dimension: {},
@@ -367,19 +369,11 @@ export default class Window extends EventHandler {
      */
     this._loadingDebounce = null;
 
-    // Assign the window if it is a child
-    if (this.parent) {
-      this.on('destroy', () => {
-        const foundIndex = this.parent.children.findIndex(w => w === this);
-        if (foundIndex !== -1) {
-          this.parent.children.splice(foundIndex, 1);
-        }
-      });
-
-      this.parent.children.push(this);
-    }
-
-    this.core.emit('osjs/window:create', this);
+    /**
+     * The window template
+     * @type {String|Function}
+     */
+    this._template = options.template;
   }
 
   /**
@@ -428,14 +422,34 @@ export default class Window extends EventHandler {
       return this;
     }
 
+    // Assign the window if it is a child
+    if (this.parent) {
+      this.on('destroy', () => {
+        const foundIndex = this.parent.children.findIndex(w => w === this);
+        if (foundIndex !== -1) {
+          this.parent.children.splice(foundIndex, 1);
+        }
+      });
+
+      this.parent.children.push(this);
+    }
+
+    // Insert template
+    if (typeof this._template === 'string') {
+      this.$element.innerHTML = this._template;
+    } else if (typeof this._template === 'function') {
+      this._template(this.$element, this);
+    } else {
+      this.$element.innerHTML = TEMPLATE;
+    }
+
+    // Behavior
     const behavior = this.core.make('osjs/window-behavior');
     if (behavior) {
       behavior.init(this);
     }
 
-    this.inited = true;
-    this.emit('init', this);
-
+    // DnD functionality
     const d = droppable(this.$element, {
       ondragenter: (...args) => this.emit('dragenter', ...args, this),
       ondragover: (...args) => this.emit('dragover', ...args, this),
@@ -444,6 +458,10 @@ export default class Window extends EventHandler {
     });
 
     this.on('destroy', () => d.destroy());
+
+    this.inited = true;
+    this.emit('init', this);
+    this.core.emit('osjs/window:create', this);
 
     return this;
   }
@@ -459,8 +477,6 @@ export default class Window extends EventHandler {
     } else if (!this.inited) {
       this.init();
     }
-
-    this.$element.innerHTML = TEMPLATE;
 
     ['osjs-window', ...this.attributes.classNames]
       .filter(val => !!val)

@@ -342,6 +342,18 @@ export default class Window extends EventHandler {
     this.$header = null;
 
     /**
+     * The icon container
+     * @type {Node}
+     */
+    this.$icon = null;
+
+    /**
+     * The title container
+     * @type {Node}
+     */
+    this.$title = null;
+
+    /**
      * Internal variable to signal not to use default position
      * given by user (used for restore)
      * @type {Boolean}
@@ -404,6 +416,8 @@ export default class Window extends EventHandler {
     this.$element = null;
     this.$content = null;
     this.$header = null;
+    this.$icon = null;
+    this.$title = null;
   }
 
   /**
@@ -456,6 +470,8 @@ export default class Window extends EventHandler {
 
     this.$content = this.$element.querySelector('.osjs-window-content');
     this.$header = this.$element.querySelector('.osjs-window-header');
+    this.$icon = this.$element.querySelector('.osjs-window-icon > div');
+    this.$title = this.$element.querySelector('.osjs-window-title');
 
     if (!this.attributes.header) {
       this.$header.style.display = 'none';
@@ -878,48 +894,49 @@ export default class Window extends EventHandler {
       return;
     }
 
-    // TODO: Optimize
+    const {$element, $title, $icon, id, state, attributes} = this;
+    const {width, height} = state.dimension;
+    const {top, left} = state.position;
+    const {title, icon, zIndex, styles} = state;
 
-    const {width, height} = this.state.dimension;
-    const {top, left} = this.state.position;
-    const {zIndex} = this.state;
-
-    const attributes = {
-      id: this.id,
-      media: this.state.media,
-      moving: this.state.moving,
-      resizing: this.state.resizing,
-      loading: this.state.loading,
-      focused: this.state.focused,
-      maximized: this.state.maximized,
-      minimized: this.state.minimized,
-      modal: this.attributes.modal,
-      ontop: this.attributes.ontop,
-      resizable: this.attributes.resizable,
-      maximizable: this.attributes.maximizable,
-      minimizable: this.attributes.minimizable
+    const attrs = {
+      id: id,
+      media: state.media,
+      moving: state.moving,
+      resizing: state.resizing,
+      loading: state.loading,
+      focused: state.focused,
+      maximized: state.maximized,
+      minimized: state.minimized,
+      modal: attributes.modal,
+      ontop: attributes.ontop,
+      resizable: attributes.resizable,
+      maximizable: attributes.maximizable,
+      minimizable: attributes.minimizable
     };
 
-    Object.keys(attributes)
-      .forEach(a => this.$element.setAttribute(`data-${a}`, String(attributes[a])));
-
-    const $title = this.$element.querySelector('.osjs-window-title');
-    if ($title) {
-      $title.innerHTML = escapeHtml(this.state.title);
-    }
-
-    const $icon = this.$element.querySelector('.osjs-window-icon > div');
-    if ($icon) {
-      $icon.style.backgroundImage = `url(${this.state.icon})`;
-    }
-
-    this.$element.style.cssText = createCssText(Object.assign({
+    const cssText = createCssText(Object.assign({
       top: String(top) + 'px',
       left: String(left) + 'px',
       height: String(height) + 'px',
       width: String(width) + 'px',
-      zIndex: (this.attributes.ontop ? ONTOP_ZINDEX : 0) + zIndex
-    }, this.state.styles));
+      zIndex: (attrs.ontop ? ONTOP_ZINDEX : 0) + zIndex
+    }, styles));
+
+    if ($title) {
+      $title.innerHTML = escapeHtml(title);
+    }
+
+    if ($icon) {
+      $icon.style.backgroundImage = `url(${icon})`;
+    }
+
+    if ($element) {
+      Object.keys(attrs)
+        .forEach(a => $element.setAttribute(`data-${a}`, String(attrs[a])));
+
+      $element.style.cssText = cssText;
+    }
   }
 
 }

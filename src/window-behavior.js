@@ -181,12 +181,26 @@ export default class WindowBehavior {
    * @param {Window} win Window reference
    */
   init(win) {
-    win.$element.addEventListener('touchstart', (ev) => this.mousedown(ev, win), touchArg);
-    win.$element.addEventListener('mousedown', (ev) => this.mousedown(ev, win));
-    win.$element.addEventListener('click', (ev) => this.click(ev, win));
-    win.$element.addEventListener('dblclick', (ev) => this.dblclick(ev, win));
-    win.$element.addEventListener('transitionend', (ev) => {
-      this.core.emit('osjs/window:transitionend', ev, win);
+    const ontouchstart = ev => this.mousedown(ev, win);
+    const onmousedown = ev => this.mousedown(ev, win);
+    const onclick = ev => this.click(ev, win);
+    const ondblclick = ev => this.dblclick(ev, win);
+    const ontrasitionend = ev => this.core.emit('osjs/window:transitionend', ev, win);
+
+    win.$element.addEventListener('touchstart', ontouchstart, touchArg);
+    win.$element.addEventListener('mousedown', onmousedown);
+    win.$element.addEventListener('click', onclick);
+    win.$element.addEventListener('dblclick', ondblclick);
+    win.$element.addEventListener('transitionend', ontrasitionend);
+
+    win.on('destroy', () => {
+      if (win.$element) {
+        win.$element.removeEventListener('touchstart', ontouchstart, touchArg);
+        win.$element.removeEventListener('mousedown', onmousedown);
+        win.$element.removeEventListener('click', onclick);
+        win.$element.removeEventListener('dblclick', ondblclick);
+        win.$element.removeEventListener('transitionend', ontrasitionend);
+      }
     });
 
     const rect = this.core.has('osjs/desktop')

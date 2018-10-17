@@ -125,7 +125,7 @@ export default class Desktop extends EventHandler {
     }
     this.$styles = null;
 
-    this._removeIconTheme();
+    this._removeIcons();
     this._removeTheme();
   }
 

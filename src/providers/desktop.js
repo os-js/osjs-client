@@ -41,7 +41,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
   constructor(core) {
     super(core);
 
-    this.desktop = new Desktop(core);
+    this.desktop = null;
   }
 
   destroy() {
@@ -58,6 +58,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
   }
 
   init() {
+    this.desktop = new Desktop(this.core);
     this.desktop.init();
 
     this.core.singleton('osjs/desktop', () => ({

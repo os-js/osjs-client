@@ -41,7 +41,7 @@ export default class NotificationServiceProvider extends ServiceProvider {
   constructor(core) {
     super(core);
 
-    this.$element = document.createElement('div');
+    this.$element = null;
   }
 
   destroy() {
@@ -59,6 +59,8 @@ export default class NotificationServiceProvider extends ServiceProvider {
   }
 
   init() {
+    this.$element = document.createElement('div');
+
     this.core.instance('osjs/notification', (options) => {
       if (!options) {
         throw new Error('Notification options not given');

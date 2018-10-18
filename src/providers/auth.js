@@ -109,6 +109,15 @@ export default class AuthServiceProvider extends ServiceProvider {
   }
 
   /**
+   * Destroys authentication
+   */
+  destroy() {
+    this.ui.destroy();
+
+    return super.destroy();
+  }
+
+  /**
    * Get a list of services this provider registers
    */
   provides() {
@@ -179,6 +188,7 @@ export default class AuthServiceProvider extends ServiceProvider {
     if (reload) {
       // TODO: Reload, not refresh
       setTimeout(() => window.location.reload(), 1);
+      //setTimeout(() => this.core.boot(), 1);
     }
   }
 

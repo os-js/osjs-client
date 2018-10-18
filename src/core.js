@@ -63,6 +63,8 @@ export default class Core extends CoreBase {
     this.ping = null;
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
+
+    this.options.classNames.forEach(n => this.$root.classList.add(n));
   }
 
   /**
@@ -78,6 +80,17 @@ export default class Core extends CoreBase {
     this.ping = clearInterval(this.ping);
 
     Application.destroyAll();
+
+    if (this.ws) {
+      this.ws.close();
+    }
+
+    this.user = null;
+    this.ws = null;
+    this.connected = false;
+    this.connecting = false;
+    this.reconnecting = false;
+    this.ping = null;
 
     super.destroy();
   }
@@ -116,8 +129,6 @@ export default class Core extends CoreBase {
 
     return super.boot()
       .then(() => {
-        this.options.classNames.forEach(n => this.$root.classList.add(n));
-
         if (this.has('osjs/auth')) {
           return this.make('osjs/auth').show(user => {
             this.user = user;

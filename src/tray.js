@@ -61,6 +61,10 @@ export default class Tray {
     this.entries = [];
   }
 
+  destroy() {
+    this.entries = [];
+  }
+
   /**
    * Creates a new Tray entry
    * @param {Object} options Options

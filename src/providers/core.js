@@ -160,6 +160,14 @@ export default class CoreServiceProvider extends ServiceProvider {
     ];
   }
 
+  destroy() {
+    this.tray.destroy();
+    this.pm.destroy();
+    this.clipboard.destroy();
+
+    super.destroy();
+  }
+
   init() {
     const {themeResource, soundResource, soundsEnabled, icon} = resourceResolver(this.core);
 

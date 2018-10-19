@@ -35,6 +35,10 @@ export default class Clipboard {
     this.clear();
   }
 
+  destroy() {
+    this.clear();
+  }
+
   clear() {
     this.value = Promise.resolve();
   }

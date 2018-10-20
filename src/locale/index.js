@@ -31,3 +31,4 @@
 export * from './en_EN';
 export * from './nb_NO';
 export * from './vi_VN';
+export * from './fr_FR';

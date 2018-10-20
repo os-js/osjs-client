@@ -41,7 +41,8 @@ export const defaultConfiguration = {
   languages: {
     en_EN: 'English',
     nb_NO: 'Norwegian, Norsk (bokmål)',
-    vi_VN: 'Vietnamese, Vietnamese'
+    vi_VN: 'Vietnamese, Vietnamese',
+    fr_FR: 'French'
   },
 
   application: {

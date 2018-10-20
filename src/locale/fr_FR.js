@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-export const en_EN = {
+export const fr_FR = {
   // Core
   ERR_REQUEST_STANDALONE: 'Impossible d\'effectuer des requêtes en mode autonome.',
   ERR_REQUEST_NOT_OK: 'Une erreur s\'est produite en exécutant une requête : {0}',

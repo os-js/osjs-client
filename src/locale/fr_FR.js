@@ -38,7 +38,7 @@ export const fr_FR = {
   ERR_VFS_MOUNT_ALREADY_MOUNTED: 'Le système de fichier \'{0}\' est déjà monté',
   ERR_VFS_PATH_FORMAT_INVALID: 'Le dossier \'{0}\' ne correspond pas \'name:/path\'',
   ERR_PACKAGE_NOT_FOUND: 'Les métadonnées du paquet \'{0}\' n\'ont pas été touvées',
-  ERR_PACKAGE_LOAD: 'Package Loading \'{0}\' failed: {1}',
+  ERR_PACKAGE_LOAD: 'Le chargement du paquet \'{0}\' a échoué: {1}',
   ERR_PACKAGE_NO_RUNTIME: 'Durée d\'exécution du paquet \'{0}\' absente',
   ERR_PACKAGE_NO_METADATA: 'Métadonnée absentes pour \'{0}\'. Sont-elles dans le manifeste ?',
   ERR_PACKAGE_EXCEPTION: 'Une exception s\'est produite dans \'{0}\'',

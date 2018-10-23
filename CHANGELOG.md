@@ -1,5 +1,17 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.82
+
+* Added French (fr_FR) translations (#16)
+* Updated some destructors
+* Updated @osjs/common
+* Updated dependencies
+* Updated some destructors etc.
+* Fixed call to undefined method in desktop destructor
+* Added login/logout sounds
+* Support custom window templates
+* Some optimization to window and behavior
+
 ## 3.0.0-alpha.81
 
 * Updated sound configurations

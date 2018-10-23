@@ -189,7 +189,7 @@ export default class AuthServiceProvider extends ServiceProvider {
       setTimeout(() => {
         window.location.reload();
         // FIXME Reload, not refresh
-        //this.core.boot();
+        // this.core.boot();
       }, 1);
     }
   }

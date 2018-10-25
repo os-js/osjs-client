@@ -30,6 +30,7 @@
 import {EventHandler} from '@osjs/common';
 import Websocket from './websocket';
 import Window from './window';
+import {fetch} from './utils/fetch';
 
 const applications = [];
 let applicationCount = 0;
@@ -223,20 +224,15 @@ export default class Application extends EventHandler {
    */
   request(path = '/', params = {}, method = 'post', options = {}) {
     const uri = this.resource(path);
-    const body = method === 'get' ? null : params;
 
-    const fetchOptions = {
+    const fetchOptions = Object.assign({
       method,
-      body: JSON.stringify(body),
+      body: params,
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       }
-    };
-
-    if (method.toLowerCase() === 'get' && fetchOptions.body) {
-      delete fetchOptions.body;
-    }
+    }, options);
 
     return fetch(uri, fetchOptions).then(response => {
       const contentType = response.headers.get('content-type');

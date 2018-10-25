@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.83
+
+* Better Application#request
+
 ## 3.0.0-alpha.82
 
 * Added French (fr_FR) translations (#16)

@@ -217,32 +217,14 @@ export default class Application extends EventHandler {
    * Performs a request to the OS.js server with the application
    * as the endpoint.
    * @param {String} [path=/] Append this to endpoint
-   * @param {Object} [params] Parameters to pass on
-   * @param {String} [method=post] HTTP Method
-   * @param {Object} [options] HTTP Options
+   * @param {Options} [options] fetch options
+   * @param {String} [type='json'] Request / Response type
    * @return {Promise<*, Error>} ArrayBuffer or JSON
    */
-  request(path = '/', params = {}, method = 'post', options = {}) {
+  request(path = '/', options = {}, type = 'json') {
     const uri = this.resource(path);
 
-    const fetchOptions = Object.assign({
-      method,
-      body: params,
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      }
-    }, options);
-
-    return fetch(uri, fetchOptions).then(response => {
-      const contentType = response.headers.get('content-type');
-
-      if (contentType && contentType.includes('application/json')) {
-        return response.json();
-      }
-
-      return response.arrayBuffer();
-    });
+    return fetch(uri, options, type);
   }
 
   /**

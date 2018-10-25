@@ -1,8 +1,8 @@
 # Changelog for osjs-client
 
-## 3.0.0-alpha.83
+## 3.0.0-alpha.84
 
-* Better Application#request
+* Application#request now reflects Core#request
 
 ## 3.0.0-alpha.82
 

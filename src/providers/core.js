@@ -40,7 +40,7 @@ import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
 import {style, script, supportedMedia, playSound} from '../utils/dom';
 import * as dnd from '../utils/dnd';
-import {EventHandler, ServiceProvider} from '@osjs/common';
+import {EventHandler, ServiceProvider, BasicApplication} from '@osjs/common';
 
 /*
  * Gets the public facting API object
@@ -143,6 +143,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   provides() {
     return [
       'osjs/application',
+      'osjs/basic-application',
       'osjs/window',
       'osjs/windows',
       'osjs/event-handler',
@@ -181,6 +182,10 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);
+    });
+
+    this.core.instance('osjs/basic-application', (proc, win, options = {}) => {
+      return new BasicApplication(this.core, proc, win, options);
     });
 
     this.core.instance('osjs/window', createWindow);

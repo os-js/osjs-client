@@ -3,7 +3,6 @@
   "version": "3.0.0-alpha.85",
   "description": "OS.js v3 client",
   "main": "dist/main.js",
-  "module": "dist/main.js",
   "style": "dist/main.css",
   "files": [
     "dist/main.js",

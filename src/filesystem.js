@@ -29,7 +29,7 @@
  */
 
 import * as VFS from './vfs/methods';
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 import systemAdapter from './vfs/system';
 import appsAdapter from './vfs/apps';
 import merge from 'deepmerge';
@@ -112,7 +112,7 @@ const createMountpoint = (core, adapters, props) => {
  *
  * @desc Class that manages filesystems
  */
-export default class Filesystem extends EventHandler {
+export default class Filesystem extends EventEmitter {
 
   /**
    * Create filesystem manager

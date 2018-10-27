@@ -40,7 +40,9 @@ import * as translations from '../locale';
 import {format, translatable, translatableFlat} from '../utils/locale';
 import {style, script, supportedMedia, playSound} from '../utils/dom';
 import * as dnd from '../utils/dnd';
-import {EventHandler, ServiceProvider, BasicApplication} from '@osjs/common';
+import {BasicApplication} from '../basic-application.js';
+import {ServiceProvider} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 
 /*
  * Gets the public facting API object
@@ -196,7 +198,12 @@ export default class CoreServiceProvider extends ServiceProvider {
     }));
 
     this.core.instance('osjs/event-handler', (...args) => {
-      return new EventHandler(...args);
+      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
+      return new EventEmitter(...args);
+    });
+
+    this.core.instance('osjs/event-emitter', (...args) => {
+      return new EventEmitter(...args);
     });
 
     this.core.singleton('osjs/window-behavior', () => {

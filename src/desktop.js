@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
 import Window from './window';
@@ -87,7 +87,7 @@ const applyBackgroundStyles = (core, background) => {
  *
  * @desc Handles the Desktop
  */
-export default class Desktop extends EventHandler {
+export default class Desktop extends EventEmitter {
 
   /**
    * Create Desktop

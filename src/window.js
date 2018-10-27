@@ -27,7 +27,7 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 import {droppable} from './utils/dnd';
 import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
 
@@ -233,7 +233,7 @@ const TEMPLATE = `<div class="osjs-window-inner">
  *
  * @desc Class for a OS.js Window
  */
-export default class Window extends EventHandler {
+export default class Window extends EventEmitter {
 
   /**
    * Create window

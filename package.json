@@ -28,7 +28,9 @@
   "keywords": [
     "osjs"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@osjs/event-emitter": "^1.0.2"
+  },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",
   "bugs": {
@@ -40,7 +42,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime": "^7.1.2",
-    "@osjs/common": "^3.0.0-alpha.23",
+    "@osjs/common": "^3.0.1",
     "babel-loader": "^8.0.4",
     "css-loader": "^1.0.0",
     "css-mediaquery": "^0.1.2",

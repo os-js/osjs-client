@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import {h, app} from 'hyperapp';
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 
 const createAttributes = (props, field, disabled) => {
   disabled = disabled ? 'disabled' : undefined;
@@ -69,7 +69,7 @@ const createFields = (props, fields, disabled) => {
  *
  * @desc Handles the Login UI and its events
  */
-export default class Login extends EventHandler {
+export default class Login extends EventEmitter {
 
   /**
    * Create authentication handler

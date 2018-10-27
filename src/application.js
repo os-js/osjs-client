@@ -27,7 +27,7 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 import Websocket from './websocket';
 import Window from './window';
 import {fetch} from './utils/fetch';
@@ -43,7 +43,7 @@ const getSettingsKey = metadata =>
  *
  * @desc Base class for an Application
  */
-export default class Application extends EventHandler {
+export default class Application extends EventEmitter {
 
   /**
    * Create application

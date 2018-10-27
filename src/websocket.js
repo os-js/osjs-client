@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import {EventHandler} from '@osjs/common';
+import {EventEmitter} from '@osjs/event-emitter';
 
 /**
  * Application Socket
@@ -37,7 +37,7 @@ import {EventHandler} from '@osjs/common';
  * Since this class implements the EventHandler, use the `.on('event')` pattern instead of `.onevent`.
  *
  */
-export default class Websocket extends EventHandler {
+export default class Websocket extends EventEmitter {
 
   /**
    * Create a new Websocket

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.0-alpha.85
+
+* Added 'osjs/basic-application' as provider
+
 ## 3.0.0-alpha.84
 
 * Application#request now reflects Core#request

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.1
+
+* Updated @osjs/common, added @osjs/event-emitter
+
 ## 3.0.0-alpha.85
 
 * Added 'osjs/basic-application' as provider

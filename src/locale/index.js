@@ -29,6 +29,7 @@
  */
 
 export * from './en_EN';
-export * from './nb_NO';
-export * from './vi_VN';
 export * from './fr_FR';
+export * from './nb_NO';
+export * from './sl_SI';
+export * from './vi_VN';

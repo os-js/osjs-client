@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.2
+
+* Fixed windows getting clamped outside viewport
+* Add Slovenian (sl_SI) translation (#18)
+
 ## 3.0.1
 
 * Updated @osjs/common, added @osjs/event-emitter

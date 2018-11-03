@@ -193,7 +193,7 @@ const clampPosition = (rect, {dimension, position}) => {
 
   return {
     left: Math.min(maxLeft, position.left),
-    top: Math.min(maxTop, position.top)
+    top: Math.max(rect.top, Math.min(maxTop, position.top))
   };
 };
 

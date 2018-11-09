@@ -121,9 +121,9 @@ export const defaultConfiguration = {
 
     settings: {
       font: 'Roboto',
-      theme: 'Standard',
+      theme: 'StandardTheme',
       sounds: 'FreedesktopSounds',
-      icons: 'Gnome',
+      icons: 'GnomeIcons',
       animations: false,
       panels: [{
         position: 'top',

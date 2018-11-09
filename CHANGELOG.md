@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.3
+
+* Updated configuration
+
 ## 3.0.2
 
 * Fixed windows getting clamped outside viewport

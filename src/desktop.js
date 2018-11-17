@@ -459,22 +459,22 @@ export default class Desktop extends EventEmitter {
       .getPackages(p => p.type === 'theme');
 
     const _ = this.core.make('osjs/locale').translate;
-
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
-
-    const menu = [
-      {
+    const base = this.core.config('desktop.contextmenu')
+      ? [{
         label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
         onclick: () => openWallpaperDialog()
-      },
-      {
+      }, {
         label: _('LBL_DESKTOP_SELECT_THEME'),
         items: themes.map(t => ({
           label: t.name,
           onclick: () => setTheme(t)
         }))
-      },
+      }]
+      : [];
 
+    const menu = [
+      ...base,
       ...extras
     ];
 

@@ -118,6 +118,7 @@ export const defaultConfiguration = {
 
   desktop: {
     lock: false,
+    contextmenu: true,
 
     settings: {
       font: 'Roboto',

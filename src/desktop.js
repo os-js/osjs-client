@@ -66,7 +66,7 @@ const applyBackgroundStyles = (core, background) => {
     styles.backgroundRepeat = 'repeat';
   }
 
-  if (background.style !== 'color') {
+  if (background.style !== 'color' && background.src) {
     if (typeof background.src === 'string') {
       styles.backgroundImage = `url(${background.src})`;
     } else {

@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.4
+
+* Added a check for applying wallpaper
+* Added 'desktop.contextmenu' configuration
+
 ## 3.0.3
 
 * Updated configuration

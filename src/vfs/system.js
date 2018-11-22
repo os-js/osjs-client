@@ -87,7 +87,7 @@ const adapter = (core) => {
       request('stat', {path, options}, 'json').then(({body}) => body),
 
     url: ({path}, options) =>
-      Promise.resolve(`/vfs/readfile?path=${encodeURIComponent(path)}`),
+      Promise.resolve(core.url(`/vfs/readfile?path=${encodeURIComponent(path)}`)),
 
     search: ({path}, pattern, options) =>
       request('search', {root: path, pattern, options}, 'json')

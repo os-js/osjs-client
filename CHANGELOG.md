@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.6
+
+* Updated some theme resource resolution
+
 ## 3.0.4
 
 * Added a check for applying wallpaper

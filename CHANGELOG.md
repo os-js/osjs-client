@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.9
+
+* Added german language to configurations
+
 ## 3.0.8
 
 * Fixed incorrect datetime formats in config

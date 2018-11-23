@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.8
+
+* Fixed incorrect datetime formats in config
+* Added German (de_DE) translations (#17)
+
 ## 3.0.7
 
 * Updated url() in system vfs adapter

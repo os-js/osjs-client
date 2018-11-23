@@ -169,8 +169,8 @@ export const defaultConfiguration = {
       mediumDate: 'dS mmm yyyy',
       longDate: 'dS mmmm yyyy',
       fullDate: 'dddd dS mmmm yyyy',
-      shortTime: 'HH:mm',
-      longTime: 'HH:mm:ss'
+      shortTime: 'HH:MM',
+      longTime: 'HH:MM:ss'
     }
   },
 

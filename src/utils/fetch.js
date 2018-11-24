@@ -79,10 +79,16 @@ const createFetchOptions = (url, options, type) => {
 export const fetch = (url, options = {}, type = null) => {
   const [target, fetchOptions] = createFetchOptions(url, options, type);
 
+  const createErrorRejection = (response, error) =>
+    Promise.reject(new Error(error
+      ? error
+      : `${response.status} (${response.statusText})`));
+
   return window.fetch(target, fetchOptions)
     .then(response => {
       if (!response.ok) {
-        throw new Error(response.statusText);
+        return response.json()
+          .then(data => createErrorRejection(response, data.error));
       }
 
       return type === 'json'

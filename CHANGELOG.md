@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.10
+
+* Improved fetch() error handling
+
 ## 3.0.9
 
 * Added german language to configurations

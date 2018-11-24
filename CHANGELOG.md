@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.11
+
+* Updated webpack config to not inline css sourcemap in production
+
 ## 3.0.10
 
 * Improved fetch() error handling

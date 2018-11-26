@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.12
+
+* Updated contextmenu creation and provider options
+* Added 'sessionable' Application option
+* Desktop contextmenu can now be customized more
+* Updated desktop contextmenu enable check
+* Fixed launch notification sticking on invalid themes
+
 ## 3.0.11
 
 * Updated webpack config to not inline css sourcemap in production

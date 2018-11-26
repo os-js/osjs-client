@@ -460,34 +460,40 @@ export default class Desktop extends EventEmitter {
 
     const _ = this.core.make('osjs/locale').translate;
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
-    const enabled = this.core.config('desktop.contextmenu');
+    const config = this.core.config('desktop.contextmenu');
 
-    if (!enabled) {
+    if (config === false || config.enabled === false) {
       return;
     }
 
-    const base = this.core.config('desktop.contextmenu')
-      ? [{
-        label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
-        onclick: () => openWallpaperDialog()
-      }, {
-        label: _('LBL_DESKTOP_SELECT_THEME'),
-        items: themes.map(t => ({
-          label: t.name,
-          onclick: () => setTheme(t)
-        }))
-      }]
-      : [];
+    const useDefaults = config === true || config.defaults; // NOTE: Backward compability
+
+    const defaultItems = [{
+      label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
+      onclick: () => openWallpaperDialog()
+    }, {
+      label: _('LBL_DESKTOP_SELECT_THEME'),
+      items: themes.map(t => ({
+        label: t.name,
+        onclick: () => setTheme(t)
+      }))
+    }];
+
+    const base = useDefaults === 'function'
+      ? config.defaults(this, defaultItems)
+      : (useDefaults ? defaultItems : []);
 
     const menu = [
       ...base,
       ...extras
     ];
 
-    this.core.make('osjs/contextmenu').show({
-      menu,
-      position: ev
-    });
+    if (menu.length) {
+      this.core.make('osjs/contextmenu').show({
+        menu,
+        position: ev
+      });
+    }
   }
 
   /**

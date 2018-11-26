@@ -36,6 +36,15 @@ const encodeQueryData = data => Object.keys(data)
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
   .join('&');
 
+const bodyTypes = [
+  window.ArrayBuffer,
+  window.ArrayBufferView,
+  window.Blob,
+  window.File,
+  window.URLSearchParams,
+  window.FormData
+].filter(t => !!t);
+
 /*
  * Creates fetch() options
  */
@@ -62,7 +71,12 @@ const createFetchOptions = (url, options, type) => {
   const stringBody = typeof fetchOptions.body === 'string';
 
   if (type === 'json' && (hasBody && !stringBody)) {
-    fetchOptions.body = JSON.stringify(fetchOptions.body);
+    if (!(fetchOptions.body instanceof FormData)) {
+      const found = bodyTypes.find(t => (fetchOptions.body instanceof t));
+      if (!found) {
+        fetchOptions.body = JSON.stringify(fetchOptions.body);
+      }
+    }
   }
 
   return [url, fetchOptions];

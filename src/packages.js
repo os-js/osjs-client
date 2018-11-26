@@ -201,7 +201,7 @@ export default class Packages {
       throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
     }
 
-    if (['theme', 'icons'].indexOf(metadata.type) !== -1) {
+    if (['theme', 'icons', 'sounds'].indexOf(metadata.type) !== -1) {
       return this._launchTheme(name, metadata.type);
     }
 
@@ -255,14 +255,14 @@ export default class Packages {
     const basePath = this.core.config('public');
 
     const metadata = this
-      .getPackages(iter => ['theme', 'icons'].indexOf(iter.type) !== -1)
+      .getPackages(iter => ['theme', 'icons', 'sounds'].indexOf(iter.type) !== -1)
       .find(pkg => pkg.name === name);
 
     if (!metadata) {
       throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
     }
 
-    const preloads = metadata.files
+    const preloads = (metadata.files || [])
       .map(f => this.core.url(createUrl(basePath, folder, metadata, f)));
 
     return this.preload(preloads)

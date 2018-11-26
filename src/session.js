@@ -54,7 +54,9 @@ export default class Session {
    * Saves session
    */
   save() {
-    const apps = Application.getApplications();
+    const apps = Application.getApplications()
+      .filter(a => a.options.sessionable !== false);
+
     const session = apps.map(app => app.getSession());
 
     return this.core.make('osjs/settings')

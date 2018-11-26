@@ -55,6 +55,7 @@ export default class Application extends EventEmitter {
    * @param {Object} [data.options.settings] Initial settings
    * @param {Object} [data.options.restore] Restore data
    * @param {Boolean} [data.options.windowAutoFocus=true] Auto-focus first created window
+   * @param {Boolean} [data.options.sessionable=true] Allow session storage
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
@@ -99,6 +100,7 @@ export default class Application extends EventEmitter {
      * @type {Object}
      */
     this.options = Object.assign({
+      sessionable: true,
       windowAutoFocus: true
     }, data.options);
 

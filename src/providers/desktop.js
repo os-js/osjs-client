@@ -38,8 +38,8 @@ import Desktop from '../desktop';
  */
 export default class DesktopServiceProvider extends ServiceProvider {
 
-  constructor(core) {
-    super(core);
+  constructor(core, options = {}) {
+    super(core, options || {});
 
     this.desktop = null;
   }
@@ -58,7 +58,7 @@ export default class DesktopServiceProvider extends ServiceProvider {
   }
 
   init() {
-    this.desktop = new Desktop(this.core);
+    this.desktop = new Desktop(this.core, this.options);
     this.desktop.init();
 
     this.core.singleton('osjs/desktop', () => ({

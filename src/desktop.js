@@ -94,10 +94,13 @@ export default class Desktop extends EventEmitter {
    *
    * @param {Core} core Core reference
    */
-  constructor(core) {
+  constructor(core, options) {
     super('Desktop');
 
     this.core = core;
+    this.options = Object.assign({
+      contextmenu: []
+    }, options);
     this.$theme = [];
     this.$icons = [];
     this.$styles = document.createElement('style');
@@ -405,6 +408,13 @@ export default class Desktop extends EventEmitter {
       });
   }
 
+  _applySettingsByKey(k, v) {
+    return this.core.make('osjs/settings')
+      .set('osjs/desktop', k, v)
+      .save()
+      .then(() => this.applySettings());
+  }
+
   onDeveloperMenu(ev) {
     const _ = this.core.make('osjs/locale').translate;
     this.core.make('osjs/contextmenu').show({
@@ -436,29 +446,6 @@ export default class Desktop extends EventEmitter {
 
   onContextMenu(ev) {
     const lockSettings = this.core.config('desktop.lock');
-    if (lockSettings) {
-      return;
-    }
-
-    const applySettings = (k, v) => this.core.make('osjs/settings')
-      .set('osjs/desktop', k, v)
-      .save()
-      .then(() => this.applySettings());
-
-    const setTheme = t => applySettings('theme', t.name);
-
-    const openWallpaperDialog = () => this.core.make('osjs/dialog', 'file', {
-      mime: ['^image']
-    }, (btn, file) => {
-      if (btn === 'ok') {
-        applySettings('background.src', file);
-      }
-    });
-
-    const themes = this.core.make('osjs/packages')
-      .getPackages(p => p.type === 'theme');
-
-    const _ = this.core.make('osjs/locale').translate;
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
     const config = this.core.config('desktop.contextmenu');
 
@@ -468,14 +455,29 @@ export default class Desktop extends EventEmitter {
 
     const useDefaults = config === true || config.defaults; // NOTE: Backward compability
 
-    const defaultItems = [{
+    const _ = this.core.make('osjs/locale').translate;
+
+    const themes = this.core.make('osjs/packages')
+      .getPackages(p => p.type === 'theme');
+
+    const defaultItems = lockSettings ? [] : [{
       label: _('LBL_DESKTOP_SELECT_WALLPAPER'),
-      onclick: () => openWallpaperDialog()
+      onclick: () => {
+        this.core.make('osjs/dialog', 'file', {
+          mime: ['^image']
+        }, (btn, file) => {
+          if (btn === 'ok') {
+            this._applySettingsByKey('background.src', file);
+          }
+        });
+      }
     }, {
       label: _('LBL_DESKTOP_SELECT_THEME'),
       items: themes.map(t => ({
         label: t.name,
-        onclick: () => setTheme(t)
+        onclick: () => {
+          this._applySettingsByKey('theme', t.name);
+        }
       }))
     }];
 
@@ -483,8 +485,13 @@ export default class Desktop extends EventEmitter {
       ? config.defaults(this, defaultItems)
       : (useDefaults ? defaultItems : []);
 
+    const provided = typeof this.options.contextmenu === 'function'
+      ? this.options.contextmenu(this, defaultItems)
+      : this.options.contextmenu || [];
+
     const menu = [
       ...base,
+      ...provided,
       ...extras
     ];
 

@@ -460,6 +460,12 @@ export default class Desktop extends EventEmitter {
 
     const _ = this.core.make('osjs/locale').translate;
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
+    const enabled = this.core.config('desktop.contextmenu');
+
+    if (!enabled) {
+      return;
+    }
+
     const base = this.core.config('desktop.contextmenu')
       ? [{
         label: _('LBL_DESKTOP_SELECT_WALLPAPER'),

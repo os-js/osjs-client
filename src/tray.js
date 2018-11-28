@@ -31,6 +31,7 @@
 /**
  * A Tray Icon ("Entry")
  * @property {Object} entry The given entry data
+ * @property {Function} update Updates entry with given data
  * @property {Function} destroy Destroy the entry
  * @typedef TrayEntry
  */
@@ -96,10 +97,17 @@ export default class Tray {
     this.core.emit('osjs/tray:create', entry);
     this.core.emit('osjs/tray:update', this.entries);
 
-    return {
+    const obj = {
       entry,
+      update: u => {
+        Object.keys(u).forEach(k => (entry[k] = u[k]));
+
+        this.core.emit('osjs/tray:update', this.entries);
+      },
       destroy: () => this.remove(entry)
     };
+
+    return obj;
   }
 
   /**

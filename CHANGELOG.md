@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.13
+
+* Window template can now be set via config
+* The 'windows.template' can now be set as a string.
+* Now possible to set WindowBehavior via provider option
+* CoreServiceProivder now takes 'windowBehavior' option.
+* Added update support on tray entries
+* Updated fetch() body serializer
+
 ## 3.0.12
 
 * Updated contextmenu creation and provider options

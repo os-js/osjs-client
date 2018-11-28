@@ -128,6 +128,11 @@ const resourceResolver = (core) => {
  */
 export default class CoreServiceProvider extends ServiceProvider {
 
+  /**
+   * @param {Object} core OS.js Core
+   * @param {Object} [args] Arguments
+   * @param {Function} [args.windowBehavior] Custom Window Behavior
+   */
   constructor(core, args = {}) {
     super(core);
 
@@ -207,6 +212,10 @@ export default class CoreServiceProvider extends ServiceProvider {
     });
 
     this.core.singleton('osjs/window-behavior', () => {
+      if (typeof this.options.windowBehavior === 'function') {
+        return this.options.windowBehavior(this.core);
+      }
+
       return new WindowBehavior(this.core);
     });
 

@@ -178,6 +178,10 @@ export const defaultConfiguration = {
     }
   },
 
+  windows: {
+    template: null // A string. See 'window.js' for example
+  },
+
   vfs: {
     defaultPath: 'osjs:/',
     defaultAdapter: 'system',

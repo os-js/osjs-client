@@ -435,12 +435,13 @@ export default class Window extends EventEmitter {
     }
 
     // Insert template
-    if (typeof this._template === 'string') {
-      this.$element.innerHTML = this._template;
-    } else if (typeof this._template === 'function') {
-      this._template(this.$element, this);
+    const tpl = this.core.config('windows.template') || TEMPLATE;
+    if (this._template) {
+      this.$element.innerHTML = typeof this._template === 'function'
+        ? this._template(this, tpl)
+        : this._template;
     } else {
-      this.$element.innerHTML = TEMPLATE;
+      this.$element.innerHTML = tpl;
     }
 
     // Behavior

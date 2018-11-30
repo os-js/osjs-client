@@ -209,10 +209,11 @@ export default class Application extends EventEmitter {
    * @desc If given path is an URI it will just return itself.
    *
    * @param {String} path The path
+   * @param {Object} [options] Options for url() in core
    * @return {String} A complete URI
    */
-  resource(path = '/') {
-    return this.core.url(path, this.metadata);
+  resource(path = '/', options = {}) {
+    return this.core.url(path, options, this.metadata);
   }
 
   /**
@@ -237,18 +238,10 @@ export default class Application extends EventEmitter {
    */
   socket(path = '/socket', options = {}) {
     options = Object.assign({}, {
-      hostname: window.location.hostname,
-      protocol: window.location.protocol.replace('http', 'ws'),
-      port: window.location.port,
       socket: {}
     }, options);
 
-    const resource = this.resource(path);
-    const {hostname, port, protocol} = options;
-    const uri = resource.match(/^wss?:/)
-      ? resource
-      : `${protocol}//${hostname}:${port}${resource}`;
-
+    const uri = this.resource(path, {type: 'websocket'});
     const ws = new Websocket(this.metadata.name, uri, options.socket);
 
     this.sockets.push(ws);

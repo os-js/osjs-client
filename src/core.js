@@ -285,32 +285,46 @@ export default class Core extends CoreBase {
   /**
    * Creates an URL based on configured public path
    *
-   * @desc If you give a metadata object, the URL will be resolved
-   * to the correct subdirectory.
+   * @desc If you give a options.type, the URL will be resolved
+   * to the correct resource.
    *
    * @param {String} [endpoint=/] Endpoint
-   * @param {Object} [metadata] Metadata
+   * @param {Object} [options] Additional options for resolving url
+   * @param {Boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
+   * @param {PackageMetadata} [metadata] A package metadata
    * @return {String}
    */
-  url(endpoint = '/', metadata = null) {
+  url(endpoint = '/', options = {}, metadata = {}) {
     if (typeof endpoint !== 'string') {
       return this.configuration.public;
-    }
-
-    if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
+    } else if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
       return endpoint;
     }
 
-    const root = this.configuration.http.path;
+    const {type, prefix} = Object.assign({}, {
+      type: null,
+      prefix: options.type === 'websocket'
+    }, options);
 
-    if (metadata) {
+    const {http} = this.configuration;
+    const str = (type === 'websocket'
+      ? http.protocol.replace(/^http/, 'ws')
+      : http.protocol
+    ) + '//' + http.hostname + (http.port ? `:${http.port}` : '');
+
+    let url = http.path + endpoint.replace(/^\/+/, '');
+    if (metadata.type) {
       const path = endpoint.replace(/^\/?/, '/');
       const type = metadata.type === 'theme' ? 'themes' : 'apps';
-      return `${root}${type}/${metadata.name}${path}`;
+
+      url = `${http.path}${type}/${metadata.name}${path}`;
     }
 
-    return root + endpoint.replace(/^\/+/, '');
+    return prefix
+      ? str + url
+      : url;
   }
+
 
   /**
    * Make a HTTP request

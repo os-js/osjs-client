@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.14
+
+* Added customization to Core#url (#22)
+
 ## 3.0.13
 
 * Window template can now be set via config

@@ -35,6 +35,7 @@ export default class Search {
     this.core = core;
     this.$element = document.createElement('div');
     this.app = null;
+    this.focusLastWindow = null;
   }
 
   destroy() {
@@ -207,15 +208,19 @@ export default class Search {
   hide() {
     if (this.searchUI) {
       this.searchUI.toggle(false);
+
+      const win = Window.lastWindow();
+      if (this.focusLastWindow && win) {
+        win.focus();
+      }
     }
   }
 
   show() {
     if (this.searchUI) {
       const win = Window.lastWindow();
-      if (win) {
-        win.blur();
-      }
+
+      this.focusLastWindow = win && win.blur();
 
       this.searchUI.toggle(true);
       setTimeout(() => this.focus(), 1);

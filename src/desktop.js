@@ -424,7 +424,8 @@ export default class Desktop extends EventEmitter {
         label: k,
         onclick: () => {
           this.core.make('osjs/settings')
-            .clear(k);
+            .clear(k)
+            .then(() => this.applySettings());
         }
       }));
 

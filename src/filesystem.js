@@ -56,6 +56,12 @@ const defaultAdapter = ({
  * @param {String} name Name
  * @param {String} label Label
  * @param {String} adapter Adater name
+ * @param {Boolean} [enabled=true] Enabled state
+ * @param {Object} [attributes] Attributes
+ * @param {String} [attributes.visibility='global'] Visibility in UI
+ * @param {Boolean} [attributes.local=true] Local filesystem ?
+ * @param {Boolean} [attributes.searchable=true] If can be searched
+ * @param {Boolean} [attributes.readOnly=false] Readonly
  * @typedef Mountpoint
  */
 
@@ -96,6 +102,7 @@ const createMountpoint = (core, adapters, props) => {
     attributes: {
       visibility: 'global',
       local: true,
+      searchable: true,
       readOnly: false
     }
   }, props);

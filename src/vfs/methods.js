@@ -195,11 +195,16 @@ export const download = (adapter, mount) => (path, options = {}) =>
  * @param {Object|String} root The root
  * @param {String} pattern Search pattern
  * @param {Object} [options] Options
- * @return {String}
+ * @return {Object[]} A list of files
  */
-export const search = (adapter, mount) => (root, pattern, options = {}) =>
-  adapter.search(pathToObject(root), pattern, options, mount)
+export const search = (adapter, mount) => (root, pattern, options = {}) => {
+  if (mount.attributes && mount.attributes.searchable === false) {
+    return Promise.resolve([]);
+  }
+
+  return adapter.search(pathToObject(root), pattern, options, mount)
     .then(handleDirectoryList(root, options));
+};
 
 /**
  * Touches a file

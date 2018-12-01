@@ -138,7 +138,10 @@ export default class Search {
         }
       }, state.error || state.status),
       h('ol', {
-        class: 'osjs-search-results'
+        class: 'osjs-search-results',
+        style: {
+          display: state.results.length ? undefined : 'none'
+        }
       }, resultView(state, actions))
     ]);
 

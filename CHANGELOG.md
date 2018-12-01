@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.17
+
+* Reapply settings when clear from developer tray contextmenu
+* Update settings cache after clear
+* Developer tray context menu can now clear settings
+* Added Settings#clear for removing a setting by namespace
+
 ## 3.0.16
 
 * Added some new translation strings

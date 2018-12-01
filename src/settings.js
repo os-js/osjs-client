@@ -225,7 +225,14 @@ export default class Settings {
    * @return {Promise<boolean, Error>}
    */
   clear(ns) {
-    return this.adapter.clear(ns);
+    return this.adapter.clear(ns)
+      .then(result => {
+        if (result && this.settings[ns]) {
+          delete this.settings[ns];
+        }
+
+        return result;
+      });
   }
 
 }

@@ -185,7 +185,12 @@ export default class WindowBehavior {
     const onmousedown = ev => this.mousedown(ev, win);
     const onclick = ev => this.click(ev, win);
     const ondblclick = ev => this.dblclick(ev, win);
-    const ontrasitionend = ev => this.core.emit('osjs/window:transitionend', ev, win);
+    const ontrasitionend = ev => {
+      if (win) {
+        win.emit('transitionend');
+      }
+      this.core.emit('osjs/window:transitionend', ev, win);
+    };
 
     win.$element.addEventListener('touchstart', ontouchstart, touchArg);
     win.$element.addEventListener('mousedown', onmousedown);

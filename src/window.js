@@ -649,7 +649,13 @@ export default class Window extends EventEmitter {
    * @return {Boolean}
    */
   maximize() {
-    return this._toggleState('maximized', true, 'maximize');
+    if (this._toggleState('maximized', true, 'maximize')) {
+      this.once('transitionend', () => this.emit('resized'));
+
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -657,7 +663,13 @@ export default class Window extends EventEmitter {
    * @return {Boolean}
    */
   restore() {
-    return this._toggleState('maximized', false, 'restore');
+    if (this._toggleState('maximized', false, 'restore')) {
+      this.once('transitionend', () => this.emit('resized'));
+
+      return true;
+    }
+
+    return false;
   }
 
   /**

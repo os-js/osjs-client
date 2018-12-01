@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.0.15
+
+* Fire 'resized' event after maximized/restored (#20)
+* Added 'searchable' vfs mountpoint attribute
+* Hide serach results on empty list (#25)
+* Search now focuses the last acive window on hide (#25)
+* Added 'last()' to window service provider
+
 ## 3.0.14
 
 * Added customization to Core#url (#22)

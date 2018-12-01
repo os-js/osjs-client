@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.16
+
+* Added some new translation strings
+
 ## 3.0.15
 
 * Fire 'resized' event after maximized/restored (#20)

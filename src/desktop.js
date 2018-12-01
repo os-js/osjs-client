@@ -417,6 +417,17 @@ export default class Desktop extends EventEmitter {
 
   onDeveloperMenu(ev) {
     const _ = this.core.make('osjs/locale').translate;
+    const s = this.core.make('osjs/settings').get();
+
+    const storageItems = Object.keys(s)
+      .map(k => ({
+        label: k,
+        onclick: () => {
+          this.core.make('osjs/settings')
+            .clear(k);
+        }
+      }));
+
     this.core.make('osjs/contextmenu').show({
       position: ev,
       menu: [
@@ -439,6 +450,10 @@ export default class Desktop extends EventEmitter {
               }
             ]
           }))
+        },
+        {
+          label: 'Clear Storage',
+          items: storageItems
         }
       ]
     });

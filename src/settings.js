@@ -43,6 +43,12 @@ const serverSettings = core => ({
 });
 
 const localStorageSettings = core => ({
+  clear: ns => {
+    localStorage.removeItem(ns);
+
+    return Promise.resolve(true);
+  },
+
   save: settings => {
     Object.keys(settings).forEach((k) => {
       localStorage.setItem(k, JSON.stringify(settings[k]));
@@ -84,6 +90,7 @@ export default class Settings {
       load: () => Promise.reject(new Error('Not implemented')),
       save: () => Promise.reject(new Error('Not implemented')),
       init: () => Promise.resolve(true),
+      clear: () => Promise.resolve(true),
       destroy: () => {}
     }, adapter(core, args.config));
 
@@ -108,6 +115,7 @@ export default class Settings {
 
   /**
    * Saves settings
+   * @return {Promise<boolean,  Error>}
    */
   save() {
     return new Promise((resolve, reject) => {
@@ -133,6 +141,7 @@ export default class Settings {
 
   /**
    * Loads settings
+   * @return {Promise<boolean,  Error>}
    */
   load() {
     this.core.emit('osjs/settings:load');
@@ -157,6 +166,7 @@ export default class Settings {
   /**
    * Gets a settings entry by key
    *
+   * @desc Gets a setting (from cache)
    * @param {String} [ns] The namespace
    * @param {String} [key] The key to get the value from
    * @param {*} [defaultValue] If result is undefined, return this instead
@@ -177,7 +187,8 @@ export default class Settings {
   }
 
   /**
-   * Sets a settings entry by root key
+   * Sets a settings entry by root key.
+   * @desc Sets a setting, but does not save.
    * @param {String} ns The namespace
    * @param {String} [key] The key to set
    * @param {*} value The value to set
@@ -206,6 +217,15 @@ export default class Settings {
     }
 
     return this;
+  }
+
+  /**
+   * Clears a namespace by root key
+   * @param {String} ns The namespace
+   * @return {Promise<boolean, Error>}
+   */
+  clear(ns) {
+    return this.adapter.clear(ns);
   }
 
 }

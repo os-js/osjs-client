@@ -130,5 +130,13 @@ export const nb_NO = {
   LBL_APPLICATION: 'Applikasjon',
   LBL_APPLICATIONS: 'Applikasjoner',
   LBL_KILL: 'Drep',
-  LBL_KILL_ALL: 'Drep alle'
+  LBL_KILL_ALL: 'Drep alle',
+  LBL_MINIMIZE: 'Minimisèr',
+  LBL_MAXIMIZE: 'Maksimisèr',
+  LBL_RESTORE: 'Gjenopprett',
+  LBL_RAISE: 'Løft',
+  LBL_SHADE: 'Rull opp',
+  LBL_UNSHADE: 'Rull ned',
+  LBL_ONTOP: 'Alltid øverst',
+  LBL_RESIZE: 'Endre størrelse'
 };

@@ -130,5 +130,13 @@ export const en_EN = {
   LBL_APPLICATION: 'Application',
   LBL_APPLICATIONS: 'Applications',
   LBL_KILL: 'Kill',
-  LBL_KILL_ALL: 'Kill all'
+  LBL_KILL_ALL: 'Kill all',
+  LBL_MINIMIZE: 'Minimize',
+  LBL_MAXIMIZE: 'Maximize',
+  LBL_RESTORE: 'Restore',
+  LBL_RAISE: 'Raise',
+  LBL_SHADE: 'Shade',
+  LBL_UNSHADE: 'Unshade',
+  LBL_ONTOP: 'On top',
+  LBL_RESIZE: 'Resize'
 };

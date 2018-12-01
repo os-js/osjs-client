@@ -199,7 +199,8 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.singleton('osjs/windows', () => ({
       create: createWindow,
-      list: () => Window.getWindows()
+      list: () => Window.getWindows(),
+      last: () => Window.lastWindow()
     }));
 
     this.core.instance('osjs/event-handler', (...args) => {

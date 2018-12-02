@@ -43,7 +43,8 @@ export const defaultConfiguration = {
     nb_NO: 'Norwegian, Norsk (bokmål)',
     vi_VN: 'Vietnamese, Vietnamese',
     fr_FR: 'French',
-    de_DE: 'German'
+    de_DE: 'German',
+    sl_SI: 'Slovenian, Slovenščina'
   },
 
   application: {

@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.18
+
+* Updated Window 'gravity' support
+* Added 'moveable' window attribute (#27)
+* Updated 'playSound' error handling
+* Add Slovenian (sl_SI) translation to config (#26)
+
 ## 3.0.17
 
 * Reapply settings when clear from developer tray contextmenu

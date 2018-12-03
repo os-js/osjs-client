@@ -816,6 +816,9 @@ export default class Window extends EventEmitter {
       left = (rect.width / 2) - (this.state.dimension.width / 2);
       top = (rect.height / 2) - (this.state.dimension.height / 2);
     } else if (gravity) {
+      let hasVertical =  gravity.match(/top|bottom/);
+      let hasHorizontal = gravity.match(/left|rigth/);
+
       if (gravity.match(/top/)) {
         top = rect.top;
       } else if (gravity.match(/bottom/)) {
@@ -826,6 +829,12 @@ export default class Window extends EventEmitter {
         left = rect.left;
       } else if (gravity.match(/right/)) {
         left = rect.width - (this.state.dimension.width);
+      }
+
+      if (!hasVertical && gravity.match(/center/)) {
+        top = (rect.height / 2) - (this.state.dimension.height / 2);
+      } else if (!hasHorizontal && gravity.match(/center/)) {
+        left = (rect.width / 2) - (this.state.dimension.width / 2);
       }
     }
 

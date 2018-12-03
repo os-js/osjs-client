@@ -142,7 +142,7 @@ export const supportsPassive = (function() {
  * Plays a sound
  * @param {string} src Sound source
  * @param {Object} [options] Options
- * @return {HTMLAudioElement}
+ * @return {Promise<HTMLAudioElement>}
  */
 export const playSound = (src, options = {}) => {
   const opts = Object.assign({
@@ -152,9 +152,18 @@ export const playSound = (src, options = {}) => {
   const audio = new Audio();
   audio.voule = opts.volume;
   audio.src = src;
-  audio.play();
 
-  return audio;
+  try {
+    const p = audio.play();
+    if (p instanceof Promise) {
+      return p.then(() => audio)
+        .catch(err => console.warn('Failed to play sound', src, err));
+    }
+  } catch (e) {
+    console.warn('Failed to play sound', src, e);
+  }
+
+  return Promise.resolve(audio);
 };
 
 /**

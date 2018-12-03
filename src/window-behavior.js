@@ -270,6 +270,7 @@ export default class WindowBehavior {
   mousedown(ev, win) {
     let attributeSet = false;
 
+    const {moveable, resizable} = win.attributes;
     const {clientX, clientY, touch, target} = getEvent(ev);
 
     const checkMove = ev.ctrlKey
@@ -291,6 +292,10 @@ export default class WindowBehavior {
     const mousemove = (ev) => {
       if (!isPassive) {
         ev.preventDefault();
+      }
+
+      if ((!moveable && move) || (!resizable && resize)) {
+        return;
       }
 
       const transformedEvent = getEvent(ev);

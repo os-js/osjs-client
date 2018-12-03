@@ -61,6 +61,7 @@ import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
  * @property {Boolean} [focusable=true] If focusable
  * @property {Boolean} [maximizable=true] If window if maximizable
  * @property {Boolean} [minimizable=true] If minimizable
+ * @property {Boolean} [moveable=true] If moveable
  * @property {Boolean} [closeable=true] If closeable
  * @property {Boolean} [header=true] Show header
  * @property {Boolean} [controls=true] Show controls
@@ -105,6 +106,7 @@ const createAttributes = (attrs) => Object.assign({
   modal: false,
   ontop: false,
   gravity: false,
+  moveable: true,
   resizable: true,
   focusable: true,
   maximizable: true,
@@ -940,6 +942,7 @@ export default class Window extends EventEmitter {
       modal: attributes.modal,
       ontop: attributes.ontop,
       resizable: attributes.resizable,
+      moveable: attributes.moveable,
       maximizable: attributes.maximizable,
       minimizable: attributes.minimizable
     };

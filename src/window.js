@@ -82,6 +82,7 @@ import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
  * @property {Boolean} [focused=false] If focused
  * @property {Boolean} [maximized=false] If maximized
  * @property {Boolean} [mimimized=false] If mimimized
+ * @property {Boolean} [shaded=false] If shaded
  * @property {Boolean} [modal=false] If modal to the parent
  * @property {number} [zIndex=1] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
@@ -145,6 +146,7 @@ const createState = (state, options, attrs) => Object.assign({
   focused: false,
   maximized: false,
   minimized: false,
+  shaded: false,
   zIndex: 1,
   styles: {},
   position: Object.assign({}, {
@@ -647,6 +649,22 @@ export default class Window extends EventEmitter {
   }
 
   /**
+   * Shade the window
+   * @return {Boolean}
+   */
+  shade() {
+    return this._toggleState('shaded', true, 'shade');
+  }
+
+  /**
+   * Un-shade the window
+   * @return {Boolean}
+   */
+  unshade() {
+    return this._toggleState('shaded', false, 'shade');
+  }
+
+  /**
    * Maximize the window
    * @return {Boolean}
    */
@@ -948,6 +966,7 @@ export default class Window extends EventEmitter {
       focused: state.focused,
       maximized: state.maximized,
       minimized: state.minimized,
+      shaded: state.shaded,
       modal: attributes.modal,
       ontop: attributes.ontop,
       resizable: attributes.resizable,

@@ -1,6 +1,10 @@
 # Changelog for osjs-client
 
-## 3.0.18
+## 3.0.20
+
+* Added 'running()' to 'osjs/packages' service (#29)
+
+## 3.0.19
 
 * Updated Window 'gravity' support
 * Added 'moveable' window attribute (#27)

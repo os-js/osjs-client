@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.21
+
+* Fixed arrow keys on input in Firefox (#31)
+
 ## 3.0.20
 
 * Added 'running()' to 'osjs/packages' service (#29)

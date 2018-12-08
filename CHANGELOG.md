@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.23
+
+* Update HTTP/WS path configuration and resolution
+
 ## 3.0.22
 
 * Fixed issue with WS port not applied properly in some deployments

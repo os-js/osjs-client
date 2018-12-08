@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.22
+
+* Fixed issue with WS port not applied properly in some deployments
+
 ## 3.0.21
 
 * Fixed arrow keys on input in Firefox (#31)

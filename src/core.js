@@ -218,7 +218,8 @@ export default class Core extends CoreBase {
     }
 
     const ws = this.configuration.ws;
-    const uri = `${ws.protocol}://${ws.hostname}:${ws.port}${ws.path}`;
+    const port = ws.port ? `:${ws.port}` : '';
+    const uri = `${ws.protocol}://${ws.hostname}${port}${ws.path}`;
 
     console.log('Creating websocket connection on', uri);
 

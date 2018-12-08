@@ -42,7 +42,7 @@ const adapter = (core) => {
           path: `${path}/${pkg.name}`,
           size: 0,
           stat: {},
-          icon: pkg.icon ? core.url(pkg.icon, pkg) : null
+          icon: pkg.icon ? core.url(pkg.icon, {}, pkg) : null
         })));
     }
   };

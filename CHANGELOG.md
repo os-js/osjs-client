@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.24
+
+* Updated application vfs adapter
+
 ## 3.0.23
 
 * Update HTTP/WS path configuration and resolution

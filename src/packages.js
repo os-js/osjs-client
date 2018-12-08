@@ -31,11 +31,6 @@
 import Application from './application';
 import {style, script} from './utils/dom';
 
-const createUrl = (basePath, folder, metadata, filename) =>
-  filename.match(/^https?:/)
-    ? filename
-    : `${basePath}${folder}/${metadata.name}/${filename}`;
-
 /**
  * A registered package reference
  * @property {Object} metadata Package metadata
@@ -251,8 +246,6 @@ export default class Packages {
    */
   _launchTheme(name, type) {
     const _ = this.core.make('osjs/locale').translate;
-    const folder = type === 'icons' ? 'icons' : 'themes';
-    const basePath = this.core.config('public');
 
     const metadata = this
       .getPackages(iter => ['theme', 'icons', 'sounds'].indexOf(iter.type) !== -1)
@@ -263,7 +256,7 @@ export default class Packages {
     }
 
     const preloads = (metadata.files || [])
-      .map(f => this.core.url(createUrl(basePath, folder, metadata, f)));
+      .map(f => this.core.url(f, {}, Object.assign({type}, metadata)));
 
     return this.preload(preloads)
       .then(result => {
@@ -284,7 +277,6 @@ export default class Packages {
    * @return {Application}
    */
   _launch(name, metadata, args, options) {
-    const basePath = this.core.config('public');
     const _ = this.core.make('osjs/locale').translate;
 
     const dialog = e => {
@@ -309,7 +301,7 @@ export default class Packages {
     };
 
     const preloads = metadata.files
-      .map(f => this.core.url(createUrl(basePath, 'apps', metadata, f)));
+      .map(f => this.core.url(f, {}, Object.assign({type: 'apps'}, metadata)));
 
     const create = found => {
       let app;

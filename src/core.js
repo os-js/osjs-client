@@ -65,6 +65,13 @@ export default class Core extends CoreBase {
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
+
+    const {uri} = this.configuration.ws;
+    if (!this.configuration.ws.uri.match(/^wss?:/)) {
+      const {protocol, host} = window.location;
+
+      this.configuration.ws.uri = protocol.replace(/^http/, 'ws') + '//' + host + uri.replace(/^\/+/, '/');
+    }
   }
 
   /**
@@ -200,7 +207,11 @@ export default class Core extends CoreBase {
               this.emit('osjs/core:started');
               done();
             })
-            .catch(done);
+            .catch(err => {
+              console.warn(err);
+              this.emit('osjs/core:started');
+              done();
+            });
         }
 
         return false;
@@ -217,9 +228,7 @@ export default class Core extends CoreBase {
       return false;
     }
 
-    const ws = this.configuration.ws;
-    const port = ws.port ? `:${ws.port}` : '';
-    const uri = `${ws.protocol}://${ws.hostname}${port}${ws.path}`;
+    const {uri} = this.config('ws');
 
     console.log('Creating websocket connection on', uri);
 
@@ -292,12 +301,15 @@ export default class Core extends CoreBase {
    * @param {String} [endpoint=/] Endpoint
    * @param {Object} [options] Additional options for resolving url
    * @param {Boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
+   * @param {string} [options.type] Optional URL type (websocket)
    * @param {PackageMetadata} [metadata] A package metadata
    * @return {String}
    */
   url(endpoint = '/', options = {}, metadata = {}) {
+    const {http, ws} = this.configuration;
+
     if (typeof endpoint !== 'string') {
-      return this.configuration.public;
+      return http.public;
     } else if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
       return endpoint;
     }
@@ -307,23 +319,21 @@ export default class Core extends CoreBase {
       prefix: options.type === 'websocket'
     }, options);
 
-    const {http} = this.configuration;
-    const str = (type === 'websocket'
-      ? http.protocol.replace(/^http/, 'ws')
-      : http.protocol
-    ) + '//' + http.hostname + (http.port ? `:${http.port}` : '');
+    const str = type === 'websocket' ? ws.uri : http.uri;
 
-    let url = http.path + endpoint.replace(/^\/+/, '');
+    let url = endpoint.replace(/^\/+/, '');
     if (metadata.type) {
       const path = endpoint.replace(/^\/?/, '/');
-      const type = metadata.type === 'theme' ? 'themes' : 'apps';
+      const type = metadata.type === 'theme' ? 'themes' : (
+        metadata.type === 'icons' ? 'icons' : 'apps'
+      );
 
-      url = `${http.path}${type}/${metadata.name}${path}`;
+      url = `${type}/${metadata.name}${path}`;
     }
 
     return prefix
       ? str + url
-      : url;
+      : http.public.replace(/^\/?/, '/') + url;
   }
 
 
@@ -346,11 +356,8 @@ export default class Core extends CoreBase {
       return Promise.reject(new Error(_('ERR_REQUEST_STANDALONE')));
     }
 
-    if (!url.match(/^(http|ws|ftp)s?:/i)) {
-      const {protocol, port, hostname} = this.config('http');
-      const prefix = protocol + `//${hostname}` + (port ? `:${port}` : '');
-
-      url = prefix + url;
+    if (!url.match(/^((http|ws|ftp)s?:)?/i)) {
+      url = this.url(url);
     }
 
     return fetch(url, options, type)

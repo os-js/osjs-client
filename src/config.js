@@ -30,13 +30,22 @@
 
 import {clientLocale} from './utils/locale.js';
 
-const {port, hostname, pathname, protocol} = window.location;
+const {pathname, href} = window.location;
 const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
+const uri = href.replace(/[^/]*$/, '');
 
 export const defaultConfiguration = {
   development: !(process.env.NODE_ENV || '').match(/^prod/i),
   standalone: false,
-  public: path,
+
+  http: {
+    public: path,
+    uri
+  },
+
+  ws: {
+    uri: uri.replace(/^http/, 'ws')
+  },
 
   languages: {
     en_EN: 'English',
@@ -151,20 +160,6 @@ export const defaultConfiguration = {
         enabled: false
       }
     }
-  },
-
-  http: {
-    hostname,
-    protocol,
-    port,
-    path
-  },
-
-  ws: {
-    protocol: protocol === 'https:' ? 'wss' : 'ws',
-    port,
-    hostname,
-    path
   },
 
   locale: {

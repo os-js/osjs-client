@@ -44,6 +44,7 @@ export const defaultConfiguration = {
   },
 
   ws: {
+    connectInterval: 5000,
     uri: uri.replace(/^http/, 'ws')
   },
 

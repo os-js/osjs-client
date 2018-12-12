@@ -170,6 +170,16 @@ export default class Desktop extends EventEmitter {
       }
     });
 
+    this.core.on('osjs/core:connection-failed', (ev) => {
+      console.info('Connection failed');
+
+      const _ = this.core.make('osjs/locale').translate;
+      this.core.make('osjs/notification', {
+        title: _('LBL_CONNECTION_FAILED'),
+        message: _('LBL_CONNECTION_FAILED_MESSAGE')
+      });
+    });
+
     this.core.on('osjs/window:transitionend', (...args) => {
       this.emit('theme:window:transitionend', ...args);
     });

@@ -97,6 +97,7 @@ export default class Core extends CoreBase {
     this.connected = false;
     this.connecting = false;
     this.reconnecting = false;
+    this.connectfailed = false;
     this.ping = null;
 
     super.destroy();
@@ -208,9 +209,8 @@ export default class Core extends CoreBase {
               done();
             })
             .catch(err => {
-              console.warn(err);
               this.emit('osjs/core:started');
-              done();
+              return done(err);
             });
         }
 
@@ -238,6 +238,7 @@ export default class Core extends CoreBase {
       clearInterval(this.reconnecting);
       this.connected = true;
       this.reconnecting = false;
+      this.connectfailed = false;
 
       // Allow for some grace-time in case we close prematurely
       setTimeout(() => cb(), 100);
@@ -246,9 +247,15 @@ export default class Core extends CoreBase {
     };
 
     this.ws.onclose = (ev) => {
-      if (this.connected) {
-        this.reconnecting = setInterval(() => this._createConnection(), 5000);
+      if (!this.connected && !this.connectfailed) {
+        this.emit('osjs/core:connection-failed', ev);
+        this.connectfailed = true;
       }
+
+      clearInterval(this.reconnecting);
+      this.reconnecting = setInterval(() => {
+        this._createConnection();
+      }, this.config('ws.connectInterval', 1000));
 
       this.connected = false;
 

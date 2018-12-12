@@ -48,6 +48,8 @@ export const en_EN = {
   LBL_CONNECTION_LOST_MESSAGE: 'The connection to the OS.js was lost. Reconnecting....',
   LBL_CONNECTION_RESTORED: 'Connection Restored',
   LBL_CONNECTION_RESTORED_MESSAGE: 'The connection to the OS.js server was restored.',
+  LBL_CONNECTION_FAILED: 'Connection Failed',
+  LBL_CONNECTION_FAILED_MESSAGE: 'The connection to the OS.js could not be established. Some features might not work properly.',
 
   // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'Development',

@@ -48,6 +48,8 @@ export const nb_NO = {
   LBL_CONNECTION_LOST_MESSAGE: 'Tilkobling til OS.js var tapt. Kobler til på nytt....',
   LBL_CONNECTION_RESTORED: 'Tilkobling gjenopprettet',
   LBL_CONNECTION_RESTORED_MESSAGE: 'Tilkobling til OS.js var gjenopprettet.',
+  LBL_CONNECTION_FAILED: 'Tilkobling feilet',
+  LBL_CONNECTION_FAILED_MESSAGE: 'Tilkobling til OS.js var ikke vellykket. Noen egenskaper er utilgjenglig.',
 
   // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'Utvikling',

@@ -482,6 +482,7 @@ export default class Desktop extends EventEmitter {
     const useDefaults = config === true || config.defaults; // NOTE: Backward compability
 
     const _ = this.core.make('osjs/locale').translate;
+    const __ = this.core.make('osjs/locale').translatableFlat;
 
     const themes = this.core.make('osjs/packages')
       .getPackages(p => p.type === 'theme');
@@ -500,7 +501,7 @@ export default class Desktop extends EventEmitter {
     }, {
       label: _('LBL_DESKTOP_SELECT_THEME'),
       items: themes.map(t => ({
-        label: t.name,
+        label: __(t.title, t.name),
         onclick: () => {
           this._applySettingsByKey('theme', t.name);
         }

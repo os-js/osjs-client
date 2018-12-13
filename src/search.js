@@ -105,7 +105,11 @@ export default class Search {
         placeholder: _('LBL_SEARCH_PLACEHOLDER'),
         class: 'osjs-search-input',
         value: state.query,
-        onblur: () => actions.toggle(false),
+        onblur: () => {
+          if (!state.value) {
+            setTimeout(() => actions.toggle(false), 300);
+          }
+        },
         oninput: ev => actions.setQuery(ev.target.value),
         onkeydown: ev => {
           if (ev.keyCode === 38) { // Up

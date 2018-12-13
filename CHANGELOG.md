@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.0.25
+
+* Fixed clicks in search results popup
+* Desktop contextmenu now shows proper theme names
+* Improved WS establishment handling
+
 ## 3.0.24
 
 * Updated application vfs adapter

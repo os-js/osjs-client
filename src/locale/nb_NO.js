@@ -140,5 +140,9 @@ export const nb_NO = {
   LBL_SHADE: 'Rull opp',
   LBL_UNSHADE: 'Rull ned',
   LBL_ONTOP: 'Alltid øverst',
-  LBL_RESIZE: 'Endre størrelse'
+  LBL_RESIZE: 'Endre størrelse',
+  LBL_BACK: 'Tilbake',
+  LBL_FORWARD: 'Frem',
+  LBL_UPLOAD: 'Last opp',
+  LBL_IMAGE: 'Bilde'
 };

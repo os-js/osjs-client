@@ -140,5 +140,9 @@ export const en_EN = {
   LBL_SHADE: 'Shade',
   LBL_UNSHADE: 'Unshade',
   LBL_ONTOP: 'On top',
-  LBL_RESIZE: 'Resize'
+  LBL_RESIZE: 'Resize',
+  LBL_BACK: 'Back',
+  LBL_FORWARD: 'Forward',
+  LBL_UPLOAD: 'Upload',
+  LBL_IMAGE: 'Image'
 };

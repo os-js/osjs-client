@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.26
+
+* Updated dependencies
+* Updated locales
+
 ## 3.0.25
 
 * Fixed clicks in search results popup

@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.27
+
+* Updated default application
+* Updated mime icon mapping
+
 ## 3.0.26
 
 * Updated dependencies

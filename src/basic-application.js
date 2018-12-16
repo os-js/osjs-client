@@ -58,7 +58,9 @@ export class BasicApplication extends EventEmitter {
    * @param {Application} proc The application process
    * @param {Window} win The main application window
    * @param {Object} options Basic application options
-   * @param {string[]} [options.mimeTypes] What MIME types to support
+   * @param {string[]} [options.mimeTypes] What MIME types to support (all/fallback)
+   * @param {string[]} [options.loadMimeTypes] What MIME types to support on load
+   * @param {string[]} [options.saveMimeTypes] What MIME types to support on save
    * @param {string} [options.defaultFilename] Default filename of a new file
    */
   constructor(core, proc, win, options) {
@@ -70,6 +72,8 @@ export class BasicApplication extends EventEmitter {
 
     this.options = Object.assign({
       mimeTypes: proc.metadata.mimes || [],
+      loadMimeTypes: [],
+      saveMimeTypes: [],
       defaultFilename: 'New File'
     }, options);
   }
@@ -99,16 +103,26 @@ export class BasicApplication extends EventEmitter {
    * @param {string} type Dialog type
    * @return {Object}
    */
-  getDialogOptions(type) {
-    const {defaultFilename} = this.options;
+  getDialogOptions(type, options = {}) {
+    const {
+      defaultFilename,
+      mimeTypes,
+      loadMimeTypes,
+      saveMimeTypes
+    } = this.options;
+
+    const currentFile = options.file ? options.file : this.proc.args.file;
     const defaultPath = this.core.config('vfs.defaultPath');
-    const path = this.proc.args.file
-      ? this.proc.args.file.path
-      : null;
+    const path = currentFile ? currentFile.path : null;
+
+    let mime = type === 'open' ? loadMimeTypes : saveMimeTypes;
+    if (!mime.length) {
+      mime = mimeTypes;
+    }
 
     return [{
       type,
-      mime: this.options.mimeTypes,
+      mime,
       filename: path ? basename(path) : defaultFilename,
       path: path ? pathname(path) : defaultPath
     }, {
@@ -142,11 +156,12 @@ export class BasicApplication extends EventEmitter {
    * Creates a new dialog of a type
    * @param {string} type Dialog type
    * @param {Function} cb Callback
+   * @param {Object} [options] Override options
    */
-  createDialog(type, cb) {
-    const [args, options] = this.getDialogOptions(type);
+  createDialog(type, cb, options = {}) {
+    const [args, opts] = this.getDialogOptions(type, options);
 
-    this.core.make('osjs/dialog', 'file', args, options, (btn, item) => {
+    this.core.make('osjs/dialog', 'file', args, opts, (btn, item) => {
       if (btn === 'ok') {
         cb(item);
       }
@@ -202,14 +217,14 @@ export class BasicApplication extends EventEmitter {
   /**
    * Creates a new save dialog
    */
-  createSaveDialog() {
-    this.createDialog('save', item => this.save(item));
+  createSaveDialog(options = {}) {
+    this.createDialog('save', item => this.save(item), options);
   }
 
   /**
    * Creates a new load dialog
    */
-  createOpenDialog() {
-    this.createDialog('load', item => this.open(item));
+  createOpenDialog(options = {}) {
+    this.createDialog('open', item => this.open(item), options);
   }
 }

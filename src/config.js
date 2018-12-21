@@ -176,6 +176,7 @@ export const defaultConfiguration = {
   },
 
   windows: {
+    lofi: false,
     template: null // A string. See 'window.js' for example
   },
 

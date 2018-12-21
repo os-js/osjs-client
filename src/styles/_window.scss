@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+.osjs-window-behavior-lofi {
+  position: absolute;
+  border: 2px solid #000;
+}
+
 .osjs-window-resize {
   z-index: 10;
   position: absolute;

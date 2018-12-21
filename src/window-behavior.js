@@ -174,6 +174,8 @@ export default class WindowBehavior {
     this.core = core;
 
     this.lastAction = null;
+    this.$lofi = document.createElement('div');
+    this.$lofi.className = 'osjs-window-behavior-lofi';
   }
 
   /**
@@ -271,6 +273,7 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const {moveable, resizable} = win.attributes;
+    const {lofi} = this.core.config('windows');
     const {clientX, clientY, touch, target} = getEvent(ev);
 
     const checkMove = ev.ctrlKey
@@ -288,6 +291,8 @@ export default class WindowBehavior {
     const move = checkMove
       ? mover(win, rect)
       : null;
+
+    let actionCallback;
 
     const mousemove = (ev) => {
       if (!isPassive) {
@@ -307,14 +312,34 @@ export default class WindowBehavior {
       if (resize) {
         const {width, height, top, left} = resize(diffX, diffY);
 
-        win._setState('dimension', {width, height}, false);
-        win._setState('position', {top, left}, false);
+        actionCallback = () => {
+          win._setState('dimension', {width, height}, false);
+          win._setState('position', {top, left}, false);
+        };
+
+        if (lofi) {
+          this.$lofi.style.top = `${top}px`;
+          this.$lofi.style.left = `${left}px`;
+          this.$lofi.style.width = `${width}px`;
+          this.$lofi.style.height = `${height}px`;
+        } else {
+          actionCallback();
+        }
 
         this.lastAction = 'resize';
       } else if (move) {
         const position = move(diffX, diffY);
 
-        win._setState('position', position, false);
+        actionCallback = () => {
+          win._setState('position', position, false);
+        };
+
+        if (lofi) {
+          this.$lofi.style.top = `${position.top}px`;
+          this.$lofi.style.left = `${position.left}px`;
+        } else {
+          actionCallback();
+        }
 
         this.lastAction = 'move';
       }
@@ -339,6 +364,16 @@ export default class WindowBehavior {
       }
 
       win._setState('media', getMediaQueryName(win), false);
+
+      if (lofi) {
+        this.$lofi.remove();
+
+        if (actionCallback) {
+          actionCallback();
+        }
+
+        actionCallback = undefined;
+      }
 
       if (this.lastAction === 'move') {
         win.emit('moved', Object.assign({}, win.state.position), win);
@@ -370,6 +405,18 @@ export default class WindowBehavior {
 
     if (this.core.has('osjs/contextmenu')) {
       this.core.make('osjs/contextmenu').hide();
+    }
+
+    if (lofi) {
+      this.$lofi.style.zIndex = win.state.zIndex + 1;
+      this.$lofi.style.top = `${win.state.position.top}px`;
+      this.$lofi.style.left = `${win.state.position.left}px`;
+      this.$lofi.style.width = `${win.state.dimension.width}px`;
+      this.$lofi.style.height = `${win.state.dimension.height}px`;
+
+      if (!this.$lofi.parentNode) {
+        document.body.appendChild(this.$lofi);
+      }
     }
   }
 

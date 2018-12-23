@@ -48,6 +48,8 @@ export const sl_SI = {
   LBL_CONNECTION_LOST_MESSAGE: 'Povezava do strežnika je bila izgubljena. Ponovno povezovanje ...',
   LBL_CONNECTION_RESTORED: 'Vzpostavitev povezave',
   LBL_CONNECTION_RESTORED_MESSAGE: 'Povezava do strežnika je bila ponovno vzpostavljena.',
+  LBL_CONNECTION_FAILED: 'Povezava ni uspela',
+  LBL_CONNECTION_FAILED_MESSAGE: 'Povezave z OS.js ni bilo mogoče vzpostaviti. Nekatere funkcije morda ne bodo delovale pravilno.',
 
   // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'Razvoj',
@@ -130,5 +132,17 @@ export const sl_SI = {
   LBL_APPLICATION: 'Aplikacija',
   LBL_APPLICATIONS: 'Aplikacije',
   LBL_KILL: 'Končaj',
-  LBL_KILL_ALL: 'Končaj vse'
+  LBL_KILL_ALL: 'Končaj vse',
+  LBL_MINIMIZE: 'Pomanjšaj',
+  LBL_MAXIMIZE: 'Povečaj',
+  LBL_RESTORE: 'Obnovi',
+  LBL_RAISE: 'Dvigni',
+  LBL_SHADE: 'Zasenči',
+  LBL_UNSHADE: 'Odsenči',
+  LBL_ONTOP: 'Na vrhu',
+  LBL_RESIZE: 'Spremeni velikost',
+  LBL_BACK: 'Nazaj',
+  LBL_FORWARD: 'Naprej',
+  LBL_UPLOAD: 'Naloži',
+  LBL_IMAGE: 'Slika'
 };

@@ -1,5 +1,14 @@
 # Changelog for osjs-client
 
+## 3.0.28
+
+* Fixed an issue with restored window focus
+* Added some low-resolution optimization options (#33)
+* Added simple loading screen (#36)
+* Added navigation prevention
+* Update Slovenian (sl_SI) translations (#32)
+* Added 'lo-fi' window move/resize
+
 ## 3.0.27
 
 * Updated default application

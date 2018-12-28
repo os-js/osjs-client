@@ -36,6 +36,7 @@ import Search from './search';
 import merge from 'deepmerge';
 
 const TEMPLATE = subtract => `
+  .osjs-root[data-mobile=true] .osjs-window,
   .osjs-window[data-maximized=true] {
     top: ${subtract.top}px !important;
     left: ${subtract.left}px !important;
@@ -202,6 +203,7 @@ export default class Desktop extends EventEmitter {
     this.core.$root.addEventListener('dragover', e => {
       e.preventDefault();
     });
+
     this.core.$root.addEventListener('drop', e => {
       e.preventDefault();
     });
@@ -263,6 +265,13 @@ export default class Desktop extends EventEmitter {
       }
     });
 
+    // Resize hook
+    let resizeDebounce;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(() => this._updateCSS(), 200);
+    });
+
     // Prevent navigation
     history.pushState(null, null, document.URL);
     window.addEventListener('popstate', () => {
@@ -276,6 +285,8 @@ export default class Desktop extends EventEmitter {
     if (this.search) {
       this.search.init();
     }
+
+    this._updateCSS();
   }
 
   /**
@@ -285,6 +296,10 @@ export default class Desktop extends EventEmitter {
     if (!this.$styles) {
       return;
     }
+
+    const mobile = this.core.config('windows.mobile');
+    const isMobile = !mobile ? false : this.core.$root.offsetWidth <= mobile;
+    this.core.$root.setAttribute('data-mobile', isMobile);
 
     this.$styles.innerHTML = TEMPLATE(this.subtract);
   }

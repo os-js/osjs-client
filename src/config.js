@@ -177,6 +177,7 @@ export const defaultConfiguration = {
 
   windows: {
     lofi: false,
+    mobile: false, // Trigger for setting mobile UI
     template: null // A string. See 'window.js' for example
   },
 

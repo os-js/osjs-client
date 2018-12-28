@@ -242,3 +242,13 @@
     }
   }
 }
+
+.osjs-root[data-mobile="true"] {
+  .osjs-window {
+    opacity: 1;
+
+    .osjs-window-button[data-action=maximize] {
+      display: none;
+    }
+  }
+}

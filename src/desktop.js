@@ -256,10 +256,17 @@ export default class Desktop extends EventEmitter {
       }
     });
 
+    // Custom context menu
     this.core.$root.addEventListener('contextmenu', ev => {
       if (ev.target === this.core.$root) {
         this.onContextMenu(ev);
       }
+    });
+
+    // Prevent navigation
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', () => {
+      history.pushState(null, null, document.URL);
     });
 
     this.core.$resourceRoot.appendChild(this.$styles);

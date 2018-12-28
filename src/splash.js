@@ -28,47 +28,28 @@
  * @licence Simplified BSD License
  */
 
-.osjs-root {
-  overflow: hidden;
-  line-height: 1;
-  font-size: 13px;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-size: cover;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-image: url('src/styles/wallpaper.png');
-  position: fixed;
-  top: 0;
-  left: 0;
-  touch-action: none;
+export default class Splash {
+  constructor(core) {
+    this.core = core;
+    this.$loading = document.createElement('div');
+    this.$loading.className = 'osjs-boot-splash';
+    this.$loading.appendChild(document.createTextNode('Loading...'));
 
-  textarea,
-  input,
-  label {
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
+    core.on('osjs/core:boot', () => this.show());
+    core.on('osjs/core:booted', () => this.destroy());
+    core.on('osjs/core:logged-in', () => this.show());
+    core.on('osjs/core:started', () => this.destroy());
   }
-}
 
-.osjs-boot-splash {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999999999;
-  background-color: #000;
-  color: #fff;
-  font-size: 120%;
-  font-family: sans-serif;
-  padding: $base-margin;
-  text-align: center;
+  show() {
+    if (!this.$loading.parentNode) {
+      this.core.$root.appendChild(this.$loading);
+    }
+  }
+
+  destroy() {
+    if (this.$loading.parentNode) {
+      this.$loading.remove();
+    }
+  }
 }

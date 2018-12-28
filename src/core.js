@@ -29,6 +29,7 @@
  */
 
 import Application from './application';
+import Splash from './splash';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
@@ -61,6 +62,7 @@ export default class Core extends CoreBase {
     this.connected = false;
     this.reconnecting = false;
     this.ping = null;
+    this.splash = new Splash(this);
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
@@ -135,11 +137,17 @@ export default class Core extends CoreBase {
       }
     });
 
+    this.emit('osjs/core:boot');
+
     return super.boot()
       .then(() => {
+        this.emit('osjs/core:booted');
+
         if (this.has('osjs/auth')) {
           return this.make('osjs/auth').show(user => {
             this.user = user;
+
+            this.emit('osjs/core:logged-in');
 
             if (this.has('osjs/settings')) {
               this.make('osjs/settings').load()
@@ -169,6 +177,8 @@ export default class Core extends CoreBase {
     });
 
     const done = (err) => {
+      this.emit('osjs/core:started');
+
       if (err) {
         console.warn(err);
       }
@@ -204,14 +214,8 @@ export default class Core extends CoreBase {
 
         if (result) {
           return connect()
-            .then(() => {
-              this.emit('osjs/core:started');
-              done();
-            })
-            .catch(err => {
-              this.emit('osjs/core:started');
-              return done(err);
-            });
+            .then(() => done())
+            .catch(err => done(err));
         }
 
         return false;

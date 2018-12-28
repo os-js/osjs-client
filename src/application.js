@@ -317,7 +317,7 @@ export default class Application extends EventEmitter {
       this.emit('destroy-window', instance);
     });
 
-    if (!restored && this.options.windowAutoFocus) {
+    if (this.options.windowAutoFocus) {
       instance.focus();
     }
 

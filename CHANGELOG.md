@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.30
+
+* Updated default path to 'home:/'
+
 ## 3.0.29
 
 * Added a node check in Window#resizeFit

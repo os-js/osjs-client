@@ -680,6 +680,9 @@ export default class Window extends EventEmitter {
    */
   resizeFit(container) {
     container = container || this.$content.firstChild;
+    if (!container) {
+      return;
+    }
 
     const min = this.attributes.minDimension;
     const max = this.attributes.maxDimension;

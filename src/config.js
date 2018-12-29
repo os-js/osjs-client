@@ -182,7 +182,7 @@ export const defaultConfiguration = {
   },
 
   vfs: {
-    defaultPath: 'osjs:/',
+    defaultPath: 'home:/',
     defaultAdapter: 'system',
     adapters: {},
     mountpoints: [{

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.29
+
+* Added a node check in Window#resizeFit
+
 ## 3.0.28
 
 * Fixed an issue with restored window focus

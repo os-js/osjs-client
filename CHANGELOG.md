@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.31
+
+* Added a generic hook to prevent iframe event blocking
+
 ## 3.0.30
 
 * Updated default path to 'home:/'

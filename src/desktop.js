@@ -265,6 +265,30 @@ export default class Desktop extends EventEmitter {
       }
     });
 
+    // A hook to prevent iframe events when dragging mouse
+    window.addEventListener('mousedown', () => {
+      let moved = false;
+
+      const onmousemove = () => {
+        if (!moved) {
+          moved = true;
+
+          this.core.$root.setAttribute('data-mousemove', String(true));
+        }
+      };
+
+      const onmouseup = () => {
+        moved = false;
+
+        this.core.$root.setAttribute('data-mousemove', String(false));
+        window.removeEventListener('mousemove', onmousemove);
+        window.removeEventListener('mouseup', onmouseup);
+      };
+
+      window.addEventListener('mousemove', onmousemove);
+      window.addEventListener('mouseup', onmouseup);
+    });
+
     // Resize hook
     let resizeDebounce;
     window.addEventListener('resize', () => {

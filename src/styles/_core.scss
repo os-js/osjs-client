@@ -57,6 +57,12 @@
     -ms-user-select: text;
     user-select: text;
   }
+
+  &[data-mousemove="true"] {
+    iframe {
+      pointer-events: none;
+    }
+  }
 }
 
 .osjs-boot-splash {

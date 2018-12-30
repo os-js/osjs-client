@@ -288,7 +288,6 @@ export default class Application extends EventEmitter {
     const instance = new Window(this.core, options);
     instance.init();
 
-    let restored;
     if (this.options.restore) {
       const windows = this.options.restore.windows || [];
       const found = windows.findIndex(r => r.id === instance.id);
@@ -299,7 +298,6 @@ export default class Application extends EventEmitter {
         instance.setDimension(restore.dimension);
 
         this.options.restore.windows.splice(found, 1);
-        restored = true;
       }
     }
 

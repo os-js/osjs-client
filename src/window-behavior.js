@@ -187,6 +187,12 @@ export default class WindowBehavior {
     const onmousedown = ev => this.mousedown(ev, win);
     const onclick = ev => this.click(ev, win);
     const ondblclick = ev => this.dblclick(ev, win);
+    const onicondblclick = ev => {
+      ev.stopPropagation();
+      ev.preventDefault();
+
+      win.close();
+    };
     const ontrasitionend = ev => {
       if (win) {
         win.emit('transitionend');
@@ -200,6 +206,10 @@ export default class WindowBehavior {
     win.$element.addEventListener('dblclick', ondblclick);
     win.$element.addEventListener('transitionend', ontrasitionend);
 
+    if (win.$icon) {
+      win.$icon.addEventListener('dblclick', onicondblclick);
+    }
+
     win.on('destroy', () => {
       if (win.$element) {
         win.$element.removeEventListener('touchstart', ontouchstart, touchArg);
@@ -207,6 +217,10 @@ export default class WindowBehavior {
         win.$element.removeEventListener('click', onclick);
         win.$element.removeEventListener('dblclick', ondblclick);
         win.$element.removeEventListener('transitionend', ontrasitionend);
+      }
+
+      if (win.$icon) {
+        win.$icon.removeEventListener('dblclick', () => onicondblclick);
       }
     });
 

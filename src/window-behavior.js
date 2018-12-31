@@ -187,16 +187,25 @@ export default class WindowBehavior {
     const onmousedown = ev => this.mousedown(ev, win);
     const onclick = ev => this.click(ev, win);
     const ondblclick = ev => this.dblclick(ev, win);
+
     const onicondblclick = ev => {
       ev.stopPropagation();
       ev.preventDefault();
-
-      win.close();
+      this.iconDblclick(ev, win);
     };
+
+    const oniconclick = ev => {
+      ev.stopPropagation();
+      ev.preventDefault();
+
+      this.iconClick(ev, win);
+    };
+
     const ontrasitionend = ev => {
       if (win) {
         win.emit('transitionend');
       }
+
       this.core.emit('osjs/window:transitionend', ev, win);
     };
 
@@ -208,6 +217,7 @@ export default class WindowBehavior {
 
     if (win.$icon) {
       win.$icon.addEventListener('dblclick', onicondblclick);
+      win.$icon.addEventListener('click', oniconclick);
     }
 
     win.on('destroy', () => {
@@ -220,7 +230,8 @@ export default class WindowBehavior {
       }
 
       if (win.$icon) {
-        win.$icon.removeEventListener('dblclick', () => onicondblclick);
+        win.$icon.removeEventListener('dblclick', onicondblclick);
+        win.$icon.removeEventListener('click', oniconclick);
       }
     });
 
@@ -434,4 +445,40 @@ export default class WindowBehavior {
     }
   }
 
+  /**
+   * Handles Icon Double Click Event
+   * @param {Event} ev Browser Event
+   * @param {Window} win Window reference
+   */
+  iconDblclick(ev, win) {
+    win.close();
+  }
+
+  /**
+   * Handles Icon Click Event
+   * @param {Event} ev Browser Event
+   * @param {Window} win Window reference
+   */
+  iconClick(ev, win) {
+    const {minimized, maximized} = win.state;
+    const {minimizable, maximizable, closeable} = win.attributes;
+    const _ = this.core.make('osjs/locale').translate;
+
+    this.core.make('osjs/contextmenu', {
+      position: ev,
+      menu: [{
+        label: minimized ? _('LBL_RAISE') : _('LBL_MINIMIZE'),
+        disabled: !minimizable,
+        onclick: () => minimized ? win.raise() : win.minimize()
+      }, {
+        label: maximized ? _('LBL_RESTORE') : _('LBL_MAXIMIZE'),
+        disabled: !maximizable,
+        onclick: () => maximized ? win.restore() : win.maximize()
+      }, {
+        label: _('LBL_CLOSE'),
+        disabled: !closeable,
+        onclick: () => win.close()
+      }]
+    });
+  }
 }

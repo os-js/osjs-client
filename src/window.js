@@ -446,6 +446,11 @@ export default class Window extends EventEmitter {
       this.$element.innerHTML = tpl;
     }
 
+    this.$content = this.$element.querySelector('.osjs-window-content');
+    this.$header = this.$element.querySelector('.osjs-window-header');
+    this.$icon = this.$element.querySelector('.osjs-window-icon > div');
+    this.$title = this.$element.querySelector('.osjs-window-title');
+
     // Behavior
     const behavior = this.core.make('osjs/window-behavior');
     if (behavior) {
@@ -486,11 +491,6 @@ export default class Window extends EventEmitter {
       .forEach((val) => {
         this.$element.classList.add(val);
       });
-
-    this.$content = this.$element.querySelector('.osjs-window-content');
-    this.$header = this.$element.querySelector('.osjs-window-header');
-    this.$icon = this.$element.querySelector('.osjs-window-icon > div');
-    this.$title = this.$element.querySelector('.osjs-window-title');
 
     if (!this.attributes.header) {
       this.$header.style.display = 'none';

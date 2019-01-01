@@ -1,5 +1,15 @@
 # Changelog for osjs-client
 
+## 3.0.32
+
+* Added direct support for core websocket in applications
+* Core now uses custom Websocket class
+* Added pointer cursor to window icon
+* Click on window icon now brings up context menu
+* Double-click on window icon now closes window
+* Bind DOM element references earlier in Window
+* Removed unused variable<Paste>
+
 ## 3.0.31
 
 * Added a generic hook to prevent iframe event blocking

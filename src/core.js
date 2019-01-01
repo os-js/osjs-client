@@ -29,6 +29,7 @@
  */
 
 import Application from './application';
+import Websocket from './websocket';
 import Splash from './splash';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
@@ -236,8 +237,9 @@ export default class Core extends CoreBase {
 
     console.log('Creating websocket connection on', uri);
 
-    this.ws = new WebSocket(uri);
-    this.ws.onopen = (ev) => {
+    this.ws = new Websocket('CoreSocket', uri);
+
+    this.ws.on('open', ev => {
       const reconnected = !!this.reconnecting;
       clearInterval(this.reconnecting);
       this.connected = true;
@@ -248,9 +250,9 @@ export default class Core extends CoreBase {
       setTimeout(() => cb(), 100);
 
       this.emit('osjs/core:connect', ev, reconnected);
-    };
+    });
 
-    this.ws.onclose = (ev) => {
+    this.ws.on('close', ev => {
       if (!this.connected && !this.connectfailed) {
         this.emit('osjs/core:connection-failed', ev);
         this.connectfailed = true;
@@ -266,9 +268,9 @@ export default class Core extends CoreBase {
       cb(new Error('Connection closed'));
 
       this.emit('osjs/core:disconnect', ev);
-    };
+    });
 
-    this.ws.onmessage = (ev) => {
+    this.ws.on('message', ev => {
       try {
         const data = JSON.parse(ev.data);
         const params = data.params || [];
@@ -278,7 +280,7 @@ export default class Core extends CoreBase {
       } catch (e) {
         console.warn(e);
       }
-    };
+    });
 
     return true;
   }

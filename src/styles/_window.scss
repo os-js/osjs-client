@@ -129,16 +129,15 @@ $direction-list: "nw" "sw" "ne" "se" "n" "s" "w" "e";
     width: $base-margin;
     height: $base-margin;
   }
-}
 
-.osjs-root[data-dir="ltr"] {
-  .osjs-window-button:not(:last-child) {
+  &:not(:last-child) {
     margin-right: $base-margin / 4;
   }
 }
 
 .osjs-root[data-dir="rtl"] {
   .osjs-window-button:not(:last-child) {
+    margin-right: 0;
     margin-left: $base-margin / 4;
   }
 }

@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+$direction-list: "nw" "sw" "ne" "se" "n" "s" "w" "e";
+
 .osjs-window-behavior-lofi {
   position: absolute;
   border: 2px solid #000;
@@ -55,36 +57,10 @@
     right: -$resize-handle-size;
   }
 
-  &[data-direction="nw"] {
-    cursor: nw-resize;
-  }
-
-  &[data-direction="sw"] {
-    cursor: sw-resize;
-  }
-
-  &[data-direction="ne"] {
-    cursor: ne-resize;
-  }
-
-  &[data-direction="se"] {
-    cursor: se-resize;
-  }
-
-  &[data-direction="n"] {
-    cursor: n-resize;
-  }
-
-  &[data-direction="s"] {
-    cursor: s-resize;
-  }
-
-  &[data-direction="w"] {
-    cursor: w-resize;
-  }
-
-  &[data-direction="e"] {
-    cursor: e-resize;
+  @each $d in $direction-list {
+    &[data-direction="#{$d}"] {
+      cursor: #{$d}-resize;
+    }
   }
 
   &[data-direction="s"],
@@ -246,6 +222,7 @@
 
 .osjs-root[data-window-action="true"] {
   .osjs-window {
+    /* FIXME: Maybe limit this as to increase perf ? */
     * {
       pointer-events: none;
     }

@@ -302,6 +302,21 @@ export default class Desktop extends EventEmitter {
       history.pushState(null, null, document.URL);
     });
 
+    // Right-to-left support triggers
+    const rtls = this.core.config('locale.rtl');
+    const checkRTL = () => {
+      const locale = this.core.make('osjs/locale')
+        .getLocale()
+        .split('_')[0]
+        .toLowerCase();
+
+      const isRtl = rtls.indexOf(locale) !== -1;
+      this.core.$root.setAttribute('data-dir', isRtl ? 'rtl' : 'ltr');
+    };
+    this.core.on('osjs/settings:load', checkRTL);
+    this.core.on('osjs/settings:save', checkRTL);
+    this.core.on('osjs/core:started', checkRTL);
+
     this.core.$resourceRoot.appendChild(this.$styles);
   }
 

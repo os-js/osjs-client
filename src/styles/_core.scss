@@ -49,6 +49,10 @@
   left: 0;
   touch-action: none;
 
+  &[data-dir="rtl"] {
+    direction: rtl;
+  }
+
   textarea,
   input,
   label {

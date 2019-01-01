@@ -149,13 +149,21 @@
     pointer-events: none;
   }
 
-  &:not(:last-child) {
-    margin-right: $base-margin / 4;
-  }
-
   & > div {
     width: $base-margin;
     height: $base-margin;
+  }
+}
+
+.osjs-root[data-dir="ltr"] {
+  .osjs-window-button:not(:last-child) {
+    margin-right: $base-margin / 4;
+  }
+}
+
+.osjs-root[data-dir="rtl"] {
+  .osjs-window-button:not(:last-child) {
+    margin-left: $base-margin / 4;
   }
 }
 

@@ -46,7 +46,13 @@ const getDefaultLocale = (core, key) => core.config('locale.' + key);
 const getUserLocale = (core, key, defaultLocale) => core.make('osjs/settings')
   .get('osjs/locale', key, defaultLocale);
 
-const getLocale = (core, key) => {
+/**
+ * Gest the set localization
+ * @param {Core} core OS.js Core IoC
+ * @param {String} key Settings key (locales.*)
+ * @return {Object}
+ */
+export const getLocale = (core, key) => {
   const defaultLocale = getDefaultLocale(core, key);
   const userLocale = getUserLocale(core, key, defaultLocale);
   return {defaultLocale, userLocale};

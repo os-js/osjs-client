@@ -165,6 +165,7 @@ export const defaultConfiguration = {
 
   locale: {
     language: clientLocale('en_EN'),
+    rtl: ['az', 'fa', 'he', 'uz', 'ar'],
     format: {
       shortDate: 'yyyy-mm-dd',
       mediumDate: 'dS mmm yyyy',

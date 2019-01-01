@@ -37,7 +37,7 @@ import Tray from '../tray';
 import Websocket from '../websocket';
 import Clipboard from '../clipboard';
 import * as translations from '../locale';
-import {format, translatable, translatableFlat} from '../utils/locale';
+import {format, translatable, translatableFlat, getLocale} from '../utils/locale';
 import {style, script, supportedMedia, playSound} from '../utils/dom';
 import * as dnd from '../utils/dnd';
 import {BasicApplication} from '../basic-application.js';
@@ -250,6 +250,10 @@ export default class CoreServiceProvider extends ServiceProvider {
       translate: translatable(this.core)(translations),
       translatable: translatable(this.core),
       translatableFlat: translatableFlat(this.core),
+      getLocale: (key = 'language') => {
+        const ref = getLocale(this.core, key);
+        return ref.userLocale || ref.defaultLocale;
+      },
       setLocale: name => name in translations
         ? this.core.make('osjs/settings')
           .set('osjs/locale', 'language', name)

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.33
+
+* Updated RTL support (#38)
+
 ## 3.0.32
 
 * Added direct support for core websocket in applications

@@ -77,6 +77,8 @@ export default class Application extends EventEmitter {
 
     super(name);
 
+    window.zztop = this;
+
     /**
      * The Application ID
      * @type {Number}
@@ -247,6 +249,22 @@ export default class Application extends EventEmitter {
     this.sockets.push(ws);
 
     return ws;
+  }
+
+  /**
+   * Sends a message over websocket via the core connection.
+   * @desc This does not create a new connection, but rather uses the core connection.
+   * For subscribing to messages from the server use the 'ws:message' event
+   */
+  send(...args) {
+    this.core.ws.send(JSON.stringify({
+      name: 'osjs/application:socket:message',
+      params: [{
+        pid: this.pid,
+        name: this.metadata.name,
+        args
+      }]
+    }));
   }
 
   /**

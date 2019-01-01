@@ -126,6 +126,7 @@ export default class Core extends CoreBase {
 
     console.group('Core::boot()');
 
+    // Attaches sounds for certain events
     this.on('osjs/core:started', () => {
       if (this.has('osjs/sounds')) {
         this.make('osjs/sounds').play('service-login');
@@ -135,6 +136,16 @@ export default class Core extends CoreBase {
     this.on('osjs/core:destroy', () => {
       if (this.has('osjs/sounds')) {
         this.make('osjs/sounds').play('service-logout');
+      }
+    });
+
+    // Forwards messages to an application from internal websocket
+    this.on('osjs/application:socket:message', ({pid, args}) => {
+      const found = Application.getApplications()
+        .find(proc => proc && proc.pid === pid);
+
+      if (found) {
+        found.emit('ws:message', ...args);
       }
     });
 

@@ -55,5 +55,8 @@
     "no-multi-assign": 1,
     "no-new-object": 2,
     "no-tabs": 1,
+    "no-trailing-spaces": 2,
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "object-curly-spacing": ["error", "never"]
   }
 }

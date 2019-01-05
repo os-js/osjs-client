@@ -48,6 +48,8 @@ export const vi_VN = {
   LBL_CONNECTION_LOST_MESSAGE: 'Kết nối với OS.js đã bị mất. Đang kết nối lại....',
   LBL_CONNECTION_RESTORED: 'Đã khôi phục kết nối',
   LBL_CONNECTION_RESTORED_MESSAGE: 'Kết nối với máy chủ OS.js đã được khôi phục.',
+  LBL_CONNECTION_FAILED: 'Kết nối thất bại',
+  LBL_CONNECTION_FAILED_MESSAGE: 'Không thể kết nối đến máy chủ OS.js. Một số tính năng có thể không hoạt động ổn định.',
 
   // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'Phát triển',
@@ -63,11 +65,11 @@ export const vi_VN = {
 
   // UI
   LBL_LAUNCH_SELECT: 'Chọn ứng dụng',
-  LBL_LAUNCH_SELECT_MESSAGE: 'Chọn ứng dụng cho \'{0}\'',
-  LBL_DESKTOP_SELECT_WALLPAPER: 'Chọn hình nền',
-  LBL_DESKTOP_SELECT_THEME: 'Chọn chủ đề',
+  LBL_LAUNCH_SELECT_MESSAGE: 'Chọn ứng dụng để mở tập tin \'{0}\'',
+  LBL_DESKTOP_SELECT_WALLPAPER: 'Thay đổi hình nền',
+  LBL_DESKTOP_SELECT_THEME: 'Thay đổi chủ đề',
   LBL_SEARCH_TOOLTOP: 'Tìm kiếm dữ liệu ({0})',
-  LBL_SEARCH_PLACEHOLDER: 'Tìm kiếm các dữ liệu...',
+  LBL_SEARCH_PLACEHOLDER: 'Tìm kiếm...',
   LBL_SEARCH_WAIT: 'Đang tìm kiếm...',
   LBL_SEARCH_RESULT: 'Đang hiển thị {0} kết quả',
 
@@ -80,10 +82,10 @@ export const vi_VN = {
   LBL_FS_GIB: 'GiB',
 
   // Generic
-  LBL_TOP: 'Trên cùng',
+  LBL_TOP: 'Phía trên',
   LBL_LEFT: 'Trái',
   LBL_RIGHT: 'Phải',
-  LBL_BOTTOM: 'Dưới cùng',
+  LBL_BOTTOM: 'Phía dưới',
   LBL_MENU: 'Menu',
   LBL_ERROR: 'Lỗi',
   LBL_INFO: 'Thông tin',
@@ -130,5 +132,17 @@ export const vi_VN = {
   LBL_APPLICATION: 'Ứng dụng',
   LBL_APPLICATIONS: 'Các ứng dụng',
   LBL_KILL: 'Đóng',
-  LBL_KILL_ALL: 'Đóng tất cả'
+  LBL_KILL_ALL: 'Đóng tất cả',
+  LBL_MINIMIZE: 'Thu nhỏ',
+  LBL_MAXIMIZE: 'Tối đa',
+  LBL_RESTORE: 'Phục hồi',
+  LBL_RAISE: 'Nâng lên',
+  LBL_SHADE: 'Làm mở',
+  LBL_UNSHADE: 'Bỏ làm mờ',
+  LBL_ONTOP: 'Ở trên cùng',
+  LBL_RESIZE: 'Thay đổi kích thước',
+  LBL_BACK: 'Lùi',
+  LBL_FORWARD: 'Tiến',
+  LBL_UPLOAD: 'Tải lên',
+  LBL_IMAGE: 'Ảnh'
 };

@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.34
+
+* Updated README
+* Updated Vietnamese (vi_VN) translations (#40)
+* Updated eslintrc
+* Updated copyright(s)
+
 ## 3.0.33
 
 * Updated RTL support (#38)

@@ -32,7 +32,7 @@ import * as VFS from './vfs/methods';
 import {EventEmitter} from '@osjs/event-emitter';
 import systemAdapter from './vfs/system';
 import appsAdapter from './vfs/apps';
-import merge from 'deepmerge';
+import * as merge from 'deepmerge';
 
 const defaultAdapter = ({
   readdir: (path, options) => Promise.resolve([]),

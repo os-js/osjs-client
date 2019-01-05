@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 
-import merge from 'deepmerge';
+import * as merge from 'deepmerge';
 import simplejsonconf from 'simplejsonconf';
 
 const serverSettings = core => ({

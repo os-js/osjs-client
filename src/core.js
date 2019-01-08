@@ -182,9 +182,14 @@ export default class Core extends CoreBase {
    */
   start() {
     const connect = () => new Promise((resolve, reject) => {
-      const valid = this._createConnection(error => error ? reject(error) : resolve());
-      if (!valid) {
-        reject('Already connecting...');
+      try {
+        const valid = this._createConnection(error => error ? reject(error) : resolve());
+        if (valid === false) {
+          // We can skip the connection
+          resolve();
+        }
+      } catch (e) {
+        reject(e);
       }
     });
 
@@ -240,8 +245,10 @@ export default class Core extends CoreBase {
   _createConnection(cb) {
     cb = cb || function() {};
 
-    if (this.configuration.standalone || this.connected) {
+    if (this.configuration.standalone) {
       return false;
+    } else if (this.connected) {
+      throw new Error('Already connecting');
     }
 
     const {uri} = this.config('ws');

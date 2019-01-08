@@ -57,8 +57,8 @@ import {style, script} from './utils/dom';
 /*
  * Fetch package manifest
  */
-const fetchManifest = core =>
-  fetch(core.url('/metadata.json'))
+const fetchManifest = core => // FIXME: Use internal ?!
+  window.fetch(core.url('/metadata.json'))
     .then(response => response.json());
 
 /**

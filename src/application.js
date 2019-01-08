@@ -77,8 +77,6 @@ export default class Application extends EventEmitter {
 
     super(name);
 
-    window.zztop = this;
-
     /**
      * The Application ID
      * @type {Number}

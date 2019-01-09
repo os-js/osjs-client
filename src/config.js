@@ -54,7 +54,8 @@ export const defaultConfiguration = {
     vi_VN: 'Vietnamese, Vietnamese',
     fr_FR: 'French',
     de_DE: 'German',
-    sl_SI: 'Slovenian, Slovenščina'
+    sl_SI: 'Slovenian, Slovenščina',
+    zh_CN: 'Chinese (simplified)'
   },
 
   application: {

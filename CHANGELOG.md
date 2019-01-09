@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.35
+
+* Updated standalone WS handling
+* Updated internal parent directory resolver in vfs
+* Updated a fetch call
+* Removed a leftover debug from application
+
 ## 3.0.34
 
 * Updated README

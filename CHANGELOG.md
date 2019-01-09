@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.36
+
+* Added Chinese (zh_CN) translations (#44)
+
 ## 3.0.35
 
 * Updated standalone WS handling

@@ -32,6 +32,7 @@ import dateformat from 'dateformat';
 
 const FALLBACK_LOCALE = 'en_EN';
 
+// TODO
 const prefixMap = {
   nb: 'nb_NO'
 };
@@ -49,8 +50,8 @@ const getUserLocale = (core, key, defaultLocale) => core.make('osjs/settings')
 /**
  * Gest the set localization
  * @param {Core} core OS.js Core IoC
- * @param {String} key Settings key (locales.*)
- * @return {Object}
+ * @param {string} key Settings key (locales.*)
+ * @return {Object} An object with defaultLocale and userLocale
  */
 export const getLocale = (core, key) => {
   const defaultLocale = getDefaultLocale(core, key);
@@ -58,42 +59,77 @@ export const getLocale = (core, key) => {
   return {defaultLocale, userLocale};
 };
 
+/**
+ * Gets a raw string from a tree of translations based on key
+ *
+ * Note that this function will fall back to a pre-configured locale
+ * if the given locale names were not found.
+ *
+ * @private
+ * @param {Object}  list      The tree of translations
+ * @param {string}  ul        User locale name
+ * @param {string}  dl        Default locale name
+ * @param {string}  k         The key to translate from tree
+ * @return {string}           The raw string
+ */
 const getFromList = (list, ul, dl, k) => {
   const localizedList = list[ul] || list[dl] || list[FALLBACK_LOCALE] || {};
   return localizedList[k] || k;
 };
 
+/**
+ * Translates a key + arguments from a tree of translations
+ *
+ * @example
+ *  translate({en_EN: {foo: 'Hello {0}'}}, 'nb_NO', 'en_EN', 'foo', 'World') => 'Hello World'
+ *
+ * @private
+ * @param {Object}  list      The tree of translations
+ * @param {string}  ul        User locale name
+ * @param {string}  dl        Default locale name
+ * @param {string}  k         The key to translate from tree
+ * @param {...*}    args      A list of arguments that are defined in the translation string
+ * @return {string}           The translated string
+ */
 const translate = (list, ul, dl, k, ...args) => {
   const fmt = getFromList(list, ul, dl, k);
   return fmt.replace(sprintfRegex, sprintfMatcher(args));
 };
 
 /**
- * Translates a given flat list of locales
+ * Translates a given flat tree of locales
  *
- * @desc Automatically translates using user locale if available.
+ * Will automatically detect the current locale from the user.
+ *
+ * Returns a function that takes a key and returns the correct string.
+ *
  * @example
  *  translatableFlat({en_EN: 'Hello World'}); // => 'Hello World'
  *
- * @param {Object} list The list
- * @param {String} defaultValue Default value if none found
- * @return {String}
+ * @param {Object} list The tree of translations
+ * @param {string} defaultValue Default value if none found
+ * @return {string} The translated string
  */
 export const translatableFlat = core => (list, defaultValue) => {
   const {defaultLocale, userLocale} = getLocale(core, 'language');
+
   return list[userLocale] || list[defaultLocale] || list[FALLBACK_LOCALE] || defaultValue;
 };
 
 /**
- * Translates a given list of locales
+ * Translates a given tree of locales.
  *
- * @desc Automatically translates using user locale if available.
+ * Will automatically detect the current locale from the user.
+ *
+ * Returns a `translate` function that takes a key and list of arguments.
+ *
+ * @see translate
  * @example
  *  translatable({en_EN: {foo: 'Hello {0}'}})
  *    ('foo', 'World'); // => 'Hello World'
- * @param {String} k List key
+ * @param {string} k List key
  * @param {...args} Format arguments
- * @return {String}
+ * @return {Function} A translation function
  */
 export const translatable = core => list => {
   const {defaultLocale, userLocale} = getLocale(core, 'language');
@@ -108,23 +144,29 @@ export const translatable = core => list => {
 };
 
 /**
- * Formats a given Date to a format
- * @desc Formats are 'shortDate', 'mediumDate', 'longDate', 'fullDate',
+ * Formats a given Date to a specified format
+ *
+ * Will automatically detect the current locale from the user.
+ *
+ * Formats are 'shortDate', 'mediumDate', 'longDate', 'fullDate',
  *       'shortTime' and 'longTime'
+ *
  * @param {Date} date Date object
- * @param {String} fmt Format
- * @return {String}
+ * @param {string} fmt Format
+ * @return {string}
  */
 export const format = core => (date, fmt) => {
   const {defaultLocale, userLocale} = getLocale(core, 'format.' + fmt);
   const useFormat = userLocale || defaultLocale || fmt;
+
   return dateformat(date, useFormat);
 };
 
 /**
- * Get the browser locale
+ * Figures out what locale the browser is running as
+ *
  * @param {string} [defaultLocale=en_EN] Default locale if none found
- * @return {String}
+ * @return {string} The browser locale
  */
 export const clientLocale = (function() {
   const nav = window.navigator || {};

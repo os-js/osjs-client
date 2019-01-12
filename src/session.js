@@ -91,7 +91,7 @@ export default class Session {
             }
           });
         } catch (e) {
-          console.warn(e);
+          console.warn('Error while loading session entry', e);
         }
       });
 

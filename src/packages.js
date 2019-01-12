@@ -323,7 +323,7 @@ export default class Packages {
       } catch (e) {
         dialog(e);
 
-        console.warn(e);
+        console.warn('Exception when launching', name, e);
       } finally {
         this.core.emit('osjs/application:launched', name, app);
         console.groupEnd();
@@ -413,7 +413,7 @@ export default class Packages {
             const re = new RegExp(mime);
             return re.test(mimeType);
           } catch (e) {
-            console.warn(e);
+            console.warn('Compability check failed', e);
           }
 
           return mime === mimeType;

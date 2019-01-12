@@ -159,7 +159,7 @@ export default class AuthServiceProvider extends ServiceProvider {
       return true;
     } catch (e) {
       if (this.core.config('development')) {
-        console.warn(e);
+        console.warn('Exception on login', e);
       }
 
       this.ui.emit('login:error', 'Login failed');
@@ -182,7 +182,7 @@ export default class AuthServiceProvider extends ServiceProvider {
     try {
       this.core.destroy();
     } catch (e) {
-      console.warn(e);
+      console.warn('Exception on logout', e);
     }
 
     if (reload) {

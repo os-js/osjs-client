@@ -59,7 +59,7 @@ export const draggable = (el, options = {}) => {
         try {
           setDragImage(ev, el, options);
         } catch (e) {
-          console.warn(e);
+          console.warn('draggable dragstart setDragImage error', e);
         }
       }
 
@@ -67,7 +67,7 @@ export const draggable = (el, options = {}) => {
         ev.dataTransfer.effectAllowed = effect;
         ev.dataTransfer.setData(type, transferData);
       } catch (e) {
-        console.warn(e);
+        console.warn('draggable dragstart dataTransfer error', e);
       }
     }
 
@@ -125,7 +125,7 @@ export const droppable = (el, options = {}) => {
         return result;
       }
     } catch (e) {
-      console.warn(e);
+      console.warn('droppable value parsing error', e);
     }
 
     return true;
@@ -176,10 +176,10 @@ export const droppable = (el, options = {}) => {
           }
         } catch (e) {
           data = transfer;
-          console.warn(e);
+          console.warn('droppable dataTransfer parsing error', e);
         }
       } catch (e) {
-        console.warn(e);
+        console.warn('droppable dataTransfer parsing error', e);
       }
     }
 

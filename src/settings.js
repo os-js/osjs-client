@@ -210,7 +210,7 @@ export default class Settings {
         sjc.set(key, value);
         this.settings[ns] = sjc.get();
       } catch (e) {
-        console.warn(e);
+        console.warn('Error while setting settings for', key, e);
       }
     } else {
       this.settings[ns] = Object.assign({}, value);

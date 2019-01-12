@@ -64,7 +64,7 @@ export default class Search {
       .map(path => {
         return vfs.search({path}, pattern)
           .catch(error => {
-            console.warn(error);
+            console.warn('Error while searching', error);
             return [];
           });
       });

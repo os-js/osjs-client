@@ -76,7 +76,7 @@ const applyBackgroundStyles = (core, background) => {
         .then(src => {
           setTimeout(() => ($root.style.backgroundImage = `url(${src})`), 1);
         })
-        .catch(error => console.warn(error));
+        .catch(error => console.warn('Error while setting wallpaper from VFS', error));
     }
   }
 
@@ -457,7 +457,7 @@ export default class Desktop extends EventEmitter {
           try {
             callback(this.core, this, {}, metadata);
           } catch (e) {
-            console.warn(e);
+            console.warn('Exception while calling theme callback', e);
           }
         }
 

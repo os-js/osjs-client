@@ -176,7 +176,7 @@ export default class Notification {
     if (this.options.native) {
       createNativeNotification(this.options, onclick)
         .catch(err => {
-          console.warn(err);
+          console.warn('Error on native notification', err);
           renderCustom();
         });
     } else {

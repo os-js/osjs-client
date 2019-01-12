@@ -184,7 +184,7 @@ export default class Filesystem extends EventEmitter {
         try {
           return createMountpoint(this.core, this.adapters, mount);
         } catch (e) {
-          console.warn(e);
+          console.warn('Error while creating mountpoint', e);
         }
 
         return null;
@@ -202,7 +202,7 @@ export default class Filesystem extends EventEmitter {
 
     const fn = m => stopOnError
       ? this._mount(m)
-      : this._mount(m).catch(err => console.warn(err));
+      : this._mount(m).catch(err => console.warn('Error while mounting', m, err));
 
     return Promise.all(this.mounts.map(fn));
   }

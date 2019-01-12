@@ -169,7 +169,7 @@ export default class Application extends EventEmitter {
       try {
         list.forEach(fn);
       } catch (e) {
-        console.warn(e);
+        console.warn('Exception on application destruction', e);
       }
 
       return [];
@@ -415,7 +415,7 @@ export default class Application extends EventEmitter {
       try {
         proc.destroy(false);
       } catch (e) {
-        console.warn(e);
+        console.warn('Exception on destroyAll', e);
       }
     });
 

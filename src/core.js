@@ -112,7 +112,7 @@ export default class Core extends CoreBase {
   boot() {
     const done = e => {
       if (e) {
-        console.error(e);
+        console.error('Error while booting', e);
       }
 
       console.groupEnd();
@@ -197,7 +197,7 @@ export default class Core extends CoreBase {
       this.emit('osjs/core:started');
 
       if (err) {
-        console.warn(err);
+        console.warn('Error while starting', err);
       }
 
       console.groupEnd();
@@ -218,7 +218,7 @@ export default class Core extends CoreBase {
 
       this.ping = setInterval(() => {
         if (this.connected && !this.reconnecting) {
-          this.request('/ping').catch(e => console.warn(e));
+          this.request('/ping').catch(e => console.warn('Error on ping', e));
         }
       }, pingTime);
     });
@@ -296,7 +296,7 @@ export default class Core extends CoreBase {
         console.debug('WebSocket message', data);
         this.emit(data.name, ...params);
       } catch (e) {
-        console.warn(e);
+        console.warn('Exception on websocket message', e);
       }
     });
 
@@ -445,7 +445,7 @@ export default class Core extends CoreBase {
 
           return true;
         } catch (e) {
-          console.warn(e);
+          console.warn('Exception on compability check', e);
         }
       }
 

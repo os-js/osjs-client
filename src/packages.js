@@ -215,14 +215,12 @@ export default class Packages {
 
       if (found.length > 0) {
         return new Promise((resolve, reject) => {
-          this.core.on('osjs/application:launched', (n, a) => {
+          this.core.once(`osjs/application:${name}:launched`, a => {
             if (signaled) {
               resolve(a);
             } else {
-              if (n === name) {
-                a.emit('attention', args, options);
-                resolve(a);
-              }
+              a.emit('attention', args, options);
+              resolve(a);
             }
           });
         });
@@ -294,6 +292,7 @@ export default class Packages {
 
     const fail = err => {
       this.core.emit('osjs/application:launched', name, false);
+      this.core.emit(`osjs/application:${name}:launched`, false);
 
       dialog(err);
 
@@ -326,6 +325,7 @@ export default class Packages {
         console.warn('Exception when launching', name, e);
       } finally {
         this.core.emit('osjs/application:launched', name, app);
+        this.core.emit(`osjs/application:${name}:launched`, app);
         console.groupEnd();
       }
 

@@ -201,44 +201,10 @@ export default class Filesystem extends EventEmitter {
       .filter(mount => mount !== null);
 
     const fn = m => stopOnError
-      ? this._mount(m)
-      : this._mount(m).catch(err => console.warn('Error while mounting', m, err));
+      ? this._mountpointAction(m)
+      : this._mountpointAction(m).catch(err => console.warn('Error while mounting', m, err));
 
     return Promise.all(this.mounts.map(fn));
-  }
-
-  /**
-   * Wrapper for mounting
-   * @param {Mountpoint} mountpoint The mountpoint
-   */
-  _mount(mountpoint) {
-    return mountpoint._adapter.mount({}, mountpoint)
-      .then(result => {
-        if (result) {
-          mountpoint.mounted = true;
-          this.emit('mounted', mountpoint);
-          this.core.emit('osjs/fs:mount');
-        }
-
-        return result;
-      });
-  }
-
-  /**
-   * Wrapper for unmounting
-   * @param {Mountpoint} mountpoint The mountpoint
-   */
-  _unmount(mountpoint) {
-    return mountpoint._adapter.unmount({}, mountpoint)
-      .then(result => {
-        if (result) {
-          mountpoint.mounted = false;
-          this.emit('unmounted', mountpoint);
-          this.core.emit('osjs/fs:unmount');
-        }
-
-        return result;
-      });
   }
 
   /**
@@ -247,18 +213,7 @@ export default class Filesystem extends EventEmitter {
    * @throws {Error} On invalid name or if already mounted
    */
   mount(name) {
-    return Promise.resolve(this.mounts.find(m => m.name === name))
-      .then(found => {
-        const _ = this.core.make('osjs/locale').translate;
-
-        if (!found) {
-          throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND', name));
-        } else if (!found.mounted) {
-          throw new Error(_('ERR_VFS_MOUNT_ALREADY_MOUNTED', name));
-        }
-
-        return this._mount(found);
-      });
+    return this._mountAction(name, false);
   }
 
   /**
@@ -267,6 +222,41 @@ export default class Filesystem extends EventEmitter {
    * @throws {Error} On invalid name or if already unmounted
    */
   unmount(name) {
+    return this._mountAction(name, true);
+  }
+
+  /**
+   * Internal wrapper for mounting/unmounting
+   *
+   * @param {Mountpoint} mountpoint The mountpoint
+   * @param {boolean} [unmount=false] If action is unmounting
+   * @return {Promise<Boolean, Error>}
+   */
+  _mountpointAction(mountpoint, unmount = false) {
+    const eventName = unmount ? 'unmounted' : 'mounted';
+    const coreEventName = unmount ? 'unmount' : 'mount';
+
+    return mountpoint._adapter[coreEventName]({}, mountpoint)
+      .then(result => {
+        if (result) {
+          mountpoint.mounted = !unmount;
+
+          this.emit(eventName, mountpoint);
+          this.core.emit('osjs/fs:' + coreEventName);
+        }
+
+        return result;
+      });
+  }
+
+  /**
+   * Internal wrapper for mounting/unmounting by name
+   *
+   * @param {string} name Mountpoint name
+   * @param {boolean} [unmount=false] If action is unmounting
+   * @return {Promise<Boolean, Error>}
+   */
+  _mountAction(name, unmount) {
     return Promise.resolve(this.mounts.find(m => m.name === name))
       .then(found => {
         const _ = this.core.make('osjs/locale').translate;
@@ -277,7 +267,7 @@ export default class Filesystem extends EventEmitter {
           throw new Error(_('ERR_VFS_MOUNT_NOT_MOUNTED', name));
         }
 
-        return this._unmount(found);
+        return this._mountpointAction(found, unmount);
       });
   }
 

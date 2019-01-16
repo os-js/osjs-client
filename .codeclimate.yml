@@ -6,6 +6,9 @@ checks:
   method-lines:
     config:
       threshold: 50
+  method-count:
+    config:
+      threshold: 50
 plugins:
   eslint:
     enabled: true

@@ -200,6 +200,39 @@ const clampPosition = (rect, {dimension, position}) => {
 };
 
 /*
+ * Window rendering callback function
+ */
+const renderCallback = (win, callback) => {
+  if (typeof callback === 'function') {
+    if (win.attributes.shadowDOM) {
+      try {
+        const mode = typeof win.attributes.shadowDOM === 'string'
+          ? win.attributes.shadowDOM
+          : 'open';
+
+        const shadow = win.$content.attachShadow({mode});
+
+        callback(shadow, win);
+
+        return;
+      } catch (e) {
+        console.warn('Shadow DOM not supported?', e);
+      }
+    }
+
+    callback(win.$content, win);
+  }
+};
+
+/*
+ * Adds a list of classnames to window element
+ */
+const addClassNames = (win, names) => names
+  .filter(val => !!val)
+  .forEach((val) => win.$element.classList.add(val));
+
+
+/*
  * Default window template
  */
 const TEMPLATE = `<div class="osjs-window-inner">
@@ -475,52 +508,12 @@ export default class Window extends EventEmitter {
   }
 
   /**
-   * Render window
-   * @param {Function} [callback] Callback when window DOM has been constructed
-   * @return {Window} this instance
+   * Updates the window buttons
    */
-  render(callback = function() {}) {
-    if (this.rendered) {
-      return this;
-    } else if (!this.inited) {
-      this.init();
-    }
-
-    ['osjs-window', ...this.attributes.classNames]
-      .filter(val => !!val)
-      .forEach((val) => {
-        this.$element.classList.add(val);
-      });
-
-    if (!this.attributes.header) {
-      this.$header.style.display = 'none';
-    }
-
+  _updateButtons() {
     const hideButton = action =>
       this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
         .style.display = 'none';
-
-    const renderCallback = () => {
-      if (typeof callback === 'function') {
-        if (this.attributes.shadowDOM) {
-          try {
-            const mode = typeof this.attributes.shadowDOM === 'string'
-              ? this.attributes.shadowDOM
-              : 'open';
-
-            const shadow = this.$content.attachShadow({mode});
-
-            callback(shadow, this);
-
-            return;
-          } catch (e) {
-            console.warn('Shadow DOM not supported?', e);
-          }
-        }
-
-        callback(this.$content, this);
-      }
-    };
 
     if (this.attributes.controls) {
       if (!this.attributes.maximizable) {
@@ -538,11 +531,31 @@ export default class Window extends EventEmitter {
       Array.from(this.$header.querySelectorAll('.osjs-window-button'))
         .forEach(el => el.style.display = 'none');
     }
+  }
 
+  /**
+   * Render window
+   * @param {Function} [callback] Callback when window DOM has been constructed
+   * @return {Window} this instance
+   */
+  render(callback = function() {}) {
+    if (this.rendered) {
+      return this;
+    } else if (!this.inited) {
+      this.init();
+    }
+
+    addClassNames(this, ['osjs-window', ...this.attributes.classNames]);
+
+    this._updateButtons();
     this._updateDOM();
 
     if (!this._preventDefaultPosition) {
       this.gravitate(this.attributes.gravity);
+    }
+
+    if (!this.attributes.header) {
+      this.$header.style.display = 'none';
     }
 
     // Clamp the initial window position to viewport
@@ -564,7 +577,7 @@ export default class Window extends EventEmitter {
       // TODO: Global modal
     }
 
-    renderCallback();
+    renderCallback(this, callback);
 
     this.rendered = true;
     this.setNextZindex(true);

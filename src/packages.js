@@ -189,7 +189,6 @@ export default class Packages {
   launch(name, args = {}, options = {}) {
     console.debug('Packages::launch()', name, args, options);
 
-    let signaled = false;
     const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);
     if (!metadata) {
@@ -199,6 +198,20 @@ export default class Packages {
     if (['theme', 'icons', 'sounds'].indexOf(metadata.type) !== -1) {
       return this._launchTheme(name, metadata.type);
     }
+
+    return this._launchApplication(name, metadata, args, options);
+  }
+
+  /**
+   * Launches an application package
+   *
+   * @param {String} name Application package name
+   * @param {Metadata} metadata Application metadata
+   * @param {Array} args Launch arguments
+   * @param {Object} options Launch options
+   */
+  _launchApplication(name, metadata, args, options) {
+    let signaled = false;
 
     if (metadata.singleton) {
       const foundApp = Application.getApplications()

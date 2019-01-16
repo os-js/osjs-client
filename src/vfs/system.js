@@ -28,27 +28,30 @@
  * @licence Simplified BSD License
  */
 
-const adapter = (core) => {
+const getters = ['exists', 'stat', 'readdir', 'readfile'];
 
-  const getters = ['exists', 'stat', 'readdir', 'readfile'];
+const requester = core => (fn, body, type) =>
+  core.request(core.url(`/vfs/${fn}`), {
+    body,
+    method: getters.indexOf(fn) !== -1 ? 'get' : 'post'
+  }, type)
+    .then(response => {
+      if (type === 'json') {
+        return {mime: 'application/json', body: response};
+      }
 
-  const request = (fn, body, type) =>
-    core.request(core.url(`/vfs/${fn}`), {
-      body,
-      method: getters.indexOf(fn) !== -1 ? 'get' : 'post'
-    }, type)
-      .then(response => {
-        if (type === 'json') {
-          return {mime: 'application/json', body: response};
-        }
+      const contentType = response.headers.get('content-type') || 'application/octet-stream';
 
-        const contentType = response.headers.get('content-type') || 'application/octet-stream';
+      return response.arrayBuffer().then(result => ({
+        mime: contentType,
+        body: result
+      }));
+    });
 
-        return response.arrayBuffer().then(result => ({
-          mime: contentType,
-          body: result
-        }));
-      });
+const methods = (core, request) => {
+  const passthrough = (name) => ({path}, options) =>
+    request(name, {path, options}, 'json')
+      .then(({body}) => body);
 
   return {
     readdir: ({path}, options) => request('readdir', {
@@ -74,20 +77,14 @@ const adapter = (core) => {
     rename: (from, to, options) =>
       request('rename', {from: from.path, to: to.path, options}, 'json').then(({body}) => body),
 
-    mkdir: ({path}, options) =>
-      request('mkdir', {path, options}, 'json').then(({body}) => body),
+    mkdir: passthrough('mkdir'),
+    unlink: passthrough('unlink'),
+    exists: passthrough('exists'),
+    stat: passthrough('stat'),
 
-    unlink: ({path}, options) =>
-      request('unlink', {path, options}, 'json').then(({body}) => body),
-
-    exists: ({path}, options) =>
-      request('exists', {path, options}, 'json').then(({body}) => body),
-
-    stat: ({path}, options) =>
-      request('stat', {path, options}, 'json').then(({body}) => body),
-
-    url: ({path}, options) =>
-      Promise.resolve(core.url(`/vfs/readfile?path=${encodeURIComponent(path)}`)),
+    url: ({path}, options) => Promise.resolve(
+      core.url(`/vfs/readfile?path=${encodeURIComponent(path)}`)
+    ),
 
     search: ({path}, pattern, options) =>
       request('search', {root: path, pattern, options}, 'json')
@@ -105,7 +102,12 @@ const adapter = (core) => {
         });
     }
   };
+};
 
+const adapter = (core) => {
+  const request = requester(core);
+
+  return methods(core, request);
 };
 
 export default adapter;

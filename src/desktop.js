@@ -137,18 +137,19 @@ export default class Desktop extends EventEmitter {
    * Initializes Desktop
    */
   init() {
-    this.core.on('osjs/panel:create', panel => {
-      this.subtract[panel.options.position] += panel.$element.offsetHeight;
-      this._updateCSS();
-      this.core.emit('osjs/desktop:transform', this.getRect());
-    });
+    this.initConnectionEvents();
+    this.initUIEvents();
+    this.initDragEvents();
+    this.initKeyboardEvents();
+    this.initMouseEvents();
+    this.initBaseEvents();
+    this.initLocales();
+    this.initDeveloperTray();
 
-    this.core.on('osjs/panel:destroy', panel => {
-      this.subtract[panel.options.position] -= panel.$element.offsetHeight;
-      this._updateCSS();
-      this.core.emit('osjs/desktop:transform', this.getRect());
-    });
+    this.core.$resourceRoot.appendChild(this.$styles);
+  }
 
+  initConnectionEvents() {
     this.core.on('osjs/core:disconnect', ev => {
       console.warn('Connection closed', ev);
 
@@ -180,6 +181,20 @@ export default class Desktop extends EventEmitter {
         message: _('LBL_CONNECTION_FAILED_MESSAGE')
       });
     });
+  }
+
+  initUIEvents() {
+    this.core.on('osjs/panel:create', panel => {
+      this.subtract[panel.options.position] += panel.$element.offsetHeight;
+      this._updateCSS();
+      this.core.emit('osjs/desktop:transform', this.getRect());
+    });
+
+    this.core.on('osjs/panel:destroy', panel => {
+      this.subtract[panel.options.position] -= panel.$element.offsetHeight;
+      this._updateCSS();
+      this.core.emit('osjs/desktop:transform', this.getRect());
+    });
 
     this.core.on('osjs/window:transitionend', (...args) => {
       this.emit('theme:window:transitionend', ...args);
@@ -188,6 +203,12 @@ export default class Desktop extends EventEmitter {
     this.core.on('osjs/window:change', (...args) => {
       this.emit('theme:window:change', ...args);
     });
+  }
+
+  initDeveloperTray() {
+    if (!this.core.config('development')) {
+      return;
+    }
 
     // Creates tray
     const tray = this.core.make('osjs/tray').create({
@@ -195,10 +216,9 @@ export default class Desktop extends EventEmitter {
     }, (ev) => this.onDeveloperMenu(ev));
 
     this.core.on('destroy', () => tray.destroy());
+  }
 
-    // Prevents background scrolling on iOS
-    this.core.$root.addEventListener('touchmove', e => e.preventDefault());
-
+  initDragEvents() {
     // Handles dnd
     this.core.$root.addEventListener('dragover', e => {
       e.preventDefault();
@@ -207,7 +227,9 @@ export default class Desktop extends EventEmitter {
     this.core.$root.addEventListener('drop', e => {
       e.preventDefault();
     });
+  }
 
+  initKeyboardEvents() {
     // Forward keypress events
     const isVisible = w => w &&
       !w.getState('minimized') &&
@@ -257,7 +279,9 @@ export default class Desktop extends EventEmitter {
         }
       }
     });
+  }
 
+  initMouseEvents() {
     // Custom context menu
     this.core.$root.addEventListener('contextmenu', ev => {
       if (ev.target === this.core.$root) {
@@ -288,7 +312,9 @@ export default class Desktop extends EventEmitter {
       window.addEventListener('mousemove', onmousemove);
       window.addEventListener('mouseup', onmouseup);
     });
+  }
 
+  initBaseEvents() {
     // Resize hook
     let resizeDebounce;
     window.addEventListener('resize', () => {
@@ -302,6 +328,11 @@ export default class Desktop extends EventEmitter {
       history.pushState(null, null, document.URL);
     });
 
+    // Prevents background scrolling on iOS
+    this.core.$root.addEventListener('touchmove', e => e.preventDefault());
+  }
+
+  initLocales() {
     // Right-to-left support triggers
     const rtls = this.core.config('locale.rtl');
     const checkRTL = () => {
@@ -317,7 +348,6 @@ export default class Desktop extends EventEmitter {
     this.core.on('osjs/settings:save', checkRTL);
     this.core.on('osjs/core:started', checkRTL);
 
-    this.core.$resourceRoot.appendChild(this.$styles);
   }
 
   start() {

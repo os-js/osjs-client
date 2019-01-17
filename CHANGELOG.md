@@ -1,5 +1,15 @@
 # Changelog for osjs-client
 
+## 3.0.37
+
+* Fixed desktop panel space calculations (#48)
+* Added codeclimate badge to README
+* Better handling of singleton app launch queue
+* Cleanups
+* Added codeclimate config
+* Updated some console warning/error messages
+* Updated locale esdoc
+
 ## 3.0.36
 
 * Added Chinese (zh_CN) translations (#44)

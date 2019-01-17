@@ -559,8 +559,7 @@ export default class Window extends EventEmitter {
     }
 
     // Clamp the initial window position to viewport
-    const rect = this.core.make('osjs/desktop').getRect();
-    Object.assign(this.state.position, clampPosition(rect, this.state));
+    this.clampToViewport(false);
 
     this.core.$root.appendChild(this.$element);
 
@@ -712,6 +711,24 @@ export default class Window extends EventEmitter {
 
     if (!isNaN(width) && !isNaN(height)) {
       this.setDimension({width, height});
+    }
+  }
+
+  /**
+   * Clamps the position to viewport
+   * @param {boolean} [update=true] Update DOM
+   */
+  clampToViewport(update = true) {
+    const rect = this.core.make('osjs/desktop').getRect();
+
+    this.state.position = Object.assign(
+      {},
+      this.state.position,
+      clampPosition(rect, this.state)
+    );
+
+    if (update) {
+      this._updateDOM();
     }
   }
 

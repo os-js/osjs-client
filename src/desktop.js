@@ -83,6 +83,23 @@ const applyBackgroundStyles = (core, background) => {
   Object.keys(styles).forEach(k => ($root.style[k] = styles[k]));
 };
 
+/*
+ * Creates a rectangle with the realestate panels takes up
+ */
+const createPanelSubtraction = (panel, panels) => {
+  const subtraction = {top: 0, left: 0, right: 0, bottom: 0};
+  const set = p => (subtraction[p.options.position] = p.$element.offsetHeight);
+
+  if (panels.length > 0) {
+    panels.forEach(set);
+  } else {
+    // Backward compability
+    set(panel);
+  }
+
+  return subtraction;
+};
+
 /**
  * Desktop Class
  *
@@ -184,15 +201,15 @@ export default class Desktop extends EventEmitter {
   }
 
   initUIEvents() {
-    this.core.on('osjs/panel:create', panel => {
-      this.subtract[panel.options.position] += panel.$element.offsetHeight;
-      this._updateCSS();
-      this.core.emit('osjs/desktop:transform', this.getRect());
-    });
+    this.core.on(['osjs/panel:create', 'osjs/panel:destroy'], (panel, panels = []) => {
+      this.subtract = createPanelSubtraction(panel, panels);
 
-    this.core.on('osjs/panel:destroy', panel => {
-      this.subtract[panel.options.position] -= panel.$element.offsetHeight;
-      this._updateCSS();
+      try {
+        this._updateCSS();
+        Window.getWindows().forEach(w => w.clampToViewport());
+      } catch (e) {
+        console.warn('Panel event error', e);
+      }
       this.core.emit('osjs/desktop:transform', this.getRect());
     });
 

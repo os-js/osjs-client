@@ -643,11 +643,15 @@ export default class Window extends EventEmitter {
    * @return {Boolean}
    */
   minimize() {
-    if (this._toggleState('minimized', true, 'minimize')) {
-      return this.blur();
+    if (this.attributes.minimizable) {
+      if (this._toggleState('minimized', true, 'minimize')) {
+        return this.blur();
+      }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   /**
@@ -663,10 +667,12 @@ export default class Window extends EventEmitter {
    * @return {Boolean}
    */
   maximize() {
-    if (this._toggleState('maximized', true, 'maximize')) {
-      this.once('transitionend', () => this.emit('resized'));
+    if (this.attributes.maximizable) {
+      if (this._toggleState('maximized', true, 'maximize')) {
+        this.once('transitionend', () => this.emit('resized'));
 
-      return true;
+        return true;
+      }
     }
 
     return false;

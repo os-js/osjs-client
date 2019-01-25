@@ -153,8 +153,11 @@ export default class AuthServiceProvider extends ServiceProvider {
         return false;
       }
 
+
       this.ui.destroy();
       this.callback(response);
+
+      this.core.emit('osjs/core:logged-in');
 
       return true;
     } catch (e) {
@@ -184,6 +187,8 @@ export default class AuthServiceProvider extends ServiceProvider {
     } catch (e) {
       console.warn('Exception on logout', e);
     }
+
+    this.core.emit('osjs/core:logged-out');
 
     if (reload) {
       setTimeout(() => {

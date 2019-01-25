@@ -30,7 +30,6 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import Websocket from './websocket';
 import Window from './window';
-import {fetch} from './utils/fetch';
 
 const applications = [];
 let applicationCount = 0;
@@ -121,6 +120,12 @@ export default class Application extends EventEmitter {
      * @type {Worker[]}
      */
     this.workers = [];
+
+    /**
+     * Options for internal fetch/requests
+     * @type {Object}
+     */
+    this.requestOptions = {};
 
     /**
      * The application destruction state
@@ -227,7 +232,7 @@ export default class Application extends EventEmitter {
   request(path = '/', options = {}, type = 'json') {
     const uri = this.resource(path);
 
-    return fetch(uri, options, type);
+    return this.core.request(uri, options, type);
   }
 
   /**

@@ -34,6 +34,7 @@ import Splash from './splash';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
+import merge from 'deepmerge';
 
 /**
  * Core
@@ -132,8 +133,6 @@ export default class Core extends CoreBase {
         if (this.has('osjs/auth')) {
           return this.make('osjs/auth').show(user => {
             this.user = user;
-
-            this.emit('osjs/core:logged-in');
 
             if (this.has('osjs/settings')) {
               this.make('osjs/settings').load()
@@ -384,8 +383,9 @@ export default class Core extends CoreBase {
       return Promise.reject(new Error(_('ERR_REQUEST_STANDALONE')));
     }
 
-    if (!url.match(/^((http|ws|ftp)s?:)?/i)) {
+    if (!url.match(/^((http|ws|ftp)s?:)/i)) {
       url = this.url(url);
+      options = merge(options, this.requestOptions);
     }
 
     return fetch(url, options, type)
@@ -464,6 +464,14 @@ export default class Core extends CoreBase {
     }
 
     return super.off(name, callback, force);
+  }
+
+  /**
+   * Set the internal fetch/request options
+   * @param {Object} options Request options
+   */
+  setRequestOptions(options) {
+    this.requestOptions = Object.assign({}, options);
   }
 
   /**

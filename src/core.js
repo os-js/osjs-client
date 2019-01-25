@@ -60,8 +60,6 @@ export default class Core extends CoreBase {
 
     this.user = null;
     this.ws = null;
-    this.connected = false;
-    this.reconnecting = false;
     this.ping = null;
     this.splash = new Splash(this);
     this.$root = options.root;
@@ -97,9 +95,7 @@ export default class Core extends CoreBase {
 
     this.user = null;
     this.ws = null;
-    this.connected = false;
     this.connecting = false;
-    this.reconnecting = false;
     this.connectfailed = false;
     this.ping = null;
 
@@ -239,8 +235,10 @@ export default class Core extends CoreBase {
       const pingTime = config.cookie.maxAge / 2;
 
       this.ping = setInterval(() => {
-        if (this.connected && !this.reconnecting) {
-          this.request('/ping').catch(e => console.warn('Error on ping', e));
+        if (this.ws) {
+          if (this.ws.connected && !this.ws.reconnecting) {
+            this.request('/ping').catch(e => console.warn('Error on ping', e));
+          }
         }
       }, pingTime);
     });
@@ -251,48 +249,39 @@ export default class Core extends CoreBase {
    * Creates the main connection to server
    */
   _createConnection(cb) {
-    cb = cb || function() {};
-
     if (this.configuration.standalone) {
       return false;
-    } else if (this.connected) {
-      throw new Error('Already connecting');
     }
 
     const {uri} = this.config('ws');
+    let wasConnected = false;
 
     console.log('Creating websocket connection on', uri);
 
-    this.ws = new Websocket('CoreSocket', uri);
+    this.ws = new Websocket('CoreSocket', uri, {
+      interval: this.config('ws.connectInterval', 1000)
+    });
 
-    this.ws.on('open', ev => {
-      const reconnected = !!this.reconnecting;
-      clearInterval(this.reconnecting);
-      this.connected = true;
-      this.reconnecting = false;
-      this.connectfailed = false;
-
+    this.ws.once('connected', () => {
       // Allow for some grace-time in case we close prematurely
-      setTimeout(() => cb(), 100);
+      setTimeout(() => {
+        wasConnected = true;
+        cb();
+      }, 100);
+    });
 
+    this.ws.on('connected', (ev, reconnected) => {
       this.emit('osjs/core:connect', ev, reconnected);
     });
 
-    this.ws.on('close', ev => {
-      if (!this.connected && !this.connectfailed) {
+    this.ws.once('failed', ev => {
+      if (!wasConnected) {
+        cb(new Error('Connection closed'));
         this.emit('osjs/core:connection-failed', ev);
-        this.connectfailed = true;
       }
+    });
 
-      clearInterval(this.reconnecting);
-      this.reconnecting = setInterval(() => {
-        this._createConnection();
-      }, this.config('ws.connectInterval', 1000));
-
-      this.connected = false;
-
-      cb(new Error('Connection closed'));
-
+    this.ws.on('disconnected', ev => {
       this.emit('osjs/core:disconnect', ev);
     });
 

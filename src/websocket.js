@@ -30,6 +30,16 @@
 
 import {EventEmitter} from '@osjs/event-emitter';
 
+const eventNames = ['open', 'close', 'message', 'error'];
+
+const attachEvents = (socket, instance) => eventNames.forEach(name => {
+  socket[`on${name}`] = (...args) => instance.emit(name, ...args);
+});
+
+const detachEvents = (socket) => eventNames.forEach(name => {
+  socket[`on${name}`] = () => {};
+});
+
 /**
  * Application Socket
  *
@@ -49,16 +59,93 @@ export default class Websocket extends EventEmitter {
 
     super('Websocket@' + name);
 
+    this.uri = uri;
+    this.connected = false;
+    this.connecting = false;
+    this.reconnecting = false;
+    this.connectfailed = false;
+    this.options = Object.assign({
+      interval: 1000,
+      open: true
+    }, options);
+
     /**
      * The Websocket
      * @type {WebSocket}
      */
-    this.connection = new WebSocket(uri);
+    this.connection = null;
 
-    this.connection.onopen = (...args) => this.emit('open', ...args);
-    this.connection.onclose = (...args) => this.emit('close', ...args);
-    this.connection.onmessage = (...args) => this.emit('message', ...args);
-    this.connection.onerror = (...args) => this.emit('error', ...args);
+    this._attachEvents();
+
+    if (this.options.open) {
+      this.open();
+    }
+  }
+
+  /**
+   * Destroys the current connection
+   */
+  _destroyConnection() {
+    if (!this.connection) {
+      return;
+    }
+
+    detachEvents(this.connection, this);
+
+    this.reconnecting = clearInterval(this.reconnecting);
+    this.connection = null;
+  }
+
+  /**
+   * Attaches internal events
+   */
+  _attachEvents() {
+    this.on('open', ev => {
+      const reconnected = !!this.reconnecting;
+
+      this.connected = true;
+      this.reconnecting = false;
+      this.connectfailed = false;
+      this.reconnecting = clearInterval(this.reconnecting);
+
+      this.emit('connected', ev, reconnected);
+    });
+
+    this.on('close', ev => {
+      if (!this.connected && !this.connectfailed) {
+        this.emit('failed', ev);
+
+        this.connectfailed = true;
+      }
+
+      clearInterval(this.reconnecting);
+
+      this._destroyConnection();
+
+      this.connected = false;
+      this.reconnecting = setInterval(() => {
+        this.open();
+      }, this.options.interval);
+
+      this.emit('disconnected', ev);
+    });
+  }
+
+  /**
+   * Opens the connection
+   * @param {boolean} [reconnect=false] Force reconnection
+   */
+  open(reconnect = false) {
+    if (this.connection && !reconnect) {
+      return;
+    }
+
+    this._destroyConnection();
+
+    this.reconnecting = clearInterval(this.reconnecting);
+    this.connection = new WebSocket(this.uri);
+
+    attachEvents(this.connection, this);
   }
 
   /**

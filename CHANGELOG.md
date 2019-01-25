@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.38
+
+* Updated websocket connection handling
+* Correctly detect attributes in maximize/minimize (#54)
+
 ## 3.0.37
 
 * Fixed desktop panel space calculations (#48)

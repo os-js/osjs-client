@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.39
+
+* Added support for setting 'fetch' options internally
+
 ## 3.0.38
 
 * Updated websocket connection handling

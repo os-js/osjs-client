@@ -29,7 +29,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/event-emitter": "^1.0.4"
+    "@osjs/event-emitter": "^1.0.5"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",

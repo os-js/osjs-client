@@ -65,6 +65,7 @@ export default class Core extends CoreBase {
     this.splash = new Splash(this);
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
+    this.requestOptions = {};
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 
@@ -385,7 +386,7 @@ export default class Core extends CoreBase {
 
     if (!url.match(/^((http|ws|ftp)s?:)/i)) {
       url = this.url(url);
-      options = merge(options, this.requestOptions);
+      options = merge(options || {}, this.requestOptions || {});
     }
 
     return fetch(url, options, type)

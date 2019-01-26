@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.41
+
+* Updated @osjs/event-emitter
+
 ## 3.0.40
 
 * HOTFIX: Added missing core class property

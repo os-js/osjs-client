@@ -484,6 +484,16 @@ export default class Window extends EventEmitter {
     this.$icon = this.$element.querySelector('.osjs-window-icon > div');
     this.$title = this.$element.querySelector('.osjs-window-title');
 
+    // Transform percentages in dimension to pixels
+    const rect = this.core.make('osjs/desktop').getRect();
+    const {width, height} = this.state.dimension;
+    const transformPercentage = (val, attr) => !Number.isInteger(val)
+      ? Math.round(rect[attr] * parseFloat(val))
+      : val;
+
+    this.state.dimension.width = transformPercentage(width, 'width');
+    this.state.dimension.height = transformPercentage(height, 'height');
+
     // Behavior
     const behavior = this.core.make('osjs/window-behavior');
     if (behavior) {

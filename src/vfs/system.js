@@ -31,7 +31,7 @@
 const getters = ['exists', 'stat', 'readdir', 'readfile'];
 
 const requester = core => (fn, body, type) =>
-  core.request(core.url(`/vfs/${fn}`), {
+  core.request(`/vfs/${fn}`, {
     body,
     method: getters.indexOf(fn) !== -1 ? 'get' : 'post'
   }, type)

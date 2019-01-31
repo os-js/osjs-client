@@ -34,7 +34,6 @@ import Splash from './splash';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
-import merge from 'deepmerge';
 
 /**
  * Core
@@ -386,7 +385,8 @@ export default class Core extends CoreBase {
 
     if (!url.match(/^((http|ws|ftp)s?:)/i)) {
       url = this.url(url);
-      options = merge(options || {}, this.requestOptions || {});
+      // FIXME: Deep merge
+      options = Object.assign({}, options || {}, this.requestOptions || {});
     }
 
     return fetch(url, options, type)

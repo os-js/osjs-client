@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+# 3.0.43
+
+* Updated server auth provider
+
 # 3.0.42
 
 * Support percentages as initial window position (#56)

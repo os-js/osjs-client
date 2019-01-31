@@ -1,10 +1,14 @@
 # Changelog for osjs-client
 
-# 3.0.43
+## 3.0.44
+
+* Updated system VFS request calls
+
+## 3.0.43
 
 * Updated server auth provider
 
-# 3.0.42
+## 3.0.42
 
 * Support percentages as initial window position (#56)
 * Fixed request options getting corrupted

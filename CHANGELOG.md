@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+# 3.0.42
+
+* Support percentages as initial window position (#56)
+* Fixed request options getting corrupted
+* Support percentages as initial window dimension (#56)
+
 ## 3.0.41
 
 * Updated @osjs/event-emitter

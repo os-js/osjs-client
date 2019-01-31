@@ -66,6 +66,7 @@ import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
  * @property {Boolean} [header=true] Show header
  * @property {Boolean} [controls=true] Show controls
  * @property {String} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
+ * @property {boolean} [clamp=true] Clamp the window position upon creation
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {Map<String,String>} [mediaQueries] A map of matchMedia to name
@@ -117,6 +118,7 @@ const createAttributes = (attrs) => Object.assign({
   controls: true,
   visibility: 'global',
   shadowDOM: false,
+  clamp: true,
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
@@ -231,6 +233,28 @@ const addClassNames = (win, names) => names
   .filter(val => !!val)
   .forEach((val) => win.$element.classList.add(val));
 
+const transformVectors = (rect, {width, height}, {top, left}) => {
+  const transform = (val, attr) => {
+    if (!isNaN(val)) {
+      return Number.isInteger(val)
+        ? val
+        : Math.round(rect[attr] * parseFloat(val));
+    }
+
+    return val;
+  };
+
+  return {
+    dimension: {
+      width: transform(width, 'width'),
+      height: transform(height, 'height')
+    },
+    position: {
+      top: transform(top, 'height'),
+      left: transform(left, 'width')
+    }
+  };
+};
 
 /*
  * Default window template
@@ -484,15 +508,11 @@ export default class Window extends EventEmitter {
     this.$icon = this.$element.querySelector('.osjs-window-icon > div');
     this.$title = this.$element.querySelector('.osjs-window-title');
 
-    // Transform percentages in dimension to pixels
+    // Transform percentages in dimension to pixels etc
     const rect = this.core.make('osjs/desktop').getRect();
-    const {width, height} = this.state.dimension;
-    const transformPercentage = (val, attr) => !Number.isInteger(val)
-      ? Math.round(rect[attr] * parseFloat(val))
-      : val;
-
-    this.state.dimension.width = transformPercentage(width, 'width');
-    this.state.dimension.height = transformPercentage(height, 'height');
+    const {dimension, position} = transformVectors(rect, this.state.dimension, this.state.position);
+    this.state.dimension = dimension;
+    this.state.position = position;
 
     // Behavior
     const behavior = this.core.make('osjs/window-behavior');
@@ -569,7 +589,9 @@ export default class Window extends EventEmitter {
     }
 
     // Clamp the initial window position to viewport
-    this.clampToViewport(false);
+    if (this.attributes.clamp) {
+      this.clampToViewport(false);
+    }
 
     this.core.$root.appendChild(this.$element);
 

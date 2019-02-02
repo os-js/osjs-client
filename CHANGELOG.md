@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.45
+
+* Fixed parsing of certain backend error messages
+
 ## 3.0.44
 
 * Updated system VFS request calls

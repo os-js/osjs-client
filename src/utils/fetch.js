@@ -101,7 +101,12 @@ export const fetch = (url, options = {}, type = null) => {
   return window.fetch(target, fetchOptions)
     .then(response => {
       if (!response.ok) {
-        return response.json()
+        const contentType = response.headers.get('content-type');
+        const method = contentType && contentType.indexOf('application/json') !== -1
+          ? 'json'
+          : 'text';
+
+        return response[method]()
           .then(data => createErrorRejection(response, data.error));
       }
 

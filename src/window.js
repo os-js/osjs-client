@@ -730,14 +730,28 @@ export default class Window extends EventEmitter {
    */
   resizeFit(container) {
     container = container || this.$content.firstChild;
+
     if (!container) {
       return;
     }
 
+    const rect = this.core.make('osjs/desktop').getRect();
+
+    const innerBox = (container.parentNode.classList.contains('osjs-gui')
+      ? container.parentNode
+      : container).getBoundingClientRect();
+
+    const outerBox = this.$content.getBoundingClientRect();
+    const diffY = Math.ceil(outerBox.height - innerBox.height);
+    const diffX = Math.ceil(outerBox.width - innerBox.width);
+    const topHeight = this.$header.offsetHeight;
+
+    const {left, top} = this.state.position;
     const min = this.attributes.minDimension;
     const max = this.attributes.maxDimension;
-    let width = Math.max(container.offsetWidth, min.width);
-    let height = Math.max(container.offsetHeight + this.$header.offsetHeight, min.height);
+
+    let width = Math.max(container.offsetWidth + diffX, min.width);
+    let height = Math.max(container.offsetHeight + diffY + topHeight, min.height);
 
     if (max.width > 0) {
       width = Math.min(width, max.width);
@@ -746,6 +760,9 @@ export default class Window extends EventEmitter {
     if (max.height > 0) {
       height = Math.min(height, max.height);
     }
+
+    width = Math.min(Math.max(width, container.offsetWidth), rect.width - left);
+    height = Math.min(Math.max(height, container.offsetHeight), rect.height - top);
 
     if (!isNaN(width) && !isNaN(height)) {
       this.setDimension({width, height});

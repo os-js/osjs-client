@@ -427,7 +427,7 @@ export default class Core extends CoreBase {
       return Promise.resolve(true);
     }
 
-    return Promise.reject(false);
+    return Promise.resolve(false);
   }
 
   /**

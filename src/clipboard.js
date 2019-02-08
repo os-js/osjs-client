@@ -49,8 +49,8 @@ export default class Clipboard {
 
   get(clear) {
     const v = typeof this.value === 'function'
-      ? v()
-      : v;
+      ? this.value()
+      : this.value;
 
     const done = ret => {
       if (clear) {

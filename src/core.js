@@ -145,7 +145,7 @@ export default class Core extends CoreBase {
             }
           });
         } else {
-          console.warn('OS.js STARTED WITHOUT ANY AUTHENTICATION');
+          console.info('OS.js STARTED WITHOUT ANY AUTHENTICATION');
         }
 
         return done();

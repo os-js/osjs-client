@@ -59,7 +59,6 @@ export default class Core extends CoreBase {
 
     super(defaultConfiguration, config, options);
 
-    this.user = null;
     this.ws = null;
     this.ping = null;
     this.splash = new Splash(this);
@@ -67,6 +66,11 @@ export default class Core extends CoreBase {
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
     this.requestOptions = {};
     this.urlResolver = urlResolver(this.configuration);
+    this.user = {
+      id: null,
+      username: 'osjs',
+      groups: []
+    };
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 

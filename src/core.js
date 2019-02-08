@@ -34,6 +34,7 @@ import Splash from './splash';
 import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
+import {urlResolver} from './utils/url';
 
 /**
  * Core
@@ -65,6 +66,7 @@ export default class Core extends CoreBase {
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
     this.requestOptions = {};
+    this.urlResolver = urlResolver(this.configuration);
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 
@@ -333,34 +335,7 @@ export default class Core extends CoreBase {
    * @return {String}
    */
   url(endpoint = '/', options = {}, metadata = {}) {
-    const {http, ws} = this.configuration;
-
-    if (typeof endpoint !== 'string') {
-      return http.public;
-    } else if (endpoint.match(/^(http|ws|ftp)s?:/i)) {
-      return endpoint;
-    }
-
-    const {type, prefix} = Object.assign({}, {
-      type: null,
-      prefix: options.type === 'websocket'
-    }, options);
-
-    const str = type === 'websocket' ? ws.uri : http.uri;
-
-    let url = endpoint.replace(/^\/+/, '');
-    if (metadata.type) {
-      const path = endpoint.replace(/^\/?/, '/');
-      const type = metadata.type === 'theme' ? 'themes' : (
-        metadata.type === 'icons' ? 'icons' : 'apps'
-      );
-
-      url = `${type}/${metadata.name}${path}`;
-    }
-
-    return prefix
-      ? str + url
-      : http.public.replace(/^\/?/, '/') + url;
+    return this.urlResolver(endpoint, options, metadata);
   }
 
 

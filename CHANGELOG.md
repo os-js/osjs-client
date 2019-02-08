@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.46
+
+* Improve Window#resizeFit (#60)
+
 ## 3.0.45
 
 * Fixed parsing of certain backend error messages

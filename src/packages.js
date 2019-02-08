@@ -128,7 +128,9 @@ export default class Packages {
 
     return fetchManifest(this.core)
       .then(metadata => {
-        this.metadata = metadata.map(iter => Object.assign({type: 'application'}, iter));
+        if (metadata instanceof Array) {
+          this.metadata = metadata.map(iter => Object.assign({type: 'application'}, iter));
+        }
       });
   }
 

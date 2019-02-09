@@ -628,12 +628,14 @@ export default class Window extends EventEmitter {
    */
   close() {
     if (this.destroyed) {
-      return;
+      return false;
     }
 
     this.emit('close', this);
 
     this.destroy();
+
+    return true;
   }
 
   /**
@@ -679,10 +681,10 @@ export default class Window extends EventEmitter {
   minimize() {
     if (this.attributes.minimizable) {
       if (this._toggleState('minimized', true, 'minimize')) {
-        return this.blur();
-      }
+        this.blur();
 
-      return true;
+        return true;
+      }
     }
 
     return false;

@@ -35,7 +35,9 @@ import Window from './src/window';
 import Desktop from './src/desktop';
 import Application from './src/application';
 import Notification from './src/notification';
+import Notifications from './src/notifications';
 import WindowBehavior from './src/window-behavior';
+import Auth from './src/auth';
 import Login from './src/login';
 import Websocket from './src/websocket';
 
@@ -52,8 +54,10 @@ export {
   Desktop,
   Application,
   Notification,
+  Notifications,
   WindowBehavior,
   Login,
+  Auth,
   Websocket,
 
   CoreServiceProvider,

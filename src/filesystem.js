@@ -30,26 +30,10 @@
 
 import * as VFS from './vfs';
 import {EventEmitter} from '@osjs/event-emitter';
+import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
 import * as merge from 'deepmerge';
-
-const defaultAdapter = ({
-  readdir: (path, options) => Promise.resolve([]),
-  readfile: (path, type, options) => Promise.resolve({body: null, mime: 'application/octet-stream'}),
-  writefile: (path, data, options) => Promise.resolve(-1),
-  copy: (from, to, options) => Promise.resolve(false),
-  rename: (from, to, options) => Promise.resolve(false),
-  mkdir: (path, options) => Promise.resolve(false),
-  unlink: (path, options) => Promise.resolve(false),
-  exists: (path, options) => Promise.resolve(false),
-  stat: (path, options) => Promise.resolve({}),
-  url: (path, options) => Promise.resolve(null),
-  mount: options => Promise.resolve(true),
-  unmount: options => Promise.resolve(true),
-  search: (root, pattern, options) => Promise.resolve([]),
-  touch: (path, options) => Promise.resolve([])
-});
 
 /**
  * VFS Mountpoint

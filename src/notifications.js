@@ -28,37 +28,49 @@
  * @licence Simplified BSD License
  */
 
-import Notifications from '../notifications';
-import {ServiceProvider} from '@osjs/common';
+import Notification from './notification';
 
 /**
- * OS.js Notification Service Provider
- *
- * @desc Provides methods to create notifications
+ * Handles Notifications
  */
-export default class NotificationServiceProvider extends ServiceProvider {
+export default class Notifications {
 
+  /**
+   * @param {Core} core OS.js Core instance reference
+   */
   constructor(core) {
-    super(core);
-
-    this.notifications = new Notifications(core);
+    this.core = core;
   }
 
+  /**
+   * Destroy notification handler
+   */
   destroy() {
-    this.notifications.destroy();
+    this.$element.remove();
+    this.$element = null;
   }
 
-  provides() {
-    return [
-      'osjs/notification'
-    ];
-  }
-
+  /**
+   * Initialize notification handler
+   */
   init() {
-    this.notifications.init();
+    this.$element = document.createElement('div');
+    this.$element.classList.add('osjs-notifications');
+    this.core.$root.appendChild(this.$element);
+  }
 
-    this.core.instance('osjs/notification', (options) => {
-      return this.notifications.create(options);
-    });
+  /**
+   * Create a new notification
+   * @param {Object} options See notification class for options
+   * @return {Notification}
+   */
+  create(options) {
+    if (!options) {
+      throw new Error('Notification options not given');
+    }
+
+    const notification = new Notification(this.core, this.$element, options);
+    notification.render();
+    return notification;
   }
 }

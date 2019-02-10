@@ -32,7 +32,7 @@ import {
   transformReaddir,
   transformArrayBuffer,
   createFileIter
-} from '../utils/vfs';
+} from './utils/vfs';
 
 // Makes sure our input paths are object(s)
 const pathToObject = path => Object.assign({

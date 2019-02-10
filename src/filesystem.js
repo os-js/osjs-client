@@ -28,10 +28,10 @@
  * @licence Simplified BSD License
  */
 
-import * as VFS from './vfs/methods';
+import * as VFS from './vfs';
 import {EventEmitter} from '@osjs/event-emitter';
-import systemAdapter from './vfs/system';
-import appsAdapter from './vfs/apps';
+import systemAdapter from './adapters/vfs/system';
+import appsAdapter from './adapters/vfs/apps';
 import * as merge from 'deepmerge';
 
 const defaultAdapter = ({

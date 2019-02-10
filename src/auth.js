@@ -28,7 +28,8 @@
  * @licence Simplified BSD License
  */
 import Login from './login';
-import {serverAuth, localStorageAuth} from './adapters/auth';
+import serverAuth  from './adapters/auth/server';
+import localStorageAuth from './adapters/auth/localstorage';
 
 /**
  * Handles Authentication
@@ -68,6 +69,7 @@ export default class Auth {
     }, adapter(core, args.config || {}));
 
     this.callback = function() {};
+    this.core = core;
   }
 
   /**

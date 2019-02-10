@@ -29,28 +29,7 @@
  */
 
 import {ServiceProvider} from '@osjs/common';
-import Login from '../login';
-
-const serverAuth = (core, options) => {
-  const request = (endpoint, params = {}) => core.request(endpoint, {
-    method: 'POST',
-    body: JSON.stringify(params)
-  }, 'json');
-
-  return {
-    login: (values) => request('/login', values),
-    logout: () =>  request('/logout')
-  };
-};
-
-const localStorageAuth = (core, options) => ({
-  login: (values) => Promise.resolve(values)
-});
-
-const defaultAdapters = {
-  server: serverAuth,
-  localStorage: localStorageAuth
-};
+import Auth from '../auth';
 
 /**
  * OS.js Auth Service Provider
@@ -62,34 +41,12 @@ export default class AuthServiceProvider extends ServiceProvider {
   /**
    * @param {Object} core OS.js Core
    * @param {Object} [args] Arguments
-   * @param {Object} [args.ui] Options for default login UI adapter
-   * @param {Function} [args.adapter] Custom login adapter
-   * @param {Function} [args.login] Custom UI
-   * @param {Object} [args.config] Configuration object to be passed on
+   * @see Auth
    */
   constructor(core, args = {}) {
     super(core);
 
-    const defaultUi = core.config('auth.ui', {});
-
-    const adapter = core.config('standalone')
-      ? localStorageAuth
-      : typeof args.adapter === 'function'
-        ? args.adapter
-        : defaultAdapters[args.adapter || 'server'];
-
-    this.ui = args.login
-      ? args.login(core, args.config || {})
-      : new Login(core, args.ui || defaultUi);
-
-    this.adapter = Object.assign({
-      login: () => Promise.reject(new Error('Not implemented')),
-      logout: () => Promise.reject(new Error('Not implemented')),
-      init: () => Promise.resolve(true),
-      destroy: () => {}
-    }, adapter(core, args.config || {}));
-
-    this.callback = function() {};
+    this.auth = new Auth(core, args);
   }
 
   /**
@@ -97,22 +54,20 @@ export default class AuthServiceProvider extends ServiceProvider {
    */
   init() {
     this.core.singleton('osjs/auth', () => ({
-      show: (cb) => this.show(cb),
-      login: (values) => this.login(values),
-      logout: (reload) => this.logout(reload),
+      show: (cb) => this.auth.show(cb),
+      login: (values) => this.auth.login(values),
+      logout: (reload) => this.auth.logout(reload),
       user: () => this.core.getUser()
     }));
 
-    this.ui.on('login:post', values => this.login(values));
-
-    return this.adapter.init();
+    return this.auth.init();
   }
 
   /**
    * Destroys authentication
    */
   destroy() {
-    this.ui.destroy();
+    this.auth.destroy();
 
     return super.destroy();
   }
@@ -125,78 +80,4 @@ export default class AuthServiceProvider extends ServiceProvider {
       'osjs/auth'
     ];
   }
-
-  /**
-   * Shows Login UI
-   */
-  show(cb) {
-    const login = this.core.config('auth.login', {});
-    const autologin = login.username && login.password;
-
-    this.callback = cb;
-    this.ui.init(autologin);
-
-    if (autologin) {
-      this.login(login);
-    }
-  }
-
-  /**
-   * Performs a login
-   */
-  async login(values) {
-    this.ui.emit('login:start');
-
-    try {
-      const response = await this.adapter.login(values);
-      if (!response) {
-        return false;
-      }
-
-
-      this.ui.destroy();
-      this.callback(response);
-
-      this.core.emit('osjs/core:logged-in');
-
-      return true;
-    } catch (e) {
-      if (this.core.config('development')) {
-        console.warn('Exception on login', e);
-      }
-
-      this.ui.emit('login:error', 'Login failed');
-
-      return false;
-    } finally {
-      this.ui.emit('login:stop');
-    }
-  }
-
-  /**
-   * Performs a logout
-   */
-  async logout(reload = true) {
-    const response = await this.adapter.logout(reload);
-    if (!response) {
-      return;
-    }
-
-    try {
-      this.core.destroy();
-    } catch (e) {
-      console.warn('Exception on logout', e);
-    }
-
-    this.core.emit('osjs/core:logged-out');
-
-    if (reload) {
-      setTimeout(() => {
-        window.location.reload();
-        // FIXME Reload, not refresh
-        // this.core.boot();
-      }, 1);
-    }
-  }
-
 }

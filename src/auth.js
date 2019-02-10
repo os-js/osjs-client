@@ -131,30 +131,31 @@ export default class Auth {
   async login(values) {
     this.ui.emit('login:start');
 
-    try {
-      const response = await this.adapter.login(values);
-      if (!response) {
+    return this.adapter
+      .login(values)
+      .then(response => {
+        if (response) {
+          this.ui.destroy();
+          this.callback(response);
+
+          this.core.emit('osjs/core:logged-in');
+          this.ui.emit('login:stop');
+
+          return true;
+        }
+
         return false;
-      }
+      })
+      .catch(e => {
+        if (this.core.config('development')) {
+          console.warn('Exception on login', e);
+        }
 
+        this.ui.emit('login:error', 'Login failed');
+        this.ui.emit('login:stop');
 
-      this.ui.destroy();
-      this.callback(response);
-
-      this.core.emit('osjs/core:logged-in');
-
-      return true;
-    } catch (e) {
-      if (this.core.config('development')) {
-        console.warn('Exception on login', e);
-      }
-
-      this.ui.emit('login:error', 'Login failed');
-
-      return false;
-    } finally {
-      this.ui.emit('login:stop');
-    }
+        return false;
+      });
   }
 
   /**

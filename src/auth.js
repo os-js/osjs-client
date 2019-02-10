@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import Login from './login';
-import {serverAuth, localStorageAuth} from './providers/auth';
+import {serverAuth, localStorageAuth} from './adapters/auth';
 
 /**
  * Handles Authentication

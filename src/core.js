@@ -51,7 +51,7 @@ export default class Core extends CoreBase {
    * @param {Element} [options.resourceRoot] The root DOM element for resources
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
-  constructor(config, options = {}) {
+  constructor(config = {}, options = {}) {
     options = Object.assign({}, {
       classNames: ['osjs-root'],
       root: document.body
@@ -75,7 +75,7 @@ export default class Core extends CoreBase {
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 
     const {uri} = this.configuration.ws;
-    if (!this.configuration.ws.uri.match(/^wss?:/)) {
+    if (!uri.match(/^wss?:/)) {
       const {protocol, host} = window.location;
 
       this.configuration.ws.uri = protocol.replace(/^http/, 'ws') + '//' + host + uri.replace(/^\/+/, '/');
@@ -254,7 +254,7 @@ export default class Core extends CoreBase {
    * Creates the main connection to server
    */
   _createConnection(cb) {
-    if (this.configuration.standalone) {
+    if (this.configuration.standalone || this.configuration.ws.disabled) {
       return false;
     }
 
@@ -370,6 +370,8 @@ export default class Core extends CoreBase {
 
     return fetch(url, options, type)
       .catch(error => {
+        console.warn(error);
+
         throw new Error(_('ERR_REQUEST_NOT_OK', error));
       });
   }

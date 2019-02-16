@@ -56,7 +56,7 @@ export const urlResolver = configuration => {
     }
 
     return prefix
-      ? str + url
+      ? str.replace(/\/$/, '') + url.replace(/^\/?/, '/')
       : http.public.replace(/^\/?/, '/') + url;
   };
 };

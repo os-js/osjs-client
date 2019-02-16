@@ -54,13 +54,6 @@ import {style, script} from './utils/dom';
  * @typedef PackageMetadata
  */
 
-/*
- * Fetch package manifest
- */
-const fetchManifest = core => // FIXME: Use internal ?!
-  window.fetch(core.url('/metadata.json'))
-    .then(response => response.json());
-
 /**
  * Package Manager
  *
@@ -126,7 +119,7 @@ export default class Packages {
         .forEach(pkg => this.launch(pkg.name));
     });
 
-    return fetchManifest(this.core)
+    return this.core.request('/metadata.json', {}, 'json')
       .then(metadata => {
         if (metadata instanceof Array) {
           this.metadata = metadata.map(iter => Object.assign({type: 'application'}, iter));

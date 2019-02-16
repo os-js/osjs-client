@@ -52,7 +52,7 @@ const handleDirectoryList = (path, options) => result =>
  *
  * @param {Object|String} path The path to read
  * @param {Object} [options] Options
- * @return {Object[]} A list of files
+ * @return {Promise<Object[], Error>} A list of files
  */
 export const readdir = (adapter, mount) => (path, options = {}) =>
   adapter.readdir(pathToObject(path), options, mount)
@@ -66,7 +66,7 @@ export const readdir = (adapter, mount) => (path, options = {}) =>
  * @param {Object|String} path The path to read
  * @param {String} [type=string] Return this content type
  * @param {Object} [options] Options
- * @return {ArrayBuffer}
+ * @return {Promise<ArrayBuffer, Error>}
  */
 export const readfile = (adapter, mount) => (path, type = 'string', options = {}) =>
   adapter.readfile(pathToObject(path), type, options, mount)
@@ -77,7 +77,7 @@ export const readfile = (adapter, mount) => (path, type = 'string', options = {}
  * @param {Object|String} path The path to write
  * @param {ArrayBuffer|Blob|String} data The data
  * @param {Object} [options] Options
- * @return {Number} File size
+ * @return {Promise<number, Error>} File size
  */
 export const writefile = (adapter, mount) => (path, data, options = {}) => {
   const binary = (data instanceof ArrayBuffer || data instanceof Blob)
@@ -92,7 +92,7 @@ export const writefile = (adapter, mount) => (path, data, options = {}) => {
  * @param {Object|String} from The source (from)
  * @param {Object|String} to The destination (to)
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const copy = (adapter, mount) => (from, to, options = {}) =>
   adapter.copy(pathToObject(from), pathToObject(to), options, mount);
@@ -102,7 +102,7 @@ export const copy = (adapter, mount) => (from, to, options = {}) =>
  * @param {Object|String} from The source (from)
  * @param {Object|String} to The destination (to)
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const rename = (adapter, mount) => (from, to, options = {}) =>
   adapter.rename(pathToObject(from), pathToObject(to), options, mount);
@@ -112,7 +112,7 @@ export const rename = (adapter, mount) => (from, to, options = {}) =>
  * @param {Object|String} from The source (from)
  * @param {Object|String} to The destination (to)
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const move = rename;
 
@@ -120,7 +120,7 @@ export const move = rename;
  * Creates a directory
  * @param {Object|String} path The path to new directory
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const mkdir = (adapter, mount) => (path, options = {}) =>
   adapter.mkdir(pathToObject(path), options, mount);
@@ -129,7 +129,7 @@ export const mkdir = (adapter, mount) => (path, options = {}) =>
  * Removes a file or directory
  * @param {Object|String} path The path to remove
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const unlink = (adapter, mount) => (path, options = {}) =>
   adapter.unlink(pathToObject(path), options, mount);
@@ -138,7 +138,7 @@ export const unlink = (adapter, mount) => (path, options = {}) =>
  * Checks if path exists
  * @param {Object|String} path The path to check
  * @param {Object} [options] Options
- * @return {Boolean}
+ * @return {Promise<boolean, Error>}
  */
 export const exists = (adapter, mount) => (path, options = {}) =>
   adapter.exists(pathToObject(path), options, mount);
@@ -147,7 +147,7 @@ export const exists = (adapter, mount) => (path, options = {}) =>
  * Gets the stats of the file or directory
  * @param {Object|String} path The path to check
  * @param {Object} [options] Options
- * @return {Object}
+ * @return {Promise<Object, Error>}
  */
 export const stat = (adapter, mount) => (path, options = {}) =>
   adapter.stat(pathToObject(path), options, mount)
@@ -157,7 +157,7 @@ export const stat = (adapter, mount) => (path, options = {}) =>
  * Gets an URL to a resource defined by file
  * @param {Object|String} path The file
  * @param {Object} [options] Options
- * @return {String}
+ * @return {Promise<string, Error>}
  */
 export const url = (adapter, mount) => (path, options = {}) =>
   adapter.url(pathToObject(path), options, mount);
@@ -166,7 +166,7 @@ export const url = (adapter, mount) => (path, options = {}) =>
  * Initiates a native browser download of the file
  * @param {Object|String} path The file
  * @param {Object} [options] Options
- * @return {String}
+ * @return {Promise}
  */
 export const download = (adapter, mount) => (path, options = {}) =>
   typeof adapter.download === 'function' && options.readfile !== true
@@ -195,7 +195,7 @@ export const download = (adapter, mount) => (path, options = {}) =>
  * @param {Object|String} root The root
  * @param {String} pattern Search pattern
  * @param {Object} [options] Options
- * @return {Object[]} A list of files
+ * @return {Promise<Object[], Error>} A list of files
  */
 export const search = (adapter, mount) => (root, pattern, options = {}) => {
   if (mount.attributes && mount.attributes.searchable === false) {
@@ -209,7 +209,7 @@ export const search = (adapter, mount) => (root, pattern, options = {}) => {
 /**
  * Touches a file
  * @param {Object|String} path File path
- * @return {String}
+ * @return {Promise<boolean, Error>}
  */
 export const touch = (adapter, mount) => (path, options = {}) =>
   adapter.touch(pathToObject(path), options, mount);

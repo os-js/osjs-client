@@ -27,21 +27,26 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import {h, app} from 'hyperapp';
 import Window from './window';
+import SearchUI from './search-ui';
 
+/**
+ * Search Service
+ */
 export default class Search {
   constructor(core) {
     this.core = core;
-    this.$element = document.createElement('div');
-    this.app = null;
+    this.ui = new SearchUI(core);
     this.focusLastWindow = null;
   }
 
   destroy() {
-
+    this.ui.destroy();
   }
 
+  /**
+   * Initializes Search Service
+   */
   init() {
     const {icon} = this.core.make('osjs/theme');
     const _ = this.core.make('osjs/locale').translate;
@@ -49,13 +54,23 @@ export default class Search {
     this.core.make('osjs/tray').create({
       title: _('LBL_SEARCH_TOOLTOP', 'F3'),
       icon: icon('system-search.png')
-    }, ev => this.show());
+    }, () => this.show());
 
-    this.$element.className = 'osjs-search';
-    this.core.$root.appendChild(this.$element);
-    this.createApp();
+    this.ui.init();
+    this.ui.on('hide', () => this.hide());
+    this.ui.on('open', iter => this.core.open(iter));
+    this.ui.on('search', query => {
+      this.search(query)
+        .then(results => this.ui.emit('success', results))
+        .catch(error => this.ui.emit('error', error));
+    });
   }
 
+  /**
+   * Performs a search across all mounts
+   * @param {string} pattern Search query
+   * @return {Promise<FileMetadata[], Error>}
+   */
   search(pattern) {
     const vfs = this.core.make('osjs/vfs');
     const promises = this.core.make('osjs/fs')
@@ -73,148 +88,21 @@ export default class Search {
       .then(lists => [].concat(...lists));
   }
 
-  createApp() {
-    const fs = this.core.make('osjs/fs');
-    const {icon} = this.core.make('osjs/theme');
-    const _ = this.core.make('osjs/locale').translate;
-
-    const resultView = ({results, index}, actions) => results.map((r, i) => h('li', {
-      onclick: () => actions.open(i),
-      onupdate: el => {
-        if (i === index) {
-          el.scrollIntoView();
-        }
-      },
-      class: [
-        'osjs-search-result',
-        index === i ? 'osjs__active' : ''
-      ].join(' ')
-    }, [
-      h('img', {src: icon(fs.icon(r).name + '.png')}),
-      h('span', {}, `${r.path} (${r.mime})`)
-    ]));
-
-    const view = (state, actions) => h('div', {
-      class: 'osjs-search-container osjs-notification',
-      style: {
-        display: state.visible ? undefined : 'none'
-      }
-    }, [
-      h('input', {
-        type: 'text',
-        placeholder: _('LBL_SEARCH_PLACEHOLDER'),
-        class: 'osjs-search-input',
-        value: state.query,
-        onblur: () => {
-          if (!state.value) {
-            setTimeout(() => actions.toggle(false), 300);
-          }
-        },
-        oninput: ev => actions.setQuery(ev.target.value),
-        onkeydown: ev => {
-          if (ev.keyCode === 38) { // Up
-            actions.setPreviousIndex();
-          } else if (ev.keyCode === 40) { // Down
-            actions.setNextIndex();
-          } else if (ev.keyCode === 27) { // Escape
-            actions.resetIndex();
-
-            if (state.index === -1) {
-              this.hide();
-            }
-          }
-        },
-        onkeypress: ev => {
-          if (ev.keyCode === 13) {
-            if (state.index >= 0) {
-              actions.open(state.index);
-            } else {
-              actions.search(state.query.replace(/\*?$/, '*').replace(/^\*?/, '*'));
-            }
-          }
-        }
-      }),
-      h('div', {
-        'data-error': !!state.error,
-        class: 'osjs-search-message',
-        style: {
-          display: (state.error || state.status) ? 'block' : 'none'
-        }
-      }, state.error || state.status),
-      h('ol', {
-        class: 'osjs-search-results',
-        style: {
-          display: state.results.length ? undefined : 'none'
-        }
-      }, resultView(state, actions))
-    ]);
-
-    this.searchUI = app({
-      query: '',
-      index: -1,
-      status: undefined,
-      error: null,
-      visible: false,
-      results: []
-    }, {
-      search: query => (state, actions) => {
-        this.search(query)
-          .then(results => actions.setResults(results))
-          .catch(error => actions.setError(error));
-
-        return {status: _('LBL_SEARCH_WAIT')};
-      },
-      open: index => (state, actions) => {
-        const iter = state.results[index];
-        if (iter) {
-          this.core.open(iter);
-        }
-
-        actions.toggle(false);
-      },
-      resetIndex: () => () => ({
-        index: -1
-      }),
-      setNextIndex: () => state => ({
-        index: (state.index + 1) % state.results.length
-      }),
-      setPreviousIndex: () => state => ({
-        index: state.index <= 0 ? state.results.length - 1 : state.index - 1
-      }),
-      setError: error => () => ({
-        error,
-        status: undefined,
-        index: -1
-      }),
-      setResults: results => () => ({
-        results,
-        index: -1,
-        status: _('LBL_SEARCH_RESULT', results.length),
-      }),
-      setQuery: query => () => ({
-        query
-      }),
-      toggle: visible => state => ({
-        query: '',
-        results: [],
-        index: -1,
-        status: undefined,
-        error: null,
-        visible: typeof visible === 'boolean' ? visible : !state.visible
-      })
-    }, view, this.$element);
-  }
-
+  /**
+   * Focuses UI
+   */
   focus() {
-    const el = this.$element.querySelector('.osjs-search-input');
-    if (el) {
-      el.focus();
+    if (this.ui) {
+      this.ui.emit('focus');
     }
   }
 
+  /**
+   * Hides UI
+   */
   hide() {
-    if (this.searchUI) {
-      this.searchUI.toggle(false);
+    if (this.ui) {
+      this.ui.emit('toggle', false);
 
       const win = Window.lastWindow();
       if (this.focusLastWindow && win) {
@@ -223,13 +111,16 @@ export default class Search {
     }
   }
 
+  /**
+   * Shows UI
+   */
   show() {
-    if (this.searchUI) {
+    if (this.ui) {
       const win = Window.lastWindow();
 
       this.focusLastWindow = win && win.blur();
 
-      this.searchUI.toggle(true);
+      this.ui.emit('toggle', true);
       setTimeout(() => this.focus(), 1);
     }
   }

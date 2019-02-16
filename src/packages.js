@@ -97,6 +97,12 @@ export default class Packages {
      * @type {Preloader}
      */
     this.preloader = new Preloader(core.$resourceRoot);
+
+    /**
+     * If inited
+     * @type {boolean}
+     */
+    this.inited = false;
   }
 
   /**
@@ -115,7 +121,11 @@ export default class Packages {
   init() {
     console.debug('Packages::init()');
 
-    this.core.on('osjs/core:started', () => this._autostart());
+    if (!this.inited) {
+      this.core.on('osjs/core:started', () => this._autostart());
+    }
+
+    this.inited = true;
 
     const manifest = this.core.config('packages.manifest');
 

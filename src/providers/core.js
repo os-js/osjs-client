@@ -329,10 +329,6 @@ export default class CoreServiceProvider extends ServiceProvider {
         }
       });
 
-      this.core.on('osjs/packages:metadata:changed', () => {
-        this.pm.init();
-      });
-
       this.core.on('osjs/packages:package:changed', name => {
         // TODO: Reload themes as well
         Application.getApplications()
@@ -340,6 +336,10 @@ export default class CoreServiceProvider extends ServiceProvider {
           .forEach(proc => proc.relaunch());
       });
     }
+
+    this.core.on('osjs/packages:metadata:changed', () => {
+      this.pm.init();
+    });
   }
 
 }

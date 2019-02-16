@@ -120,11 +120,7 @@ export default class Packages {
     });
 
     return this.core.request('/metadata.json', {}, 'json')
-      .then(metadata => {
-        if (metadata instanceof Array) {
-          this.metadata = metadata.map(iter => Object.assign({type: 'application'}, iter));
-        }
-      });
+      .then(metadata => this.addPackages(metadata));
   }
 
   /**
@@ -380,6 +376,21 @@ export default class Packages {
       metadata,
       callback
     });
+  }
+
+  /**
+   * Adds a set of packages
+   * @param {PackageMetadata[]} list Package list
+   */
+  addPackages(list) {
+    if (list instanceof Array) {
+      const append = list
+        .map(iter => Object.assign({
+          type: 'application'
+        }, iter));
+
+      this.metadata = [...this.metadata, ...append];
+    }
   }
 
   /**

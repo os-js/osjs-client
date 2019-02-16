@@ -27,41 +27,8 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-import {h, app} from 'hyperapp';
 import {EventEmitter} from '@osjs/event-emitter';
-
-const createAttributes = (props, field, disabled) => {
-  disabled = disabled ? 'disabled' : undefined;
-  if (field.tagName === 'input') {
-    if (field.attributes.type !== 'submit') {
-      return Object.assign({}, {
-        autocapitalize: 'off',
-        autocomplete: 'new-' + field.attributes.name,
-        disabled,
-        oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
-      }, field.attributes);
-    }
-  }
-
-  return Object.assign({disabled}, field.attributes);
-};
-
-const createFields = (props, fields, disabled) => {
-  const children = f => {
-    if (f.tagName === 'select' && f.choices) {
-      return f.choices.map(c => h('option', {
-        current: c.current ? 'current' : undefined,
-        value: c.value
-      }, c.label));
-    }
-
-    return [];
-  };
-
-  return fields.map(f => h('div', {
-    class: 'osjs-login-field osjs-login-field-' + f.tagName
-  }, h(f.tagName, createAttributes(props, f, disabled), children(f))));
-};
+import createUI from './login-ui';
 
 
 /**
@@ -144,107 +111,13 @@ export default class Login extends EventEmitter {
    * Renders the UI
    */
   render(startHidden) {
-    const {src, position} = this.options.logo;
     const login = this.core.config('auth.login', {});
+    const ui = createUI(this.options, login, startHidden, this.$container);
 
-    const logo = () =>
-      h('div', {
-        class: 'osjs-login-logo',
-        'data-position': position,
-        style: {
-          backgroundImage: `url('${src}')`
-        }
-      });
-
-    const fields = state => {
-      const result = createFields(state, this.options.fields, state.loading);
-
-      if (src && position === 'bottom') {
-        result.push(logo());
-      }
-
-      if (this.options.stamp) {
-        result.push(h('div', {
-          class: 'osjs-login-stamp'
-        }, this.options.stamp));
-      }
-
-      return result;
-    };
-
-    const createView = (state, actions) => {
-      const header = [];
-
-      if (this.options.title) {
-        header.push(h('div', {
-          class: 'osjs-login-header'
-        }, h('span', {}, this.options.title)));
-      }
-
-      if (src && ['top', 'middle'].indexOf(position) !== -1) {
-        const m = position === 'top'
-          ? 'unshift'
-          : 'push';
-
-        header[m](logo());
-      }
-
-      const createSide = side => position === side
-        ? h('div', {'data-position': position}, logo())
-        : null;
-
-      const left = () => createSide('left');
-      const right = () => createSide('right');
-      const middle = () => h('div', {class: 'osjs-login-content'}, children);
-
-      const formFields = fields(state);
-
-      const children = [
-        ...header,
-
-        h('div', {
-          class: 'osjs-login-error',
-          style: {display: state.error ? 'block' : 'none'}
-        }, h('span', {}, state.error)),
-        h('form', {
-          loading: false,
-          method: 'post',
-          action: '#',
-          autocomplete: 'off',
-          onsubmit: actions.submit
-        }, formFields)
-      ];
-
-      return h('div', {
-        class: 'osjs-login',
-        id: this.options.id,
-        style: {display: state.hidden ? 'none' : undefined}
-      }, [left(), middle(), right()].filter(el => !!el));
-    };
-
-    const a = app(Object.assign({
-      hidden: startHidden
-    }, login), {
-      setLoading: loading => state => ({loading}),
-      setError: error => state => ({error, hidden: false}),
-      submit: ev => state => {
-        ev.preventDefault();
-
-        if (state.loading) {
-          return;
-        }
-
-        const values = Array.from(ev.target.elements)
-          .filter(el => el.type !== 'submit')
-          .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
-
-        this.emit('login:post', values);
-      }
-    }, createView, this.$container);
-
-    this.on('login:start', () => a.setLoading(true));
-    this.on('login:stop', () => a.setLoading(false));
-    this.on('login:error', err => a.setError(err));
+    ui.on('login:post', values => this.emit('login:post', values));
+    this.on('login:start', () => ui.emit('login:start'));
+    this.on('login:stop', () => ui.emit('login:stop'));
+    this.on('login:error', err => ui.emit('login:error', err));
   }
 
 }

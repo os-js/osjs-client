@@ -120,7 +120,8 @@ export default class Packages {
     });
 
     return this.core.request('/metadata.json', {}, 'json')
-      .then(metadata => this.addPackages(metadata));
+      .then(metadata => this.addPackages(metadata))
+      .catch(error => console.error(error));
   }
 
   /**

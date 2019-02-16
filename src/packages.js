@@ -119,9 +119,13 @@ export default class Packages {
         .forEach(pkg => this.launch(pkg.name));
     });
 
-    return this.core.request('/metadata.json', {}, 'json')
-      .then(metadata => this.addPackages(metadata))
-      .catch(error => console.error(error));
+    const manifest = this.core.config('packages.manifest');
+
+    return manifest
+      ? this.core.request(manifest, {}, 'json')
+        .then(metadata => this.addPackages(metadata))
+        .catch(error => console.error(error))
+      : Promise.resolve();
   }
 
   /**

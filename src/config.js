@@ -58,6 +58,11 @@ export const defaultConfiguration = {
     zh_CN: 'Chinese (simplified)'
   },
 
+  packages: {
+    manifest: '/metadata.json'
+  },
+
+  // FIXME: Move into packages above ?!
   application: {
     categories: {
       development: {

@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import Window from './window';
-import SearchUI from './search-ui';
+import createUI from './search-ui';
 
 /**
  * Search Service
@@ -36,12 +36,15 @@ import SearchUI from './search-ui';
 export default class Search {
   constructor(core) {
     this.core = core;
-    this.ui = new SearchUI(core);
+    this.ui = null;
     this.focusLastWindow = null;
+    this.$element = document.createElement('div');
   }
 
   destroy() {
-    this.ui.destroy();
+    if (this.ui) {
+      this.ui.destroy();
+    }
   }
 
   /**
@@ -51,12 +54,15 @@ export default class Search {
     const {icon} = this.core.make('osjs/theme');
     const _ = this.core.make('osjs/locale').translate;
 
+    this.$element.className = 'osjs-search';
+    this.core.$root.appendChild(this.$element);
+
     this.core.make('osjs/tray').create({
       title: _('LBL_SEARCH_TOOLTOP', 'F3'),
       icon: icon('system-search.png')
     }, () => this.show());
 
-    this.ui.init();
+    this.ui = createUI(this.core, this.$element);
     this.ui.on('hide', () => this.hide());
     this.ui.on('open', iter => this.core.open(iter));
     this.ui.on('search', query => {

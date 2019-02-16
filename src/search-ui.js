@@ -31,172 +31,153 @@
 import {h, app} from 'hyperapp';
 import {EventEmitter} from '@osjs/event-emitter';
 
-/**
- * Search UI
- * @see Search
- */
-export default class SearchUI extends EventEmitter {
+const createView = (core, fs, icon, _) => {
+  const resultView = ({results, index}, actions) => results.map((r, i) => h('li', {
+    onclick: () => actions.open(i),
+    onupdate: el => {
+      if (i === index) {
+        el.scrollIntoView();
+      }
+    },
+    class: [
+      'osjs-search-result',
+      index === i ? 'osjs__active' : ''
+    ].join(' ')
+  }, [
+    h('img', {src: icon(fs.icon(r).name + '.png')}),
+    h('span', {}, `${r.path} (${r.mime})`)
+  ]));
 
-  constructor(core) {
-    super();
+  return (state, actions) => h('div', {
+    class: 'osjs-search-container osjs-notification',
+    style: {
+      display: state.visible ? undefined : 'none'
+    }
+  }, [
+    h('input', {
+      type: 'text',
+      placeholder: _('LBL_SEARCH_PLACEHOLDER'),
+      class: 'osjs-search-input',
+      value: state.query,
+      onblur: () => {
+        if (!state.value) {
+          setTimeout(() => actions.toggle(false), 300);
+        }
+      },
+      oninput: ev => actions.setQuery(ev.target.value),
+      onkeydown: ev => {
+        if (ev.keyCode === 38) { // Up
+          actions.setPreviousIndex();
+        } else if (ev.keyCode === 40) { // Down
+          actions.setNextIndex();
+        } else if (ev.keyCode === 27) { // Escape
+          actions.resetIndex();
 
-    this.core = core;
-    this.$element = document.createElement('div');
-  }
+          if (state.index === -1) {
+            actions.hide();
+          }
+        }
+      },
+      onkeypress: ev => {
+        if (ev.keyCode === 13) {
+          if (state.index >= 0) {
+            actions.open(state.index);
+          } else {
+            actions.search(state.query.replace(/\*?$/, '*').replace(/^\*?/, '*'));
+          }
+        }
+      }
+    }),
+    h('div', {
+      'data-error': !!state.error,
+      class: 'osjs-search-message',
+      style: {
+        display: (state.error || state.status) ? 'block' : 'none'
+      }
+    }, state.error || state.status),
+    h('ol', {
+      class: 'osjs-search-results',
+      style: {
+        display: state.results.length ? undefined : 'none'
+      }
+    }, resultView(state, actions))
+  ]);
+};
 
-  init() {
-    this.$element.className = 'osjs-search';
-    this.core.$root.appendChild(this.$element);
+const create = (core, $element) => {
+  const _ = core.make('osjs/locale').translate;
+  const fs = core.make('osjs/fs');
+  const {icon} = core.make('osjs/theme');
+  const view = createView(core, fs, icon, _);
+  const ee = new EventEmitter('SearchUI');
 
-    const hyperapp = this.render();
+  const hyperapp = app({
+    query: '',
+    index: -1,
+    status: undefined,
+    error: null,
+    visible: false,
+    results: []
+  }, {
+    search: query => {
+      ee.emit('search', query);
 
-    this.on('error', error => hyperapp.setError(error));
-    this.on('success', results => hyperapp.setResults(results));
-    this.on('toggle', toggle => hyperapp.toggle(toggle));
-    this.on('focus', () => this.focus());
-  }
+      return {status: _('LBL_SEARCH_WAIT')};
+    },
+    open: index => (state, actions) => {
+      const iter = state.results[index];
+      if (iter) {
+        ee.emit('open', iter);
+      }
 
-  render() {
-    const _ = this.core.make('osjs/locale').translate;
-    const view = this.createView();
-
-    return app({
+      actions.toggle(false);
+    },
+    resetIndex: () => () => ({
+      index: -1
+    }),
+    setNextIndex: () => state => ({
+      index: (state.index + 1) % state.results.length
+    }),
+    setPreviousIndex: () => state => ({
+      index: state.index <= 0 ? state.results.length - 1 : state.index - 1
+    }),
+    setError: error => () => ({
+      error,
+      status: undefined,
+      index: -1
+    }),
+    setResults: results => () => ({
+      results,
+      index: -1,
+      status: _('LBL_SEARCH_RESULT', results.length),
+    }),
+    setQuery: query => () => ({
+      query
+    }),
+    hide: () => {
+      ee.emit('hide');
+    },
+    toggle: visible => state => ({
       query: '',
+      results: [],
       index: -1,
       status: undefined,
       error: null,
-      visible: false,
-      results: []
-    }, {
-      search: query => (state, actions) => {
-        this.emit('search', query);
+      visible: typeof visible === 'boolean' ? visible : !state.visible
+    })
+  }, view, $element);
 
-        return {status: _('LBL_SEARCH_WAIT')};
-      },
-      open: index => (state, actions) => {
-        const iter = state.results[index];
-        if (iter) {
-          this.emit('open', iter);
-        }
-
-        actions.toggle(false);
-      },
-      resetIndex: () => () => ({
-        index: -1
-      }),
-      setNextIndex: () => state => ({
-        index: (state.index + 1) % state.results.length
-      }),
-      setPreviousIndex: () => state => ({
-        index: state.index <= 0 ? state.results.length - 1 : state.index - 1
-      }),
-      setError: error => () => ({
-        error,
-        status: undefined,
-        index: -1
-      }),
-      setResults: results => () => ({
-        results,
-        index: -1,
-        status: _('LBL_SEARCH_RESULT', results.length),
-      }),
-      setQuery: query => () => ({
-        query
-      }),
-      toggle: visible => state => ({
-        query: '',
-        results: [],
-        index: -1,
-        status: undefined,
-        error: null,
-        visible: typeof visible === 'boolean' ? visible : !state.visible
-      })
-    }, view, this.$element);
-
-
-  }
-
-  focus() {
-    const el = this.$element.querySelector('.osjs-search-input');
+  ee.on('error', error => hyperapp.setError(error));
+  ee.on('success', results => hyperapp.setResults(results));
+  ee.on('toggle', toggle => hyperapp.toggle(toggle));
+  ee.on('focus', () => {
+    const el = $element.querySelector('.osjs-search-input');
     if (el) {
       el.focus();
     }
-  }
+  });
 
-  createView() {
-    const fs = this.core.make('osjs/fs');
-    const {icon} = this.core.make('osjs/theme');
-    const _ = this.core.make('osjs/locale').translate;
+  return ee;
+};
 
-    const resultView = ({results, index}, actions) => results.map((r, i) => h('li', {
-      onclick: () => actions.open(i),
-      onupdate: el => {
-        if (i === index) {
-          el.scrollIntoView();
-        }
-      },
-      class: [
-        'osjs-search-result',
-        index === i ? 'osjs__active' : ''
-      ].join(' ')
-    }, [
-      h('img', {src: icon(fs.icon(r).name + '.png')}),
-      h('span', {}, `${r.path} (${r.mime})`)
-    ]));
-
-    return (state, actions) => h('div', {
-      class: 'osjs-search-container osjs-notification',
-      style: {
-        display: state.visible ? undefined : 'none'
-      }
-    }, [
-      h('input', {
-        type: 'text',
-        placeholder: _('LBL_SEARCH_PLACEHOLDER'),
-        class: 'osjs-search-input',
-        value: state.query,
-        onblur: () => {
-          if (!state.value) {
-            setTimeout(() => actions.toggle(false), 300);
-          }
-        },
-        oninput: ev => actions.setQuery(ev.target.value),
-        onkeydown: ev => {
-          if (ev.keyCode === 38) { // Up
-            actions.setPreviousIndex();
-          } else if (ev.keyCode === 40) { // Down
-            actions.setNextIndex();
-          } else if (ev.keyCode === 27) { // Escape
-            actions.resetIndex();
-
-            if (state.index === -1) {
-              this.emit('hide');
-            }
-          }
-        },
-        onkeypress: ev => {
-          if (ev.keyCode === 13) {
-            if (state.index >= 0) {
-              actions.open(state.index);
-            } else {
-              actions.search(state.query.replace(/\*?$/, '*').replace(/^\*?/, '*'));
-            }
-          }
-        }
-      }),
-      h('div', {
-        'data-error': !!state.error,
-        class: 'osjs-search-message',
-        style: {
-          display: (state.error || state.status) ? 'block' : 'none'
-        }
-      }, state.error || state.status),
-      h('ol', {
-        class: 'osjs-search-results',
-        style: {
-          display: state.results.length ? undefined : 'none'
-        }
-      }, resultView(state, actions))
-    ]);
-  }
-}
+export default create;

@@ -1,5 +1,41 @@
 # Changelog for osjs-client
 
+## 3.0.47
+
+* Fixed WS connection URI behind proxy
+* Update manifest on signal even in production mode
+* Updated SearchUI abstraction
+* Split up Login and the UI code
+* Split up Search and SearchUI
+* Added config option to disable WS connection
+* Split preloader from Packages
+* Added configurable manifest uri
+* Allow Packages#init to fall through
+* Added Packages#addPackages
+* Use internal request() for Packages#init
+* Updated VFS null method adapter
+* Updated vfs docs
+* Updated dev dependencies
+* Updated osjs/common
+* Added eslintignore
+* Replaced an async generator with promise
+* Split out 'null' adapter for vfs
+* Split up auth providers
+* Updated some imports
+* Moved some VFS files
+* Updated library exports
+* Split up notification provider code
+* Split up auth provider code
+* Updated some return states in Window actions
+* Added some checks for desktop service in Window
+* Settings#get now returns proper default on undefined ns
+* Add null user in Core
+* Core#open no longer rejects
+* Fixed Clipboard#get resolver
+* Make sure package manifest is checked as array
+* Updated some logging
+* Split out Core#url into separate util file
+
 ## 3.0.46
 
 * Improve Window#resizeFit (#60)

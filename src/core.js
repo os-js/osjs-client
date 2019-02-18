@@ -309,18 +309,25 @@ export default class Core extends CoreBase {
    * Creates event listeners*
    */
   _createListeners() {
+    const handle = data => {
+      const {pid, wid, args} = data;
+
+      const proc = Application.getApplications()
+        .find(p => p.pid === pid);
+
+      const win = proc
+        ? proc.windows.find(w => w.wid === wid)
+        : null;
+
+      if (win) {
+        win.emit('iframe:get', ...(args || []));
+      }
+    };
+
     window.addEventListener('message', ev => {
       const message = ev.data || {};
-      if (message) {
-        // FIXME: This might actually collide with something... need to check more.
-        if (message.pid >= 0) {
-          const proc = Application.getApplications().find(p => p.pid === message.pid);
-          if (proc) {
-            console.debug('Routing message', message);
-            proc.emit('message', ...message.args);
-            return;
-          }
-        }
+      if (message && message.name === 'osjs/iframe:message') {
+        handle(...(message.params || []));
       }
     });
   }

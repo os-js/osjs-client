@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.48
+
+* Added new iframe message handler
+
 ## 3.0.47
 
 * Fixed WS connection URI behind proxy

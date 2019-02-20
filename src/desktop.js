@@ -67,10 +67,12 @@ const applyBackgroundStyles = (core, background) => {
     styles.backgroundRepeat = 'repeat';
   }
 
-  if (background.style !== 'color' && background.src) {
-    if (typeof background.src === 'string') {
+  if (background.style !== 'color') {
+    if (background.src === undefined) {
+      styles.backgroundImage = undefined;
+    } else if (typeof background.src === 'string') {
       styles.backgroundImage = `url(${background.src})`;
-    } else {
+    } else if (background.src) {
       core.make('osjs/vfs')
         .url(background.src)
         .then(src => {

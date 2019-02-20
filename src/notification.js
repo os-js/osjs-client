@@ -77,10 +77,11 @@ export default class Notification {
    *
    * @param {Core} core Core reference
    * @param {Node} root Root DOM element
-   * @param {Object} options Options
-   * @param {String} options.title Title
-   * @param {String} options.message Message
-   * @param {String} [options.icon] Icon source
+   * @param {object} options Options
+   * @param {string} options.title Title
+   * @param {string} options.message Message
+   * @param {string} [options.sound=message] Sound to play
+   * @param {string} [options.icon] Icon source
    * @param {number} [options.timeout=5000] Timeout value (0=infinite)
    */
   constructor(core, root, options = {}) {
@@ -120,7 +121,8 @@ export default class Notification {
       title: defaultLabel,
       message: defaultLabel,
       timeout: 5000,
-      native: core.config('notifications.native', false)
+      native: core.config('notifications.native', false),
+      sound: 'message'
     }, options);
 
     this.core.emit('osjs/notification:create', this);
@@ -181,6 +183,11 @@ export default class Notification {
         });
     } else {
       renderCustom();
+
+      if (this.options.sound) {
+        this.core.make('osjs/sounds')
+          .play(this.options.sound);
+      }
     }
   }
 

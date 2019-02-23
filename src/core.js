@@ -460,10 +460,11 @@ export default class Core extends CoreBase {
    * to all applications matching given filter
    *
    * @param {string|Function} pkg The filter
+   * @param {string} name The event name
    * @param {*} ...args Arguments to pass to emit
    * @return {string[]} List of application names emitted to
    */
-  broadcast(pkg, ...args) {
+  broadcast(pkg, name, ...args) {
     const filter = typeof pkg === 'function'
       ? pkg
       : p => p.metadata.name === pkg;
@@ -474,7 +475,7 @@ export default class Core extends CoreBase {
       .filter(filter);
 
     return apps.map(proc => {
-      proc.emit('broadcast', ...args);
+      proc.emit(name, ...args);
 
       return proc.name;
     });

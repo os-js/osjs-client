@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.51
+
+* Stripped away some unwanted stuff from build
+
 ## 3.0.50
 
 * Updated Core#broadcast (#64)

@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.0.49
+
+* Added Core#broadcast (#64)
+* If wallpaper src is 'undefined' inherit CSS background (#59)
+* Add sound support to notification (#61)
+
 ## 3.0.48
 
 * Added new iframe message handler

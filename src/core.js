@@ -456,6 +456,31 @@ export default class Core extends CoreBase {
   }
 
   /**
+   * Sends a 'broadcast' event with given arguments
+   * to all applications matching given filter
+   *
+   * @param {string|Function} pkg The filter
+   * @param {*} ...args Arguments to pass to emit
+   * @return {string[]} List of application names emitted to
+   */
+  broadcast(pkg, ...args) {
+    const filter = typeof pkg === 'function'
+      ? pkg
+      : p => p.metadata.name === pkg;
+
+
+    const apps = Application
+      .getApplications()
+      .filter(filter);
+
+    return apps.map(proc => {
+      proc.emit('broadcast', ...args);
+
+      return proc.name;
+    });
+  }
+
+  /**
    * Set the internal fetch/request options
    * @param {Object} options Request options
    */

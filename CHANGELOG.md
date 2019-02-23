@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.50
+
+* Updated Core#broadcast (#64)
+
 ## 3.0.49
 
 * Added Core#broadcast (#64)

@@ -33,7 +33,7 @@ import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
 import Window from './window';
 import Search from './search';
-import * as merge from 'deepmerge';
+import merge from 'deepmerge';
 
 const TEMPLATE = subtract => `
   .osjs-root[data-mobile=true] .osjs-window,

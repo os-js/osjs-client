@@ -33,7 +33,7 @@ import {EventEmitter} from '@osjs/event-emitter';
 import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
-import * as merge from 'deepmerge';
+import merge from 'deepmerge';
 
 /**
  * VFS Mountpoint

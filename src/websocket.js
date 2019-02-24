@@ -32,14 +32,6 @@ import {EventEmitter} from '@osjs/event-emitter';
 
 const eventNames = ['open', 'close', 'message', 'error'];
 
-const attachEvents = (socket, instance) => eventNames.forEach(name => {
-  socket[`on${name}`] = (...args) => instance.emit(name, ...args);
-});
-
-const detachEvents = (socket) => eventNames.forEach(name => {
-  socket[`on${name}`] = () => {};
-});
-
 /**
  * Application Socket
  *
@@ -90,7 +82,9 @@ export default class Websocket extends EventEmitter {
       return;
     }
 
-    detachEvents(this.connection, this);
+    eventNames.forEach(name => {
+      this.connection[`on${name}`] = () => {};
+    });
 
     this.reconnecting = clearInterval(this.reconnecting);
     this.connection = null;
@@ -145,7 +139,9 @@ export default class Websocket extends EventEmitter {
     this.reconnecting = clearInterval(this.reconnecting);
     this.connection = new WebSocket(this.uri);
 
-    attachEvents(this.connection, this);
+    eventNames.forEach(name => {
+      this.connection[`on${name}`] = (...args) => this.emit(name, ...args);
+    });
   }
 
   /**

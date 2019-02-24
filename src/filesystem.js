@@ -49,55 +49,6 @@ import merge from 'deepmerge';
  * @typedef Mountpoint
  */
 
-/*
- * Gets mountpoint from a path
- */
-const getMountpointFromPath = (core, mounts, file) => {
-  const path = typeof file === 'string' ? file : file.path;
-  const re = /^(\w+):(.*)/;
-  const match = String(path).replace(/\+/g, '/').match(re);
-  const [prefix] = Array.from(match || []).slice(1);
-  const _ = core.make('osjs/locale').translate;
-
-  if (!prefix) {
-    throw new Error(_('ERR_VFS_PATH_FORMAT_INVALID', path));
-  }
-
-  const found = mounts.find(m => m.name === prefix);
-
-  if (!found) {
-    throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND_FOR', `${prefix}:`));
-  }
-
-  return found;
-};
-
-/*
- * Creates given mountpoint
- */
-const createMountpoint = (core, adapters, props) => {
-  const name = props.adapter || core.config('vfs.defaultAdapter');
-  const adapter = Object.assign({}, defaultAdapter, adapters[name](core));
-
-  const result = merge({
-    enabled: true,
-    mounted: false,
-    adapter: name,
-    attributes: {
-      visibility: 'global',
-      local: true,
-      searchable: true,
-      readOnly: false
-    }
-  }, props);
-
-  return Object.assign({
-    _adapter: adapter,
-    label: name,
-    root: `${result.name || name}:/`
-  }, result);
-};
-
 /**
  * Filesystem Manager
  *
@@ -166,7 +117,7 @@ export default class Filesystem extends EventEmitter {
       .concat(this.options.mounts || [])
       .map(mount => {
         try {
-          return createMountpoint(this.core, this.adapters, mount);
+          return this.createMountpoint(mount);
         } catch (e) {
           console.warn('Error while creating mountpoint', e);
         }
@@ -245,6 +196,7 @@ export default class Filesystem extends EventEmitter {
       .then(found => {
         const _ = this.core.make('osjs/locale').translate;
 
+        // FIXME: Add already mounting state
         if (!found) {
           throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND', name));
         } else if (unmount && !found.mounted) {
@@ -274,8 +226,8 @@ export default class Filesystem extends EventEmitter {
   _request(method, ...args) {
     if (['rename', 'move', 'copy'].indexOf(method) !== -1) {
       const [src, dest] = args;
-      const srcMount = getMountpointFromPath(this.core, this.mounts, src);
-      const destMount = getMountpointFromPath(this.core, this.mounts, dest);
+      const srcMount = this.getMountpointFromPath(src);
+      const destMount = this.getMountpointFromPath(dest);
       const sameAdapter = srcMount.adapter === destMount.adapter;
 
       if (!sameAdapter) {
@@ -290,11 +242,64 @@ export default class Filesystem extends EventEmitter {
     }
 
     const [file] = args;
-    const mount = getMountpointFromPath(this.core, this.mounts, file);
+    const mount = this.getMountpointFromPath(file);
 
     this.core.emit(`osjs/vfs:${method}`, ...args);
 
     return VFS[method](mount._adapter, mount)(...args);
+  }
+
+  /**
+   * Creates a new mountpoint based on given properties
+   * @param {object} props Properties (see Mountpoint)
+   * @return {Mountpoint}
+   */
+  createMountpoint(props) {
+    const name = props.adapter || this.core.config('vfs.defaultAdapter');
+    const adapter = Object.assign({}, defaultAdapter, this.adapters[name](this.core));
+
+    const result = merge({
+      enabled: true,
+      mounted: false,
+      adapter: name,
+      attributes: {
+        visibility: 'global',
+        local: true,
+        searchable: true,
+        readOnly: false
+      }
+    }, props);
+
+    return Object.assign({
+      _adapter: adapter,
+      label: name,
+      root: `${result.name || name}:/`
+    }, result);
+  }
+
+  /**
+   * Gets mountpoint from given path
+   * @param {string|object} file The file object
+   * @return {Mountpoint|null}
+   */
+  getMountpointFromPath(file) {
+    const path = typeof file === 'string' ? file : file.path;
+    const re = /^(\w+):(.*)/;
+    const match = String(path).replace(/\+/g, '/').match(re);
+    const [prefix] = Array.from(match || []).slice(1);
+    const _ = this.core.make('osjs/locale').translate;
+
+    if (!prefix) {
+      throw new Error(_('ERR_VFS_PATH_FORMAT_INVALID', path));
+    }
+
+    const found = this.mounts.find(m => m.name === prefix);
+
+    if (!found) {
+      throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND_FOR', `${prefix}:`));
+    }
+
+    return found;
   }
 
   /**

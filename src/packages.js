@@ -117,6 +117,7 @@ export default class Packages {
 
   /**
    * Initializes package manager
+   * @return {Promise<boolean, Error>}
    */
   init() {
     console.debug('Packages::init()');
@@ -132,8 +133,9 @@ export default class Packages {
     return manifest
       ? this.core.request(manifest, {}, 'json')
         .then(metadata => this.addPackages(metadata))
+        .then(() => true)
         .catch(error => console.error(error))
-      : Promise.resolve();
+      : Promise.resolve(true);
   }
 
   /**

@@ -149,7 +149,7 @@ export default class Core extends CoreBase {
             }
           });
         } else {
-          console.info('OS.js STARTED WITHOUT ANY AUTHENTICATION');
+          console.debug('OS.js STARTED WITHOUT ANY AUTHENTICATION');
         }
 
         return done();
@@ -261,7 +261,7 @@ export default class Core extends CoreBase {
     const {uri} = this.config('ws');
     let wasConnected = false;
 
-    console.log('Creating websocket connection on', uri);
+    console.debug('Creating websocket connection on', uri);
 
     this.ws = new Websocket('CoreSocket', uri, {
       interval: this.config('ws.connectInterval', 1000)
@@ -393,7 +393,7 @@ export default class Core extends CoreBase {
    * @return {Application}
    */
   run(name, args = {}, options = {}) {
-    console.log('Core::run()', name, args, options);
+    console.debug('Core::run()', name, args, options);
 
     return this.make('osjs/packages').launch(name, args, options);
   }

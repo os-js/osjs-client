@@ -64,7 +64,7 @@ export default class Application extends EventEmitter {
       metadata: {}
     }, data);
 
-    console.log('Application::constructor()', data);
+    console.debug('Application::constructor()', data);
 
     const defaultSettings = data.options.settings
       ? Object.assign({}, data.options.settings)

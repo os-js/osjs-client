@@ -321,7 +321,7 @@ export default class Window extends EventEmitter {
       state: {}
     }, options);
 
-    console.log('Window::constructor()', options);
+    console.debug('Window::constructor()', options);
 
     super('Window@' + options.id);
 

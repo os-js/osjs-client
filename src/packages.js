@@ -340,7 +340,7 @@ export default class Packages {
    * @throws {Error}
    */
   register(name, callback) {
-    console.info('Packages::register()', name);
+    console.debug('Packages::register()', name);
 
     const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);

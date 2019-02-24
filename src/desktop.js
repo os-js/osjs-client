@@ -180,7 +180,7 @@ export default class Desktop extends EventEmitter {
     });
 
     this.core.on('osjs/core:connect', (ev, reconnected) => {
-      console.info('Connection opened');
+      console.debug('Connection opened');
 
       if (reconnected) {
         const _ = this.core.make('osjs/locale').translate;
@@ -192,7 +192,7 @@ export default class Desktop extends EventEmitter {
     });
 
     this.core.on('osjs/core:connection-failed', (ev) => {
-      console.info('Connection failed');
+      console.warn('Connection failed');
 
       const _ = this.core.make('osjs/locale').translate;
       this.core.make('osjs/notification', {

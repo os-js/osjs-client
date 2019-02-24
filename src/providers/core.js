@@ -321,7 +321,7 @@ export default class CoreServiceProvider extends ServiceProvider {
         }, {});
 
         if (map[url]) {
-          console.info('Hot-reloading', url);
+          console.debug('Hot-reloading', url);
 
           setTimeout(() => {
             map[url].setAttribute('href', url);

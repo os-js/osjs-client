@@ -169,10 +169,12 @@ export default class Auth {
     return this.adapter.logout(reload)
       .then(response => {
         if (!response) {
-          return;
+          return false;
         }
 
         this.shutdown(reload);
+
+        return true;
       });
   }
 }

@@ -111,6 +111,7 @@ export default class Auth {
 
   /**
    * Shows Login UI
+   * @return {Promise<boolean, Error>}
    */
   show(cb) {
     const login = this.core.config('auth.login', {});
@@ -120,8 +121,10 @@ export default class Auth {
     this.ui.init(autologin);
 
     if (autologin) {
-      this.login(login);
+      return this.login(login);
     }
+
+    return Promise.resolve(true);
   }
 
   /**

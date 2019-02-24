@@ -29,41 +29,7 @@
  */
 
 import {h, app} from 'hyperapp';
-
-const supportsNativeNotification = 'Notification' in window;
-
-const createNativeNotification = (options, onclick) => {
-  const Notif = window.Notification;
-
-  const create = () => {
-    const notification = new Notif(
-      options.title,
-      {
-        body: options.message,
-        icon: options.icon
-      }
-    );
-
-    notification.onclick = onclick;
-
-    return notification;
-  };
-
-  if (supportsNativeNotification) {
-    if (Notif.permission === 'granted') {
-      return Promise.resolve(create());
-    } else if (Notif.permission !== 'denied') {
-      return new Promise((resolve, reject) => {
-        Notif.requestPermission(permission => {
-          return permission === 'granted' ? resolve(true) : reject(permission);
-        });
-      }).then(create);
-    }
-  }
-
-  return Promise.reject('Unsupported');
-};
-
+import {createNativeNotification} from './utils/dom';
 
 /**
  * Notification

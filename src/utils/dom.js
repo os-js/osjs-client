@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+const supportsNativeNotification = 'Notification' in window;
+
 /**
  * Creates a new CSS DOM element
  * @param {Element} root Root node
@@ -193,4 +195,42 @@ export const supportedMedia = () => {
     audio: reduce(audioFormats, document.createElement('audio')),
     video: reduce(videoFormats, document.createElement('video'))
   };
+};
+
+/**
+ * Creates a native notification
+ * @param {object} options Notification options
+ * @param {Function} [onclick] Callback on click
+ * @return {Promise<window.Notification>}
+ */
+export const createNativeNotification = (options, onclick) => {
+  const Notif = window.Notification;
+
+  const create = () => {
+    const notification = new Notif(
+      options.title,
+      {
+        body: options.message,
+        icon: options.icon
+      }
+    );
+
+    notification.onclick = onclick;
+
+    return notification;
+  };
+
+  if (supportsNativeNotification) {
+    if (Notif.permission === 'granted') {
+      return Promise.resolve(create());
+    } else if (Notif.permission !== 'denied') {
+      return new Promise((resolve, reject) => {
+        Notif.requestPermission(permission => {
+          return permission === 'granted' ? resolve(true) : reject(permission);
+        });
+      }).then(create);
+    }
+  }
+
+  return Promise.reject('Unsupported');
 };

@@ -369,6 +369,7 @@ export default class Packages {
       const append = list
         .map(iter => Object.assign({
           type: 'application',
+          files: []
         }, iter));
 
       this.metadata = [...this.metadata, ...append];

@@ -247,8 +247,10 @@ export default class Filesystem extends EventEmitter {
 
         if (!found) {
           throw new Error(_('ERR_VFS_MOUNT_NOT_FOUND', name));
-        } else if (!found.mounted) {
+        } else if (unmount && !found.mounted) {
           throw new Error(_('ERR_VFS_MOUNT_NOT_MOUNTED', name));
+        } else if (!unmount && found.mounted) {
+          throw new Error(_('ERR_VFS_MOUNT_ALREADY_MOUNTED', name));
         }
 
         return this._mountpointAction(found, unmount);

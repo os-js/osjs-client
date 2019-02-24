@@ -43,7 +43,7 @@ export default class Auth {
    * @param {Function} [args.login] Custom UI
    * @param {Object} [args.config] Configuration object to be passed on
    */
-  constructor(core, args) {
+  constructor(core, args = {}) {
     const defaultUi = core.config('auth.ui', {});
 
     const defaultAdapters = {

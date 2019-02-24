@@ -362,16 +362,19 @@ export default class Packages {
   /**
    * Adds a set of packages
    * @param {PackageMetadata[]} list Package list
+   * @return {PackageMetadata[]} Current list of packages
    */
   addPackages(list) {
     if (list instanceof Array) {
       const append = list
         .map(iter => Object.assign({
-          type: 'application'
+          type: 'application',
         }, iter));
 
       this.metadata = [...this.metadata, ...append];
     }
+
+    return this.getPackages();
   }
 
   /**

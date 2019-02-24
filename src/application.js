@@ -348,12 +348,8 @@ export default class Application extends EventEmitter {
    * @param {Function} filter Filter function
    */
   removeWindow(filter) {
-    let i = this.windows.length;
-    while (i--) {
-      if (filter(this.windows[i], i)) {
-        this.windows.splice(i, 1);
-      }
-    }
+    const found = this.windows.filter(filter);
+    found.forEach(win => win.destroy());
   }
 
   /**

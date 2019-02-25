@@ -577,7 +577,12 @@ export default class Window extends EventEmitter {
       this.init();
     }
 
-    addClassNames(this, ['osjs-window', ...this.attributes.classNames]);
+    const classNames = ['osjs-window', ...this.attributes.classNames];
+    if (this.id) {
+      classNames.push(`Window_${this.id}`);
+    }
+
+    addClassNames(this, classNames);
 
     this._updateButtons();
     this._updateDOM();

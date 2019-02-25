@@ -302,10 +302,6 @@ export default class Application extends EventEmitter {
       throw new Error(msg);
     }
 
-    options.attributes = options.attributes || {
-      classNames: [`Window_${this.metadata.name}`]
-    };
-
     const instance = new Window(this.core, options);
     instance.init();
 

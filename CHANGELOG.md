@@ -1,5 +1,24 @@
 # Changelog for osjs-client
 
+## 3.0.52
+
+* Updated classNames of Windows (Fixes #66)
+* Minor cleanup in Websocket class
+* Removed debug message on WS messages
+* Updated some log levels
+* Resolve with boolean in Auth#logout
+* Return a promise in Auth#show
+* Updated Auth#constructor signature
+* Deprecate Application#emitAll
+* Updated Application#removeWindow
+* Packages#addPackages now fills 'files' if not existing
+* Packages#addPackages now returns package list
+* Return boolean for Packages#init
+* Moved native notification code to utils
+* Moved some functions in filesystem.js
+* Added missing mount check in Filesystem#_mountAction
+* Changed 'deepmerge' import
+
 ## 3.0.51
 
 * Stripped away some unwanted stuff from build

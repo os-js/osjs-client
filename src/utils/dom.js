@@ -117,8 +117,13 @@ export const handleTabOnTextarea = ev => {
  * @return {Element|null}
  */
 export const getActiveElement = (root) => {
-  const ae = document.activeElement;
-  return root.contains(ae) ? ae : null;
+  if (root) {
+    const ae = document.activeElement;
+
+    return root.contains(ae) ? ae : null;
+  }
+
+  return null;
 };
 
 /**

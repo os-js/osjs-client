@@ -39,7 +39,7 @@ const adapter = (core) => {
           isFile: true,
           filename: pkg.name,
           mime: 'osjs/application',
-          path: `${path}/${pkg.name}`,
+          path: `${path.replace(/(\/+)?$/, '/')}${pkg.name}`,
           size: 0,
           stat: {},
           icon: pkg.icon ? core.url(pkg.icon, {}, pkg) : null

@@ -303,7 +303,6 @@ export default class Application extends EventEmitter {
     }
 
     const instance = new Window(this.core, options);
-    instance.init();
 
     if (this.options.restore) {
       const windows = this.options.restore.windows || [];
@@ -317,6 +316,8 @@ export default class Application extends EventEmitter {
         this.options.restore.windows.splice(found, 1);
       }
     }
+
+    instance.init();
 
     this.windows.push(instance);
 

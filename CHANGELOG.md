@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.53
+
+* Correctly set window media state on maximize/restore (#37)
+* Updated Application#createWindow initialization (#37)
+* Fixed double slashes in apps vfs adapter readdir
+* Added a check in getActiveElement dom utility
+
 ## 3.0.52
 
 * Updated classNames of Windows (Fixes #66)

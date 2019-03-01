@@ -154,8 +154,8 @@ const getMediaQueryName = (win) => Object.keys(win.attributes.mediaQueries)
   .filter(name => mediaQuery.match(win.attributes.mediaQueries[name], {
     type: 'screen',
     orientation: getScreenOrientation(window.screen),
-    width: win.state.dimension.width,
-    height: win.state.dimension.height
+    width: win.$element.offsetWidth || win.state.dimension.width,
+    height: win.$element.offsetHeight || win.state.dimension.height
   }))
   .pop();
 
@@ -220,6 +220,10 @@ export default class WindowBehavior {
       win.$icon.addEventListener('click', oniconclick);
     }
 
+    win.on('resized,rendered', () => {
+      win.setState('media', getMediaQueryName(win));
+    });
+
     win.on('destroy', () => {
       if (win.$element) {
         win.$element.removeEventListener('touchstart', ontouchstart, touchArg);
@@ -242,7 +246,6 @@ export default class WindowBehavior {
     const {top, left} = getCascadePosition(win, rect, win.state.position);
     win.state.position.top = top;
     win.state.position.left = left;
-
     win.state.media = getMediaQueryName(win);
   }
 
@@ -387,8 +390,6 @@ export default class WindowBehavior {
         document.removeEventListener('mousemove', mousemove);
         document.removeEventListener('mouseup', mouseup);
       }
-
-      win._setState('media', getMediaQueryName(win), false);
 
       if (lofi) {
         this.$lofi.remove();

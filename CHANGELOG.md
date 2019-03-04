@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.54
+
+* Fixed package manifest update causing duplicates
+
 ## 3.0.53
 
 * Correctly set window media state on maximize/restore (#37)

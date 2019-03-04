@@ -126,6 +126,7 @@ export default class Packages {
       this.core.on('osjs/core:started', () => this._autostart());
     }
 
+    this.metadata = [];
     this.inited = true;
 
     const manifest = this.core.config('packages.manifest');

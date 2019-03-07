@@ -26,7 +26,7 @@ const createFields = (props, fields, disabled) => {
       }, c.label));
     }
 
-    return [];
+    return f.children || [];
   };
 
   return fields.map(f => h('div', {

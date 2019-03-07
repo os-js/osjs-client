@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.55
+
+* Allow arbitrary children in login ui fields
+
 ## 3.0.54
 
 * Fixed package manifest update causing duplicates

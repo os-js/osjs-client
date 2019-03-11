@@ -14,12 +14,13 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint index.js src/**/*.js",
+    "test": "npm run eslint && npm run stylelint && npm run test:coverage",
+    "test:coverage": "jest",
+    "eslint": "eslint index.js",
     "build": "webpack",
     "watch": "webpack --watch",
     "stylelint": "stylelint index.scss src/**/*.scss",
-    "prepublishOnly": "npm run eslint && npm run stylelint && rm ./dist/* && NODE_ENV=production npm run build"
+    "prepublishOnly": "npm run test && rm ./dist/* && NODE_ENV=production npm run build"
   },
   "repository": {
     "type": "git",

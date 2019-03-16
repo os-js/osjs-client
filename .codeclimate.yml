@@ -16,3 +16,5 @@ plugins:
     enabled: true
 exclude_patterns:
   - src/locale/**
+  - __tests__/**
+  - __mocks__/**

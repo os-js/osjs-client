@@ -4,7 +4,7 @@
   "description": "OS.js v3 client",
   "main": "dist/main.js",
   "style": "dist/main.css",
-  "types": "index.d.ts",
+  "typings": "index.d.ts",
   "files": [
     "dist/main.js",
     "dist/main.js.map",

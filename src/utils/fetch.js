@@ -85,9 +85,9 @@ const createFetchOptions = (url, options, type) => {
 /**
  * Make a HTTP request
  *
- * @param {String} url The endpoint
+ * @param {string} url The endpoint
  * @param {Options} [options] fetch options
- * @param {String} [type] Request / Response type
+ * @param {string} [type] Request / Response type
  * @return {*}
  */
 export const fetch = (url, options = {}, type = null) => {

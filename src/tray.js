@@ -68,9 +68,9 @@ export default class Tray {
 
   /**
    * Creates a new Tray entry
-   * @param {Object} options Options
-   * @param {String} [options.icon] Icon source
-   * @param {String} [options.title] The title and tooltip
+   * @param {object} options Options
+   * @param {string} [options.icon] Icon source
+   * @param {string} [options.title] The title and tooltip
    * @param {Function} [options.onclick] The callback function for clicks
    * @param {Function} [options.oncontextmenu] The callback function for contextmenu
    * @param {Function} [handler] The callback function for all events

@@ -61,7 +61,7 @@ export default class Notifications {
 
   /**
    * Create a new notification
-   * @param {Object} options See notification class for options
+   * @param {object} options See notification class for options
    * @return {Notification}
    */
   create(options) {

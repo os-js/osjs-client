@@ -42,9 +42,9 @@ export default class Login extends EventEmitter {
    * Create authentication handler
    *
    * @param {Core} core Core reference
-   * @param {Object} [options] Options
-   * @param {String} [options.title] Title
-   * @param {Array} [options.fields] Fields
+   * @param {object} [options] Options
+   * @param {string} [options.title] Title
+   * @param {object[]} [options.fields] Fields
    */
   constructor(core, options) {
     super('Login');

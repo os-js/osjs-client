@@ -33,7 +33,7 @@ const supportsNativeNotification = 'Notification' in window;
 /**
  * Creates a new CSS DOM element
  * @param {Element} root Root node
- * @param {String} src Source
+ * @param {string} src Source
  * @return {Promise<ScriptElement, Error>}
  */
 export const style = (root, src) => new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ export const style = (root, src) => new Promise((resolve, reject) => {
 /**
  * Creates a new Script DOM element
  * @param {Element} root Root node
- * @param {String} src Source
+ * @param {string} src Source
  * @return {Promise<StyleElement>, Error>}
  */
 export const script = (root, src) => new Promise((resolve, reject) => {
@@ -74,8 +74,8 @@ export const script = (root, src) => new Promise((resolve, reject) => {
 
 /**
  * Escape text so it is "safe" for HTML usage
- * @param {String} text Input text
- * @return {String}
+ * @param {string} text Input text
+ * @return {string}
  */
 export const escapeHtml = (text) => {
   const div = document.createElement('div');
@@ -85,8 +85,8 @@ export const escapeHtml = (text) => {
 
 /**
  * Serialize an object to CSS
- * @param {Object} obj Object
- * @return {String} CSS text
+ * @param {object} obj Object
+ * @return {string} CSS text
  */
 export const createCssText = (obj) => Object.keys(obj)
   .map(k => [k, k.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()])
@@ -148,7 +148,7 @@ export const supportsPassive = (function() {
 /**
  * Plays a sound
  * @param {string} src Sound source
- * @param {Object} [options] Options
+ * @param {object} [options] Options
  * @return {Promise<HTMLAudioElement>}
  */
 export const playSound = (src, options = {}) => {

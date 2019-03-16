@@ -42,7 +42,7 @@ export default class Notification {
    * Create notification
    *
    * @param {Core} core Core reference
-   * @param {Node} root Root DOM element
+   * @param {Element} root Root DOM element
    * @param {object} options Options
    * @param {string} options.title Title
    * @param {string} options.message Message
@@ -62,13 +62,13 @@ export default class Notification {
 
     /**
      * Root node reference
-     * @type {Node}
+     * @type {Element}
      */
     this.$root = root;
 
     /**
      * Notification DOM node
-     * @type {Node}
+     * @type {Element}
      */
     this.$element = document.createElement('div');
 

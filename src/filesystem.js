@@ -37,15 +37,15 @@ import merge from 'deepmerge';
 
 /**
  * VFS Mountpoint
- * @param {String} name Name
- * @param {String} label Label
- * @param {String} adapter Adater name
- * @param {Boolean} [enabled=true] Enabled state
- * @param {Object} [attributes] Attributes
- * @param {String} [attributes.visibility='global'] Visibility in UI
- * @param {Boolean} [attributes.local=true] Local filesystem ?
- * @param {Boolean} [attributes.searchable=true] If can be searched
- * @param {Boolean} [attributes.readOnly=false] Readonly
+ * @param {string} name Name
+ * @param {string} label Label
+ * @param {string} adapter Adater name
+ * @param {boolean} [enabled=true] Enabled state
+ * @param {object} [attributes] Attributes
+ * @param {string} [attributes.visibility='global'] Visibility in UI
+ * @param {boolean} [attributes.local=true] Local filesystem ?
+ * @param {boolean} [attributes.searchable=true] If can be searched
+ * @param {boolean} [attributes.readOnly=false] Readonly
  * @typedef Mountpoint
  */
 
@@ -60,8 +60,8 @@ export default class Filesystem extends EventEmitter {
    * Create filesystem manager
    *
    * @param {Core} core Core reference
-   * @param {Object} [options] Options
-   * @param {Map<String,Adapter>} [options.adapters] Adapter registry
+   * @param {object} [options] Options
+   * @param {Map<string,Adapter>} [options.adapters] Adapter registry
    * @param {Mountpoint[]} [options.mounts] Mountpoints
    */
   constructor(core, options = {}) {
@@ -80,7 +80,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * Adapter registry
-     * @type {Map<String, Adapter>}
+     * @type {Map<string, Adapter>}
      */
     this.adapters = Object.assign({}, {
       system: systemAdapter,
@@ -101,7 +101,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * A wrapper for VFS method requests
-     * @type {Map<String, Function>}
+     * @type {Map<string, Function>}
      */
     this.proxy = Object.keys(VFS).reduce((result, method) => {
       return Object.assign({
@@ -145,7 +145,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Mount given filesystem
-   * @param {String} name Filesystem name
+   * @param {string} name Filesystem name
    * @throws {Error} On invalid name or if already mounted
    */
   mount(name) {
@@ -154,7 +154,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Unmount given filesystem
-   * @param {String} name Filesystem name
+   * @param {string} name Filesystem name
    * @throws {Error} On invalid name or if already unmounted
    */
   unmount(name) {
@@ -166,7 +166,7 @@ export default class Filesystem extends EventEmitter {
    *
    * @param {Mountpoint} mountpoint The mountpoint
    * @param {boolean} [unmount=false] If action is unmounting
-   * @return {Promise<Boolean, Error>}
+   * @return {Promise<boolean, Error>}
    */
   _mountpointAction(mountpoint, unmount = false) {
     const eventName = unmount ? 'unmounted' : 'mounted';
@@ -190,7 +190,7 @@ export default class Filesystem extends EventEmitter {
    *
    * @param {string} name Mountpoint name
    * @param {boolean} [unmount=false] If action is unmounting
-   * @return {Promise<Boolean, Error>}
+   * @return {Promise<boolean, Error>}
    */
   _mountAction(name, unmount) {
     return Promise.resolve(this.mounts.find(m => m.name === name))
@@ -220,7 +220,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Perform a VFS method request
-   * @param {String} method VFS method name
+   * @param {string} method VFS method name
    * @param {*} ...args Arguments
    * @return {*}
    */
@@ -305,7 +305,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets all mountpoints
-   * @return {Object[]}
+   * @return {object[]}
    */
   getMounts(all = false) {
     const theme = this.core.make('osjs/theme');

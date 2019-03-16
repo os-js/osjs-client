@@ -38,10 +38,10 @@ export default class Auth {
 
   /**
    * @param {Core} core OS.js Core instance reference
-   * @param {Object} [args.ui] Options for default login UI adapter
+   * @param {object} [args.ui] Options for default login UI adapter
    * @param {Function} [args.adapter] Custom login adapter
    * @param {Function} [args.login] Custom UI
-   * @param {Object} [args.config] Configuration object to be passed on
+   * @param {object} [args.config] Configuration object to be passed on
    */
   constructor(core, args = {}) {
     const defaultUi = core.config('auth.ui', {});
@@ -129,7 +129,7 @@ export default class Auth {
 
   /**
    * Performs a login
-   * @param {Object} values Form values as JSON
+   * @param {object} values Form values as JSON
    */
   async login(values) {
     this.ui.emit('login:start');

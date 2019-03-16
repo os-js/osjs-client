@@ -54,36 +54,36 @@ import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Testing_media_queries
  *
- * @property {String[]} [classNames=[]] A list of class names
- * @property {Boolean} [ontop=false] If always on top
- * @property {String} [gravity] Gravity (center/top/left/right/bottom or any combination)
- * @property {Boolean} [resizable=true] If resizable
- * @property {Boolean} [focusable=true] If focusable
- * @property {Boolean} [maximizable=true] If window if maximizable
- * @property {Boolean} [minimizable=true] If minimizable
- * @property {Boolean} [moveable=true] If moveable
- * @property {Boolean} [closeable=true] If closeable
- * @property {Boolean} [header=true] Show header
- * @property {Boolean} [controls=true] Show controls
- * @property {String} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
+ * @property {string[]} [classNames=[]] A list of class names
+ * @property {boolean} [ontop=false] If always on top
+ * @property {string} [gravity] Gravity (center/top/left/right/bottom or any combination)
+ * @property {boolean} [resizable=true] If resizable
+ * @property {boolean} [focusable=true] If focusable
+ * @property {boolean} [maximizable=true] If window if maximizable
+ * @property {boolean} [minimizable=true] If minimizable
+ * @property {boolean} [moveable=true] If moveable
+ * @property {boolean} [closeable=true] If closeable
+ * @property {boolean} [header=true] Show header
+ * @property {boolean} [controls=true] Show controls
+ * @property {string} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
  * @property {boolean} [clamp=true] Clamp the window position upon creation
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
- * @property {Map<String,String>} [mediaQueries] A map of matchMedia to name
+ * @property {Map<string,string>} [mediaQueries] A map of matchMedia to name
  * @typedef WindowAttributes
  */
 
 /**
  * Window state definition
- * @property {String} title Title
- * @property {String} icon Icon
- * @property {Boolean} [moving=false] If moving
- * @property {Boolean} [resizing=false] If resizing
- * @property {Boolean} [loading=false] If loading
- * @property {Boolean} [focused=false] If focused
- * @property {Boolean} [maximized=false] If maximized
- * @property {Boolean} [mimimized=false] If mimimized
- * @property {Boolean} [modal=false] If modal to the parent
+ * @property {string} title Title
+ * @property {string} icon Icon
+ * @property {boolean} [moving=false] If moving
+ * @property {boolean} [resizing=false] If resizing
+ * @property {boolean} [loading=false] If loading
+ * @property {boolean} [focused=false] If focused
+ * @property {boolean} [maximized=false] If maximized
+ * @property {boolean} [mimimized=false] If mimimized
+ * @property {boolean} [modal=false] If modal to the parent
  * @property {number} [zIndex=1] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension
@@ -298,13 +298,13 @@ export default class Window extends EventEmitter {
    * Create window
    *
    * @param {Core} core Core reference
-   * @param {Object} options Options
-   * @param {String} options.id Window Id (not globaly unique)
-   * @param {String} [options.title] Window Title
-   * @param {String} [options.icon] Window Icon
+   * @param {object} options Options
+   * @param {string} options.id Window Id (not globaly unique)
+   * @param {string} [options.title] Window Title
+   * @param {string} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
-   * @param {String|Function} [options.template] The Window HTML template (or function with signature (el, win) for programatic construction)
-   * @param {WindowPosition|String} [options.position] Window position
+   * @param {string|Function} [options.template] The Window HTML template (or function with signature (el, win) for programatic construction)
+   * @param {WindowPosition|string} [options.position] Window position
    * @param {WindowDimension} [options.dimension] Window dimension
    * @param {WindowAttributes} [options.attributes] Apply Window attributes
    * @param {WindowState} [options.state] Apply Window state
@@ -332,7 +332,7 @@ export default class Window extends EventEmitter {
 
     /**
      * The Window ID
-     * @type {String}
+     * @type {string}
      */
     this.id = options.id;
 
@@ -362,13 +362,13 @@ export default class Window extends EventEmitter {
 
     /**
      * The window destruction state
-     * @type {Boolean}
+     * @type {boolean}
      */
     this.destroyed = false;
 
     /**
      * The window rendered state
-     * @type {Boolean}
+     * @type {boolean}
      */
     this.rendered = false;
 
@@ -386,51 +386,51 @@ export default class Window extends EventEmitter {
 
     /**
      * The window container
-     * @type {Node}
+     * @type {Element}
      */
     this.$element = document.createElement('div');
 
     /**
      * The content container
-     * @type {Node}
+     * @type {Element}
      */
     this.$content = null;
 
     /**
      * The header container
-     * @type {Node}
+     * @type {Element}
      */
     this.$header = null;
 
     /**
      * The icon container
-     * @type {Node}
+     * @type {Element}
      */
     this.$icon = null;
 
     /**
      * The title container
-     * @type {Node}
+     * @type {Element}
      */
     this.$title = null;
 
     /**
      * Internal variable to signal not to use default position
      * given by user (used for restore)
-     * @type {Boolean}
+     * @type {boolean}
      */
     this._preventDefaultPosition = false;
 
     /**
      * Internal timeout reference used for triggering the loading
      * overlay.
-     * @type {Boolean}
+     * @type {boolean}
      */
     this._loadingDebounce = null;
 
     /**
      * The window template
-     * @type {String|Function}
+     * @type {string|Function}
      */
     this._template = options.template;
   }
@@ -645,7 +645,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Focus the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   focus() {
     if (!this.state.minimized) {
@@ -667,7 +667,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Blur (un-focus) the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   blur() {
     // Forces blur-ing of browser input element belonging to this window
@@ -681,7 +681,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Minimize (hide) the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   minimize() {
     if (this.attributes.minimizable) {
@@ -697,7 +697,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Raise (un-minimize) the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   raise() {
     return this._toggleState('minimized', false, 'raise');
@@ -705,7 +705,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Maximize the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   maximize() {
     if (this.attributes.maximizable) {
@@ -721,7 +721,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Restore (un-maximize) the window
-   * @return {Boolean}
+   * @return {boolean}
    */
   restore() {
     if (this._toggleState('maximized', false, 'restore')) {
@@ -806,7 +806,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Set the Window icon
-   * @param {String} uri Icon URI
+   * @param {string} uri Icon URI
    */
   setIcon(uri) {
     this.state.icon = uri;
@@ -816,7 +816,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Set the Window title
-   * @param {String} title Title
+   * @param {string} title Title
    */
   setTitle(title) {
     this.state.title = title || '';
@@ -842,7 +842,7 @@ export default class Window extends EventEmitter {
   /**
    * Set the Window position
    * @param {WindowPosition} position The position
-   * @param {Boolean} [preventDefault=false] Prevents any future position setting in init procedure
+   * @param {boolean} [preventDefault=false] Prevents any future position setting in init procedure
    */
   setPosition(position, preventDefault = false) {
     const {left, top} = Object.assign({}, this.state.position, position || {});
@@ -883,9 +883,9 @@ export default class Window extends EventEmitter {
 
   /**
    * Set a state by value
-   * @param {String} name State name
+   * @param {string} name State name
    * @param {*} value State value
-   * @param {Boolean} [update=true] Update the DOM
+   * @param {boolean} [update=true] Update the DOM
    * @see {WindowState}
    */
   setState(name, value, update = true) {
@@ -907,7 +907,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Gravitates window towards a certain area
-   * @param {String} gravity Gravity
+   * @param {string} gravity Gravity
    */
   gravitate(gravity) {
     if (!this.core.has('osjs/desktop')) {
@@ -989,9 +989,9 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal method for setting state
-   * @param {String} name State name
+   * @param {string} name State name
    * @param {*} value State value
-   * @param {Boolean} [update=true] Update the DOM
+   * @param {boolean} [update=true] Update the DOM
    */
   _setState(name, value, update = true) {
     const oldValue = this.state[name];
@@ -1008,10 +1008,10 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal method for toggling state
-   * @param {String} name State name
-   * @param {*} value State value
-   * @param {String} eventName Name of event to emit
-   * @param {Boolean} [update=true] Update the DOM
+   * @param {string} name State name
+   * @param {any} value State value
+   * @param {string} eventName Name of event to emit
+   * @param {boolean} [update=true] Update the DOM
    */
   _toggleState(name, value, eventName, update = true) {
     if (this.state[name] === value) {

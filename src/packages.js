@@ -40,15 +40,15 @@ import Preloader from './utils/preloader';
 
 /**
  * A package metadata
- * @property {String} name The package name
- * @property {String} [category] Package category
- * @property {String} [icon] Package icon
- * @property {Boolean} [singleton] If only one instance allowed
- * @property {Boolean} [autostart] Autostart on boot
- * @property {Boolean} [hidden] Hide from launch menus etc.
- * @property {String} [server] Server script filename
- * @property {String[]} [groups] Only available for users in this group
- * @property {String[]} [files] Files to preload
+ * @property {string} name The package name
+ * @property {string} [category] Package category
+ * @property {string} [icon] Package icon
+ * @property {boolean} [singleton] If only one instance allowed
+ * @property {boolean} [autostart] Autostart on boot
+ * @property {boolean} [hidden] Hide from launch menus etc.
+ * @property {string} [server] Server script filename
+ * @property {string[]} [groups] Only available for users in this group
+ * @property {string[]} [files] Files to preload
  * @property {Map<String, String>} title A map of locales and titles
  * @property {Map<String, String>} description A map of locales and titles
  * @typedef PackageMetadata
@@ -88,7 +88,7 @@ export default class Packages {
     /**
      * A list of running application names
      * @desc Mainly used for singleton awareness
-     * @type {String[]}
+     * @type {string[]}
      */
     this.running = [];
 
@@ -142,10 +142,10 @@ export default class Packages {
   /**
    * Launches a (application) package
    *
-   * @param {String} name Package name
-   * @param {Object} [args] Launch arguments
-   * @param {Object} [options] Launch options
-   * @param {Boolean} [options.forcePreload=false] Force preload reloading
+   * @param {string} name Package name
+   * @param {object} [args] Launch arguments
+   * @param {object} [options] Launch options
+   * @param {boolean} [options.forcePreload=false] Force preload reloading
    * @see PackageServiceProvider
    * @throws {Error}
    * @return {Promise<Application, Error>}
@@ -169,10 +169,10 @@ export default class Packages {
   /**
    * Launches an application package
    *
-   * @param {String} name Application package name
+   * @param {string} name Application package name
    * @param {Metadata} metadata Application metadata
-   * @param {Array} args Launch arguments
-   * @param {Object} options Launch options
+   * @param {Map<string, *>} args Launch arguments
+   * @param {object} options Launch options
    */
   _launchApplication(name, metadata, args, options) {
     let signaled = false;
@@ -214,10 +214,10 @@ export default class Packages {
   /**
    * Launches a (theme) package
    *
-   * @param {String} name Package name
-   * @param {String} type Package type
+   * @param {string} name Package name
+   * @param {string} type Package type
    * @throws {Error}
-   * @return {Promise<Object, Error>}
+   * @return {Promise<object, Error>}
    */
   _launchTheme(name, type) {
     const _ = this.core.make('osjs/locale').translate;
@@ -246,9 +246,9 @@ export default class Packages {
   /**
    * Wrapper for launching a (application) package
    *
-   * @param {String} name Package name
-   * @param {Object} args Launch arguments
-   * @param {Object} options Launch options
+   * @param {string} name Package name
+   * @param {object} args Launch arguments
+   * @param {object} options Launch options
    * @return {Application}
    */
   _launch(name, metadata, args, options) {
@@ -336,7 +336,7 @@ export default class Packages {
   /**
    * Registers a package
    *
-   * @param {String} name Package name
+   * @param {string} name Package name
    * @param {Function} callback Callback function to construct application instance
    * @throws {Error}
    */

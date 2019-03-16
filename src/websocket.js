@@ -43,8 +43,8 @@ export default class Websocket extends EventEmitter {
 
   /**
    * Create a new Websocket
-   * @param {String} uri Connection URI
-   * @param {Object} options Websocket options
+   * @param {string} uri Connection URI
+   * @param {object} options Websocket options
    */
   constructor(name, uri, options = {}) {
     console.debug('Websocket::constructor()', name, uri);

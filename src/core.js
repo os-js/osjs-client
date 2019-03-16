@@ -45,8 +45,8 @@ export default class Core extends CoreBase {
 
   /**
    * Create core instance
-   * @param {Object} config Configuration tree
-   * @param {Object} [options] Options
+   * @param {object} config Configuration tree
+   * @param {object} [options] Options
    * @param {Element} [options.root] The root DOM element for elements
    * @param {Element} [options.resourceRoot] The root DOM element for resources
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
@@ -336,12 +336,12 @@ export default class Core extends CoreBase {
    * @desc If you give a options.type, the URL will be resolved
    * to the correct resource.
    *
-   * @param {String} [endpoint=/] Endpoint
-   * @param {Object} [options] Additional options for resolving url
-   * @param {Boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
+   * @param {string} [endpoint=/] Endpoint
+   * @param {object} [options] Additional options for resolving url
+   * @param {boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
    * @param {string} [options.type] Optional URL type (websocket)
    * @param {PackageMetadata} [metadata] A package metadata
-   * @return {String}
+   * @return {string}
    */
   url(endpoint = '/', options = {}, metadata = {}) {
     return this.urlResolver(endpoint, options, metadata);
@@ -353,9 +353,9 @@ export default class Core extends CoreBase {
    *
    * @desc This is a wrapper for making a 'fetch' request with some helpers
    * and integration with OS.js
-   * @param {String} url The endpoint
+   * @param {string} url The endpoint
    * @param {Options} [options] fetch options
-   * @param {String} [type] Request / Response type
+   * @param {string} [type] Request / Response type
    * @return {*}
    */
   request(url, options = {}, type = null) {
@@ -384,9 +384,9 @@ export default class Core extends CoreBase {
   /**
    * Create an application from a package
    *
-   * @param {String} name Package name
-   * @param {Object} [args] Launch arguments
-   * @param {Object} [options] Launch options
+   * @param {string} name Package name
+   * @param {object} [args] Launch arguments
+   * @param {object} [options] Launch options
    * @see {Packages}
    * @return {Application}
    */
@@ -398,8 +398,8 @@ export default class Core extends CoreBase {
 
   /**
    * Spawns an application based on the file given
-   * @param {Object} file A file object
-   * @param {Object} [options] Options
+   * @param {object} file A file object
+   * @param {object} [options] Options
    * @return {Boolean|Application}
    */
   open(file, options = {}) {
@@ -481,7 +481,7 @@ export default class Core extends CoreBase {
 
   /**
    * Set the internal fetch/request options
-   * @param {Object} options Request options
+   * @param {object} options Request options
    */
   setRequestOptions(options) {
     this.requestOptions = Object.assign({}, options);

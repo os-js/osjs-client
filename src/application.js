@@ -48,13 +48,13 @@ export default class Application extends EventEmitter {
    * Create application
    *
    * @param {Core} core Core reference
-   * @param {Object} data Application data
-   * @param {Map<String, *>} data.args Launch arguments
-   * @param {Object} [data.options] Options
-   * @param {Object} [data.options.settings] Initial settings
-   * @param {Object} [data.options.restore] Restore data
-   * @param {Boolean} [data.options.windowAutoFocus=true] Auto-focus first created window
-   * @param {Boolean} [data.options.sessionable=true] Allow session storage
+   * @param {object} data Application data
+   * @param {Map<string, *>} data.args Launch arguments
+   * @param {object} [data.options] Options
+   * @param {object} [data.options.settings] Initial settings
+   * @param {object} [data.options.restore] Restore data
+   * @param {boolean} [data.options.windowAutoFocus=true] Auto-focus first created window
+   * @param {boolean} [data.options.sessionable=true] Allow session storage
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
@@ -90,13 +90,13 @@ export default class Application extends EventEmitter {
 
     /**
      * Application arguments
-     * @type {Map<String, *>}
+     * @type {Map<string, *>}
      */
     this.args = data.args;
 
     /**
      * Application options
-     * @type {Object}
+     * @type {object}
      */
     this.options = Object.assign({
       sessionable: true,
@@ -123,19 +123,19 @@ export default class Application extends EventEmitter {
 
     /**
      * Options for internal fetch/requests
-     * @type {Object}
+     * @type {object}
      */
     this.requestOptions = {};
 
     /**
      * The application destruction state
-     * @type {Boolean}
+     * @type {boolean}
      */
     this.destroyed = false;
 
     /**
      * Application settings
-     * @type {Object}
+     * @type {object}
      */
     this.settings = core.make('osjs/settings')
       .get(getSettingsKey(this.metadata), null, defaultSettings);
@@ -213,9 +213,9 @@ export default class Application extends EventEmitter {
    *
    * @desc If given path is an URI it will just return itself.
    *
-   * @param {String} path The path
-   * @param {Object} [options] Options for url() in core
-   * @return {String} A complete URI
+   * @param {string} path The path
+   * @param {object} [options] Options for url() in core
+   * @return {string} A complete URI
    */
   resource(path = '/', options = {}) {
     return this.core.url(path, options, this.metadata);
@@ -224,9 +224,9 @@ export default class Application extends EventEmitter {
   /**
    * Performs a request to the OS.js server with the application
    * as the endpoint.
-   * @param {String} [path=/] Append this to endpoint
+   * @param {string} [path=/] Append this to endpoint
    * @param {Options} [options] fetch options
-   * @param {String} [type='json'] Request / Response type
+   * @param {string} [type='json'] Request / Response type
    * @return {Promise<*, Error>} ArrayBuffer or JSON
    */
   request(path = '/', options = {}, type = 'json') {
@@ -237,8 +237,8 @@ export default class Application extends EventEmitter {
 
   /**
    * Creates a new Websocket
-   * @param {String} [path=/socket] Append this to endpoint
-   * @param {Object} [options] Connection options
+   * @param {string} [path=/socket] Append this to endpoint
+   * @param {object} [options] Connection options
    * @return {Websocket}
    */
   socket(path = '/socket', options = {}) {
@@ -272,8 +272,8 @@ export default class Application extends EventEmitter {
 
   /**
    * Creates a new Worker
-   * @param {String} filename Worker filename
-   * @param {Object} [options] Worker options
+   * @param {string} filename Worker filename
+   * @param {object} [options] Worker options
    * @return {Worker}
    */
   worker(filename, options = {}) {
@@ -289,7 +289,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Create a new window belonging to this application
-   * @param {Object} options Window options
+   * @param {object} options Window options
    * @see {Window}
    * @return {Window}
    */
@@ -351,7 +351,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Gets a snapshot of the application session
-   * @return {Object}
+   * @return {object}
    */
   getSession() {
     const session = {

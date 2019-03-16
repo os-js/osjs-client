@@ -30,8 +30,8 @@
 
 /**
  * Get parent directory
- * @param {String} path Directory
- * @return {String} Parent directory
+ * @param {string} path Directory
+ * @return {string} Parent directory
  */
 export const parentDirectory = path => path
   .replace(/\/$/, '')
@@ -42,8 +42,8 @@ export const parentDirectory = path => path
 
 /**
  * Joins paths
- * @param {String[]} args paths
- * @return {String}
+ * @param {string[]} args paths
+ * @return {string}
  */
 export const pathJoin = (...args) => args
   .reduce((o, a, i) => o.concat([i > 0 ? a.replace(/\/$/, '') : a]), [])
@@ -83,7 +83,7 @@ const sortMap = {
 
 /**
  * Creates "special" directory entries
- * @param {String} path The path to the readdir root
+ * @param {string} path The path to the readdir root
  * @return {Object[]}
  */
 const createSpecials = path => {
@@ -109,9 +109,9 @@ const createSpecials = path => {
 
 /**
  * Creates a FileReader (promisified)
- * @param {String} method The method to call
+ * @param {string} method The method to call
  * @param {ArrayBuffer} ab The ArrayBuffer
- * @param {String} mime The MIME type
+ * @param {string} mime The MIME type
  * @return {Promise}
  */
 const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => {
@@ -126,7 +126,7 @@ const createFileReader = (method, ab, mime) => new Promise((resolve, reject) => 
  * Converts a number (bytez) into human-readable string
  * @param {Number} bytes Input
  * @param {Boolean} [si=false] Use SI units
- * @return {String}
+ * @return {string}
  */
 export const humanFileSize = (bytes, si = false) => {
   if (isNaN(bytes) || typeof bytes !== 'number') {
@@ -153,13 +153,13 @@ export const humanFileSize = (bytes, si = false) => {
 
 /**
  * Transforms a readdir result
- * @param {Object} root The path to the readdir root
+ * @param {object} root The path to the readdir root
  * @param Object[] files An array of readdir results
- * @param {Object} options Options
+ * @param {object} options Options
  * @param {Boolean} [options.showHiddenFiles=true] Show hidden files
  * @param {Function} [options.filter] A filter
- * @param {String} [options.sortBy='filename'] Sort by this attribute
- * @param {String} [options.sortDir='asc'] Sort in this direction
+ * @param {string} [options.sortBy='filename'] Sort by this attribute
+ * @param {string} [options.sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
 export const transformReaddir = ({path}, files, options = {}) => {
@@ -216,9 +216,9 @@ export const transformReaddir = ({path}, files, options = {}) => {
 /**
  * Transform an ArrayBuffer
  * @param {ArrayBuffer} ab The ArrayBuffer
- * @param {String} mime The MIME type
- * @param {String} type Transform to this type
- * @return {DOMString|String|Blob|ArrayBuffer}
+ * @param {string} mime The MIME type
+ * @param {string} type Transform to this type
+ * @return {DOMString|string|Blob|ArrayBuffer}
  */
 export const transformArrayBuffer = (ab, mime, type) => {
   if (type === 'string') {
@@ -234,8 +234,8 @@ export const transformArrayBuffer = (ab, mime, type) => {
 
 /**
  * Gets an icon from file stat
- * @param {Object} file The file stat object
- * @return {String|Object}
+ * @param {object} file The file stat object
+ * @return {string|object}
  */
 export const getFileIcon = map => {
   const find = file => {
@@ -256,8 +256,8 @@ export const getFileIcon = map => {
 
 /**
  * Creates a file iter for scandir
- * @param {Object} stat file stat
- * @return {Object}
+ * @param {object} stat file stat
+ * @return {object}
  */
 export const createFileIter = stat => Object.assign({
   isDirectory: false,

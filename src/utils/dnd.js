@@ -35,7 +35,7 @@
  * @param {Function} [options.ondragstart] Callback to event (ev) => {}
  * @param {Function} [options.ondragend] Callback to event (ev) => {}
  * @param {Function} [options.setDragImage] Set custom drag image (browser dependent)
- * @return {Object} An object with a destructor
+ * @return {object} An object with a destructor
  */
 export const draggable = (el, options = {}) => {
   const {type, effect, data, ondragstart, ondragend, setDragImage} = Object.assign({}, {
@@ -106,7 +106,7 @@ export const draggable = (el, options = {}) => {
  * @param {Function} [options.ondragover] Callback to event (ev) => {}
  * @param {Function} [options.ondragleave] Callback to event (ev) => {}
  * @param {Function} [options.ondrop] Callback to event (ev, data, files) => {}
- * @return {Object} An object with a destructor
+ * @return {object} An object with a destructor
  */
 export const droppable = (el, options = {}) => {
   const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = Object.assign({}, {

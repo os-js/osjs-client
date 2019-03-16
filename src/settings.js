@@ -60,13 +60,13 @@ export default class Settings {
 
     /**
      * Internal timeout reference used for debouncing
-     * @type {Object}
+     * @type {object}
      */
     this.debounce = null;
 
     /**
      * The settings tree
-     * @type {Object}
+     * @type {Map<string, any>}
      */
     this.settings = {};
 
@@ -131,8 +131,8 @@ export default class Settings {
    * Gets a settings entry by key
    *
    * @desc Gets a setting (from cache)
-   * @param {String} [ns] The namespace
-   * @param {String} [key] The key to get the value from
+   * @param {string} [ns] The namespace
+   * @param {string} [key] The key to get the value from
    * @param {*} [defaultValue] If result is undefined, return this instead
    * @return {*}
    */
@@ -153,8 +153,8 @@ export default class Settings {
   /**
    * Sets a settings entry by root key.
    * @desc Sets a setting, but does not save.
-   * @param {String} ns The namespace
-   * @param {String} [key] The key to set
+   * @param {string} ns The namespace
+   * @param {string} [key] The key to set
    * @param {*} value The value to set
    * @return {Settings} This
    */
@@ -185,7 +185,7 @@ export default class Settings {
 
   /**
    * Clears a namespace by root key
-   * @param {String} ns The namespace
+   * @param {string} ns The namespace
    * @return {Promise<boolean, Error>}
    */
   clear(ns) {

@@ -398,7 +398,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Applies settings and updates desktop
-   * @param {Object} [settings] Use this set instead of loading from settings
+   * @param {object} [settings] Use this set instead of loading from settings
    */
   applySettings(settings) {
     const lockSettings = this.core.config('desktop.lock');
@@ -644,7 +644,7 @@ export default class Desktop extends EventEmitter {
    * Gets the rectangle of available space
    *
    * @desc This is based on any panels etc taking up space
-   * @return {Object}
+   * @return {object}
    */
   getRect() {
     const root = this.core.$root;

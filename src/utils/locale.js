@@ -51,7 +51,7 @@ const getUserLocale = (core, key, defaultLocale) => core.make('osjs/settings')
  * Gest the set localization
  * @param {Core} core OS.js Core IoC
  * @param {string} key Settings key (locales.*)
- * @return {Object} An object with defaultLocale and userLocale
+ * @return {object} An object with defaultLocale and userLocale
  */
 export const getLocale = (core, key) => {
   const defaultLocale = getDefaultLocale(core, key);
@@ -66,7 +66,7 @@ export const getLocale = (core, key) => {
  * if the given locale names were not found.
  *
  * @private
- * @param {Object}  list      The tree of translations
+ * @param {object}  list      The tree of translations
  * @param {string}  ul        User locale name
  * @param {string}  dl        Default locale name
  * @param {string}  k         The key to translate from tree
@@ -84,7 +84,7 @@ const getFromList = (list, ul, dl, k) => {
  *  translate({en_EN: {foo: 'Hello {0}'}}, 'nb_NO', 'en_EN', 'foo', 'World') => 'Hello World'
  *
  * @private
- * @param {Object}  list      The tree of translations
+ * @param {object}  list      The tree of translations
  * @param {string}  ul        User locale name
  * @param {string}  dl        Default locale name
  * @param {string}  k         The key to translate from tree
@@ -106,7 +106,7 @@ const translate = (list, ul, dl, k, ...args) => {
  * @example
  *  translatableFlat({en_EN: 'Hello World'}); // => 'Hello World'
  *
- * @param {Object} list The tree of translations
+ * @param {object} list The tree of translations
  * @param {string} defaultValue Default value if none found
  * @return {string} The translated string
  */

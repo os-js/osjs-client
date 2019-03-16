@@ -57,7 +57,7 @@ export class BasicApplication extends EventEmitter {
    * @param {Core} core OS.js Core API
    * @param {Application} proc The application process
    * @param {Window} win The main application window
-   * @param {Object} options Basic application options
+   * @param {object} options Basic application options
    * @param {string[]} [options.mimeTypes] What MIME types to support (all/fallback)
    * @param {string[]} [options.loadMimeTypes] What MIME types to support on load
    * @param {string[]} [options.saveMimeTypes] What MIME types to support on save
@@ -101,7 +101,7 @@ export class BasicApplication extends EventEmitter {
   /**
    * Gets options for a dialog
    * @param {string} type Dialog type
-   * @return {Object}
+   * @return {object}
    */
   getDialogOptions(type, options = {}) {
     const {
@@ -156,7 +156,7 @@ export class BasicApplication extends EventEmitter {
    * Creates a new dialog of a type
    * @param {string} type Dialog type
    * @param {Function} cb Callback
-   * @param {Object} [options] Override options
+   * @param {object} [options] Override options
    */
   createDialog(type, cb, options = {}) {
     const [args, opts] = this.getDialogOptions(type, options);
@@ -171,7 +171,7 @@ export class BasicApplication extends EventEmitter {
   /**
    * Opens given file
    * @desc Does not do any actual VFS operation
-   * @param {Object} file A file object
+   * @param {object} file A file object
    */
   open(item) {
     this.proc.args.file = Object.assign({}, item);
@@ -184,7 +184,7 @@ export class BasicApplication extends EventEmitter {
   /**
    * Saves given file
    * @desc Does not do any actual VFS operation
-   * @param {Object} file A file object
+   * @param {object} file A file object
    */
   save(item) {
     this.proc.args.file = Object.assign({}, item);

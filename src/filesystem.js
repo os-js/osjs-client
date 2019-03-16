@@ -98,6 +98,7 @@ export default class Filesystem extends EventEmitter {
      * @type {Object}
      */
     this.options = {};
+
     /**
      * A wrapper for VFS method requests
      * @type {Map<String, Function>}

@@ -68,8 +68,7 @@ export default class VFSServiceProvider extends ServiceProvider {
       icon: icon,
       mountpoints: (...args) => this.fs.getMounts(...args),
       mount: (...args) => this.fs.mount(...args),
-      unmount: (...args) => this.fs.unmount(...args),
-      register: (...args) => this.fs.register(...args)
+      unmount: (...args) => this.fs.unmount(...args)
     }));
 
     return this.fs.mountAll(false);

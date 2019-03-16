@@ -51,9 +51,9 @@ export default class Preloader {
 
   /**
    * Loads all resources required for a package
-   * @param {Array} list A list of resources
-   * @param {Boolean} [force=false] Force loading even though previously cached
-   * @return {String[]} A list of failed resources
+   * @param {string[]} list A list of resources
+   * @param {boolean} [force=false] Force loading even though previously cached
+   * @return {Promise<string[]>} A list of failed resources
    */
   load(list, force = false) {
     const cached = entry => force

@@ -269,7 +269,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       getPackages: (...args) => this.pm.getPackages(...args),
       register: (...args) => this.pm.register(...args),
       launch: (...args) => this.pm.launch(...args),
-      preload: (...args) => this.pm.preload(...args),
       running: () => this.pm.running
     }));
 

@@ -30,7 +30,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/event-emitter": "^1.0.6"
+    "@osjs/event-emitter": "^1.0.7"
   },
   "author": "Anders Evenrud <andersevenrud@gmail.com>",
   "license": "BSD-2-Clause",
@@ -39,17 +39,17 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/runtime": "^7.3.1",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/runtime": "^7.3.4",
     "@osjs/common": "^3.0.3",
     "babel-loader": "^8.0.5",
-    "css-loader": "^2.1.0",
+    "css-loader": "^2.1.1",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
     "deepmerge": "^3.2.0",
-    "eslint": "^5.14.0",
+    "eslint": "^5.15.2",
     "file-loader": "^3.0.1",
     "hyperapp": "^1.2.9",
     "mini-css-extract-plugin": "^0.5.0",
@@ -59,8 +59,8 @@
     "simplejsonconf": "^2.0.5",
     "stylelint": "^9.10.1",
     "stylelint-config-standard": "^18.2.0",
-    "stylelint-scss": "^3.5.3",
-    "webpack": "^4.29.4",
-    "webpack-cli": "^3.2.3"
+    "stylelint-scss": "^3.5.4",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   }
 }

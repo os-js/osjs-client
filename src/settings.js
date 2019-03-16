@@ -30,44 +30,8 @@
 
 import merge from 'deepmerge';
 import simplejsonconf from 'simplejsonconf';
-
-const serverSettings = core => ({
-  save: settings => core.request(core.url('/settings'), {
-    method: 'post',
-    body: settings
-  }, 'json'),
-
-  load: () => core.request(core.url('/settings'), {
-    method: 'get'
-  }, 'json')
-});
-
-const localStorageSettings = core => ({
-  clear: ns => {
-    localStorage.removeItem(ns);
-
-    return Promise.resolve(true);
-  },
-
-  save: settings => {
-    Object.keys(settings).forEach((k) => {
-      localStorage.setItem(k, JSON.stringify(settings[k]));
-    });
-
-    return Promise.resolve(true);
-  },
-
-  load: () => Promise.resolve(Object.keys(localStorage).reduce((o, v) => {
-    let value = localStorage.getItem(v);
-    try {
-      value = JSON.parse(value);
-    } catch (e) {
-      console.warn('localStorageAdapter parse error', e);
-    }
-
-    return Object.assign(o, {[v]: value});
-  }, {}))
-});
+import localStorageSettings from './adapters/settings/localstorage';
+import serverSettings from './adapters/settings/server';
 
 const defaultAdapters = {
   server: serverSettings,

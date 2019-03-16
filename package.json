@@ -4,12 +4,14 @@
   "description": "OS.js v3 client",
   "main": "dist/main.js",
   "style": "dist/main.css",
+  "types": "index.d.ts",
   "files": [
     "dist/main.js",
     "dist/main.js.map",
     "dist/main.css",
     "dist/main.css.map",
     "dist/*.png",
+    "index.d.ts",
     "README.md",
     "LICENSE"
   ],

@@ -19,6 +19,24 @@ This is the main client core component of OS.js.
 
 Contains base services, virtual filesystem, panels and other core services required for operation.
 
+## Usage
+
+### ES, Webpack, Node, etc.
+
+```
+import { Core /*, ... */ } from '@osjs/client';
+```
+
+### UMD
+
+```
+<script src="https://cdn.jsdelivr.net/npm/@osjs/gui/dist/main.js"></script>
+```
+
+```
+const { Core /*, ... */ } = osjsClient;
+```
+
 ## Contribution
 
 * **Become a [Patreon](https://www.patreon.com/user?u=2978551&ty=h&u=2978551)**

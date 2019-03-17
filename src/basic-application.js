@@ -192,6 +192,7 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Creates a new save dialog
+   * @param {object} [options] Dialog options
    */
   createSaveDialog(options = {}) {
     this.createDialog('save', item => this.save(item), options);
@@ -199,6 +200,7 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Creates a new load dialog
+   * @param {object} [options] Dialog options
    */
   createOpenDialog(options = {}) {
     this.createDialog('open', item => this.open(item), options);
@@ -206,6 +208,8 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Sets file from open/save action
+   * @param {object} item File
+   * @param {string} eventName Event to fire
    */
   _setFile(item, eventName) {
     this.proc.args.file = Object.assign({}, item);
@@ -215,6 +219,8 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Creates the window title
+   * @param {string} prefix Title prefix
+   * @return {string}
    */
   _createTitle(prefix) {
     const title = this.proc.args.file

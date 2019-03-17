@@ -30,7 +30,11 @@
 
 const localStorageSettings = core => ({
   clear: ns => {
-    localStorage.removeItem(ns);
+    if (ns) {
+      localStorage.removeItem(ns);
+    } else {
+      localStorage.clear();
+    }
 
     return Promise.resolve(true);
   },

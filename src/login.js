@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import {EventEmitter} from '@osjs/event-emitter';
-import createUI from './login-ui';
+import createUI from './adapters/ui/login';
 
 
 /**

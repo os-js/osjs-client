@@ -28,7 +28,7 @@
  * @licence Simplified BSD License
  */
 import Window from './window';
-import createUI from './search-ui';
+import createUI from './adapters/ui/search';
 
 /**
  * Search Service

@@ -5,6 +5,25 @@ import * as config from '../src/config';
 import merge from 'deepmerge';
 import {ServiceProvider} from '@osjs/common';
 
+class MockDesktopServiceProvider extends ServiceProvider {
+  provides() {
+    return ['osjs/desktop'];
+  }
+
+  init() {
+    this.core.singleton('osjs/desktop', () => ({
+      getRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: 800,
+          height: 600
+        };
+      }
+    }));
+  }
+}
+
 export const createInstance = () => {
   const core = new Core(merge(config, {
     settings: {
@@ -26,6 +45,7 @@ export const createInstance = () => {
   core.register(CoreServiceProvider);
   core.register(SettingsServiceProvider, {before: true});
   core.register(ServiceProvider);
+  core.register(MockDesktopServiceProvider);
 
   return core.boot()
     .then(() => {

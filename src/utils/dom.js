@@ -203,6 +203,18 @@ export const supportedMedia = () => {
 };
 
 /**
+ * Gets if CSS transitions is supported
+ * @return {boolean}
+ */
+export const supportsTransition = (function() {
+  const el = document.createElement('div');
+  const tests = ['WebkitTransition', 'MozTransition', 'OTransition', 'transition'];
+  const supported = tests.some(name => typeof el.style[name] !== 'undefined');
+
+  return () => supported;
+})();
+
+/**
  * Creates a native notification
  * @param {object} options Notification options
  * @param {Function} [onclick] Callback on click

@@ -29,7 +29,7 @@
  */
 import {EventEmitter} from '@osjs/event-emitter';
 import {droppable} from './utils/dnd';
-import {escapeHtml, createCssText, getActiveElement} from './utils/dom';
+import {escapeHtml, createCssText, supportsTransition, getActiveElement} from './utils/dom';
 
 /**
  * Window dimension definition
@@ -709,11 +709,7 @@ export default class Window extends EventEmitter {
    */
   maximize() {
     if (this.attributes.maximizable) {
-      if (this._toggleState('maximized', true, 'maximize')) {
-        this.once('transitionend', () => this.emit('resized'));
-
-        return true;
-      }
+      return this._maximize(true);
     }
 
     return false;
@@ -724,8 +720,21 @@ export default class Window extends EventEmitter {
    * @return {boolean}
    */
   restore() {
-    if (this._toggleState('maximized', false, 'restore')) {
-      this.once('transitionend', () => this.emit('resized'));
+    return this._maximize(false);
+  }
+
+  /**
+   * Maximize or restore
+   * @param {boolean} toggle Maximize or restore
+   * @return {boolean}
+   */
+  _maximize(toggle) {
+    if (this._toggleState('maximized', toggle, toggle ? 'maximize' : 'restore')) {
+      if (supportsTransition()) {
+        this.once('transitionend', () => this.emit('resized'));
+      } else {
+        this.emit('resized');
+      }
 
       return true;
     }

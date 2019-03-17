@@ -111,6 +111,7 @@ export default class Core extends CoreBase {
 
   /**
    * Boots up OS.js
+   * @return {Promise<boolean, Error>}
    */
   boot() {
     const done = e => {
@@ -158,6 +159,7 @@ export default class Core extends CoreBase {
 
   /**
    * Starts all core services
+   * @return {Promise<boolean, Error>}
    */
   start() {
     const connect = () => new Promise((resolve, reject) => {
@@ -252,6 +254,8 @@ export default class Core extends CoreBase {
 
   /**
    * Creates the main connection to server
+   * @param {Function} cb Callback function
+   * @return {boolean}
    */
   _createConnection(cb) {
     if (this.configuration.standalone || this.configuration.ws.disabled) {
@@ -375,7 +379,7 @@ export default class Core extends CoreBase {
 
     return fetch(url, options, type)
       .catch(error => {
-        this.logger.warn(error);
+        console.warn(error);
 
         throw new Error(_('ERR_REQUEST_NOT_OK', error));
       });

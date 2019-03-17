@@ -1,4 +1,5 @@
 import {createInstance} from 'osjs';
+import Core from '../src/core.js';
 import Auth from '../src/auth.js';
 
 // TODO: UI
@@ -41,4 +42,61 @@ it('Should log out', () => {
 
 it('Should destroy instance', () => {
   auth.destroy();
+});
+
+it('Should try to reload on shutdown', () => {
+  const a = new Auth(core);
+  a.shutdown(true);
+});
+
+it('Should try to auto login', () => {
+  const c = new Core({
+    auth: {
+      username: 'test',
+      password: 'test'
+    }
+  });
+
+  const a = new Auth(c);
+  return expect(a.show())
+    .resolves
+    .toBe(true);
+});
+
+it('Should trigger login from UI', () => {
+  const c = new Core();
+  const a = new Auth(c);
+  const fn = jest.fn();
+
+  c.on('osjs/core:logged-in', fn);
+
+  a.ui.emit('login:post', {
+    username: 'test',
+    password: 'test'
+  });
+
+  setTimeout(() => expect(fn).toBeCalled(), 25);
+});
+
+it('Should trigger failure', () => {
+  const c = new Core();
+  const a = new Auth(c, {
+    adapter: () => ({
+      login: () => Promise.reject('Simulated failure'),
+      logout: () => Promise.resolve(null)
+    })
+  });
+
+  const fnError = jest.fn();
+  const fnStop = jest.fn();
+
+  a.ui.on('login:error', fnError);
+  a.ui.on('login:stop', fnStop);
+
+  return a.login()
+    .then(() => a.logout())
+    .then(() => {
+      expect(fnError).toBeCalled();
+      expect(fnStop).toBeCalled();
+    });
 });

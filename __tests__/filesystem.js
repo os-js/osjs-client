@@ -26,6 +26,9 @@ it('Should fail at finding mountpoint from path', () => {
 
   expect(() => fs.getMountpointFromPath({path: 'unknown:/file.name'}))
     .toThrow(Error);
+
+  expect(() => fs.getMountpointFromPath({path: 'invalid'}))
+    .toThrow(Error);
 });
 
 it('Should find mountpoint from path', () => {
@@ -73,4 +76,14 @@ it('Should fail at mounting already mounted filesystem', () => {
   return expect(fs.mount('osjs'))
     .rejects
     .toBeInstanceOf(Error);
+});
+
+it('Should try to make VFS request (direct)', () => {
+  return expect(() => fs.request().exists('null:/foo'))
+    .toThrow(Error);
+});
+
+it('Should try to make VFS request (cross)', () => {
+  return expect(() => fs.request().copy('from:/foo', 'to:/bar'))
+    .toThrow(Error);
 });

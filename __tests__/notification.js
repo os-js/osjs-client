@@ -41,3 +41,13 @@ it('Should destroy instance', () => {
 
   expect(ev).toBeCalled();
 });
+
+it('Should try to create native notification', () => {
+  const n = new Notification(core, root, {
+    native: true
+  });
+
+  expect(n.render())
+    .resolves
+    .toBe(true);
+});

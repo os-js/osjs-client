@@ -9,6 +9,8 @@ beforeAll(() => {
     .then(c => {
       core = c;
       session = new Session(core);
+
+      return core.run('ValidApplication');
     });
 });
 

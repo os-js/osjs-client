@@ -17,7 +17,8 @@ it('Should create a new instance', () => {
     title: 'Jest Test',
     attributes: {
       ontop: true,
-      closeable: false
+      closeable: false,
+      header: false
     },
     state: {
       zIndex: 1000
@@ -46,52 +47,105 @@ it('Should be inited with correct attributes', () => {
 });
 
 it('Should be rendered with correct DOM', () => {
+  const oninit = jest.fn();
+  const onrender = jest.fn();
   const render = jest.fn($content => {
     $content.appendChild(document.createTextNode('Hello World'));
   });
 
-  win.init();
+  win.once('init', oninit);
+  win.once('render', onrender);
   win.render(render);
 
+  expect(oninit).toBeCalled();
   expect(render).toBeCalled();
   expect(win.$content.innerHTML).toBe('Hello World');
+  expect(win.rendered).toBe(true);
+
+  setTimeout(() => expect(onrender).toBeCalled(), 10);
+});
+
+it('Should only init once', () => {
+  const oninit = jest.fn();
+  win.once('init', oninit);
+  win.init();
+
+  expect(oninit).not.toBeCalled();
+});
+
+it('Should only render once', () => {
+  const onrender = jest.fn();
+  const render = jest.fn();
+  win.once('render', onrender);
+  win.render(render);
+
+  expect(onrender).not.toBeCalled();
+  expect(render).not.toBeCalled();
 });
 
 it('Should be minimized', () => {
+  const onminimize = jest.fn();
+  win.once('minimize', onminimize);
+
   expect(win.minimize()).toBe(true);
   expect(win.minimize()).toBe(false);
   expect(win.state.minimized).toBe(true);
+  expect(onminimize).toBeCalled();
 });
 
 it('Should be raised', () => {
+  const onraise = jest.fn();
+  win.once('raise', onraise);
+
   expect(win.raise()).toBe(true);
   expect(win.raise()).toBe(false);
   expect(win.state.minimized).toBe(false);
+  expect(onraise).toBeCalled();
 });
 
 it('Should be maximized', () => {
+  const onmaximize = jest.fn();
+  const onresized = jest.fn();
+  win.once('maximize', onmaximize);
+  win.once('resized', onresized);
+
   expect(win.maximize()).toBe(true);
   expect(win.maximize()).toBe(false);
   expect(win.state.maximized).toBe(true);
+  expect(onmaximize).toBeCalled();
+  expect(onresized).toBeCalled();
 });
 
 it('Should be restored', () => {
+  const onrestore = jest.fn();
+  win.once('restore', onrestore);
+
   expect(win.restore()).toBe(true);
+  expect(win.restore()).toBe(false);
   expect(win.state.maximized).toBe(false);
+  expect(onrestore).toBeCalled();
 });
 
 it('Should be focused', () => {
+  const onfocus = jest.fn();
+  win.once('focus', onfocus);
+
   expect(win.state.focused).toBe(false);
   expect(win.focus()).toBe(true);
   expect(win.focus()).toBe(false);
   expect(win.state.focused).toBe(true);
+  expect(onfocus).toBeCalled();
 });
 
 it('Should be blured', () => {
+  const onblur = jest.fn();
+  win.once('blur', onblur);
+
   expect(win.state.focused).toBe(true);
   expect(win.blur()).toBe(true);
   expect(win.blur()).toBe(false);
   expect(win.state.focused).toBe(false);
+  expect(onblur).toBeCalled();
 });
 
 it('Should set icon', () => {
@@ -166,6 +220,16 @@ it('Should get session', () => {
   });
 });
 
+it('Should set loading state', () => {
+  win.setState('loading', true);
+  expect(win.state.loading).toBe(false);
+
+  // FIXME: Set debounce time
+  setTimeout(() => {
+    expect(win.state.loading).toBe(true);
+  }, 300);
+});
+
 it('Should resize to fit', () => {
   // TODO
   //win.resizeFit()
@@ -193,4 +257,29 @@ it('Should get last focused window', () => {
 it('Should be closed', () => {
   expect(win.close()).toBe(true);
   expect(win.close()).toBe(false);
+});
+
+it('Parent window should handle children', () => {
+  const parentWindow = new Window(core, {
+    position: 'center'
+  });
+
+  const childWindow = new Window(core, {
+    parent: parentWindow,
+    attributes: {
+      modal: true
+    }
+  });
+
+  parentWindow.render();
+  childWindow.render();
+
+  expect(parentWindow.children.length).toBe(1);
+  expect(parentWindow.children[0]).toBe(childWindow);
+  expect(childWindow.parent).toBe(parentWindow);
+
+  parentWindow.destroy();
+  expect(parentWindow.children.length).toBe(0);
+  expect(childWindow.parent).toBe(null);
+  childWindow.destroy();
 });

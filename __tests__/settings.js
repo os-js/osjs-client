@@ -27,7 +27,11 @@ it('Should load', () => {
 });
 
 it('Should set value', () => {
-  return expect(() => settings.set('osjs/jest', 'foo', 'Hello World'))
+  expect(() => settings.set('osjs/locked', 'foo', 'Hello World'))
+    .not
+    .toThrow();
+
+  expect(() => settings.set('osjs/jest', 'foo', 'Hello World'))
     .not
     .toThrow();
 });
@@ -36,6 +40,14 @@ it('Should get value', () => {
   expect(settings.get('osjs/jest', 'foo')).toBe('Hello World');
   expect(settings.get('osjs/jest', 'bar')).toBe(undefined);
   expect(settings.get('osjs/jest', 'baz', 'default')).toBe('default');
+  expect(settings.get()).toEqual({
+    'osjs/desktop': {},
+    'osjs/locale': {},
+    'osjs/session': [],
+    'osjs/jest': {
+      foo: 'Hello World'
+    }
+  });
 });
 
 it('Should save', () => {

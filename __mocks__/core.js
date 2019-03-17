@@ -7,6 +7,13 @@ import {ServiceProvider} from '@osjs/common';
 
 export const createInstance = () => {
   const core = new Core(merge(config, {
+    settings: {
+      lock: ['osjs/locked']
+    },
+    auth: {
+      username: 'jest',
+      password: 'jest'
+    },
     ws: {
       disabled: true
     }

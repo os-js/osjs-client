@@ -1,8 +1,6 @@
 import {createInstance} from 'osjs';
+import {EventEmitter} from '@osjs/event-emitter';
 import Packages from '../src/packages.js';
-
-// TODO: Blacklisted packges
-// TODO: Group packages
 
 let core;
 let packages;
@@ -21,15 +19,32 @@ const packageList = [{
   ]
 }, {
   name: 'Package3',
-  type: 'theme'
+  type: 'theme',
+}, {
+  name: 'Package4',
+  type: 'application',
+  singleton: true
+}, {
+  name: 'PackageMissingRuntime',
+  type: 'application',
+}, {
+  name: 'GroupTestPackage',
+  groups: ['testing']
+}, {
+  name: 'BlacklistTestPackage'
 }];
 
 const packageMatch = [
   {name: 'ValidApplication', type: 'application'},
-  ...packageList.map(pkg => Object.assign({type: 'application'}, pkg))
+  ...packageList
+    .filter(pkg => pkg.name.indexOf('Test') === -1)
+    .map(pkg => Object.assign({type: 'application'}, pkg))
 ];
 
-beforeAll(() => createInstance().then(c => core = c));
+beforeAll(() => createInstance().then(c => {
+  core = c;
+  core.user.blacklist = ['BlacklistTestPackage'];
+}));
 
 afterAll(() => {
   packages.destroy();
@@ -77,9 +92,28 @@ it('Should fail to register package', () => {
     .toThrow(Error);
 });
 
-it('Should register package', () => {
+it('Should register package once ', () => {
+  expect(() => packages.register('Package1', () => {
+    throw new Error('Simulate failure');
+  }))
+    .not
+    .toThrow(Error);
+
   expect(() => packages.register('Package1', () => {}))
     .not
+    .toThrow(Error);
+
+  expect(packages.packages.length).toBe(1);
+});
+
+it('Should throw exception on invalid package', () => {
+  return expect(() => packages.launch('Fooz'))
+    .toThrow(Error);
+});
+
+it('Should fail launching package without runtime', () => {
+  return expect(packages.launch('PackageMissingRuntime'))
+    .rejects
     .toThrow(Error);
 });
 
@@ -93,11 +127,58 @@ it('Should launch application package', () => {
     });
 });
 
-it('Should launch launch package', () => {
+it('Should launch package', () => {
   packages.register('Package3', () => {});
 
   return packages.launch('Package3')
     .then(({metadata}) => {
       expect(metadata.name).toBe('Package3');
+    });
+});
+
+it('Should launch singleton package once', () => {
+  packages.register('Package4', (() => core.make('osjs/application', {
+    metadata: {
+      name: 'Package4'
+    }
+  })));
+
+  return packages.launch('Package4')
+    .then(app => {
+      const fn = jest.fn();
+      app.on('attention', fn);
+
+      return packages.launch('Package4')
+        .then(() => {
+          expect(fn).toBeCalled();
+        });
+    });
+});
+
+it('Should launch singleton package once (delayed)', () => {
+  const fn = jest.fn();
+  const fakeApp = new EventEmitter();
+  fakeApp.metadata = {};
+  fakeApp.on('attention', fn);
+
+  const name = 'SingletonDelayTest';
+  const metadata = {
+    name,
+    type: 'application',
+    singleton: true
+  };
+
+  const pkgs = new Packages(core);
+  pkgs.addPackages([metadata]);
+  pkgs.register(name, () => fakeApp);
+  pkgs.running = [name];
+
+  setTimeout(() => {
+    core.emit(`osjs/application:${name}:launched`, fakeApp);
+  }, 25);
+
+  return pkgs.launch(name)
+    .then(() => {
+      expect(fn).toBeCalled();
     });
 });

@@ -1,7 +1,7 @@
 import * as VFS from '../src/vfs.js';
 import nullAdapter from '../src/adapters/vfs/null.js';
 
-const nullMount = {
+const testMount = {
   enabled: true,
   mounted: false,
   adapter: 'null',
@@ -15,12 +15,43 @@ const nullMount = {
   }
 };
 
-const call = (method, ...args) => VFS[method](nullAdapter, nullMount)(...args);
+const otherMount = {
+  enabled: true,
+  mounted: false,
+  adapter: 'null',
+  label: 'other',
+  root: 'other:/',
+  attributes: {
+    visibility: 'global',
+    local: true,
+    searchable: false,
+    readOnly: false
+  }
+};
+
+const testAdapter = Object.assign({}, nullAdapter, {
+  readdir: (path, options) => Promise.resolve([{
+    isDirectory: false,
+    isFile: true,
+    filename: 'jest.tst',
+    path: 'null:/jest.tst',
+    mime: 'text/plain'
+  }]),
+});
+
+const call = (method, ...args) => VFS[method](testAdapter, testMount)(...args);
+const callOther = (method, ...args) => VFS[method](testAdapter, otherMount)(...args);
 
 it('readdir should return a directory list', () => {
   return expect(call('readdir', 'null:/'))
     .resolves
-    .toBeInstanceOf(Array);
+    .toMatchObject([{
+      isDirectory: false,
+      isFile: true,
+      filename: 'jest.tst',
+      path: 'null:/jest.tst',
+      mime: 'text/plain'
+    }]);
 });
 
 it('readfile should return string', () => {
@@ -55,6 +86,12 @@ it('writefile should write blob', () => {
 
 it('writefile should write arraybuffer', () => {
   return expect(call('writefile', 'null:/filename', new ArrayBuffer()))
+    .resolves
+    .toBe(-1);
+});
+
+it('writefile should write string', () => {
+  return expect(call('writefile', 'null:/filename', 'data'))
     .resolves
     .toBe(-1);
 });
@@ -101,10 +138,22 @@ it('search should should return array', () => {
     .toBeInstanceOf(Array);
 });
 
+it('search should should return array on mount without search enabled', () => {
+  return expect(callOther('search', 'other:/'))
+    .resolves
+    .toBeInstanceOf(Array);
+});
+
 it('touch should should return boolean', () => {
   return expect(call('touch', 'null:/'))
     .resolves
     .toBe(false);
+});
+
+it('touch should should try to download file', () => {
+  return expect(call('download', 'null:/'))
+    .resolves
+    .toBe(undefined);
 });
 
 it('stat should should return object', () => {

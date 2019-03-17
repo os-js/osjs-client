@@ -1,6 +1,7 @@
 import {createInstance} from 'osjs';
 import Application from '../src/application.js';
 import Window from '../src/window.js';
+import Websocket from '../src/websocket.js';
 
 let core;
 let application;
@@ -13,7 +14,21 @@ it('Should create a new instance', () => {
     args: {
       foo: 'bar'
     },
-    options: {},
+    options: {
+      restore: {
+        windows: [{
+          id: 'RestoredWindow',
+          position: {
+            top: 100,
+            left: 100
+          },
+          dimension: {
+            width: 800,
+            height: 600
+          }
+        }]
+      }
+    },
     metadata: {
       name: 'Jest',
       type: 'application'
@@ -42,6 +57,24 @@ it('Should create windows', () => {
   expect(fn).toBeCalled();
 });
 
+it('Should create windows w/restore data', () => {
+  const win = application.createWindow({
+    id: 'RestoredWindow'
+  });
+
+  expect(win).toBeInstanceOf(Window);
+  expect(win.state.dimension).toEqual({width: 800, height: 600});
+  expect(win.state.position).toEqual({top: 100, left: 100});
+  win.destroy();
+});
+
+it('Should not create another window with same ID', () => {
+  return expect(() => application.createWindow({
+    id: 'UniqueWindow'
+  }))
+    .toThrow(Error);
+});
+
 it('Should remove window', () => {
   const fn = jest.fn(() => {});
 
@@ -50,6 +83,26 @@ it('Should remove window', () => {
 
   expect(application.windows.length).toBe(1);
   expect(fn).toBeCalled();
+});
+
+it('Should perform request', () => {
+  return expect(application.request('/test'))
+    .resolves
+    .toBe(true);
+});
+
+it('Should create a new Worker', () => {
+  const w = application.worker('/worker.js');
+
+  expect(w).toBeInstanceOf(Worker);
+  expect(application.workers.length).toBe(1);
+});
+
+it('Should create a new Websocket', () => {
+  const w = application.socket('/worker.js');
+
+  expect(w).toBeInstanceOf(Websocket);
+  expect(application.sockets.length).toBe(1);
 });
 
 it('Should get Session', () => {
@@ -82,6 +135,17 @@ it('Should destroy instance', () => {
   application.destroy();
   expect(onLocalDestroy).toBeCalled();
   expect(onGlobalDestroy).toBeCalled();
+  expect(application.workers.length).toBe(0);
+  expect(application.sockets.length).toBe(0);
+  expect(application.windows.length).toBe(0);
+});
+
+it('Should not destroy destroy instance again', () => {
+  const onLocalDestroy = jest.fn(() => {});
+  application.on('destroy', onLocalDestroy);
+  application.destroy();
+
+  expect(onLocalDestroy).not.toBeCalled();
 });
 
 it('Should save settings', () => {

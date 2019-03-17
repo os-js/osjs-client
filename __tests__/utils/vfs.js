@@ -208,3 +208,15 @@ describe('utils.vfs#transformArrayBuffer', () => {
       .then(ab2str)
       .then(result => expect(result).toBe(testAbString)));
 });
+
+describe('utils.vfs#basename', () => {
+  it('Should resolve', () => {
+    expect(vfs.basename('home:/foo/bar')).toBe('bar');
+  });
+});
+
+describe('utils.vfs#pathname', () => {
+  it('Should resolve', () => {
+    expect(vfs.pathname('home:/foo/bar')).toBe('home:/foo');
+  });
+});

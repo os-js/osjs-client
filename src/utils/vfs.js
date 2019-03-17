@@ -50,25 +50,40 @@ export const pathJoin = (...args) => args
   .join('/');
 
 /*
+ * Sort by locale string
+ */
+const sortString = (k, d) => (a, b) => d === 'asc'
+  ? String(a[k]).localeCompare(b[k])
+  : String(b[k]).localeCompare(a[k]);
+
+/*
+ * Sort by date
+ */
+const sortDate = (k, d) => (a, b) => d === 'asc'
+  ? (new Date(a[k])) > (new Date(b[k]))
+  : (new Date(b[k])) > (new Date(a[k]));
+
+/*
+ * Sort by educated guess
+ */
+const sortDefault = (k, d) => (a, b) =>
+  (a[k] < b[k])
+    ? -1
+    : ((a[k] > b[k])
+      ? (d === 'asc' ? 1 : 0)
+      : (d === 'asc' ? 0 : 1));
+
+/*
  * Sorts an array of files
  */
-const sortFn = t => (k, d) => (a, b) => {
+const sortFn = t => {
   if (t === 'string') {
-    return d === 'asc'
-      ? String(a[k]).localeCompare(b[k])
-      : String(b[k]).localeCompare(a[k]);
+    return sortString;
   } else if (t === 'date') {
-    return d === 'asc'
-      ? (new Date(a[k])) > (new Date(b[k]))
-      : (new Date(b[k])) > (new Date(a[k]));
+    return sortDate;
   }
 
-  return (
-    (a[k] < b[k])
-      ? -1
-      : ((a[k] > b[k])
-        ? (d === 'asc' ? 1 : 0)
-        : (d === 'asc' ? 0 : 1)));
+  return sortDefault;
 };
 
 /*

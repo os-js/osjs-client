@@ -177,8 +177,20 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   init() {
-    const {themeResource, soundResource, soundsEnabled, icon} = resourceResolver(this.core);
+    this.initBaseProviders();
+    this.initUtilProviders();
+    this.initTrayProvider();
+    this.initLocaleProvider();
+    this.initResourceProviders();
 
+    this.core.on('osjs/core:started', () => {
+      this.session.load();
+    });
+
+    return this.pm.init();
+  }
+
+  initBaseProviders() {
     const createWindow = (options = {}) => {
       return new Window(this.core, options);
     };
@@ -225,13 +237,27 @@ export default class CoreServiceProvider extends ServiceProvider {
       load: (fresh = true) => this.session.load(fresh)
     }));
 
+    this.core.singleton('osjs/packages', () => ({
+      getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),
+      getPackages: (...args) => this.pm.getPackages(...args),
+      register: (...args) => this.pm.register(...args),
+      launch: (...args) => this.pm.launch(...args),
+      running: () => this.pm.running
+    }));
+
+    this.core.instance('osjs/clipboard', () => this.clipboard);
+  }
+
+  initUtilProviders() {
     this.core.singleton('osjs/dnd', () => dnd);
 
     this.core.singleton('osjs/dom', () => ({
       script,
       style
     }));
+  }
 
+  initTrayProvider() {
     const trayApi = {
       create: (options, handler) => this.tray.create(options, handler),
       list: () => this.tray.entries.map(e => Object.assign({}, e))
@@ -244,7 +270,9 @@ export default class CoreServiceProvider extends ServiceProvider {
 
       return trayApi;
     });
+  }
 
+  initLocaleProvider() {
     const localeApi = {
       format: format(this.core),
       translate: translatable(this.core)(translations),
@@ -263,20 +291,10 @@ export default class CoreServiceProvider extends ServiceProvider {
     };
 
     this.core.singleton('osjs/locale', () => localeApi);
+  }
 
-    this.core.singleton('osjs/packages', () => ({
-      getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),
-      getPackages: (...args) => this.pm.getPackages(...args),
-      register: (...args) => this.pm.register(...args),
-      launch: (...args) => this.pm.launch(...args),
-      running: () => this.pm.running
-    }));
-
-    this.core.instance('osjs/clipboard', () => this.clipboard);
-
-    this.core.on('osjs/core:started', () => {
-      this.session.load();
-    });
+  initResourceProviders() {
+    const {themeResource, soundResource, soundsEnabled, icon} = resourceResolver(this.core);
 
     this.core.singleton('osjs/theme', () => ({
       resource: themeResource,
@@ -300,7 +318,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       }
     }));
 
-    return this.pm.init();
   }
 
   start() {

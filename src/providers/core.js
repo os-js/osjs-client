@@ -83,17 +83,18 @@ const getPublicApi = core => {
 const resourceResolver = (core) => {
   const media = supportedMedia();
 
+  const getThemeName = (type) => {
+    const defaultTheme = core.config('desktop.settings.' + type);
+    return core.make('osjs/settings').get('osjs/desktop', type, defaultTheme);
+  };
+
   const themeResource = path => {
-    const defaultTheme = core.config('desktop.settings.theme');
-    const theme = core.make('osjs/settings').get('osjs/desktop', 'theme', defaultTheme);
+    const theme = getThemeName('theme');
 
     return core.url(`themes/${theme}/${path}`); // FIXME: Use metadata ?
   };
 
-  const getSoundThemeName = () => {
-    const defaultTheme = core.config('desktop.settings.sounds');
-    return core.make('osjs/settings').get('osjs/desktop', 'sounds', defaultTheme);
-  };
+  const getSoundThemeName = () => getThemeName('sounds');
 
   const soundResource = path => {
     if (!path.match(/\.([a-z]+)$/)) {
@@ -113,8 +114,7 @@ const resourceResolver = (core) => {
   const soundsEnabled = () => !!getSoundThemeName();
 
   const icon = path => {
-    const defaultTheme = core.config('desktop.settings.icons');
-    const theme = core.make('osjs/settings').get('osjs/desktop', 'icons', defaultTheme);
+    const theme = getThemeName('icons');
     return core.url(`icons/${theme}/icons/${path}`); // FIXME: Use metadata ?
   };
 

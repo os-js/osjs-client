@@ -244,8 +244,40 @@ it('Should clamp to viewport', () => {
 });
 
 it('Should gravitate in viewport', () => {
-  // TODO
-  //win.gravitate()
+  win.setPosition({top: 0, left: 0});
+
+  win.gravitate('center');
+  expect(win.state.position).toEqual({top: 60,  left: 80});
+
+  win.gravitate('left');
+  expect(win.state.position).toEqual({top: 60,  left: 0});
+
+  win.gravitate('top-left');
+  expect(win.state.position).toEqual({top: 0,  left: 0});
+
+  win.gravitate('bottom-left');
+  expect(win.state.position).toEqual({top: 120,  left: 0});
+
+  win.gravitate('top');
+  expect(win.state.position).toEqual({top: 0,  left: 0});
+
+  win.gravitate('top-right');
+  expect(win.state.position).toEqual({top: 0,  left: 160});
+
+  win.gravitate('top-left');
+  expect(win.state.position).toEqual({top: 0,  left: 0});
+
+  win.gravitate('bottom');
+  expect(win.state.position).toEqual({top: 120,  left: 0});
+
+  win.gravitate('bottom-left');
+  expect(win.state.position).toEqual({top: 120,  left: 0});
+
+  win.gravitate('bottom-right');
+  expect(win.state.position).toEqual({top: 120,  left: 160});
+
+  win.gravitate('right');
+  expect(win.state.position).toEqual({top: 120,  left: 160});
 });
 
 it('Should get window list', () => {

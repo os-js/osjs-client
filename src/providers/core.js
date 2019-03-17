@@ -272,11 +272,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       running: () => this.pm.running
     }));
 
-    this.core.instance('osjs/clipboard', () => ({
-      set: v => this.clipboard.set(v),
-      get: clear => this.clipboard.get(clear),
-      clear: () => this.clipboard.clear()
-    }));
+    this.core.instance('osjs/clipboard', () => this.clipboard);
 
     this.core.on('osjs/core:started', () => {
       this.session.load();

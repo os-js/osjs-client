@@ -272,3 +272,21 @@ export const createFileIter = stat => Object.assign({
   id: null,
   parent_id: null
 }, stat);
+
+/**
+ * Get basename of a file
+ * @param {string} path The path
+ * @return {string}
+ */
+export const basename = path => path.split('/').reverse()[0];
+
+/*
+ * Get path of a file
+ * @param {string} path The path
+ * @return {string}
+ */
+export const pathname = path => {
+  const split = path.split('/');
+  split.splice(split.length - 1, 1);
+  return split.join('/');
+};

@@ -29,20 +29,8 @@
  */
 
 import {EventEmitter} from '@osjs/event-emitter';
+import {basename, pathname} from './utils/vfs';
 
-/*
- * Get basename of a file
- */
-const basename = path => path.split('/').reverse()[0];
-
-/*
- * Get path of a file
- */
-const pathname = path => {
-  const split = path.split('/');
-  split.splice(split.length - 1, 1);
-  return split.join('/');
-};
 
 /**
  * Basic Application Helper
@@ -161,11 +149,13 @@ export class BasicApplication extends EventEmitter {
   createDialog(type, cb, options = {}) {
     const [args, opts] = this.getDialogOptions(type, options);
 
-    this.core.make('osjs/dialog', 'file', args, opts, (btn, item) => {
-      if (btn === 'ok') {
-        cb(item);
-      }
-    });
+    if (this.core.has('osjs/dialog')) {
+      this.core.make('osjs/dialog', 'file', args, opts, (btn, item) => {
+        if (btn === 'ok') {
+          cb(item);
+        }
+      });
+    }
   }
 
   /**

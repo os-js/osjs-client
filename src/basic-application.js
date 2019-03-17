@@ -128,15 +128,9 @@ export class BasicApplication extends EventEmitter {
     if (this.win) {
       const {translatableFlat} = this.core.make('osjs/locale');
       const prefix = translatableFlat(this.proc.metadata.title);
-      const title = this.proc.args.file
-        ? basename(this.proc.args.file.path)
-        : this.options.defaultFilename;
+      const title = this._createTitle(prefix);
 
-      if (title) {
-        this.win.setTitle(`${prefix} - ${title}`);
-      } else {
-        this.win.setTitle(prefix);
-      }
+      this.win.setTitle(title);
     }
   }
 
@@ -164,11 +158,7 @@ export class BasicApplication extends EventEmitter {
    * @param {object} file A file object
    */
   open(item) {
-    this.proc.args.file = Object.assign({}, item);
-
-    this.emit('open-file', item);
-
-    this.updateWindowTitle();
+    this._setFile(item, 'open-file');
   }
 
   /**
@@ -177,11 +167,7 @@ export class BasicApplication extends EventEmitter {
    * @param {object} file A file object
    */
   save(item) {
-    this.proc.args.file = Object.assign({}, item);
-
-    this.emit('save-file', item);
-
-    this.updateWindowTitle();
+    this._setFile(item, 'save-file');
   }
 
   /**
@@ -216,5 +202,27 @@ export class BasicApplication extends EventEmitter {
    */
   createOpenDialog(options = {}) {
     this.createDialog('open', item => this.open(item), options);
+  }
+
+  /**
+   * Sets file from open/save action
+   */
+  _setFile(item, eventName) {
+    this.proc.args.file = Object.assign({}, item);
+    this.emit(eventName, item);
+    this.updateWindowTitle();
+  }
+
+  /**
+   * Creates the window title
+   */
+  _createTitle(prefix) {
+    const title = this.proc.args.file
+      ? basename(this.proc.args.file.path)
+      : this.options.defaultFilename;
+
+    return title
+      ? `${prefix} - ${title}`
+      : prefix;
   }
 }

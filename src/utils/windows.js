@@ -134,13 +134,6 @@ export const renderCallback = (win, callback) => {
 };
 
 /*
- * Adds a list of classnames to window element
- */
-export const addClassNames = (win, names) => names
-  .filter(val => !!val)
-  .forEach((val) => win.$element.classList.add(val));
-
-/*
  * Gets new position based on "gravity"
  */
 export const positionFromGravity = (win, rect, gravity) => {

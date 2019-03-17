@@ -35,7 +35,6 @@ import {
   createState,
   clampPosition,
   renderCallback,
-  addClassNames,
   transformVectors,
   positionFromGravity,
   dimensionFromElement
@@ -334,8 +333,8 @@ export default class Window extends EventEmitter {
       return this;
     }
 
-    // Assign the window if it is a child
     if (this.parent) {
+      // Assign the window if it is a child
       this.on('destroy', () => {
         const foundIndex = this.parent.children.findIndex(w => w === this);
         if (foundIndex !== -1) {
@@ -346,7 +345,21 @@ export default class Window extends EventEmitter {
       this.parent.children.push(this);
     }
 
-    // Insert template
+    this._initTemplate();
+    this._initBehavior();
+
+
+    this.inited = true;
+    this.emit('init', this);
+    this.core.emit('osjs/window:create', this);
+
+    return this;
+  }
+
+  /**
+   * Initializes window template
+   */
+  _initTemplate() {
     const tpl = this.core.config('windows.template') || TEMPLATE;
     if (this._template) {
       this.$element.innerHTML = typeof this._template === 'function'
@@ -360,7 +373,12 @@ export default class Window extends EventEmitter {
     this.$header = this.$element.querySelector('.osjs-window-header');
     this.$icon = this.$element.querySelector('.osjs-window-icon > div');
     this.$title = this.$element.querySelector('.osjs-window-title');
+  }
 
+  /**
+   * Initializes window behavior
+   */
+  _initBehavior() {
     // Transform percentages in dimension to pixels etc
     if (this.core.has('osjs/desktop')) {
       const rect = this.core.make('osjs/desktop').getRect();
@@ -384,12 +402,6 @@ export default class Window extends EventEmitter {
     });
 
     this.on('destroy', () => d.destroy());
-
-    this.inited = true;
-    this.emit('init', this);
-    this.core.emit('osjs/window:create', this);
-
-    return this;
   }
 
   /**
@@ -400,22 +412,53 @@ export default class Window extends EventEmitter {
       this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
         .style.display = 'none';
 
+    const buttonmap = {
+      maximizable: 'maximize',
+      minimizable: 'minimize',
+      closeable: 'close'
+    };
+
     if (this.attributes.controls) {
-      if (!this.attributes.maximizable) {
-        hideButton('maximize');
-      }
-
-      if (!this.attributes.minimizable) {
-        hideButton('minimize');
-      }
-
-      if (!this.attributes.closeable) {
-        hideButton('close');
-      }
+      Object.keys(buttonmap)
+        .forEach(key => {
+          if (!this.attributes[key]) {
+            hideButton(buttonmap[key]);
+          }
+        });
     } else {
       Array.from(this.$header.querySelectorAll('.osjs-window-button'))
         .forEach(el => el.style.display = 'none');
     }
+  }
+
+  /**
+   * Checks the modal state of the window upon render
+   */
+  _checkModal() {
+    // TODO: Global modal
+    if (this.attributes.modal) {
+      if (this.parent) {
+        this.on('render', () => this.parent.setState('loading', true));
+
+        this.on('destroy', () => {
+          this.parent.setState('loading', false);
+          this.parent.focus();
+        });
+      }
+    }
+  }
+
+  /**
+   * Sets the initial class names
+   */
+  _setClassNames() {
+    const classNames = ['osjs-window', ...this.attributes.classNames];
+    if (this.id) {
+      classNames.push(`Window_${this.id}`);
+    }
+
+    classNames.filter(val => !!val)
+      .forEach((val) => this.$element.classList.add(val));
   }
 
   /**
@@ -430,22 +473,13 @@ export default class Window extends EventEmitter {
       this.init();
     }
 
-    const classNames = ['osjs-window', ...this.attributes.classNames];
-    if (this.id) {
-      classNames.push(`Window_${this.id}`);
-    }
-
-    addClassNames(this, classNames);
-
+    this._setClassNames();
     this._updateButtons();
     this._updateDOM();
+    this._checkModal();
 
     if (!this._preventDefaultPosition) {
       this.gravitate(this.attributes.gravity);
-    }
-
-    if (!this.attributes.header) {
-      this.$header.style.display = 'none';
     }
 
     // Clamp the initial window position to viewport
@@ -454,19 +488,6 @@ export default class Window extends EventEmitter {
     }
 
     this.core.$root.appendChild(this.$element);
-
-    if (this.attributes.modal) {
-      if (this.parent) {
-        this.on('render', () => this.parent.setState('loading', true));
-
-        this.on('destroy', () => {
-          this.parent.setState('loading', false);
-          this.parent.focus();
-        });
-      }
-
-      // TODO: Global modal
-    }
 
     renderCallback(this, callback);
 
@@ -501,21 +522,26 @@ export default class Window extends EventEmitter {
    * @return {boolean}
    */
   focus() {
-    if (!this.state.minimized) {
-      if (this._toggleState('focused', true, 'focus')) {
-        if (lastWindow && lastWindow !== this) {
-          lastWindow.blur();
-        }
+    if (!this.state.minimized && this._toggleState('focused', true, 'focus')) {
+      this._focus();
 
-        this.setNextZindex();
-
-        lastWindow = this;
-
-        return true;
-      }
+      return true;
     }
 
     return false;
+  }
+
+  /**
+   * Internal for focus
+   */
+  _focus() {
+    if (lastWindow && lastWindow !== this) {
+      lastWindow.blur();
+    }
+
+    lastWindow = this;
+
+    this.setNextZindex();
   }
 
   /**
@@ -577,7 +603,7 @@ export default class Window extends EventEmitter {
   }
 
   /**
-   * Maximize or restore
+   * Internal for Maximize or restore
    * @param {boolean} toggle Maximize or restore
    * @return {boolean}
    */
@@ -864,7 +890,7 @@ export default class Window extends EventEmitter {
       return;
     }
 
-    const {$element, $title, $icon, id, state, attributes} = this;
+    const {$element, $title, $icon, $header, id, state, attributes} = this;
     const {width, height} = state.dimension;
     const {top, left} = state.position;
     const {title, icon, zIndex, styles} = state;
@@ -900,6 +926,10 @@ export default class Window extends EventEmitter {
 
     if ($icon) {
       $icon.style.backgroundImage = `url(${icon})`;
+    }
+
+    if ($header) {
+      $header.style.display = attributes.header ? undefined : 'none';
     }
 
     if ($element) {

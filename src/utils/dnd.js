@@ -27,6 +27,76 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
+
+const retval = (fn, ...args) => {
+  try {
+    const result = fn(...args);
+    if (typeof result === 'boolean') {
+      return result;
+    }
+  } catch (e) {
+    console.warn('droppable value parsing error', e);
+  }
+
+  return true;
+};
+
+const getDataTransfer = (ev, type) => {
+  let files = [];
+  let data;
+
+  if (ev.dataTransfer) {
+    files = ev.dataTransfer.files
+      ? Array.from(ev.dataTransfer.files)
+      : [];
+
+    try {
+      const transfer = ev.dataTransfer.getData(type);
+
+      try {
+        if (type === 'application/json') {
+          data = typeof transfer === 'undefined' ? transfer : JSON.parse(transfer);
+        } else {
+          data = transfer;
+        }
+      } catch (e) {
+        data = transfer;
+        console.warn('droppable dataTransfer parsing error', e);
+      }
+    } catch (e) {
+      console.warn('droppable dataTransfer parsing error', e);
+    }
+  }
+
+  return {files, data};
+};
+
+const setDataTransfer = (type, effect, data, setDragImage) => {
+  const hasDragImage = typeof setDragImage === 'function';
+  const transferData = type === 'application/json'
+    ? JSON.stringify(data)
+    : data;
+
+  return (ev, el, options) => {
+    if (ev.dataTransfer) {
+      if (ev.dataTransfer.setDragImage && hasDragImage) {
+        try {
+          setDragImage(ev, el, options);
+        } catch (e) {
+          console.warn('draggable dragstart setDragImage error', e);
+        }
+      }
+
+      try {
+        ev.dataTransfer.effectAllowed = effect;
+        ev.dataTransfer.setData(type, transferData);
+      } catch (e) {
+        console.warn('draggable dragstart dataTransfer error', e);
+      }
+    }
+  };
+};
+
 /**
  * Creates a "draggable" element
  * @param {Element} el The DOM element to apply to
@@ -46,31 +116,11 @@ export const draggable = (el, options = {}) => {
     setDragImage: null
   }, options);
 
-  const hasDragImage = typeof setDragImage === 'function';
-  const transferData = type === 'application/json'
-    ? JSON.stringify(data)
-    : data;
+  const setter = setDataTransfer(type, effect, data, setDragImage);
 
   const dragstart = ev => {
     el.setAttribute('aria-grabbed', 'true');
-
-    if (ev.dataTransfer) {
-      if (ev.dataTransfer.setDragImage && hasDragImage) {
-        try {
-          setDragImage(ev, el, options);
-        } catch (e) {
-          console.warn('draggable dragstart setDragImage error', e);
-        }
-      }
-
-      try {
-        ev.dataTransfer.effectAllowed = effect;
-        ev.dataTransfer.setData(type, transferData);
-      } catch (e) {
-        console.warn('draggable dragstart dataTransfer error', e);
-      }
-    }
-
+    setter(ev, el, options);
     return ondragstart(ev);
   };
 
@@ -118,19 +168,6 @@ export const droppable = (el, options = {}) => {
     ondrop: () => true
   }, options);
 
-  const retval = (fn, ...args) => {
-    try {
-      const result = fn(...args);
-      if (typeof result === 'boolean') {
-        return result;
-      }
-    } catch (e) {
-      console.warn('droppable value parsing error', e);
-    }
-
-    return true;
-  };
-
   const dragenter = ev => ondragenter(ev);
 
   const dragleave = ev => {
@@ -157,31 +194,7 @@ export const droppable = (el, options = {}) => {
   };
 
   const drop = ev => {
-    let data;
-    let files = [];
-
-    if (ev.dataTransfer) {
-      files = ev.dataTransfer.files
-        ? Array.from(ev.dataTransfer.files)
-        : [];
-
-      try {
-        const transfer = ev.dataTransfer.getData(type);
-
-        try {
-          if (type === 'application/json') {
-            data = typeof transfer === 'undefined' ? transfer : JSON.parse(transfer);
-          } else {
-            data = transfer;
-          }
-        } catch (e) {
-          data = transfer;
-          console.warn('droppable dataTransfer parsing error', e);
-        }
-      } catch (e) {
-        console.warn('droppable dataTransfer parsing error', e);
-      }
-    }
+    const {files, data} = getDataTransfer(ev, type);
 
     ev.stopPropagation();
     ev.preventDefault();

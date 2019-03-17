@@ -311,16 +311,11 @@ export const getCascadePosition = (win, rect, pos) => {
 
   const newX = startX + ((win.wid % wrap) * distance);
   const newY = startY + ((win.wid % wrap) * distance);
+  const position = (key, value) => typeof pos[key] === 'number' && Number.isInteger(pos[key])
+    ? Math.max(rect[key], pos[key])
+    : value;
 
-  const top = typeof pos.top === 'number' && Number.isInteger(pos.top)
-    ? Math.max(rect.top, pos.top)
-    : newY;
-
-  const left = typeof pos.left === 'number' && Number.isInteger(pos.left)
-    ? Math.max(rect.left, pos.left)
-    : newX;
-
-  return {top, left};
+  return {top: position('top', newY), left: position('left', newX)};
 };
 
 /*

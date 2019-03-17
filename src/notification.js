@@ -112,6 +112,7 @@ export default class Notification {
 
   /**
    * Render notification
+   * @return {<Promise<boolean, Error>}
    */
   render() {
     const onclick = () => this.destroy();
@@ -139,22 +140,24 @@ export default class Notification {
       this.$root.appendChild(this.$element);
 
       app(this.options, {}, view, this.$element);
+
+      return Promise.resolve(true);
     };
 
     if (this.options.native) {
-      createNativeNotification(this.options, onclick)
+      return createNativeNotification(this.options, onclick)
         .catch(err => {
           console.warn('Error on native notification', err);
-          renderCustom();
+          return renderCustom();
         });
-    } else {
-      renderCustom();
-
-      if (this.options.sound) {
-        this.core.make('osjs/sounds')
-          .play(this.options.sound);
-      }
     }
+
+    if (this.options.sound) {
+      this.core.make('osjs/sounds')
+        .play(this.options.sound);
+    }
+
+    return renderCustom();
   }
 
 }

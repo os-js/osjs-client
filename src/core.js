@@ -181,11 +181,11 @@ export default class Core extends CoreBase {
 
       console.groupEnd();
 
-      return !!err;
+      return !err;
     };
 
     if (this.started) {
-      return Promise.resolve();
+      return Promise.resolve(false);
     }
 
     console.group('Core::start()');
@@ -375,7 +375,7 @@ export default class Core extends CoreBase {
 
     return fetch(url, options, type)
       .catch(error => {
-        console.warn(error);
+        this.logger.warn(error);
 
         throw new Error(_('ERR_REQUEST_NOT_OK', error));
       });

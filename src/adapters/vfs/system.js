@@ -38,6 +38,8 @@ const requester = core => (fn, body, type) =>
     .then(response => {
       if (type === 'json') {
         return {mime: 'application/json', body: response};
+      } else if (fn === 'writefile') {
+        return response.json();
       }
 
       const contentType = response.headers.get('content-type') || 'application/octet-stream';
@@ -68,7 +70,7 @@ const methods = (core, request) => {
       formData.append('path', path);
       formData.append('options', options);
 
-      return request('writefile', formData).then(({body}) => body);
+      return request('writefile', formData);
     },
 
     copy: (from, to, options) =>

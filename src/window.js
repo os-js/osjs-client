@@ -30,6 +30,16 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import {droppable} from './utils/dnd';
 import {escapeHtml, createCssText, supportsTransition, getActiveElement} from './utils/dom';
+import {
+  createAttributes,
+  createState,
+  clampPosition,
+  renderCallback,
+  addClassNames,
+  transformVectors,
+  positionFromGravity,
+  dimensionFromElement
+} from './utils/windows';
 
 /**
  * Window dimension definition
@@ -90,171 +100,12 @@ import {escapeHtml, createCssText, supportsTransition, getActiveElement} from '.
  * @typedef WindowState
  */
 
-const MINIMUM_WIDTH = 100;
-const MINIMUM_HEIGHT = 100;
 const ONTOP_ZINDEX = 8388635;
 
 let windows = [];
 let windowCount = 0;
 let nextZindex = 1;
 let lastWindow = null;
-
-/*
- * Creates window attributes from an object
- */
-const createAttributes = (attrs) => Object.assign({
-  classNames: [],
-  modal: false,
-  ontop: false,
-  gravity: false,
-  moveable: true,
-  resizable: true,
-  focusable: true,
-  maximizable: true,
-  minimizable: true,
-  sessionable: true,
-  closeable: true,
-  header: true,
-  controls: true,
-  visibility: 'global',
-  shadowDOM: false,
-  clamp: true,
-  mediaQueries: {
-    small: 'screen and (max-width: 640px)',
-    medium: 'screen and (min-width: 640px) and (max-width: 1024px)',
-    big: 'screen and (min-width: 1024px)'
-  },
-  minDimension: {
-    width: MINIMUM_WIDTH,
-    height: MINIMUM_HEIGHT
-  },
-  maxDimension: {
-    width: -1,
-    height: -1
-  }
-}, attrs);
-
-/*
- * Creates window state from an object
- */
-const createState = (state, options, attrs) => Object.assign({
-  title: options.title || options.id,
-  icon: options.icon || require('./styles/logo-blue-32x32.png'),
-  media: null,
-  moving: false,
-  resizing: false,
-  loading: false,
-  focused: false,
-  maximized: false,
-  minimized: false,
-  zIndex: 1,
-  styles: {},
-  position: Object.assign({}, {
-    left: null,
-    top: null
-  }, options.position),
-  dimension: Object.assign({}, {
-    width: Math.max(attrs.minDimension.width, MINIMUM_WIDTH),
-    height: Math.max(attrs.minDimension.height, MINIMUM_HEIGHT)
-  }, options.dimension)
-}, state);
-
-/*
- * Creates a window id
- */
-const createWindowId = (win) => {
-  const id = windowCount;
-  windowCount++;
-  windows.push(win);
-  return id;
-};
-
-/*
- * Check if we have to set next zindex
- */
-const checkNextZindex = ({wid, attributes, state}) => {
-  const {ontop} = attributes;
-  const {zIndex} = state;
-
-  const windexes = windows
-    .filter(w => w.attributes.ontop === ontop)
-    .filter(w => w.wid !== wid)
-    .map(w => w.state.zIndex);
-
-  const max = windexes.length > 0
-    ? Math.max.apply(null, windexes)
-    : 0;
-
-  return zIndex < max;
-};
-
-/*
- * Clamps position to viewport
- */
-const clampPosition = (rect, {dimension, position}) => {
-  const maxLeft = rect.width - dimension.width;
-  const maxTop = rect.height - dimension.height + rect.top;
-
-  return {
-    left: Math.min(maxLeft, position.left),
-    top: Math.max(rect.top, Math.min(maxTop, position.top))
-  };
-};
-
-/*
- * Window rendering callback function
- */
-const renderCallback = (win, callback) => {
-  if (typeof callback === 'function') {
-    if (win.attributes.shadowDOM) {
-      try {
-        const mode = typeof win.attributes.shadowDOM === 'string'
-          ? win.attributes.shadowDOM
-          : 'open';
-
-        const shadow = win.$content.attachShadow({mode});
-
-        callback(shadow, win);
-
-        return;
-      } catch (e) {
-        console.warn('Shadow DOM not supported?', e);
-      }
-    }
-
-    callback(win.$content, win);
-  }
-};
-
-/*
- * Adds a list of classnames to window element
- */
-const addClassNames = (win, names) => names
-  .filter(val => !!val)
-  .forEach((val) => win.$element.classList.add(val));
-
-const transformVectors = (rect, {width, height}, {top, left}) => {
-  const transform = (val, attr) => {
-    if (!isNaN(val)) {
-      return Number.isInteger(val)
-        ? val
-        : Math.round(rect[attr] * parseFloat(val));
-    }
-
-    return val;
-  };
-
-  return {
-    dimension: {
-      width: transform(width, 'width'),
-      height: transform(height, 'height')
-    },
-    position: {
-      top: transform(top, 'height'),
-      left: transform(left, 'width')
-    }
-  };
-};
 
 /*
  * Default window template
@@ -340,7 +191,7 @@ export default class Window extends EventEmitter {
      * The Window ID
      * @type {Number}
      */
-    this.wid = createWindowId(this);
+    this.wid = ++windowCount;
 
     /**
      * Parent Window reference
@@ -433,6 +284,8 @@ export default class Window extends EventEmitter {
      * @type {string|Function}
      */
     this._template = options.template;
+
+    windows.push(this);
   }
 
   /**
@@ -749,45 +602,15 @@ export default class Window extends EventEmitter {
   resizeFit(container) {
     container = container || this.$content.firstChild;
 
-    if (!container) {
-      return;
-    }
+    if (container) {
+      const rect = this.core.has('osjs/desktop')
+        ? this.core.make('osjs/desktop').getRect()
+        : null;
 
-    const innerBox = (container.parentNode.classList.contains('osjs-gui')
-      ? container.parentNode
-      : container).getBoundingClientRect();
-
-    const outerBox = this.$content.getBoundingClientRect();
-    const diffY = Math.ceil(outerBox.height - innerBox.height);
-    const diffX = Math.ceil(outerBox.width - innerBox.width);
-    const topHeight = this.$header.offsetHeight;
-
-    const {left, top} = this.state.position;
-    const min = this.attributes.minDimension;
-    const max = this.attributes.maxDimension;
-
-    let width = Math.max(container.offsetWidth + diffX, min.width);
-    let height = Math.max(container.offsetHeight + diffY + topHeight, min.height);
-
-    if (max.width > 0) {
-      width = Math.min(width, max.width);
-    }
-
-    if (max.height > 0) {
-      height = Math.min(height, max.height);
-    }
-
-    width = Math.max(width, container.offsetWidth);
-    height = Math.max(height, container.offsetHeight);
-
-    if (this.core.has('osjs/desktop')) {
-      const rect = this.core.make('osjs/desktop').getRect();
-      width = Math.min(width, rect.width - left);
-      height = Math.min(height, rect.height - top);
-    }
-
-    if (!isNaN(width) && !isNaN(height)) {
-      this.setDimension({width, height});
+      const {width, height} = dimensionFromElement(this, rect, container);
+      if (!isNaN(width) && !isNaN(height)) {
+        this.setDimension({width, height});
+      }
     }
   }
 
@@ -882,7 +705,7 @@ export default class Window extends EventEmitter {
    * @param {boolean} [force] Force next index
    */
   setNextZindex(force) {
-    const setNext = force || checkNextZindex(this);
+    const setNext = force || this._checkNextZindex();
 
     if (setNext) {
       this.setZindex(nextZindex);
@@ -924,35 +747,9 @@ export default class Window extends EventEmitter {
     }
 
     const rect = this.core.make('osjs/desktop').getRect();
-    let {left, top} = this.state.position;
+    const position = positionFromGravity(this, rect, gravity);
 
-    if (gravity === 'center') {
-      left = (rect.width / 2) - (this.state.dimension.width / 2);
-      top = (rect.height / 2) - (this.state.dimension.height / 2);
-    } else if (gravity) {
-      let hasVertical =  gravity.match(/top|bottom/);
-      let hasHorizontal = gravity.match(/left|rigth/);
-
-      if (gravity.match(/top/)) {
-        top = rect.top;
-      } else if (gravity.match(/bottom/)) {
-        top = rect.height - (this.state.dimension.height) + rect.top;
-      }
-
-      if (gravity.match(/left/)) {
-        left = rect.left;
-      } else if (gravity.match(/right/)) {
-        left = rect.width - (this.state.dimension.width);
-      }
-
-      if (!hasVertical && gravity.match(/center/)) {
-        top = (rect.height / 2) - (this.state.dimension.height / 2);
-      } else if (!hasHorizontal && gravity.match(/center/)) {
-        left = (rect.width / 2) - (this.state.dimension.width / 2);
-      }
-    }
-
-    this.setPosition({left, top});
+    this.setPosition(position);
   }
 
   /**
@@ -1038,6 +835,25 @@ export default class Window extends EventEmitter {
     }
 
     return true;
+  }
+
+  /**
+   * Check if we have to set next zindex
+   */
+  _checkNextZindex() {
+    const {ontop} = this.attributes;
+    const {zIndex} = this.state;
+
+    const windexes = windows
+      .filter(w => w.attributes.ontop === ontop)
+      .filter(w => w.wid !== this.wid)
+      .map(w => w.state.zIndex);
+
+    const max = windexes.length > 0
+      ? Math.max.apply(null, windexes)
+      : 0;
+
+    return zIndex < max;
   }
 
   /**

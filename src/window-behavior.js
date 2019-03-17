@@ -28,10 +28,14 @@
  * @licence Simplified BSD License
  */
 
-import {supportsPassive} from './utils/dom.js';
-import * as mediaQuery from 'css-mediaquery';
-
-const CASCADE_DISTANCE = 10;
+import {supportsPassive} from './utils/dom';
+import {
+  resizer,
+  mover,
+  getEvent,
+  getMediaQueryName,
+  getCascadePosition
+} from './utils/windows';
 
 const isPassive = supportsPassive();
 const touchArg = isPassive ? {passive: true} : false;
@@ -44,120 +48,6 @@ const actionMap = {
   minimize: (win) => win.minimize(),
   close: (win) => win.close()
 };
-
-/*
- * Creates a clamper for resize/move
- */
-const clamper = win => {
-  const {maxDimension, minDimension} = win.attributes;
-  const {position, dimension} = win.state;
-
-  const maxPosition = {
-    left: position.left + dimension.width - minDimension.width,
-    top: position.top + dimension.height - minDimension.height
-  };
-
-  const clamp = (min, max, current) => {
-    const value = min === -1 ? current : Math.max(min, current);
-    return max === -1 ? value : Math.min(max, value);
-  };
-
-  return (width, height, top, left) => ({
-    width: clamp(minDimension.width, maxDimension.width, width),
-    height: clamp(minDimension.height, maxDimension.height, height),
-    top: clamp(-1, maxPosition.top, top),
-    left: clamp(-1, maxPosition.left, left)
-  });
-};
-
-/*
- * Creates a resize handler
- */
-const resizer = (win, handle) => {
-  const clamp = clamper(win);
-  const {position, dimension} = win.state;
-  const directions = handle.getAttribute('data-direction').split('');
-  const going = dir => directions.indexOf(dir) !== -1;
-  const xDir = going('e') ? 1 : (going('w') ? -1 : 0);
-  const yDir = going('s') ? 1 : (going('n') ? -1 : 0);
-
-  return (diffX, diffY) => {
-    const width = dimension.width + (diffX * xDir);
-    const height = dimension.height + (diffY * yDir);
-    const top = yDir === -1 ? position.top + diffY : position.top;
-    const left = xDir === -1 ? position.left + diffX : position.left;
-
-    return clamp(width, height, top, left);
-  };
-};
-
-/*
- * Creates a movement handler
- */
-const mover = (win, rect) => {
-  const {position} = win.state;
-
-  return (diffX, diffY) => {
-    const top = Math.max(position.top + diffY, rect.top);
-    const left = position.left + diffX;
-
-    return {top, left};
-  };
-};
-
-/*
- * Calculates a new initial position for window
- */
-const getCascadePosition = (win, rect, pos) => {
-  const startX = CASCADE_DISTANCE + rect.left;
-  const startY = CASCADE_DISTANCE + rect.top;
-  const distance = CASCADE_DISTANCE;
-  const wrap = CASCADE_DISTANCE * 2;
-
-  const newX = startX + ((win.wid % wrap) * distance);
-  const newY = startY + ((win.wid % wrap) * distance);
-
-  const top = typeof pos.top === 'number' && Number.isInteger(pos.top)
-    ? Math.max(rect.top, pos.top)
-    : newY;
-
-  const left = typeof pos.left === 'number' && Number.isInteger(pos.left)
-    ? Math.max(rect.left, pos.left)
-    : newX;
-
-  return {top, left};
-};
-
-/*
- * Normalizes event input (position)
- */
-const getEvent = (ev) => {
-  let {clientX, clientY, target} = ev;
-  const touch = ev.touches || ev.changedTouches || [];
-
-  if (touch.length) {
-    clientX = touch[0].clientX;
-    clientY = touch[0].clientY;
-  }
-
-  return {clientX, clientY, touch: touch.length > 0, target};
-};
-
-const getScreenOrientation = screen => screen && screen.orientation
-  ? screen.orientation.type
-  : window.matchMedia('(orientation: portrait)') ? 'portrait' : 'landscape';
-
-/*
- * Gets a media query name from a map
- */
-const getMediaQueryName = (win) => Object.keys(win.attributes.mediaQueries)
-  .filter(name => mediaQuery.match(win.attributes.mediaQueries[name], {
-    type: 'screen',
-    orientation: getScreenOrientation(window.screen),
-    width: win.$element.offsetWidth || win.state.dimension.width,
-    height: win.$element.offsetHeight || win.state.dimension.height
-  }))
-  .pop();
 
 /**
  * Default Window Behavior

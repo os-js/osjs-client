@@ -5,6 +5,7 @@
 [OS.js](https://www.os-js.org/) is an [open-source](https://raw.githubusercontent.com/os-js/OS.js/master/LICENSE) desktop implementation for your browser with a fully-fledged window manager, Application APIs, GUI toolkits and filesystem abstraction.
 
 [![Build Status](https://travis-ci.org/os-js/osjs-client.svg?branch=master)](https://travis-ci.org/os-js/osjs-client)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/074b81c78fd887a7def5/test_coverage)](https://codeclimate.com/github/os-js/osjs-client/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/074b81c78fd887a7def5/maintainability)](https://codeclimate.com/github/os-js/osjs-client/maintainability)
 [![Support](https://img.shields.io/badge/patreon-support-orange.svg)](https://www.patreon.com/user?u=2978551&ty=h&u=2978551)
 [![Back](https://opencollective.com/osjs/tiers/backer/badge.svg?label=backer&color=brightgreen)](https://opencollective.com/osjs)

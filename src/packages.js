@@ -160,7 +160,7 @@ export default class Packages {
     }
 
     if (['theme', 'icons', 'sounds'].indexOf(metadata.type) !== -1) {
-      return this._launchTheme(name, metadata.type);
+      return this._launchTheme(name, metadata);
     }
 
     return this._launchApplication(name, metadata, args, options);
@@ -215,23 +215,15 @@ export default class Packages {
    * Launches a (theme) package
    *
    * @param {string} name Package name
-   * @param {string} type Package type
+   * @param {Metadata} metadata Application metadata
    * @throws {Error}
    * @return {Promise<object, Error>}
    */
-  _launchTheme(name, type) {
-    const _ = this.core.make('osjs/locale').translate;
-
-    const metadata = this
-      .getPackages(iter => ['theme', 'icons', 'sounds'].indexOf(iter.type) !== -1)
-      .find(pkg => pkg.name === name);
-
-    if (!metadata) {
-      throw new Error(_('ERR_PACKAGE_NOT_FOUND', name));
-    }
-
+  _launchTheme(name, metadata) {
     const preloads = (metadata.files || [])
-      .map(f => this.core.url(f, {}, Object.assign({type}, metadata)));
+      .map(f => this.core.url(f, {}, Object.assign({
+        type: metadata.type
+      }, metadata)));
 
     return this.preloader.load(preloads)
       .then(result => {
@@ -249,7 +241,7 @@ export default class Packages {
    * @param {string} name Package name
    * @param {object} args Launch arguments
    * @param {object} options Launch options
-   * @return {Application}
+   * @return {Promise<Application>}
    */
   _launch(name, metadata, args, options) {
     const _ = this.core.make('osjs/locale').translate;

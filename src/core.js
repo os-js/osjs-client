@@ -239,15 +239,21 @@ export default class Core extends CoreBase {
 
     // Sets up a server ping
     this.on('osjs/core:connected', config => {
-      const pingTime = config.cookie.maxAge / 2;
+      const enabled = this.config('http.ping');
 
-      this.ping = setInterval(() => {
-        if (this.ws) {
-          if (this.ws.connected && !this.ws.reconnecting) {
-            this.request('/ping').catch(e => console.warn('Error on ping', e));
+      if (enabled) {
+        const pingTime = typeof enabled === 'number'
+          ? enabled
+          : config.cookie.maxAge / 2;
+
+        this.ping = setInterval(() => {
+          if (this.ws) {
+            if (this.ws.connected && !this.ws.reconnecting) {
+              this.request('/ping').catch(e => console.warn('Error on ping', e));
+            }
           }
-        }
-      }, pingTime);
+        }, pingTime);
+      }
     });
 
   }

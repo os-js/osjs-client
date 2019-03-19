@@ -39,6 +39,7 @@ export const defaultConfiguration = {
   standalone: false,
 
   http: {
+    ping: true, // By default maxAge / 2
     public: path,
     uri
   },

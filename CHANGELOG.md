@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.56
+
+* Added configurable HTTP ping
+
 ## 3.0.55
 
 * Allow arbitrary children in login ui fields

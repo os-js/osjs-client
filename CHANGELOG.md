@@ -3,6 +3,8 @@
 ## 3.0.56
 
 * Added configurable HTTP ping
+* Added unit tests
+* Some minor cleanups and fixes
 
 ## 3.0.55
 

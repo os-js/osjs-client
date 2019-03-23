@@ -1,26 +1,28 @@
 import {createInstance} from 'osjs';
 import Splash from '../src/splash.js';
 
-let core;
-let splash;
+describe('Splash', () => {
+  let core;
+  let splash;
 
-beforeAll(() => {
-  return createInstance()
-    .then(c => {
-      core = c;
-      splash = new Splash(core);
-    });
-});
+  beforeAll(() => {
+    return createInstance()
+      .then(c => {
+        core = c;
+        splash = new Splash(core);
+      });
+  });
 
-afterAll(() => core.destroy());
+  afterAll(() => core.destroy());
 
-// TODO: Check DOM node
-// TODO: Check events ?
+  // TODO: Check DOM node
+  // TODO: Check events ?
 
-it('should show', () => {
-  splash.show();
-});
+  test('#show', () => {
+    splash.show();
+  });
 
-it('should destroy', () => {
-  splash.destroy();
+  test('#destroy', () => {
+    splash.destroy();
+  });
 });

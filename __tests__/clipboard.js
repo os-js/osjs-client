@@ -1,16 +1,16 @@
 import Clipboard from '../src/clipboard.js';
 
-describe('clipboard', () => {
+describe('Clipboard', () => {
   const clipboard = new Clipboard();
 
-  it('should set value', () => {
+  test('#set', () => {
     clipboard.set('value');
 
     return clipboard.get()
       .then(value => expect(value).toBe('value'));
   });
 
-  it('should clear value', () => {
+  test('#clear', () => {
     clipboard.set('value');
     clipboard.clear();
 
@@ -18,7 +18,7 @@ describe('clipboard', () => {
       .then(value => expect(value).toBe(undefined));
   });
 
-  it('should get and clear value', () => {
+  test('#get + #clear', () => {
     clipboard.clear();
     clipboard.set('value');
 

@@ -16,15 +16,15 @@ const createResolver = pathname => {
   });
 };
 
-describe('utils#urlResolver', () => {
-  it('Should resolve paths correctly on root install', () => {
+describe('Url Resolver Utils', () => {
+  test('Should resolve paths correctly on root install', () => {
     const resolver = createResolver('/');
     expect(resolver('/')).toBe('/');
     expect(resolver('/foo')).toBe('/foo');
     expect(resolver('bar/baz')).toBe('/bar/baz');
   });
 
-  it('Should resolve paths correctly on root install', () => {
+  test('Should resolve paths correctly on root install', () => {
     const resolver = createResolver('/proxy/path');
     expect(resolver('/')).toBe('/proxy/path/');
     expect(resolver('/foo')).toBe('/proxy/path/foo');

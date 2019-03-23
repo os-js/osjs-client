@@ -21,10 +21,10 @@ const blob2str = blob => new Promise((resolve, reject) => {
 describe('utils.vfs#getFileIcon', () => {
   const check = s => vfs.parentDirectory(s);
 
-  it('Should remove slashes', () => expect(check('foo://///')).toEqual('foo:/'));
-  it('Should get parent directory', () => expect(check('foo:/bar')).toEqual('foo:/'));
-  it('Should get parent directory', () => expect(check('foo:/bar/baz')).toEqual('foo:/bar/'));
-  it('Should get parent directory', () => expect(check('foo:/bar/baz/jazz')).toEqual('foo:/bar/baz/'));
+  test('Should remove slashes', () => expect(check('foo://///')).toEqual('foo:/'));
+  test('Should get parent directory', () => expect(check('foo:/bar')).toEqual('foo:/'));
+  test('Should get parent directory', () => expect(check('foo:/bar/baz')).toEqual('foo:/bar/'));
+  test('Should get parent directory', () => expect(check('foo:/bar/baz/jazz')).toEqual('foo:/bar/baz/'));
 });
 
 describe('utils.vfs#transformReaddir', () => {
@@ -70,7 +70,7 @@ describe('utils.vfs#transformReaddir', () => {
   const check = (options = {}) => vfs.transformReaddir({path: root}, input, options);
   const checkMap = (options = {}, key = 'filename') => check(options).map(iter => iter[key]);
 
-  it('Should add parent directory', () => {
+  test('Should add parent directory', () => {
     expect(check({
       showHiddenFiles: true
     })[0]).toEqual({
@@ -85,13 +85,13 @@ describe('utils.vfs#transformReaddir', () => {
     });
   });
 
-  it('Should remove dotfiles', () => {
+  test('Should remove dotfiles', () => {
     expect(checkMap({
       showHiddenFiles: false
     })).toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
   });
 
-  it('Should sort by descending order', () => {
+  test('Should sort by descending order', () => {
     const result = checkMap({
       showHiddenFiles: false,
       sortDir: 'desc'
@@ -103,7 +103,7 @@ describe('utils.vfs#transformReaddir', () => {
     expect(every).toEqual(true);
   });
 
-  it('Should sort by specified column', () => {
+  test('Should sort by specified column', () => {
     const result = checkMap({
       showHiddenFiles: true,
       sortDir: 'desc',
@@ -124,21 +124,21 @@ describe('utils.vfs#getFileIcon', () => {
     'foo/bar': {name: 'foo'}
   });
 
-  it('Should match whildchar', () => expect(
+  test('Should match whildchar', () => expect(
     fn({mime: 'text/plain'})
   ).toEqual({name: 'text'}));
 
-  it('Should match regexp', () => expect(
+  test('Should match regexp', () => expect(
     fn({mime: 'application/foo'})
   ).toEqual({name: 'application'}));
 
-  it('Should match plain', () => expect(
+  test('Should match plain', () => expect(
     fn({mime: 'foo/bar'})
   ).toEqual({name: 'foo'}));
 });
 
 describe('utils.vfs#createFileIter', () => {
-  it('Should create a new iter', () => {
+  test('Should create a new iter', () => {
     return expect(vfs.createFileIter()).toEqual({
       isDirectory: false,
       isFile: true,
@@ -158,26 +158,26 @@ describe('utils.vfs#createFileIter', () => {
 describe('utils.vfs#humanFileSize', () => {
   const check = (s, i, si) => vfs.humanFileSize(Math.pow(s, i), si);
 
-  it('Should return in B-s', () => expect(check(1)).toBe('0 B'));
-  it('Should return in B-s', () => expect(check(1, 1, true)).toBe('1 B'));
+  test('Should return in B-s', () => expect(check(1)).toBe('0 B'));
+  test('Should return in B-s', () => expect(check(1, 1, true)).toBe('1 B'));
 
-  it('Should return in KiB-s', () => expect(check(1024, 1)).toBe('1.0 KiB'));
-  it('Should return in MiB-s', () => expect(check(1024, 2)).toBe('1.0 MiB'));
-  it('Should return in GiB-s', () => expect(check(1024, 3)).toBe('1.0 GiB'));
-  it('Should return in TiB-s', () => expect(check(1024, 4)).toBe('1.0 TiB'));
-  it('Should return in PiB-s', () => expect(check(1024, 5)).toBe('1.0 PiB'));
-  it('Should return in EiB-s', () => expect(check(1024, 6)).toBe('1.0 EiB'));
-  it('Should return in ZiB-s', () => expect(check(1024, 7)).toBe('1.0 ZiB'));
-  it('Should return in YiB-s', () => expect(check(1024, 8)).toBe('1.0 YiB'));
+  test('Should return in KiB-s', () => expect(check(1024, 1)).toBe('1.0 KiB'));
+  test('Should return in MiB-s', () => expect(check(1024, 2)).toBe('1.0 MiB'));
+  test('Should return in GiB-s', () => expect(check(1024, 3)).toBe('1.0 GiB'));
+  test('Should return in TiB-s', () => expect(check(1024, 4)).toBe('1.0 TiB'));
+  test('Should return in PiB-s', () => expect(check(1024, 5)).toBe('1.0 PiB'));
+  test('Should return in EiB-s', () => expect(check(1024, 6)).toBe('1.0 EiB'));
+  test('Should return in ZiB-s', () => expect(check(1024, 7)).toBe('1.0 ZiB'));
+  test('Should return in YiB-s', () => expect(check(1024, 8)).toBe('1.0 YiB'));
 
-  it('Should return in K-s', () => expect(check(1024, 1, true)).toBe('1.0 kB'));
-  it('Should return in M-s', () => expect(check(1024, 2, true)).toBe('1.0 MB'));
-  it('Should return in G-s', () => expect(check(1024, 3, true)).toBe('1.1 GB'));
-  it('Should return in T-s', () => expect(check(1024, 4, true)).toBe('1.1 TB'));
-  it('Should return in P-s', () => expect(check(1024, 5, true)).toBe('1.1 PB'));
-  it('Should return in E-s', () => expect(check(1024, 6, true)).toBe('1.2 EB'));
-  it('Should return in Z-s', () => expect(check(1024, 7, true)).toBe('1.2 ZB'));
-  it('Should return in Y-s', () => expect(check(1024, 8, true)).toBe('1.2 YB'));
+  test('Should return in K-s', () => expect(check(1024, 1, true)).toBe('1.0 kB'));
+  test('Should return in M-s', () => expect(check(1024, 2, true)).toBe('1.0 MB'));
+  test('Should return in G-s', () => expect(check(1024, 3, true)).toBe('1.1 GB'));
+  test('Should return in T-s', () => expect(check(1024, 4, true)).toBe('1.1 TB'));
+  test('Should return in P-s', () => expect(check(1024, 5, true)).toBe('1.1 PB'));
+  test('Should return in E-s', () => expect(check(1024, 6, true)).toBe('1.2 EB'));
+  test('Should return in Z-s', () => expect(check(1024, 7, true)).toBe('1.2 ZB'));
+  test('Should return in Y-s', () => expect(check(1024, 8, true)).toBe('1.2 YB'));
 });
 
 describe('utils.vfs#transformArrayBuffer', () => {
@@ -187,36 +187,36 @@ describe('utils.vfs#transformArrayBuffer', () => {
   const create = type => vfs.transformArrayBuffer(testAb, 'text/plain', type);
 
   /* FIXME
-  it('Should create string', () =>
+  test('Should create string', () =>
     create('string')
       .then(result => expect(result).toBe('foo')));
       */
 
-  it('Should create data url', () =>
+  test('Should create data url', () =>
     create('uri')
       .then(result => expect(result).toBe('data:text/plain;charset=undefined,f%00o%00o%00')));
 
   /* FIXME
-  it('Should create blob', () =>
+  test('Should create blob', () =>
     create('blob')
       .then(blob2str)
       .then(result => expect(result).toBe(testText)));
       */
 
-  it('Should create arraybuffer (default)', () =>
+  test('Should create arraybuffer (default)', () =>
     create('arraybuffer')
       .then(ab2str)
       .then(result => expect(result).toBe(testAbString)));
 });
 
 describe('utils.vfs#basename', () => {
-  it('Should resolve', () => {
+  test('Should resolve', () => {
     expect(vfs.basename('home:/foo/bar')).toBe('bar');
   });
 });
 
 describe('utils.vfs#pathname', () => {
-  it('Should resolve', () => {
+  test('Should resolve', () => {
     expect(vfs.pathname('home:/foo/bar')).toBe('home:/foo');
   });
 });

@@ -2,51 +2,53 @@ import {createInstance} from 'osjs';
 import adapter from '../../../src/adapters/settings/localstorage.js';
 let core;
 
-beforeAll(() => createInstance().then(c => (core = c)));
-afterAll(() => core.destroy());
+describe('LocalStorage Settings Adapter', () => {
+  beforeAll(() => createInstance().then(c => (core = c)));
+  afterAll(() => core.destroy());
 
-it('Should save settings', () => {
-  const settings = adapter(core);
+  test('#save', () => {
+    const settings = adapter(core);
 
-  return expect(settings.save({
-    foo: 'bar',
-    jazz: 'bass'
-  }))
-    .resolves
-    .toBe(true);
-});
-
-it('Should load settings', () => {
-  const settings = adapter(core);
-
-  return expect(settings.load())
-    .resolves
-    .toEqual({
+    return expect(settings.save({
       foo: 'bar',
       jazz: 'bass'
-    });
-});
+    }))
+      .resolves
+      .toBe(true);
+  });
 
-it('Should clear entry', () => {
-  const settings = adapter(core);
+  test('#load', () => {
+    const settings = adapter(core);
 
-  return settings.clear('foo')
-    .then(() => {
-      return expect(settings.load())
-        .resolves
-        .toEqual({
-          jazz: 'bass'
-        });
-    });
-});
+    return expect(settings.load())
+      .resolves
+      .toEqual({
+        foo: 'bar',
+        jazz: 'bass'
+      });
+  });
 
-it('Should clear settings', () => {
-  const settings = adapter(core);
+  test('#clear', () => {
+    const settings = adapter(core);
 
-  return settings.clear()
-    .then(() => {
-      return expect(settings.load())
-        .resolves
-        .toEqual({});
-    });
+    return settings.clear('foo')
+      .then(() => {
+        return expect(settings.load())
+          .resolves
+          .toEqual({
+            jazz: 'bass'
+          });
+      });
+  });
+
+  test('#clear - all', () => {
+    const settings = adapter(core);
+
+    return settings.clear()
+      .then(() => {
+        return expect(settings.load())
+          .resolves
+          .toEqual({});
+      });
+  });
 });

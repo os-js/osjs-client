@@ -2,32 +2,34 @@ import {createInstance} from 'osjs';
 import Notification from '../src/notification.js';
 import Notifications from '../src/notifications.js';
 
-let core;
-let notifications;
+describe('Notifications', () => {
+  let core;
+  let notifications;
 
-beforeAll(() => {
-  return createInstance()
-    .then(c => (core = c));
-});
+  beforeAll(() => {
+    return createInstance()
+      .then(c => (core = c));
+  });
 
-afterAll(() => core.destroy());
+  afterAll(() => core.destroy());
 
-it('Should create a new instance', () => {
-  notifications = new Notifications(core);
-  notifications.init();
-});
+  test('#init', () => {
+    notifications = new Notifications(core);
+    notifications.init();
+  });
 
-it('Should fail at creating new notification', () => {
-  expect(() => notifications.create())
-    .toThrow(Error);
-});
+  test('#create - failure', () => {
+    expect(() => notifications.create())
+      .toThrow(Error);
+  });
 
-it('Should create new notification', () => {
-  expect(notifications.create({
-    title: 'Jest'
-  })).toBeInstanceOf(Notification);
-});
+  test('#create', () => {
+    expect(notifications.create({
+      title: 'Jest'
+    })).toBeInstanceOf(Notification);
+  });
 
-it('Should destroy instance', () => {
-  notifications.destroy();
+  test('#destroy', () => {
+    notifications.destroy();
+  });
 });

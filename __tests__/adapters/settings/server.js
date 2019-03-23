@@ -1,24 +1,27 @@
 import {createInstance} from 'osjs';
 import adapter from '../../../src/adapters/settings/server.js';
-let core;
 
-beforeAll(() => createInstance().then(c => (core = c)));
-afterAll(() => core.destroy());
+describe('Server Settings Adapter', () => {
+  let core;
 
-it('Should save settings', () => {
-  const settings = adapter(core);
+  beforeAll(() => createInstance().then(c => (core = c)));
+  afterAll(() => core.destroy());
 
-  return expect(settings.save({}))
-    .resolves
-    .toBe(true);
-});
+  test('#save', () => {
+    const settings = adapter(core);
 
-it('Should load settings', () => {
-  const settings = adapter(core);
+    return expect(settings.save({}))
+      .resolves
+      .toBe(true);
+  });
 
-  return expect(settings.load())
-    .resolves
-    .toEqual({
-      foo: 'bar'
-    });
+  test('#load', () => {
+    const settings = adapter(core);
+
+    return expect(settings.load())
+      .resolves
+      .toEqual({
+        foo: 'bar'
+      });
+  });
 });

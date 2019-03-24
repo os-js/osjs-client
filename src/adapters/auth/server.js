@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Server Auth adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const serverAuth = (core, options) => {
   const request = (endpoint, params = {}) => core.request(endpoint, {
     method: 'POST',

@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * LocalStorage Auth adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const localStorageAuth = (core, options) => ({
   login: (values) => Promise.resolve(values)
 });

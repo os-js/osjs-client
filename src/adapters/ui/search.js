@@ -104,6 +104,9 @@ const createView = (core, fs, icon, _) => {
   ]);
 };
 
+/**
+ * Search UI Adapter
+ */
 const create = (core, $element) => {
   const _ = core.make('osjs/locale').translate;
   const fs = core.make('osjs/fs');

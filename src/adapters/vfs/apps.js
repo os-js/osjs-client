@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Application VFS adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const adapter = (core) => {
   const pkgs = core.make('osjs/packages');
 

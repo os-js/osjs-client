@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * LocalStorage Settings adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const localStorageSettings = core => ({
   clear: ns => {
     if (ns) {

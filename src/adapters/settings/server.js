@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Server Settings adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const serverSettings = core => ({
   save: settings => core.request(core.url('/settings'), {
     method: 'post',

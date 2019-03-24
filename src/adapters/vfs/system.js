@@ -106,6 +106,11 @@ const methods = (core, request) => {
   };
 };
 
+/**
+ * System VFS adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const adapter = (core) => {
   const request = requester(core);
 

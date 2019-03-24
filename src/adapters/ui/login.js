@@ -143,6 +143,9 @@ const createView = (options) => {
   };
 };
 
+/**
+ * Login UI Adapter
+ */
 const create = (options, login, startHidden, $container) => {
   const ee = new EventEmitter('LoginUI');
   const view = createView(options);

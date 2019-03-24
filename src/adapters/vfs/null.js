@@ -28,6 +28,11 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Null VFS adapter
+ * @param {Core} core Core reference
+ * @param {object} [options] Adapter options
+ */
 const nullAdapter = ({
   readdir: (path, options) => Promise.resolve([]),
   readfile: (path, type, options) => Promise.resolve({body: new ArrayBuffer(), mime: 'application/octet-stream'}),

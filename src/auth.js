@@ -131,7 +131,7 @@ export default class Auth {
    * Performs a login
    * @param {object} values Form values as JSON
    */
-  async login(values) {
+  login(values) {
     this.ui.emit('login:start');
 
     return this.adapter

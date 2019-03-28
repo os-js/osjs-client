@@ -52,11 +52,13 @@ export default class Websocket extends EventEmitter {
     super('Websocket@' + name);
 
     this.uri = uri;
+    this.closed = false;
     this.connected = false;
     this.connecting = false;
     this.reconnecting = false;
     this.connectfailed = false;
     this.options = Object.assign({
+      reconnect: true,
       interval: 1000,
       open: true
     }, options);
@@ -117,11 +119,16 @@ export default class Websocket extends EventEmitter {
       this._destroyConnection();
 
       this.connected = false;
-      this.reconnecting = setInterval(() => {
-        this.open();
-      }, this.options.interval);
 
-      this.emit('disconnected', ev);
+      if (this.options.reconnect) {
+        this.reconnecting = setInterval(() => {
+          if (!this.closed) {
+            this.open();
+          }
+        }, this.options.interval);
+      }
+
+      this.emit('disconnected', ev, this.closed);
     });
   }
 
@@ -138,6 +145,7 @@ export default class Websocket extends EventEmitter {
 
     this.reconnecting = clearInterval(this.reconnecting);
     this.connection = new WebSocket(this.uri);
+    this.closed = false;
 
     eventNames.forEach(name => {
       this.connection[`on${name}`] = (...args) => this.emit(name, ...args);
@@ -155,6 +163,8 @@ export default class Websocket extends EventEmitter {
    * Wrapper for closing
    */
   close(...args) {
+    this.closed = true;
+
     return this.connection.close(...args);
   }
 

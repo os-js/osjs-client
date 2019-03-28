@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.57
+
+* Updated Websocket reconnection implementation
+* Removed async keyword from Auth#login
+* Updated esdoc
+* Updated unit tests
+
 ## 3.0.56
 
 * Added configurable HTTP ping

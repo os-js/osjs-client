@@ -178,8 +178,6 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   init() {
     this.initBaseProviders();
-    this.initUtilProviders();
-    this.initTrayProvider();
     this.initLocaleProvider();
     this.initResourceProviders();
 
@@ -191,9 +189,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   initBaseProviders() {
-    const createWindow = (options = {}) => {
-      return new Window(this.core, options);
-    };
+    const createWindow = (options = {}) => new Window(this.core, options);
 
     this.core.instance('osjs/websocket', (...args) => {
       return new Websocket(...args);
@@ -215,15 +211,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       last: () => Window.lastWindow()
     }));
 
-    this.core.instance('osjs/event-handler', (...args) => {
-      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
-      return new EventEmitter(...args);
-    });
-
-    this.core.instance('osjs/event-emitter', (...args) => {
-      return new EventEmitter(...args);
-    });
-
     this.core.singleton('osjs/window-behavior', () => {
       if (typeof this.options.windowBehavior === 'function') {
         return this.options.windowBehavior(this.core);
@@ -232,23 +219,17 @@ export default class CoreServiceProvider extends ServiceProvider {
       return new WindowBehavior(this.core);
     });
 
+    this.core.instance('osjs/event-handler', (...args) => {
+      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
+      return new EventEmitter(...args);
+    });
+
+    this.core.instance('osjs/event-emitter', (...args) => new EventEmitter(...args));
     this.core.singleton('osjs/session', () => this.session);
-
     this.core.singleton('osjs/packages', () => this.pm);
-
     this.core.instance('osjs/clipboard', () => this.clipboard);
-  }
-
-  initUtilProviders() {
     this.core.singleton('osjs/dnd', () => dnd);
-
-    this.core.singleton('osjs/dom', () => ({
-      script,
-      style
-    }));
-  }
-
-  initTrayProvider() {
+    this.core.singleton('osjs/dom', () => ({script, style}));
     this.core.instance('osjs/tray', (options) => {
       if (typeof options !== 'undefined') {
         return this.tray.create(options);

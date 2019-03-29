@@ -172,7 +172,7 @@ describe('Packages', () =>  {
     const pkgs = new Packages(core);
     pkgs.addPackages([metadata]);
     pkgs.register(name, () => fakeApp);
-    pkgs.running = [name];
+    pkgs._running = [name];
 
     setTimeout(() => {
       core.emit(`osjs/application:${name}:launched`, fakeApp);

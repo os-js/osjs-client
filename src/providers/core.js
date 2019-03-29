@@ -234,13 +234,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     this.core.singleton('osjs/session', () => this.session);
 
-    this.core.singleton('osjs/packages', () => ({
-      getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),
-      getPackages: (...args) => this.pm.getPackages(...args),
-      register: (...args) => this.pm.register(...args),
-      launch: (...args) => this.pm.launch(...args),
-      running: () => this.pm.running
-    }));
+    this.core.singleton('osjs/packages', () => this.pm);
 
     this.core.instance('osjs/clipboard', () => this.clipboard);
   }

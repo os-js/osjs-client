@@ -90,7 +90,7 @@ export default class Packages {
      * @desc Mainly used for singleton awareness
      * @type {string[]}
      */
-    this.running = [];
+    this._running = [];
 
     /**
      * Preloader
@@ -188,7 +188,7 @@ export default class Packages {
         return Promise.resolve(foundApp);
       }
 
-      const found = this.running.filter(n => n === name);
+      const found = this._running.filter(n => n === name);
 
       if (found.length > 0) {
         return new Promise((resolve, reject) => {
@@ -206,7 +206,7 @@ export default class Packages {
 
     this.core.emit('osjs/application:launch', name, args, options);
 
-    this.running.push(name);
+    this._running.push(name);
 
     return this._launch(name, metadata, args, options);
   }
@@ -280,9 +280,9 @@ export default class Packages {
 
         if (app instanceof Application) {
           app.on('destroy', () => {
-            const foundIndex = this.running.findIndex(n => n === name);
+            const foundIndex = this._running.findIndex(n => n === name);
             if (foundIndex !== -1) {
-              this.running.splice(foundIndex, 1);
+              this._running.splice(foundIndex, 1);
             }
           });
         } else {
@@ -419,5 +419,13 @@ export default class Packages {
 
       return false;
     });
+  }
+
+  /**
+   * Gets a list of running packages
+   * @return {string[]}
+   */
+  running() {
+    return this._running;
   }
 }

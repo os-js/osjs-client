@@ -79,6 +79,7 @@ const getPublicApi = core => {
 
 /*
  * Resolves various resources
+ * FIXME: Move all of this stuff to a theme class
  */
 const resourceResolver = (core) => {
   const media = supportedMedia();
@@ -179,6 +180,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   init() {
     this.initBaseProviders();
+    this.initApplicationProviders();
     this.initLocaleProvider();
     this.initResourceProviders();
 
@@ -186,15 +188,34 @@ export default class CoreServiceProvider extends ServiceProvider {
       this.session.load();
     });
 
+    // FIXME: deprecated
+    this.core.instance('osjs/event-handler', (...args) => {
+      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
+      return new EventEmitter(...args);
+    });
+
     return this.pm.init();
   }
 
   initBaseProviders() {
-    const createWindow = (options = {}) => new Window(this.core, options);
+    this.core.instance('osjs/websocket', (...args) => new Websocket(...args));
+    this.core.instance('osjs/event-emitter', (...args) => new EventEmitter(...args));
+    this.core.singleton('osjs/session', () => this.session);
+    this.core.singleton('osjs/packages', () => this.pm);
+    this.core.instance('osjs/clipboard', () => this.clipboard);
+    this.core.singleton('osjs/dnd', () => dnd);
+    this.core.singleton('osjs/dom', () => ({script, style}));
+    this.core.instance('osjs/tray', (options) => {
+      if (typeof options !== 'undefined') {
+        return this.tray.create(options);
+      }
 
-    this.core.instance('osjs/websocket', (...args) => {
-      return new Websocket(...args);
+      return this.tray;
     });
+  }
+
+  initApplicationProviders() {
+    const createWindow = (options = {}) => new Window(this.core, options);
 
     this.core.instance('osjs/application', (data = {}) => {
       return new Application(this.core, data);
@@ -218,25 +239,6 @@ export default class CoreServiceProvider extends ServiceProvider {
       }
 
       return new WindowBehavior(this.core);
-    });
-
-    this.core.instance('osjs/event-handler', (...args) => {
-      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
-      return new EventEmitter(...args);
-    });
-
-    this.core.instance('osjs/event-emitter', (...args) => new EventEmitter(...args));
-    this.core.singleton('osjs/session', () => this.session);
-    this.core.singleton('osjs/packages', () => this.pm);
-    this.core.instance('osjs/clipboard', () => this.clipboard);
-    this.core.singleton('osjs/dnd', () => dnd);
-    this.core.singleton('osjs/dom', () => ({script, style}));
-    this.core.instance('osjs/tray', (options) => {
-      if (typeof options !== 'undefined') {
-        return this.tray.create(options);
-      }
-
-      return this.tray;
     });
   }
 
@@ -291,29 +293,11 @@ export default class CoreServiceProvider extends ServiceProvider {
   start() {
     if (this.core.config('development')) {
       this.core.on('osjs/dist:changed', filename => {
-        const url = this.core.url(filename).replace(/^\//, '');
-        const found = this.core.$resourceRoot.querySelectorAll('link[rel=stylesheet]');
-        const map = Array.from(found).reduce((result, item) => {
-          const src = item.getAttribute('href').split('?')[0].replace(/^\//, '');
-          return Object.assign({
-            [src]: item
-          }, result);
-        }, {});
-
-        if (map[url]) {
-          console.debug('Hot-reloading', url);
-
-          setTimeout(() => {
-            map[url].setAttribute('href', url);
-          }, 100);
-        }
+        this.onDistChanged(filename);
       });
 
       this.core.on('osjs/packages:package:changed', name => {
-        // TODO: Reload themes as well
-        Application.getApplications()
-          .filter(proc => proc.metadata.name === name)
-          .forEach(proc => proc.relaunch());
+        this.onPackageChanged(name);
       });
     }
 
@@ -322,4 +306,29 @@ export default class CoreServiceProvider extends ServiceProvider {
     });
   }
 
+  onDistChanged(filename) {
+    const url = this.core.url(filename).replace(/^\//, '');
+    const found = this.core.$resourceRoot.querySelectorAll('link[rel=stylesheet]');
+    const map = Array.from(found).reduce((result, item) => {
+      const src = item.getAttribute('href').split('?')[0].replace(/^\//, '');
+      return Object.assign({
+        [src]: item
+      }, result);
+    }, {});
+
+    if (map[url]) {
+      console.debug('Hot-reloading', url);
+
+      setTimeout(() => {
+        map[url].setAttribute('href', url);
+      }, 100);
+    }
+  }
+
+  onPackageChanged(name) {
+    // TODO: Reload themes as well
+    Application.getApplications()
+      .filter(proc => proc.metadata.name === name)
+      .forEach(proc => proc.relaunch());
+  }
 }

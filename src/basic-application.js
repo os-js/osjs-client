@@ -45,13 +45,13 @@ export class BasicApplication extends EventEmitter {
    * @param {Core} core OS.js Core API
    * @param {Application} proc The application process
    * @param {Window} win The main application window
-   * @param {object} options Basic application options
+   * @param {object} [options] Basic application options
    * @param {string[]} [options.mimeTypes] What MIME types to support (all/fallback)
    * @param {string[]} [options.loadMimeTypes] What MIME types to support on load
    * @param {string[]} [options.saveMimeTypes] What MIME types to support on save
    * @param {string} [options.defaultFilename] Default filename of a new file
    */
-  constructor(core, proc, win, options) {
+  constructor(core, proc, win, options = {}) {
     super('BasicApplication<' + proc.name + '>');
 
     this.core = core;

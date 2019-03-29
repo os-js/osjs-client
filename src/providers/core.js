@@ -44,42 +44,10 @@ import {BasicApplication} from '../basic-application.js';
 import {ServiceProvider} from '@osjs/common';
 import {EventEmitter} from '@osjs/event-emitter';
 
-/*
- * Gets the public facting API object
- */
-const getPublicApi = core => {
-  const globalBlacklist = core.config('providers.globalBlacklist', []);
-  const globalWhitelist = core.config('providers.globalWhitelist', []);
-  const register = (...args) => core.make('osjs/packages').register(...args);
-
-  const make = (...args) => {
-    const [name] = args;
-
-    if (core.has(name)) {
-      const blacklisted = globalBlacklist.length > 0 && globalBlacklist.indexOf(name) !== -1;
-      const notWhitelisted = globalWhitelist.length > 0 && globalWhitelist.indexOf(name) === -1;
-
-      if (blacklisted || notWhitelisted) {
-        throw new Error(`The provider '${name}' cannot be used via global scope`);
-      }
-    }
-
-    return core.make(...args);
-  };
-
-  return Object.freeze({
-    make,
-    register,
-    url: (...args) => core.url(...args),
-    run: (...args) => core.run(...args),
-    open: (...args) => core.open(...args),
-    request: (...args) => core.request(...args)
-  });
-};
 
 /*
  * Resolves various resources
- * FIXME: Move all of this stuff to a theme class
+ * TODO: Move all of this (and related) stuff to a Theme class
  */
 const resourceResolver = (core) => {
   const media = supportedMedia();
@@ -122,6 +90,40 @@ const resourceResolver = (core) => {
   return {themeResource, soundResource, soundsEnabled, icon};
 };
 
+/*
+ * Provides localization
+ * TODO: Move to a Locale class
+ */
+const localeContract = core => {
+  const translate = translatable(core)(translations);
+
+  return {
+    format: format(core),
+    translate,
+    translatable: translatable(core),
+    translatableFlat: translatableFlat(core),
+    getLocale: (key = 'language') => {
+      const ref = getLocale(core, key);
+      return ref.userLocale || ref.defaultLocale;
+    },
+    setLocale: name => name in translations
+      ? core.make('osjs/settings')
+        .set('osjs/locale', 'language', name)
+        .save()
+        .then(() => core.emit('osjs/locale:change', name))
+      : Promise.reject(translate('ERR_INVALID_LOCALE', name))
+  };
+};
+
+/*
+ * Provides window contract
+ */
+const windowContract = core => ({
+  create: (options = {}) => new Window(this.core, options),
+  list: () => Window.getWindows(),
+  last: () => Window.lastWindow()
+});
+
 /**
  * OS.js Core Service Provider
  *
@@ -137,12 +139,12 @@ export default class CoreServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    window.OSjs = getPublicApi(core);
-
     this.session = new Session(core);
     this.tray = new Tray(core);
     this.pm = new Packages(core);
     this.clipboard = new Clipboard();
+
+    window.OSjs = this.createGlobalApi();
   }
 
   /**
@@ -180,8 +182,6 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   init() {
     this.initBaseProviders();
-    this.initApplicationProviders();
-    this.initLocaleProvider();
     this.initResourceProviders();
 
     this.core.on('osjs/core:started', () => {
@@ -198,69 +198,27 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   initBaseProviders() {
+    this.core.instance('osjs/window', (options = {}) => new Window(this.core, options));
+    this.core.instance('osjs/application', (data = {}) => new Application(this.core, data));
+    this.core.instance('osjs/basic-application', (...args) => new BasicApplication(this.core, ...args));
     this.core.instance('osjs/websocket', (...args) => new Websocket(...args));
     this.core.instance('osjs/event-emitter', (...args) => new EventEmitter(...args));
+
+    this.core.instance('osjs/tray', (options) => typeof options !== 'undefined'
+      ? this.tray.create(options)
+      : this.tray);
+
+    this.core.singleton('osjs/windows', () => windowContract(this.core));
+    this.core.singleton('osjs/locale', () => localeContract(this.core));
     this.core.singleton('osjs/session', () => this.session);
     this.core.singleton('osjs/packages', () => this.pm);
     this.core.singleton('osjs/clipboard', () => this.clipboard);
     this.core.singleton('osjs/dnd', () => dnd);
     this.core.singleton('osjs/dom', () => ({script, style}));
-    this.core.instance('osjs/tray', (options) => {
-      if (typeof options !== 'undefined') {
-        return this.tray.create(options);
-      }
 
-      return this.tray;
-    });
-  }
-
-  initApplicationProviders() {
-    const createWindow = (options = {}) => new Window(this.core, options);
-
-    this.core.instance('osjs/application', (data = {}) => {
-      return new Application(this.core, data);
-    });
-
-    this.core.instance('osjs/basic-application', (proc, win, options = {}) => {
-      return new BasicApplication(this.core, proc, win, options);
-    });
-
-    this.core.instance('osjs/window', createWindow);
-
-    this.core.singleton('osjs/windows', () => ({
-      create: createWindow,
-      list: () => Window.getWindows(),
-      last: () => Window.lastWindow()
-    }));
-
-    this.core.singleton('osjs/window-behavior', () => {
-      if (typeof this.options.windowBehavior === 'function') {
-        return this.options.windowBehavior(this.core);
-      }
-
-      return new WindowBehavior(this.core);
-    });
-  }
-
-  initLocaleProvider() {
-    const localeApi = {
-      format: format(this.core),
-      translate: translatable(this.core)(translations),
-      translatable: translatable(this.core),
-      translatableFlat: translatableFlat(this.core),
-      getLocale: (key = 'language') => {
-        const ref = getLocale(this.core, key);
-        return ref.userLocale || ref.defaultLocale;
-      },
-      setLocale: name => name in translations
-        ? this.core.make('osjs/settings')
-          .set('osjs/locale', 'language', name)
-          .save()
-          .then(() => this.core.emit('osjs/locale:change', name))
-        : Promise.reject(localeApi.translate('ERR_INVALID_LOCALE', name))
-    };
-
-    this.core.singleton('osjs/locale', () => localeApi);
+    this.core.singleton('osjs/window-behavior', () => typeof this.options.windowBehavior === 'function'
+      ? this.options.windowBehavior(this.core)
+      : new WindowBehavior(this.core));
   }
 
   initResourceProviders() {
@@ -287,7 +245,35 @@ export default class CoreServiceProvider extends ServiceProvider {
         return false;
       }
     }));
+  }
 
+  createGlobalApi() {
+    const globalBlacklist = this.core.config('providers.globalBlacklist', []);
+    const globalWhitelist = this.core.config('providers.globalWhitelist', []);
+
+    const make = (...args) => {
+      const [name] = args;
+
+      if (this.core.has(name)) {
+        const blacklisted = globalBlacklist.length > 0 && globalBlacklist.indexOf(name) !== -1;
+        const notWhitelisted = globalWhitelist.length > 0 && globalWhitelist.indexOf(name) === -1;
+
+        if (blacklisted || notWhitelisted) {
+          throw new Error(`The provider '${name}' cannot be used via global scope`);
+        }
+      }
+
+      return this.core.make(...args);
+    };
+
+    return Object.freeze({
+      make,
+      register: (...args) => this.pm.register(...args),
+      url: (...args) => this.core.url(...args),
+      run: (...args) => this.core.run(...args),
+      open: (...args) => this.core.open(...args),
+      request: (...args) => this.core.request(...args)
+    });
   }
 
   start() {

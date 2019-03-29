@@ -124,4 +124,11 @@ export default class Tray {
     }
   }
 
+  /**
+   * @return {TrayEntry[]}
+   */
+  list() {
+    return this.entries;
+  }
+
 }

@@ -49,6 +49,7 @@ export default class Notification {
    * @param {string} [options.sound=message] Sound to play
    * @param {string} [options.icon] Icon source
    * @param {number} [options.timeout=5000] Timeout value (0=infinite)
+   * @param {string} [options.className] Adds a DOM class name to notification
    */
   constructor(core, root, options = {}) {
     const defaultLabel = core.make('osjs/locale')
@@ -88,7 +89,8 @@ export default class Notification {
       message: defaultLabel,
       timeout: 5000,
       native: core.config('notifications.native', false),
-      sound: 'message'
+      sound: 'message',
+      className: ''
     }, options);
 
     this.core.emit('osjs/notification:create', this);
@@ -130,6 +132,9 @@ export default class Notification {
       ]);
 
       this.$element.classList.add('osjs-notification');
+      if (this.options.className) {
+        this.$element.classList.add(this.options.className);
+      }
 
       if (this.options.timeout) {
         setTimeout(() => this.destroy(), this.options.timeout);

@@ -202,7 +202,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.instance('osjs/event-emitter', (...args) => new EventEmitter(...args));
     this.core.singleton('osjs/session', () => this.session);
     this.core.singleton('osjs/packages', () => this.pm);
-    this.core.instance('osjs/clipboard', () => this.clipboard);
+    this.core.singleton('osjs/clipboard', () => this.clipboard);
     this.core.singleton('osjs/dnd', () => dnd);
     this.core.singleton('osjs/dom', () => ({script, style}));
     this.core.instance('osjs/tray', (options) => {

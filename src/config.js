@@ -160,6 +160,9 @@ export const defaultConfiguration = {
       }],
       widgets: [],
       keybindings: [],
+      notifications: {
+        position: 'top-right'
+      },
       background: {
         src: require('./styles/wallpaper.png'),
         color: '#572a79',

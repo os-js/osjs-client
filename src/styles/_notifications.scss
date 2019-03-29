@@ -35,9 +35,8 @@
   pointer-events: none;
   box-sizing: border-box;
   padding: $base-margin;
-  height: 100%;
-  max-height: 100%;
   z-index: 16777272;
+  overflow: visible;
 }
 
 .osjs-notification {

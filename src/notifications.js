@@ -29,6 +29,7 @@
  */
 
 import Notification from './notification';
+import {createCssText} from './utils/dom';
 
 /**
  * Handles Notifications
@@ -57,6 +58,12 @@ export default class Notifications {
     this.$element = document.createElement('div');
     this.$element.classList.add('osjs-notifications');
     this.core.$root.appendChild(this.$element);
+
+    this.core.on('osjs/desktop:applySettings', () => {
+      this.setElementStyles();
+    });
+
+    this.setElementStyles();
   }
 
   /**
@@ -72,5 +79,34 @@ export default class Notifications {
     const notification = new Notification(this.core, this.$element, options);
     notification.render();
     return notification;
+  }
+
+  /**
+   * Sets the element styles
+   */
+  setElementStyles() {
+    const styles = createCssText(this.createElementStyles());
+    this.$element.style.cssText = styles;
+  }
+
+  /**
+   * Creates a new CSS style object
+   * @return {object}
+   */
+  createElementStyles() {
+    const defaultPosition = this.core
+      .config('desktop.settings.notifications.position', 'top-right');
+
+    const position = this.core.make('osjs/settings')
+      .get('osjs/desktop', 'notifications.position', defaultPosition);
+
+    if (position.split('-').length !== 2) {
+      return {};
+    }
+
+    return ['left', 'right', 'top', 'bottom']
+      .reduce((carry, key) => Object.assign({
+        [key]: position.indexOf(key) === -1 ? 'auto' : '0'
+      }, carry), {});
   }
 }

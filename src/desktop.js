@@ -438,6 +438,8 @@ export default class Desktop extends EventEmitter {
     this.applyTheme(newSettings.theme);
     this.applyIcons(newSettings.icons);
 
+    this.core.emit('osjs/desktop:applySettings');
+
     return Object.assign({}, newSettings);
   }
 

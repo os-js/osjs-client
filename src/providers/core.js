@@ -172,6 +172,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.tray.destroy();
     this.pm.destroy();
     this.clipboard.destroy();
+    this.session.destroy();
 
     super.destroy();
   }

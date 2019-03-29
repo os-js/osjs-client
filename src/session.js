@@ -51,6 +51,12 @@ export default class Session {
   }
 
   /**
+   * Destroys instance
+   */
+  destroy() {
+  }
+
+  /**
    * Saves session
    */
   save() {

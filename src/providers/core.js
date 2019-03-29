@@ -232,10 +232,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       return new WindowBehavior(this.core);
     });
 
-    this.core.singleton('osjs/session', () => ({
-      save: () => this.session.save(),
-      load: (fresh = true) => this.session.load(fresh)
-    }));
+    this.core.singleton('osjs/session', () => this.session);
 
     this.core.singleton('osjs/packages', () => ({
       getCompatiblePackages: (...args) => this.pm.getCompatiblePackages(...args),

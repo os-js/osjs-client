@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.58
+
+* Added support for configuring notification position (#47)
+* Added support for adding className to Notification (#47)
+
 ## 3.0.57
 
 * Updated Websocket reconnection implementation

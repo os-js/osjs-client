@@ -119,7 +119,7 @@ const localeContract = core => {
  * Provides window contract
  */
 const windowContract = core => ({
-  create: (options = {}) => new Window(this.core, options),
+  create: (options = {}) => new Window(core, options),
   list: () => Window.getWindows(),
   last: () => Window.lastWindow()
 });

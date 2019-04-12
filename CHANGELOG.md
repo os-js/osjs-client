@@ -1,5 +1,18 @@
 # Changelog for osjs-client
 
+## 3.0.59
+
+* Added Auth#register and adapter support
+* Fixed unexpected 'this' in window contract
+* Updated some provisioning in CoreServiceProvider
+* Updated Clipboard service provision
+* Split up some stuff in CoreServiceProvider
+* Added Session#destroy
+* Minor cleanup in CoreServiceProvider
+* Updated PackageManager service provision
+* Updated Session service provision
+* Updated Tray service provision
+
 ## 3.0.58
 
 * Added support for configuring notification position (#47)

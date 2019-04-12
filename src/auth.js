@@ -64,6 +64,7 @@ export default class Auth {
     this.adapter = Object.assign({
       login: () => Promise.reject(new Error('Not implemented')),
       logout: () => Promise.reject(new Error('Not implemented')),
+      register: () => Promise.reject(new Error('Not implemented')),
       init: () => Promise.resolve(true),
       destroy: () => {}
     }, adapter(core, args.config || {}));
@@ -176,5 +177,14 @@ export default class Auth {
 
         return true;
       });
+  }
+
+  /**
+   * Performs a register call
+   * @param {object} values Form values as JSON
+   * @return {Promise<*>}
+   */
+  register(values) {
+    return this.adapter.register(values);
   }
 }

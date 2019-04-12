@@ -60,6 +60,11 @@ const fetchMocks = {
 
     '/logout': true,
 
+    '/register': ({body}) => {
+      const parsed = JSON.parse(body);
+      return {username: parsed.username};
+    },
+
     '/login': ({body}) => Object.assign({
       id: 0,
       groups: []

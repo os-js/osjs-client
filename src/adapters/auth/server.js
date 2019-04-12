@@ -40,6 +40,7 @@ const serverAuth = (core, options) => {
   }, 'json');
 
   return {
+    register: (values) => request('/register', values),
     login: (values) => request('/login', values),
     logout: () =>  request('/logout')
   };

@@ -22,6 +22,18 @@ describe('Server Auth Adapter', () => {
       });
   });
 
+  test('#register', () => {
+    const a = adapter(core);
+
+    return expect(a.register({
+      username: 'jest'
+    }))
+      .resolves
+      .toEqual({
+        username: 'jest'
+      });
+  });
+
   test('#logout', () => {
     const a = adapter(core);
 

@@ -35,6 +35,15 @@ describe('Auth', () => {
       });
   });
 
+  test('#register', () => {
+    return expect(auth.register({
+      username: 'jest',
+      password: 'jest'
+    }))
+      .resolves
+      .toEqual({username: 'jest'});
+  });
+
   test('#logout', () => {
     return expect(auth.logout())
       .resolves

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.60
+
+* Updated dependencies
+
 ## 3.0.59
 
 * Added Auth#register and adapter support

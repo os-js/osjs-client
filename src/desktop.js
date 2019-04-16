@@ -31,6 +31,7 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
+import {matchKeyCombo} from './utils/input';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
@@ -160,6 +161,7 @@ export default class Desktop extends EventEmitter {
     this.initUIEvents();
     this.initDragEvents();
     this.initKeyboardEvents();
+    this.initGlobalKeyboardEvents();
     this.initMouseEvents();
     this.initBaseEvents();
     this.initLocales();
@@ -298,6 +300,31 @@ export default class Desktop extends EventEmitter {
         }
       }
     });
+  }
+
+  initGlobalKeyboardEvents() {
+    let keybindings = [];
+
+    const defaults = this.core.config('desktop.settings.keybindings', {});
+
+    const reload = () => {
+      keybindings = this.core.make('osjs/settings')
+        .get('osjs/desktop', 'keybindings', defaults);
+    };
+
+    window.addEventListener('keydown', ev => {
+      Object.keys(keybindings).some(eventName => {
+        const combo = keybindings[eventName];
+        const result = matchKeyCombo(combo, ev);
+        if (result) {
+          this.core.emit('osjs/desktop:keybinding:' + eventName, ev);
+        }
+      });
+    });
+
+    this.core.on('osjs/settings:load', reload);
+    this.core.on('osjs/settings:save', reload);
+    this.core.on('osjs/core:started', reload);
   }
 
   initMouseEvents() {

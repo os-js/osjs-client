@@ -29,13 +29,8 @@
  */
 
 import {supportsPassive} from './utils/dom';
-import {
-  resizer,
-  mover,
-  getEvent,
-  getMediaQueryName,
-  getCascadePosition
-} from './utils/windows';
+import {getEvent} from './utils/input';
+import {resizer, mover, getMediaQueryName, getCascadePosition} from './utils/windows';
 
 const isPassive = supportsPassive();
 const touchArg = isPassive ? {passive: true} : false;

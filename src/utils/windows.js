@@ -311,21 +311,6 @@ export const getCascadePosition = (win, rect, pos) => {
   return {top: position('top', newY), left: position('left', newX)};
 };
 
-/*
- * Normalizes event input (position)
- */
-export const getEvent = (ev) => {
-  let {clientX, clientY, target} = ev;
-  const touch = ev.touches || ev.changedTouches || [];
-
-  if (touch.length) {
-    clientX = touch[0].clientX;
-    clientY = touch[0].clientY;
-  }
-
-  return {clientX, clientY, touch: touch.length > 0, target};
-};
-
 const getScreenOrientation = screen => screen && screen.orientation
   ? screen.orientation.type
   : window.matchMedia('(orientation: portrait)') ? 'portrait' : 'landscape';

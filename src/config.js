@@ -159,7 +159,7 @@ export const defaultConfiguration = {
         ]
       }],
       widgets: [],
-      keybindings: [],
+      keybindings: {},
       notifications: {
         position: 'top-right'
       },

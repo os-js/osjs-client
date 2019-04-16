@@ -142,12 +142,6 @@ describe('Window Utils', () => {
     });
   });
 
-  test('getEvent', () => {
-    expect(windows.getEvent({
-      touches: [{clientX: 100, clientY: 100}]
-    })).toEqual({clientX: 100, clientY: 100, touch: true, target: undefined});
-  });
-
   test('getMediaQueryName', () => {
     const attributes = windows.createAttributes({});
     const state = windows.createState({}, {

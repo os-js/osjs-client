@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.0.61
+
+* Added internal keycombo input handler
+* Moved 'settings:load' event call
+* Updated unit test coverage
+* Updated pathJoin in utils to be more flexible
+
 ## 3.0.60
 
 * Updated dependencies

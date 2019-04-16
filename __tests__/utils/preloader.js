@@ -8,11 +8,24 @@ describe('Preloader', () => {
   });
 
   test('#load', () => {
-    return expect(pre.load([]))
+    return expect(pre.load([
+      'onload.js',
+      'onload.css',
+      'onreadystatechange.js',
+      'onerror.css',
+      'onerror.js'
+    ]))
       .resolves
       .toEqual({
-        elements: {},
-        errors: []
+        elements: expect.objectContaining({
+          'onload.js': expect.any(HTMLScriptElement),
+          'onload.css': expect.any(HTMLLinkElement),
+          'onreadystatechange.js': expect.any(HTMLScriptElement)
+        }),
+        errors: [
+          'onerror.css',
+          'onerror.js'
+        ]
       });
   });
 });

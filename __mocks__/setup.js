@@ -111,6 +111,28 @@ console.debug = noop;
 console.group = noop;
 console.groupEnd = noop;
 
+const originalCreateElement = document.createElement;
+document.createElement = type => {
+  const el = originalCreateElement.call(document, type);
+  if (type === 'script' || type === 'link') {
+    setTimeout(() => {
+      const src = (el.src || el.href || '').replace(/\.(css|js)$/, '');
+      if (src === 'http://localhost/onreadystatechange') {
+        el.readyState = 'loaded';
+        el.onreadystatechange();
+      } else if (src === 'http://localhost/onerror') {
+        el.onerror(new Error('Simulated failure'));
+      } else {
+        if (typeof el.onload === 'function') {
+          el.onload();
+        }
+      }
+    }, 10);
+  }
+
+  return el;
+};
+
 window.URL = {
   createObjectURL: () => {},
   revokeObjectURL: () => {}

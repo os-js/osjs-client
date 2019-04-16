@@ -97,10 +97,18 @@ describe('utils.vfs#transformReaddir', () => {
       sortDir: 'desc'
     });
 
-    const every = ['..', 'xdirectory', 'directory', 'xfile', 'file']
-      .every((str, index) => result[index] === str);
+    return expect(result)
+      .toEqual(['..', 'xdirectory', 'directory', 'xfile', 'file']);
+  });
 
-    expect(every).toEqual(true);
+  test('Should sort by ascending order', () => {
+    const result = checkMap({
+      showHiddenFiles: false,
+      sortDir: 'invalid-will-be-asc'
+    });
+
+    return expect(result)
+      .toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
   });
 
   test('Should sort by specified column', () => {
@@ -218,5 +226,16 @@ describe('utils.vfs#basename', () => {
 describe('utils.vfs#pathname', () => {
   test('Should resolve', () => {
     expect(vfs.pathname('home:/foo/bar')).toBe('home:/foo');
+  });
+});
+
+describe('utils.vfs#pathJoin', () => {
+  test('Should join paths', () => {
+    expect(vfs.pathJoin('/foo', 'bar')).toBe('/foo/bar');
+    expect(vfs.pathJoin('foo', 'bar')).toBe('foo/bar');
+    expect(vfs.pathJoin('foo/', 'bar')).toBe('foo/bar');
+    expect(vfs.pathJoin('foo', '/bar')).toBe('foo/bar');
+    expect(vfs.pathJoin('foo', 'bar/')).toBe('foo/bar');
+    expect(vfs.pathJoin('home:/', 'foo', 'bar')).toBe('home:/foo/bar');
   });
 });

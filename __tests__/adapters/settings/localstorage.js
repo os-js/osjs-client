@@ -3,8 +3,16 @@ import adapter from '../../../src/adapters/settings/localstorage.js';
 let core;
 
 describe('LocalStorage Settings Adapter', () => {
-  beforeAll(() => createInstance().then(c => (core = c)));
-  afterAll(() => core.destroy());
+  beforeAll(() => {
+    localStorage.setItem('failure', '{failure}');
+
+    createInstance().then(c => (core = c));
+  });
+
+  afterAll(() => {
+    localStorage.clearItem('failure');
+    core.destroy();
+  });
 
   test('#save', () => {
     const settings = adapter(core);
@@ -24,7 +32,8 @@ describe('LocalStorage Settings Adapter', () => {
       .resolves
       .toEqual({
         foo: 'bar',
-        jazz: 'bass'
+        jazz: 'bass',
+        failure: '{failure}'
       });
   });
 
@@ -36,7 +45,8 @@ describe('LocalStorage Settings Adapter', () => {
         return expect(settings.load())
           .resolves
           .toEqual({
-            jazz: 'bass'
+            jazz: 'bass',
+            failure: '{failure}'
           });
       });
   });

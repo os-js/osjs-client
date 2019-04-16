@@ -30,4 +30,21 @@ describe('Url Resolver Utils', () => {
     expect(resolver('/foo')).toBe('/proxy/path/foo');
     expect(resolver('bar/baz')).toBe('/proxy/path/bar/baz');
   });
+
+  test('Should default to public path', () => {
+    const resolver = createResolver('/default');
+    expect(resolver(null)).toBe('/default/');
+  });
+
+  test('Should return itself on absolute', () => {
+    const resolver = createResolver('/');
+    expect(resolver('https://os-js.org')).toBe('https://os-js.org');
+  });
+
+  test('Should resolve package urls', () => {
+    const resolver = createResolver('/');
+    expect(resolver('foo', {}, {name: 'Jest', type: 'application'})).toBe('/apps/Jest/foo');
+    expect(resolver('foo', {}, {name: 'Jest', type: 'theme'})).toBe('/themes/Jest/foo');
+    expect(resolver('foo', {}, {name: 'Jest', type: 'icons'})).toBe('/icons/Jest/foo');
+  });
 });

@@ -46,7 +46,12 @@ export const parentDirectory = path => path
  * @return {string}
  */
 export const pathJoin = (...args) => args
-  .reduce((o, a, i) => o.concat([i > 0 ? a.replace(/\/$/, '') : a]), [])
+  .map((str, index) => {
+    if (index > 0) {
+      str = str.replace(/^\/?/, '');
+    }
+    return str.replace(/\/?$/, '');
+  })
   .join('/');
 
 /*

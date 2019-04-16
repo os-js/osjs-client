@@ -108,8 +108,6 @@ export default class Settings {
    * @return {Promise<boolean,  Error>}
    */
   load() {
-    this.core.emit('osjs/settings:load');
-
     const defaults = this.core.config('settings.defaults', {});
 
     return this.adapter.load()
@@ -117,6 +115,8 @@ export default class Settings {
         this.settings = merge(defaults, settings, {
           arrayMerge: (dest, source) => source
         });
+
+        this.core.emit('osjs/settings:load');
 
         return true;
       }).catch(e => {

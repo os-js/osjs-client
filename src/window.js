@@ -436,15 +436,13 @@ export default class Window extends EventEmitter {
    */
   _checkModal() {
     // TODO: Global modal
-    if (this.attributes.modal) {
-      if (this.parent) {
+    if (this.parent) {
+      if (this.attributes.modal) {
         this.on('render', () => this.parent.setState('loading', true));
-
-        this.on('destroy', () => {
-          this.parent.setState('loading', false);
-          this.parent.focus();
-        });
+        this.on('destroy', () => this.parent.setState('loading', false));
       }
+
+      this.on('destroy', () => this.parent.focus());
     }
   }
 

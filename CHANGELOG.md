@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.0.62
+
+* Window parent will now focus on destruction even if not modal
+
 ## 3.0.61
 
 * Added internal keycombo input handler

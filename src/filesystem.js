@@ -225,6 +225,8 @@ export default class Filesystem extends EventEmitter {
    * @return {*}
    */
   _request(method, ...args) {
+    this.core.emit(`osjs/vfs:${method}`, ...args);
+
     if (['rename', 'move', 'copy'].indexOf(method) !== -1) {
       const [src, dest] = args;
       const srcMount = this.getMountpointFromPath(src);
@@ -244,8 +246,6 @@ export default class Filesystem extends EventEmitter {
 
     const [file] = args;
     const mount = this.getMountpointFromPath(file);
-
-    this.core.emit(`osjs/vfs:${method}`, ...args);
 
     return VFS[method](mount._adapter, mount)(...args);
   }

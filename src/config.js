@@ -30,9 +30,13 @@
 
 import {clientLocale} from './utils/locale.js';
 
-const {pathname, href} = window.location;
-const path = pathname.substr(-1) !== '/' ? pathname + '/' : pathname;
-const uri = href.replace(/[^/]*$/, '');
+const createUri = str => str
+  .replace(/(index\.(html?|php))$/, '')
+  .replace(/\/?$/, '/');
+
+const pathname = createUri(window.location.pathname);
+
+const href = createUri(window.location.href);
 
 export const defaultConfiguration = {
   development: !(process.env.NODE_ENV || '').match(/^prod/i),
@@ -40,13 +44,13 @@ export const defaultConfiguration = {
 
   http: {
     ping: true, // By default maxAge / 2
-    public: path,
-    uri
+    public: pathname,
+    uri: href
   },
 
   ws: {
     connectInterval: 5000,
-    uri: uri.replace(/^http/, 'ws'),
+    uri: href.replace(/^http/, 'ws'),
     disabled: false
   },
 

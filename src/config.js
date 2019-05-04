@@ -65,7 +65,8 @@ export const defaultConfiguration = {
   },
 
   packages: {
-    manifest: '/metadata.json'
+    manifest: '/metadata.json',
+    metadata: []
   },
 
   // FIXME: Move into packages above ?!

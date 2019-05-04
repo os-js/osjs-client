@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.0.63
+
+* Add support for static metadata
+* Fix base url when ending with filename (fixes #71)
+
 ## 3.0.62
 
 * Window parent will now focus on destruction even if not modal

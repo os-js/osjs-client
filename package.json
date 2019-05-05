@@ -16,7 +16,7 @@
   "scripts": {
     "test": "npm run eslint && npm run stylelint && npm run test:coverage",
     "test:coverage": "jest",
-    "eslint": "eslint index.js",
+    "eslint": "eslint index.js 'src/**/*.js'",
     "build": "webpack",
     "watch": "webpack --watch",
     "stylelint": "stylelint index.scss src/**/*.scss",

@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.0.64
+
+* Updated dependencies
+* Added 'default application' for choice selection (closes #63)
+* Updated npm scripts
+
 ## 3.0.63
 
 * Add support for static metadata

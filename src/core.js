@@ -410,16 +410,16 @@ export default class Core extends CoreBase {
    * Spawns an application based on the file given
    * @param {object} file A file object
    * @param {object} [options] Options
+   * @param {boolean} [options.useDefault] Use saved default application preference
+   * @param {boolean} [options.forceDialog] Force application choice dialog on multiple choices
    * @return {Boolean|Application}
    */
   open(file, options = {}) {
-    const _ = this.make('osjs/locale').translate;
-
-    const run = app => this.run(app, {file}, options);
-
     if (file.mime === 'osjs/application') {
       return this.run(file.path.split('/').pop());
     }
+
+    const run = app => this.run(app, {file}, options);
 
     const compatible = this.make('osjs/packages')
       .getCompatiblePackages(file.mime);
@@ -427,15 +427,7 @@ export default class Core extends CoreBase {
     if (compatible.length > 0) {
       if (compatible.length > 1) {
         try {
-          this.make('osjs/dialog', 'choice', {
-            title: _('LBL_LAUNCH_SELECT'),
-            message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
-            choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {})
-          }, (btn, value) => {
-            if (btn === 'ok' && value) {
-              run(value);
-            }
-          });
+          this._openApplicationDialog(options, compatible, file, run);
 
           return true;
         } catch (e) {
@@ -449,6 +441,50 @@ export default class Core extends CoreBase {
     }
 
     return Promise.resolve(false);
+  }
+
+  /**
+   * Wrapper method to create an application choice dialog
+   */
+  _openApplicationDialog(options, compatible, file, run) {
+    const _ = this.make('osjs/locale').translate;
+    const useDefault = options.useDefault && this.has('osjs/settings');
+    const setDefault = name => this.make('osjs/settings')
+      .set('osjs/default-application', file.mime, name)
+      .save();
+
+    const value = useDefault
+      ? this.make('osjs/settings').get('osjs/default-application', file.mime)
+      : null;
+
+    const type = useDefault
+      ? 'defaultApplication'
+      : 'choice';
+
+    const args = {
+      title: _('LBL_LAUNCH_SELECT'),
+      message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
+      choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {}),
+      value
+    };
+
+    if (value && !options.forceDialog) {
+      run(value);
+    } else {
+      this.make('osjs/dialog', type, args, (btn, choice) => {
+        if (btn === 'ok') {
+          if (type === 'defaultApplication') {
+            if (useDefault) {
+              setDefault(choice.checked ? choice.value : null);
+            }
+
+            run(choice.value);
+          } else if (choice) {
+            run(choice);
+          }
+        }
+      });
+    }
   }
 
   /**

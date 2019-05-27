@@ -127,6 +127,7 @@ export const defaultConfiguration = {
     lock: [],
 
     defaults: {
+      'osjs/default-application': {},
       'osjs/session': [],
       'osjs/desktop': {},
       'osjs/locale': {}

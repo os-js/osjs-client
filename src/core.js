@@ -60,6 +60,7 @@ export default class Core extends CoreBase {
 
     super(defaultConfiguration, config, options);
 
+    this.logger = logger;
     this.ws = null;
     this.ping = null;
     this.splash = new Splash(this);

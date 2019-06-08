@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.0
+
+* Added internal logger
+
 ## 3.0.64
 
 * Updated dependencies

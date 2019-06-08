@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.1
+
+* Updated logger bindings
+
 ## 3.1.0
 
 * Added internal logger

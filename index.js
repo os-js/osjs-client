@@ -48,6 +48,8 @@ import VFSServiceProvider from './src/providers/vfs';
 import AuthServiceProvider from './src/providers/auth';
 import SettingsServiceProvider from './src/providers/settings';
 
+import logger from './src/logger';
+
 export {
   Core,
   Window,
@@ -65,5 +67,7 @@ export {
   NotificationServiceProvider,
   VFSServiceProvider,
   AuthServiceProvider,
-  SettingsServiceProvider
+  SettingsServiceProvider,
+
+  logger
 };

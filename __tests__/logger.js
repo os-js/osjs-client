@@ -23,11 +23,11 @@ describe('Logger', () => {
 
   test('should use middleware', () => {
     const now = Date.now();
-    logger.addMiddleware((...args) => [now, ...args]);
+    logger.addMiddleware((m, ...args) => [now, ...args]);
     logger.log('middleware 1');
     expect(console.log).toHaveBeenCalledWith(now, 'middleware 1');
 
-    logger.addMiddleware((...args) => [...args, 'foo']);
+    logger.addMiddleware((m, ...args) => [...args, 'foo']);
     logger.log('middleware 2');
     expect(console.log).toHaveBeenCalledWith(now, 'middleware 2', 'foo');
 

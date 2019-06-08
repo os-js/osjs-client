@@ -33,11 +33,11 @@ const methods = ['debug', 'log', 'info', 'warn', 'error'];
 let logger = console;
 let middleware = [];
 
-const reduce = input => middleware
-  .reduce((current, m) => m(...current), input);
+const reduce = (name, input) => middleware
+  .reduce((current, m) => m(name, ...current), input);
 
 const method = name => (...args) =>
-  logger[name](...reduce(args));
+  logger[name](...reduce(name, args));
 
 const instanceMethods = {
   setLogger: l => (logger = l),

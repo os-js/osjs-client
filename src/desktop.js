@@ -35,6 +35,7 @@ import {matchKeyCombo} from './utils/input';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
+import logger from './logger';
 
 const TEMPLATE = subtract => `
   .osjs-root[data-mobile=true] .osjs-window,
@@ -79,7 +80,7 @@ const applyBackgroundStyles = (core, background) => {
         .then(src => {
           setTimeout(() => ($root.style.backgroundImage = `url(${src})`), 1);
         })
-        .catch(error => console.warn('Error while setting wallpaper from VFS', error));
+        .catch(error => logger.warn('Error while setting wallpaper from VFS', error));
     }
   }
 
@@ -172,7 +173,7 @@ export default class Desktop extends EventEmitter {
 
   initConnectionEvents() {
     this.core.on('osjs/core:disconnect', ev => {
-      console.warn('Connection closed', ev);
+      logger.warn('Connection closed', ev);
 
       const _ = this.core.make('osjs/locale').translate;
       this.core.make('osjs/notification', {
@@ -182,7 +183,7 @@ export default class Desktop extends EventEmitter {
     });
 
     this.core.on('osjs/core:connect', (ev, reconnected) => {
-      console.debug('Connection opened');
+      logger.debug('Connection opened');
 
       if (reconnected) {
         const _ = this.core.make('osjs/locale').translate;
@@ -194,7 +195,7 @@ export default class Desktop extends EventEmitter {
     });
 
     this.core.on('osjs/core:connection-failed', (ev) => {
-      console.warn('Connection failed');
+      logger.warn('Connection failed');
 
       const _ = this.core.make('osjs/locale').translate;
       this.core.make('osjs/notification', {
@@ -212,7 +213,7 @@ export default class Desktop extends EventEmitter {
         this._updateCSS();
         Window.getWindows().forEach(w => w.clampToViewport());
       } catch (e) {
-        console.warn('Panel event error', e);
+        logger.warn('Panel event error', e);
       }
       this.core.emit('osjs/desktop:transform', this.getRect());
     });
@@ -535,7 +536,7 @@ export default class Desktop extends EventEmitter {
           try {
             callback(this.core, this, {}, metadata);
           } catch (e) {
-            console.warn('Exception while calling theme callback', e);
+            logger.warn('Exception while calling theme callback', e);
           }
         }
 
@@ -550,7 +551,7 @@ export default class Desktop extends EventEmitter {
       .launch(name)
       .then(result => {
         if (result.errors.length) {
-          console.error(result.errors);
+          logger.error(result.errors);
         }
 
         return result;

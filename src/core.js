@@ -35,6 +35,7 @@ import {CoreBase} from '@osjs/common';
 import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
 import {urlResolver} from './utils/url';
+import logger from './logger';
 
 /**
  * Core
@@ -116,7 +117,7 @@ export default class Core extends CoreBase {
   boot() {
     const done = e => {
       if (e) {
-        console.error('Error while booting', e);
+        logger.error('Error while booting', e);
       }
 
       console.groupEnd();
@@ -150,7 +151,7 @@ export default class Core extends CoreBase {
             }
           });
         } else {
-          console.debug('OS.js STARTED WITHOUT ANY AUTHENTICATION');
+          logger.debug('OS.js STARTED WITHOUT ANY AUTHENTICATION');
         }
 
         return done();
@@ -178,7 +179,7 @@ export default class Core extends CoreBase {
       this.emit('osjs/core:started');
 
       if (err) {
-        console.warn('Error while starting', err);
+        logger.warn('Error while starting', err);
       }
 
       console.groupEnd();
@@ -249,7 +250,7 @@ export default class Core extends CoreBase {
         this.ping = setInterval(() => {
           if (this.ws) {
             if (this.ws.connected && !this.ws.reconnecting) {
-              this.request('/ping').catch(e => console.warn('Error on ping', e));
+              this.request('/ping').catch(e => logger.warn('Error on ping', e));
             }
           }
         }, pingTime);
@@ -271,7 +272,7 @@ export default class Core extends CoreBase {
     const {uri} = this.config('ws');
     let wasConnected = false;
 
-    console.debug('Creating websocket connection on', uri);
+    logger.debug('Creating websocket connection on', uri);
 
     this.ws = new Websocket('CoreSocket', uri, {
       interval: this.config('ws.connectInterval', 1000)
@@ -306,7 +307,7 @@ export default class Core extends CoreBase {
         const params = data.params || [];
         this.emit(data.name, ...params);
       } catch (e) {
-        console.warn('Exception on websocket message', e);
+        logger.warn('Exception on websocket message', e);
       }
     });
 
@@ -385,7 +386,7 @@ export default class Core extends CoreBase {
 
     return fetch(url, options, type)
       .catch(error => {
-        console.warn(error);
+        logger.warn(error);
 
         throw new Error(_('ERR_REQUEST_NOT_OK', error));
       });
@@ -401,7 +402,7 @@ export default class Core extends CoreBase {
    * @return {Application}
    */
   run(name, args = {}, options = {}) {
-    console.debug('Core::run()', name, args, options);
+    logger.debug('Core::run()', name, args, options);
 
     return this.make('osjs/packages').launch(name, args, options);
   }
@@ -431,7 +432,7 @@ export default class Core extends CoreBase {
 
           return true;
         } catch (e) {
-          console.warn('Exception on compability check', e);
+          logger.warn('Exception on compability check', e);
         }
       }
 

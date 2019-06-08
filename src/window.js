@@ -39,6 +39,7 @@ import {
   positionFromGravity,
   dimensionFromElement
 } from './utils/windows';
+import logger from './logger';
 
 /**
  * Window dimension definition
@@ -171,7 +172,7 @@ export default class Window extends EventEmitter {
       state: {}
     }, options);
 
-    console.debug('Window::constructor()', options);
+    logger.debug('Window::constructor()', options);
 
     super('Window@' + options.id);
 
@@ -296,7 +297,7 @@ export default class Window extends EventEmitter {
     }
     this.destroyed = true;
 
-    console.debug('Window::destroy()');
+    logger.debug('Window::destroy()');
 
     this.emit('destroy', this);
     this.core.emit('osjs/window:destroy', this);
@@ -719,7 +720,7 @@ export default class Window extends EventEmitter {
    */
   setZindex(zIndex) {
     this.state.zIndex = zIndex;
-    console.debug('Window::setZindex()', zIndex);
+    logger.debug('Window::setZindex()', zIndex);
 
     this._updateDOM();
   }
@@ -829,7 +830,7 @@ export default class Window extends EventEmitter {
 
     if (update) {
       if (oldValue !== value) {
-        console.debug('Window::_setState()', name, value);
+        logger.debug('Window::_setState()', name, value);
       }
 
       this._updateDOM();
@@ -848,7 +849,7 @@ export default class Window extends EventEmitter {
       return false;
     }
 
-    console.debug('Window::_toggleState()', name, value, eventName, update);
+    logger.debug('Window::_toggleState()', name, value, eventName, update);
 
     this.state[name] = value;
     this.emit(eventName, this);

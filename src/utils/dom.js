@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import logger from '../logger';
+
 const supportsNativeNotification = 'Notification' in window;
 
 /**
@@ -164,10 +166,10 @@ export const playSound = (src, options = {}) => {
     const p = audio.play();
     if (p instanceof Promise) {
       return p.then(() => audio)
-        .catch(err => console.warn('Failed to play sound', src, err));
+        .catch(err => logger.warn('Failed to play sound', src, err));
     }
   } catch (e) {
-    console.warn('Failed to play sound', src, e);
+    logger.warn('Failed to play sound', src, e);
   }
 
   return Promise.resolve(audio);

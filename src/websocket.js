@@ -29,6 +29,7 @@
  */
 
 import {EventEmitter} from '@osjs/event-emitter';
+import logger from './logger';
 
 const eventNames = ['open', 'close', 'message', 'error'];
 
@@ -47,7 +48,7 @@ export default class Websocket extends EventEmitter {
    * @param {object} options Websocket options
    */
   constructor(name, uri, options = {}) {
-    console.debug('Websocket::constructor()', name, uri);
+    logger.debug('Websocket::constructor()', name, uri);
 
     super('Websocket@' + name);
 

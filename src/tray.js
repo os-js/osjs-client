@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import logger from './logger';
+
 /**
  * A Tray Icon ("Entry")
  * @property {Object} entry The given entry data
@@ -90,7 +92,7 @@ export default class Tray {
       handler
     }, options);
 
-    console.debug('Created new tray entry', entry);
+    logger.debug('Created new tray entry', entry);
 
     this.entries.push(entry);
 

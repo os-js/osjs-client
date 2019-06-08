@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import logger from '../logger';
+
 const retval = (fn, ...args) => {
   try {
     const result = fn(...args);
@@ -35,7 +37,7 @@ const retval = (fn, ...args) => {
       return result;
     }
   } catch (e) {
-    console.warn('droppable value parsing error', e);
+    logger.warn('droppable value parsing error', e);
   }
 
   return true;
@@ -61,10 +63,10 @@ const getDataTransfer = (ev, type) => {
         }
       } catch (e) {
         data = transfer;
-        console.warn('droppable dataTransfer parsing error', e);
+        logger.warn('droppable dataTransfer parsing error', e);
       }
     } catch (e) {
-      console.warn('droppable dataTransfer parsing error', e);
+      logger.warn('droppable dataTransfer parsing error', e);
     }
   }
 
@@ -83,7 +85,7 @@ const setDataTransfer = (type, effect, data, setDragImage) => {
         try {
           setDragImage(ev, el, options);
         } catch (e) {
-          console.warn('draggable dragstart setDragImage error', e);
+          logger.warn('draggable dragstart setDragImage error', e);
         }
       }
 
@@ -91,7 +93,7 @@ const setDataTransfer = (type, effect, data, setDragImage) => {
         ev.dataTransfer.effectAllowed = effect;
         ev.dataTransfer.setData(type, transferData);
       } catch (e) {
-        console.warn('draggable dragstart dataTransfer error', e);
+        logger.warn('draggable dragstart dataTransfer error', e);
       }
     }
   };

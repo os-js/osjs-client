@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import logger from '../../logger';
+
 /**
  * LocalStorage Settings adapter
  * @param {Core} core Core reference
@@ -57,7 +59,7 @@ const localStorageSettings = core => ({
     try {
       value = JSON.parse(value);
     } catch (e) {
-      console.warn('localStorageAdapter parse error', e);
+      logger.warn('localStorageAdapter parse error', e);
     }
 
     return Object.assign(o, {[v]: value});

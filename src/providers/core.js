@@ -43,6 +43,7 @@ import * as dnd from '../utils/dnd';
 import {BasicApplication} from '../basic-application.js';
 import {ServiceProvider} from '@osjs/common';
 import {EventEmitter} from '@osjs/event-emitter';
+import logger from '../logger';
 
 
 /*
@@ -190,7 +191,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     // FIXME: deprecated
     this.core.instance('osjs/event-handler', (...args) => {
-      console.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
+      logger.warn('osjs/event-handler is deprecated, use osjs/event-emitter');
       return new EventEmitter(...args);
     });
 
@@ -303,7 +304,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     }, {});
 
     if (map[url]) {
-      console.debug('Hot-reloading', url);
+      logger.debug('Hot-reloading', url);
 
       setTimeout(() => {
         map[url].setAttribute('href', url);

@@ -30,6 +30,7 @@
 
 import Application from './application';
 import Preloader from './utils/preloader';
+import logger from './logger';
 
 /**
  * A registered package reference
@@ -120,7 +121,7 @@ export default class Packages {
    * @return {Promise<boolean, Error>}
    */
   init() {
-    console.debug('Packages::init()');
+    logger.debug('Packages::init()');
 
     if (!this.inited) {
       this.core.on('osjs/core:started', () => this._autostart());
@@ -137,7 +138,7 @@ export default class Packages {
       ? this.core.request(manifest, {}, 'json')
         .then(metadata => this.addPackages(metadata))
         .then(() => true)
-        .catch(error => console.error(error))
+        .catch(error => logger.error(error))
       : Promise.resolve(true);
   }
 
@@ -153,7 +154,7 @@ export default class Packages {
    * @return {Promise<Application, Error>}
    */
   launch(name, args = {}, options = {}) {
-    console.debug('Packages::launch()', name, args, options);
+    logger.debug('Packages::launch()', name, args, options);
 
     const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);
@@ -288,12 +289,12 @@ export default class Packages {
             }
           });
         } else {
-          console.warn('The application', name, 'did not return an Application instance from registration');
+          logger.warn('The application', name, 'did not return an Application instance from registration');
         }
       } catch (e) {
         dialog(e);
 
-        console.warn('Exception when launching', name, e);
+        logger.warn('Exception when launching', name, e);
       } finally {
         this.core.emit('osjs/application:launched', name, app);
         this.core.emit(`osjs/application:${name}:launched`, app);
@@ -335,7 +336,7 @@ export default class Packages {
    * @throws {Error}
    */
   register(name, callback) {
-    console.debug('Packages::register()', name);
+    logger.debug('Packages::register()', name);
 
     const _ = this.core.make('osjs/locale').translate;
     const metadata = this.metadata.find(pkg => pkg.name === name);
@@ -412,7 +413,7 @@ export default class Packages {
             const re = new RegExp(mime);
             return re.test(mimeType);
           } catch (e) {
-            console.warn('Compability check failed', e);
+            logger.warn('Compability check failed', e);
           }
 
           return mime === mimeType;

@@ -30,6 +30,7 @@
 import Login from './login';
 import serverAuth  from './adapters/auth/server';
 import localStorageAuth from './adapters/auth/localstorage';
+import logger from './logger';
 
 /**
  * Handles Authentication
@@ -96,7 +97,7 @@ export default class Auth {
     try {
       this.core.destroy();
     } catch (e) {
-      console.warn('Exception on destruction', e);
+      logger.warn('Exception on destruction', e);
     }
 
     this.core.emit('osjs/core:logged-out');
@@ -152,7 +153,7 @@ export default class Auth {
       })
       .catch(e => {
         if (this.core.config('development')) {
-          console.warn('Exception on login', e);
+          logger.warn('Exception on login', e);
         }
 
         this.ui.emit('login:error', 'Login failed');

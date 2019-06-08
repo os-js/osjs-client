@@ -29,6 +29,7 @@
  */
 
 import {style, script} from './dom';
+import logger from '../logger';
 
 /**
  * The Preloader loads styles and scripts
@@ -63,7 +64,7 @@ export default class Preloader {
     const promises = list
       .filter(entry => !cached(entry))
       .map(entry => {
-        console.debug('Packages::preload()', entry);
+        logger.debug('Packages::preload()', entry);
 
         const p = entry.match(/\.js$/)
           ? script(this.$root, entry)
@@ -92,7 +93,7 @@ export default class Preloader {
     });
 
     const failed = results.filter(res => !res.success);
-    failed.forEach(failed => console.warn('Failed loading', failed.entry, failed.error));
+    failed.forEach(failed => logger.warn('Failed loading', failed.entry, failed.error));
 
     return {
       errors: failed.map(failed => failed.entry),

@@ -29,6 +29,7 @@
  */
 import Window from './window';
 import createUI from './adapters/ui/search';
+import logger from './logger';
 
 /**
  * Search Service
@@ -85,7 +86,7 @@ export default class Search {
       .map(path => {
         return vfs.search({path}, pattern)
           .catch(error => {
-            console.warn('Error while searching', error);
+            logger.warn('Error while searching', error);
             return [];
           });
       });

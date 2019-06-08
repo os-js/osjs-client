@@ -29,6 +29,7 @@
  */
 
 import Application from './application';
+import logger from './logger';
 
 /**
  * Session Handler
@@ -97,7 +98,7 @@ export default class Session {
             }
           });
         } catch (e) {
-          console.warn('Error while loading session entry', e);
+          logger.warn('Error while loading session entry', e);
         }
       });
 

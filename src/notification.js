@@ -30,6 +30,7 @@
 
 import {h, app} from 'hyperapp';
 import {createNativeNotification} from './utils/dom';
+import logger from './logger';
 
 /**
  * Notification
@@ -152,7 +153,7 @@ export default class Notification {
     if (this.options.native) {
       return createNativeNotification(this.options, onclick)
         .catch(err => {
-          console.warn('Error on native notification', err);
+          logger.warn('Error on native notification', err);
           return renderCustom();
         });
     }

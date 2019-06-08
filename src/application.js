@@ -30,6 +30,7 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import Websocket from './websocket';
 import Window from './window';
+import logger from './logger';
 
 const applications = [];
 let applicationCount = 0;
@@ -64,7 +65,7 @@ export default class Application extends EventEmitter {
       metadata: {}
     }, data);
 
-    console.debug('Application::constructor()', data);
+    logger.debug('Application::constructor()', data);
 
     const defaultSettings = data.options.settings
       ? Object.assign({}, data.options.settings)
@@ -174,7 +175,7 @@ export default class Application extends EventEmitter {
       try {
         list.forEach(fn);
       } catch (e) {
-        console.warn('Exception on application destruction', e);
+        logger.warn('Exception on application destruction', e);
       }
 
       return [];
@@ -373,7 +374,7 @@ export default class Application extends EventEmitter {
    * @return {Function} Function with 'emit()' signature
    */
   emitAll(filter) {
-    console.warn('Application#emitAll is deprecated. Use Core#broadcast instead');
+    logger.warn('Application#emitAll is deprecated. Use Core#broadcast instead');
 
     const defaultFilter = proc => proc.pid !== this.pid;
     const filterFn = typeof filter === 'function'
@@ -416,7 +417,7 @@ export default class Application extends EventEmitter {
       try {
         proc.destroy(false);
       } catch (e) {
-        console.warn('Exception on destroyAll', e);
+        logger.warn('Exception on destroyAll', e);
       }
     });
 

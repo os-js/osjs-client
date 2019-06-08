@@ -33,6 +33,7 @@ import {EventEmitter} from '@osjs/event-emitter';
 import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
+import logger from './logger';
 import merge from 'deepmerge';
 
 /**
@@ -120,7 +121,7 @@ export default class Filesystem extends EventEmitter {
         try {
           return this.createMountpoint(mount);
         } catch (e) {
-          console.warn('Error while creating mountpoint', e);
+          logger.warn('Error while creating mountpoint', e);
         }
 
         return null;
@@ -131,14 +132,14 @@ export default class Filesystem extends EventEmitter {
           return true;
         }
 
-        console.warn('Removed duplicate mountpoint', mount);
+        logger.warn('Removed duplicate mountpoint', mount);
         return false;
       })
       .filter(mount => mount !== null);
 
     const fn = m => stopOnError
       ? this._mountpointAction(m)
-      : this._mountpointAction(m).catch(err => console.warn('Error while mounting', m, err));
+      : this._mountpointAction(m).catch(err => logger.warn('Error while mounting', m, err));
 
     return Promise.all(this.mounts.map(fn));
   }

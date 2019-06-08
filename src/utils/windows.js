@@ -30,6 +30,7 @@
 
 import * as mediaQuery from 'css-mediaquery';
 import defaultIcon from '../styles/logo-blue-32x32.png';
+import logger from '../logger';
 
 const CASCADE_DISTANCE = 10;
 const MINIMUM_WIDTH = 100;
@@ -125,7 +126,7 @@ export const renderCallback = (win, callback) => {
 
         return;
       } catch (e) {
-        console.warn('Shadow DOM not supported?', e);
+        logger.warn('Shadow DOM not supported?', e);
       }
     }
 

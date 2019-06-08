@@ -32,6 +32,7 @@ import merge from 'deepmerge';
 import simplejsonconf from 'simplejsonconf';
 import localStorageSettings from './adapters/settings/localstorage';
 import serverSettings from './adapters/settings/server';
+import logger from './logger';
 
 const defaultAdapters = {
   server: serverSettings,
@@ -120,7 +121,7 @@ export default class Settings {
 
         return true;
       }).catch(e => {
-        console.warn('Failed to set settings', e);
+        logger.warn('Failed to set settings', e);
         this.settings = defaults;
 
         return false;
@@ -174,7 +175,7 @@ export default class Settings {
         sjc.set(key, value);
         this.settings[ns] = sjc.get();
       } catch (e) {
-        console.warn('Error while setting settings for', key, e);
+        logger.warn('Error while setting settings for', key, e);
       }
     } else {
       this.settings[ns] = Object.assign({}, value);

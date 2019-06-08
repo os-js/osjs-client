@@ -29,27 +29,39 @@
  */
 
 const methods = ['debug', 'log', 'info', 'warn', 'error'];
-
-let logger = console;
 let middleware = [];
 
 const reduce = (name, input) => middleware
   .reduce((current, m) => m(name, ...current), input);
 
-const method = name => (...args) =>
-  logger[name](...reduce(name, args));
+const bind = (fn, thisArg) =>
+  typeof thisArg[fn].bind === 'function'
+    ? thisArg[fn].bind(thisArg)
+    : Function.prototype.bind.apply(thisArg[fn], thisArg);
 
-const instanceMethods = {
-  setLogger: l => (logger = l),
-  addMiddleware: m => middleware.push(m),
-  clearMiddleware: () => (middleware = [])
+const bindMethod = fn => {
+  const log = bind(fn, console);
+  if (middleware.length > 0) {
+    return (...args) => log(...reduce(fn, args));
+  }
+
+  return log;
 };
 
-const instance = methods
-  .reduce((carry, name) => {
-    return Object.assign({}, carry, {
-      [name]: method(name)
-    });
-  }, instanceMethods);
+const assignMethods = (thisArg) => methods
+  .forEach(m => thisArg[m] = bindMethod(m));
+
+const instance = {
+  addMiddleware: m => {
+    middleware.push(m);
+    assignMethods(instance);
+  },
+  clearMiddleware: () => {
+    middleware = [];
+    assignMethods(instance);
+  }
+};
+
+assignMethods(instance);
 
 export default instance;

@@ -30,6 +30,7 @@
 
 import * as VFS from './vfs';
 import {EventEmitter} from '@osjs/event-emitter';
+import {parseMontpointPrefix} from './utils/vfs';
 import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
@@ -286,9 +287,7 @@ export default class Filesystem extends EventEmitter {
    */
   getMountpointFromPath(file) {
     const path = typeof file === 'string' ? file : file.path;
-    const re = /^(\w+):(.*)/;
-    const match = String(path).replace(/\+/g, '/').match(re);
-    const [prefix] = Array.from(match || []).slice(1);
+    const prefix = parseMontpointPrefix(path);
     const _ = this.core.make('osjs/locale').translate;
 
     if (!prefix) {

@@ -310,3 +310,21 @@ export const pathname = path => {
   split.splice(split.length - 1, 1);
   return split.join('/');
 };
+
+/**
+ * Gets prefix from vfs path
+ * @param {string} str Input
+ * @return {string}
+ */
+export const parseMontpointPrefix = str => {
+  const re = /^([\w-_]+):+(.*)/;
+
+  const match = String(str)
+    .replace(/\+/g, '/')
+    .match(re);
+
+  const [prefix] = Array.from(match || [])
+    .slice(1);
+
+  return prefix;
+};

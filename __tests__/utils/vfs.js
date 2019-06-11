@@ -239,3 +239,23 @@ describe('utils.vfs#pathJoin', () => {
     expect(vfs.pathJoin('home:/', 'foo', 'bar')).toBe('home:/foo/bar');
   });
 });
+
+describe('utils.vfs#parseMontpointPrefix', () => {
+  test('Should match on valid', () => {
+    expect(vfs.parseMontpointPrefix('home:/')).toBe('home');
+    expect(vfs.parseMontpointPrefix('home://')).toBe('home');
+    expect(vfs.parseMontpointPrefix('home:://')).toBe('home');
+    expect(vfs.parseMontpointPrefix('home:dir:/')).toBe('home');
+    expect(vfs.parseMontpointPrefix('home-dir:/')).toBe('home-dir');
+    expect(vfs.parseMontpointPrefix('home-dir:/')).toBe('home-dir');
+    expect(vfs.parseMontpointPrefix('home-dir_long:/')).toBe('home-dir_long');
+    expect(vfs.parseMontpointPrefix('666:/')).toBe('666');
+  });
+
+  test('Should fail on valid', () => {
+    expect(vfs.parseMontpointPrefix(':dir:/')).toBe(undefined);
+    expect(vfs.parseMontpointPrefix('invalid.:/')).toBe(undefined);
+    expect(vfs.parseMontpointPrefix('invalid@:/')).toBe(undefined);
+    expect(vfs.parseMontpointPrefix('invalid/:/')).toBe(undefined);
+  });
+});

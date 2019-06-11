@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.2
+
+* Support more characters in vfs mountpoint names
+
 ## 3.1.1
 
 * Updated logger bindings

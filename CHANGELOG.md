@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.3
+
+* Added desktop iconview (#51)
+
 ## 3.1.2
 
 * Support more characters in vfs mountpoint names

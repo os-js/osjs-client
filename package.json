@@ -44,6 +44,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/runtime": "^7.4.5",
     "@osjs/common": "^3.0.3",
+    "@osjs/eslint-config": "^1.0.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^2.1.1",
     "css-mediaquery": "^0.1.2",

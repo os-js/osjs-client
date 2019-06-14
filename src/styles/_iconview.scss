@@ -1,4 +1,4 @@
-/*!
+/*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
  * Copyright (c) 2011-2019, Anders Evenrud <andersevenrud@gmail.com>
@@ -28,10 +28,74 @@
  * @licence Simplified BSD License
  */
 
-@import "./src/styles/variables";
-@import "./src/styles/core";
-@import "./src/styles/window";
-@import "./src/styles/notifications";
-@import "./src/styles/login";
-@import "./src/styles/search";
-@import "./src/styles/iconview";
+.osjs-desktop-iconview {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  &__wrapper {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: calc(100% - 2em);
+    height: calc(100% - 2em);
+  }
+
+  &__entry {
+    $self: &;
+
+    vertical-align: top;
+    display: inline-block;
+    position: relative;
+    z-index: 0;
+    text-align: center;
+    overflow: hidden;
+    margin: 0.5em;
+    width: 5em;
+    height: 6.5em;
+
+    &__inner {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    &__icon {
+      flex-grow: 1;
+      height: 4.5em;
+      width: 100%;
+      padding: 0.5em;
+      box-sizing: border-box;
+    }
+
+    &__label {
+      height: 1em;
+      width: 100%;
+      box-sizing: border-box;
+      line-height: 1;
+      overflow: hidden;
+      text-align: center;
+      word-break: break-all;
+      text-overflow: ellipsis;
+    }
+
+    &--selected {
+      z-index: 1;
+      overflow: visible;
+
+      #{ $self }__icon {
+        background-color: rgba(0, 0, 200, 0.9);
+      }
+
+      #{ $self }__label {
+        padding: 0 0.5em 0.5em 0.5em;
+        background-color: rgba(0, 0, 200, 0.9);
+        color: #fff;
+        overflow: visible;
+        height: auto;
+        overflow-wrap: break-word;
+      }
+    }
+  }
+}

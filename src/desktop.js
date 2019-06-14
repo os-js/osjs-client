@@ -32,6 +32,7 @@ import {EventEmitter} from '@osjs/event-emitter';
 import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
 import {matchKeyCombo} from './utils/input';
+import {DesktopIconView} from './adapters/ui/iconview';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
@@ -121,7 +122,7 @@ export default class Desktop extends EventEmitter {
 
     this.core = core;
     this.options = Object.assign({
-      contextmenu: []
+      contextmenu: [],
     }, options);
     this.$theme = [];
     this.$icons = [];
@@ -129,6 +130,8 @@ export default class Desktop extends EventEmitter {
     this.$styles.setAttribute('type', 'text/css');
     this.contextmenuEntries = [];
     this.search = core.config('search.enabled') ? new Search(core) : null;
+    this.iconview = new DesktopIconView(this.core);
+
     this.subtract = {
       left: 0,
       top: 0,
@@ -145,9 +148,14 @@ export default class Desktop extends EventEmitter {
       this.search = this.search.destroy();
     }
 
+    if (this.iconview) {
+      this.iconview.destroy();
+    }
+
     if (this.$styles && this.$styles.parentNode) {
       this.$styles.remove();
     }
+
     this.$styles = null;
 
     this._removeIcons();
@@ -212,6 +220,7 @@ export default class Desktop extends EventEmitter {
       try {
         this._updateCSS();
         Window.getWindows().forEach(w => w.clampToViewport());
+        this._updateIconview();
       } catch (e) {
         logger.warn('Panel event error', e);
       }
@@ -394,7 +403,6 @@ export default class Desktop extends EventEmitter {
     this.core.on('osjs/settings:load', checkRTL);
     this.core.on('osjs/settings:save', checkRTL);
     this.core.on('osjs/core:started', checkRTL);
-
   }
 
   start() {
@@ -403,6 +411,13 @@ export default class Desktop extends EventEmitter {
     }
 
     this._updateCSS();
+    this._updateIconview();
+  }
+
+  _updateIconview() {
+    if (this.iconview) {
+      this.iconview.resize(this.getRect());
+    }
   }
 
   /**
@@ -466,6 +481,8 @@ export default class Desktop extends EventEmitter {
     this.applyTheme(newSettings.theme);
     this.applyIcons(newSettings.icons);
 
+    this.applyIconView(newSettings.iconview);
+
     this.core.emit('osjs/desktop:applySettings');
 
     return Object.assign({}, newSettings);
@@ -504,6 +521,22 @@ export default class Desktop extends EventEmitter {
     });
 
     this.$icons = [];
+  }
+
+  /**
+   * Adds or removes the icon view
+   */
+  applyIconView(settings) {
+    if (!this.iconview) {
+      return;
+    }
+
+    if (settings.enabled) {
+      this.iconview.render(settings.path);
+      this.iconview.resize(this.getRect());
+    } else {
+      this.iconview.destroy();
+    }
   }
 
   /**

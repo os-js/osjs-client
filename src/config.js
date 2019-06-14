@@ -177,7 +177,8 @@ export const defaultConfiguration = {
         style: 'cover'
       },
       iconview: {
-        enabled: false
+        enabled: false,
+        path: 'home:/.desktop'
       }
     }
   },

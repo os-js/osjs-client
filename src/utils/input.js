@@ -60,3 +60,27 @@ export const getEvent = (ev) => {
 
   return {clientX, clientY, touch: touch.length > 0, target};
 };
+
+/**
+ * Creates a double-tap event handler
+ * @param {number} [timeout=250] Timeout
+ * @return {Function} Handler with => (ev, cb)
+ */
+export const doubleTap = (timeout = 250) => {
+  let tapped = false;
+  let timer;
+
+  return (ev, cb) => {
+    timer = clearTimeout(timer);
+    timer = setTimeout(() => (tapped = false), timeout);
+
+    if (tapped) {
+      ev.preventDefault();
+      return cb(ev);
+    }
+
+    tapped = true;
+
+    return false;
+  };
+};

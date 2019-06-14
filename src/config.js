@@ -29,6 +29,8 @@
  */
 
 import {clientLocale} from './utils/locale.js';
+import defaultWallpaper from './styles/wallpaper.png';
+import defaultIcon from './styles/logo-blue-32x32.png';
 
 const createUri = str => str
   .replace(/(index\.(html?|php))$/, '')
@@ -172,7 +174,7 @@ export const defaultConfiguration = {
         position: 'top-right'
       },
       background: {
-        src: require('./styles/wallpaper.png'),
+        src: defaultWallpaper,
         color: '#572a79',
         style: 'cover'
       },
@@ -210,7 +212,7 @@ export const defaultConfiguration = {
       name: 'apps',
       label: 'Applications',
       adapter: 'apps',
-      icon: require('./styles/logo-blue-32x32.png'),
+      icon: defaultIcon,
       attributes: {
         visibility: 'restricted',
         readOnly: true

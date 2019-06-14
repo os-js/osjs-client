@@ -29,6 +29,7 @@
  */
 
 import logger from './logger';
+import defaultIcon from './styles/logo-blue-32x32.png';
 
 /**
  * A Tray Icon ("Entry")
@@ -85,7 +86,7 @@ export default class Tray {
     handler = handler || (() => {});
 
     const entry = Object.assign({}, {
-      icon: require('./styles/logo-blue-32x32.png'),
+      icon: defaultIcon,
       title: defaultTitle,
       onclick: handler,
       oncontextmenu: handler,

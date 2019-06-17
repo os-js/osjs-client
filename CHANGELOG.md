@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.5
+
+* Updated iconview application launcher and context menu (#51)
+* Updated locales
+
 ## 3.1.4
 
 * Don't use default app in desktop iconview (#51)

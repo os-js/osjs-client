@@ -167,7 +167,7 @@ export class DesktopIconView extends EventEmitter {
             path: entry
           });
         } else {
-          this.core.open(entry);
+          this.core.open(entry, {useDefault: false});
         }
 
         return {selected: -1};

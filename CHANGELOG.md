@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.4
+
+* Don't use default app in desktop iconview (#51)
+
 ## 3.1.3
 
 * Added desktop iconview (#51)

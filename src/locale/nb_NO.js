@@ -104,6 +104,7 @@ export const nb_NO = {
   LBL_FILE: 'Fil',
   LBL_NEW: 'Ny',
   LBL_OPEN: 'Åpne',
+  LBL_OPEN_WITH: 'Åpne med...',
   LBL_SAVE: 'Lagre',
   LBL_SAVEAS: 'Lagre Som',
   LBL_OK: 'OK',

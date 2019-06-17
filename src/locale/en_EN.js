@@ -104,6 +104,7 @@ export const en_EN = {
   LBL_FILE: 'File',
   LBL_NEW: 'New',
   LBL_OPEN: 'Open',
+  LBL_OPEN_WITH: 'Open with...',
   LBL_SAVE: 'Save',
   LBL_SAVEAS: 'Save As',
   LBL_OK: 'OK',

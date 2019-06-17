@@ -161,13 +161,16 @@ export class DesktopIconView extends EventEmitter {
         }
       },
 
-      openEntry: ({entry}) => {
+      openEntry: ({entry, forceDialog}) => {
         if (entry.isDirectory) {
           this.core.run('FileManager', {
             path: entry
           });
         } else {
-          this.core.open(entry, {useDefault: false});
+          this.core.open(entry, {
+            useDefault: true,
+            forceDialog
+          });
         }
 
         return {selected: -1};
@@ -209,13 +212,18 @@ export class DesktopIconView extends EventEmitter {
   }
 
   createFileContextMenu(ev, entry) {
+    const _ = this.core.make('osjs/locale').translate;
+
     this.core.make('osjs/contextmenu', {
       position: ev,
       menu: [{
-        label: 'Open',
-        onclick: () => this.iconview.openEntry(({entry}))
+        label: _('LBL_OPEN'),
+        onclick: () => this.iconview.openEntry({entry, forceDialog: false})
       }, {
-        label: 'Remove',
+        label: _('LBL_OPEN_WITH'),
+        onclick: () => this.iconview.openEntry({entry, forceDialog: true})
+      }, {
+        label: _('LBL_DELETE'),
         onclick: () => this.iconview.removeEntry(entry)
       }]
     });

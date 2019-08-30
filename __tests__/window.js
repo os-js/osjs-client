@@ -307,4 +307,23 @@ describe('Window', () => {
     expect(childWindow.parent).toBe(null);
     childWindow.destroy();
   });
+
+  test('Should block destruction', () => {
+    const blockWindow = new Window(core, {
+      ondestroy: () => false
+    });
+
+    const noblockWindow = new Window(core, {
+      ondestroy: () => true
+    });
+
+    const defaultWindow = new Window(core);
+
+    blockWindow.destroy();
+    noblockWindow.destroy();
+    defaultWindow.destroy();
+    expect(blockWindow.destroyed).toBe(false);
+    expect(noblockWindow.destroyed).toBe(true);
+    expect(defaultWindow.destroyed).toBe(true);
+  });
 });

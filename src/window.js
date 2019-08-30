@@ -155,6 +155,7 @@ export default class Window extends EventEmitter {
    * @param {string} [options.icon] Window Icon
    * @param {Window} [options.parent] The parent Window reference
    * @param {string|Function} [options.template] The Window HTML template (or function with signature (el, win) for programatic construction)
+   * @param {Function} [options.ondestroy] A callback function when window destructs to interrupt the procedure
    * @param {WindowPosition|string} [options.position] Window position
    * @param {WindowDimension} [options.dimension] Window dimension
    * @param {WindowAttributes} [options.attributes] Apply Window attributes
@@ -166,6 +167,7 @@ export default class Window extends EventEmitter {
       title: null,
       parent: null,
       template: null,
+      ondestroy: null,
       attributes: {},
       position: {},
       dimension: {},
@@ -285,6 +287,12 @@ export default class Window extends EventEmitter {
      */
     this._template = options.template;
 
+    /**
+     * Custom destructor callback
+     * @type {Function}
+     */
+    this._ondestroy = options.ondestroy || (() => true);
+
     windows.push(this);
   }
 
@@ -295,6 +303,11 @@ export default class Window extends EventEmitter {
     if (this.destroyed) {
       return;
     }
+
+    if (typeof this._ondestroy === 'function' && this._ondestroy() === false) {
+      return;
+    }
+
     this.destroyed = true;
 
     logger.debug('Window::destroy()');

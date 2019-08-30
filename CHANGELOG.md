@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.6
+
+* Added support for blocking window destruction (#72)
+
 ## 3.1.5
 
 * Updated iconview application launcher and context menu (#51)

@@ -48,6 +48,11 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
   h('div', {
     class: 'osjs-desktop-iconview__wrapper',
     oncontextmenu: ev => actions.openContextMenu({ev}),
+    onclick: ev => {
+      if (ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper')) {
+        actions.selectEntry({index: -1});
+      }
+    },
     oncreate: el => {
       droppable(el, {
         ondrop: (ev, data, files) => {
@@ -234,6 +239,8 @@ export class DesktopIconView extends EventEmitter {
           return {selected: index};
         } else {
           this.createRootContextMenu(ev);
+
+          return {selected: -1};
         }
       },
 

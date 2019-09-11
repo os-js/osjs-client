@@ -30,8 +30,19 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import {h, app} from 'hyperapp';
 import {doubleTap} from '../../utils/input';
+import {pathJoin} from '../../utils/vfs';
 
 const tapper = doubleTap();
+
+const validVfsDrop = data => data && data.path;
+
+const onDropAction = actions => (ev, data, files, shortcut = false) => {
+  if (validVfsDrop(data)) {
+    actions.addEntry({entry: data, shortcut});
+  } else if (files.length > 0) {
+    actions.uploadEntries(files);
+  }
+};
 
 const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
   h('div', {
@@ -40,10 +51,10 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
     oncreate: el => {
       droppable(el, {
         ondrop: (ev, data, files) => {
-          if (data && data.path) {
-            actions.addEntry(data);
-          } else if (files.length > 0) {
-            actions.uploadEntries(files);
+          if (ev.shiftKey && validVfsDrop(data)) {
+            actions.openDropContextMenu({ev, data, files});
+          } else {
+            onDropAction(actions)(ev, data, files);
           }
         }
       });
@@ -65,15 +76,70 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
       }, [
         h('div', {
           class: 'osjs-desktop-iconview__entry__icon'
-        }, h('img', {
-          src: themeIcon(fileIcon(entry).name)
-        })),
+        }, [
+          h('img', {
+            src: themeIcon(fileIcon(entry).name),
+            class: 'osjs-desktop-iconview__entry__icon__icon'
+          }),
+          entry.shortcut !== false
+            ? h('img', {
+              src: themeIcon('emblem-symbolic-link'),
+              class: 'osjs-desktop-iconview__entry__icon__shortcut'
+            })
+            : null
+        ]),
         h('div', {
           class: 'osjs-desktop-iconview__entry__label'
         }, entry.filename)
       ])
     ]);
   }));
+
+const createShortcuts = (root, readfile, writefile) => {
+  const read = () => {
+    const filename = pathJoin(root, '.shortcuts.json');
+
+    return readfile(filename)
+      .then(contents => JSON.parse(contents))
+      .catch(error => ([]));
+  };
+
+  const write = shortcuts => {
+    const filename = pathJoin(root, '.shortcuts.json');
+    const contents = JSON.stringify(shortcuts || []);
+
+    return writefile(filename, contents)
+      .catch(() => 0);
+  };
+
+  const add = entry => read(root)
+    .then(shortcuts => ([...shortcuts, entry]))
+    .then(write);
+
+  const remove = index => read(root)
+    .then(shortcuts => {
+      shortcuts.splice(index, 1);
+      return shortcuts;
+    })
+    .then(write);
+
+  return {read, add, remove};
+};
+
+const readDesktopFolder = (root, readdir, shortcuts) => {
+  const read = () => readdir(root, {
+    showHiddenFiles: false
+  })
+    .then(files => files.map(s => Object.assign({shortcut: false}, s)));
+
+  const readShortcuts = () => shortcuts.read()
+    .then(shortcuts => shortcuts.map((s, index) => Object.assign({shortcut: index}, s)));
+
+  return () => {
+    return Promise.all([readShortcuts(), read()])
+      .then(results => [].concat(...results));
+  };
+};
 
 /**
  * Desktop Icon View
@@ -146,8 +212,10 @@ export class DesktopIconView extends EventEmitter {
     const {droppable} = this.core.make('osjs/dnd');
     const {icon: fileIcon} = this.core.make('osjs/fs');
     const {icon: themeIcon} = this.core.make('osjs/theme');
-    const {copy, readdir, unlink} = this.core.make('osjs/vfs');
+    const {copy, readdir, readfile, writefile, unlink, mkdir} = this.core.make('osjs/vfs');
     const error = err => console.error(err);
+    const shortcuts = createShortcuts(root, readfile, writefile);
+    const read = readDesktopFolder(root, readdir, shortcuts);
 
     this.iconview = app({
       selected: -1,
@@ -155,9 +223,15 @@ export class DesktopIconView extends EventEmitter {
     }, {
       setEntries: entries => ({entries}),
 
-      openContextMenu: ({ev, entry}) => {
+      openDropContextMenu: ({ev, data, files}) => {
+        this.createDropContextMenu(ev, data, files);
+      },
+
+      openContextMenu: ({ev, entry, index}) => {
         if (entry) {
           this.createFileContextMenu(ev, entry);
+
+          return {selected: index};
         }
       },
 
@@ -182,26 +256,41 @@ export class DesktopIconView extends EventEmitter {
         // TODO
       },
 
-      addEntry: entry => (state, actions) => {
+      addEntry: ({entry, shortcut}) => (state, actions) => {
         const dest = `${root}/${entry.filename}`;
 
-        copy(entry, dest)
-          .then(() => actions.reload())
-          .catch(error);
+        mkdir(root)
+          .catch(() => true)
+          .then(() => {
+            if (shortcut) {
+              return shortcuts.add(entry);
+            }
+
+            return copy(entry, dest)
+              .then(() => actions.reload())
+              .catch(error);
+          })
+          .then(() => actions.reload());
 
         return {selected: -1};
       },
 
       removeEntry: entry => (state, actions) => {
-        unlink(entry)
-          .then(() => actions.reload())
-          .catch(error);
+        if (entry.shortcut !== false) {
+          shortcuts.remove(entry.shortcut)
+            .then(() => actions.reload())
+            .catch(error);
+        } else {
+          unlink(entry)
+            .then(() => actions.reload())
+            .catch(error);
+        }
 
         return {selected: -1};
       },
 
       reload: () => (state, actions) => {
-        readdir(root)
+        read()
           .then(entries => entries.filter(e => e.filename !== '..'))
           .then(entries => actions.setEntries(entries));
       }
@@ -223,8 +312,25 @@ export class DesktopIconView extends EventEmitter {
         label: _('LBL_OPEN_WITH'),
         onclick: () => this.iconview.openEntry({entry, forceDialog: true})
       }, {
-        label: _('LBL_DELETE'),
+        label: entry.shortcut !== false ? _('LBL_REMOVE') : _('LBL_DELETE'),
         onclick: () => this.iconview.removeEntry(entry)
+      }]
+    });
+  }
+
+  createDropContextMenu(ev, data, files) {
+    const _ = this.core.make('osjs/locale').translate;
+
+    const action = shortcut => onDropAction(this.iconview)(ev, data, files, shortcut);
+
+    this.core.make('osjs/contextmenu', {
+      position: ev,
+      menu: [{
+        label: _('LBL_COPY'),
+        onclick: () => action(false)
+      }, {
+        label: _('LBL_CREATE_SHORTCUT'),
+        onclick: () => action(true)
       }]
     });
   }

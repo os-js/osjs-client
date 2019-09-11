@@ -32,8 +32,6 @@ import {h, app} from 'hyperapp';
 import {doubleTap} from '../../utils/input';
 import {pathJoin} from '../../utils/vfs';
 
-// TODO: Add context menu with refresh
-
 const tapper = doubleTap();
 
 const validVfsDrop = data => data && data.path;
@@ -234,6 +232,8 @@ export class DesktopIconView extends EventEmitter {
           this.createFileContextMenu(ev, entry);
 
           return {selected: index};
+        } else {
+          this.createRootContextMenu(ev);
         }
       },
 
@@ -335,6 +335,18 @@ export class DesktopIconView extends EventEmitter {
       }, {
         label: _('LBL_CREATE_SHORTCUT'),
         onclick: () => action(true)
+      }]
+    });
+  }
+
+  createRootContextMenu(ev) {
+    const _ = this.core.make('osjs/locale').translate;
+
+    this.core.make('osjs/contextmenu', {
+      position: ev,
+      menu: [{
+        label: _('LBL_REFRESH'),
+        onclick: () => this.iconview.reload()
       }]
     });
   }

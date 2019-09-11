@@ -312,7 +312,7 @@ export class DesktopIconView extends EventEmitter {
         label: _('LBL_OPEN_WITH'),
         onclick: () => this.iconview.openEntry({entry, forceDialog: true})
       }, {
-        label: entry.shortcut !== false ? _('LBL_REMOVE') : _('LBL_DELETE'),
+        label: entry.shortcut !== false ? _('LBL_REMOVE_SHORTCUT') : _('LBL_DELETE'),
         onclick: () => this.iconview.removeEntry(entry)
       }]
     });

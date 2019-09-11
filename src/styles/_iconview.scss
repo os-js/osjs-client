@@ -67,6 +67,14 @@
       width: 100%;
       padding: 0.5em;
       box-sizing: border-box;
+      position: relative;
+
+      &__shortcut {
+        width: 1em;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
     }
 
     &__label {

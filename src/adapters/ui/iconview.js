@@ -36,7 +36,7 @@ const tapper = doubleTap();
 
 const validVfsDrop = data => data && data.path;
 
-const onDropAction = actions => (ev, data, files, shortcut = false) => {
+const onDropAction = actions => (ev, data, files, shortcut = true) => {
   if (validVfsDrop(data)) {
     actions.addEntry({entry: data, shortcut});
   } else if (files.length > 0) {

@@ -32,6 +32,8 @@ import {h, app} from 'hyperapp';
 import {doubleTap} from '../../utils/input';
 import {pathJoin} from '../../utils/vfs';
 
+// TODO: Add context menu with refresh
+
 const tapper = doubleTap();
 
 const validVfsDrop = data => data && data.path;
@@ -78,7 +80,7 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
           class: 'osjs-desktop-iconview__entry__icon'
         }, [
           h('img', {
-            src: themeIcon(fileIcon(entry).name),
+            src: entry.icon ? entry.icon : themeIcon(fileIcon(entry).name),
             class: 'osjs-desktop-iconview__entry__icon__icon'
           }),
           entry.shortcut !== false
@@ -240,6 +242,8 @@ export class DesktopIconView extends EventEmitter {
           this.core.run('FileManager', {
             path: entry
           });
+        } else if (entry.mime === 'osjs/application') {
+          this.core.run(entry.filename);
         } else {
           this.core.open(entry, {
             useDefault: true,
@@ -262,7 +266,7 @@ export class DesktopIconView extends EventEmitter {
         mkdir(root)
           .catch(() => true)
           .then(() => {
-            if (shortcut) {
+            if (shortcut || entry.mime === 'osjs/application') {
               return shortcuts.add(entry);
             }
 

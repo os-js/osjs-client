@@ -44,12 +44,19 @@ const onDropAction = actions => (ev, data, files, shortcut = true) => {
   }
 };
 
+const isRootElement = ev =>
+  ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper');
+
 const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
   h('div', {
     class: 'osjs-desktop-iconview__wrapper',
-    oncontextmenu: ev => actions.openContextMenu({ev}),
+    oncontextmenu: ev => {
+      if (isRootElement(ev)) {
+        actions.openContextMenu({ev});
+      }
+    },
     onclick: ev => {
-      if (ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper')) {
+      if (isRootElement(ev)) {
         actions.selectEntry({index: -1});
       }
     },

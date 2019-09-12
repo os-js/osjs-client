@@ -354,14 +354,7 @@ export class DesktopIconView extends EventEmitter {
   }
 
   createRootContextMenu(ev) {
-    const _ = this.core.make('osjs/locale').translate;
-
-    this.core.make('osjs/contextmenu', {
-      position: ev,
-      menu: [{
-        label: _('LBL_REFRESH'),
-        onclick: () => this.iconview.reload()
-      }]
-    });
+    this.core.make('osjs/desktop')
+      .openContextMenu(ev);
   }
 }

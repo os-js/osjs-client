@@ -647,6 +647,7 @@ export default class Desktop extends EventEmitter {
     const lockSettings = this.core.config('desktop.lock');
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));
     const config = this.core.config('desktop.contextmenu');
+    const hasIconview = this.core.make('osjs/settings').get('osjs/desktop', 'iconview.enabled');
 
     if (config === false || config.enabled === false) {
       return;
@@ -680,6 +681,13 @@ export default class Desktop extends EventEmitter {
         }
       }))
     }];
+
+    if (hasIconview && this.iconview) {
+      defaultItems.push({
+        label: _('LBL_REFRESH'),
+        onclick: () => this.iconview.iconview.reload()
+      });
+    }
 
     const base = useDefaults === 'function'
       ? config.defaults(this, defaultItems)

@@ -1,5 +1,15 @@
 # Changelog for osjs-client
 
+## 3.1.7
+
+* Use desktop contextmenu in iconview (#51)
+* Ensure desktop iconview root contextmenu appears in correct context (#51)
+* Make desktop iconview drop be shortcut by default (#51)
+* Unselect desktop icons if root was clicked (#51)
+* Added a contextmenu to desktop iconview (#51)
+* Add application shortcut support to iconview (#51)
+* Improved desktop iconview and added shortcuts (#51)
+
 ## 3.1.6
 
 * Added support for blocking window destruction (#72)

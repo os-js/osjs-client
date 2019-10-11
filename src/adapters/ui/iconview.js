@@ -68,44 +68,58 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
           } else {
             onDropAction(actions)(ev, data, files);
           }
-        }
+
+          actions.setGhost(false);
+        },
+
+        ondragleave: () => actions.setGhost(false),
+        ondragenter: () => actions.setGhost(true),
+        ondragover: ev => actions.setGhost(ev)
       });
     }
-  }, state.entries.map((entry, index) => {
-    return h('div', {
-      class: 'osjs-desktop-iconview__entry' + (
-        state.selected === index
-          ? ' osjs-desktop-iconview__entry--selected'
-          : ''
-      ),
-      oncontextmenu: ev => actions.openContextMenu({ev, entry, index}),
-      ontouchstart: ev => tapper(ev, () => actions.openEntry({ev, entry, index})),
-      ondblclick: ev => actions.openEntry({ev, entry, index}),
-      onclick: ev => actions.selectEntry({ev, entry, index})
-    }, [
-      h('div', {
-        class: 'osjs-desktop-iconview__entry__inner'
+  }, [
+    ...state.entries.map((entry, index) => {
+      return h('div', {
+        class: 'osjs-desktop-iconview__entry' + (
+          state.selected === index
+            ? ' osjs-desktop-iconview__entry--selected'
+            : ''
+        ),
+        oncontextmenu: ev => actions.openContextMenu({ev, entry, index}),
+        ontouchstart: ev => tapper(ev, () => actions.openEntry({ev, entry, index})),
+        ondblclick: ev => actions.openEntry({ev, entry, index}),
+        onclick: ev => actions.selectEntry({ev, entry, index})
       }, [
         h('div', {
-          class: 'osjs-desktop-iconview__entry__icon'
+          class: 'osjs-desktop-iconview__entry__inner'
         }, [
-          h('img', {
-            src: entry.icon ? entry.icon : themeIcon(fileIcon(entry).name),
-            class: 'osjs-desktop-iconview__entry__icon__icon'
-          }),
-          entry.shortcut !== false
-            ? h('img', {
-              src: themeIcon('emblem-symbolic-link'),
-              class: 'osjs-desktop-iconview__entry__icon__shortcut'
-            })
-            : null
-        ]),
-        h('div', {
-          class: 'osjs-desktop-iconview__entry__label'
-        }, entry.filename)
-      ])
-    ]);
-  }));
+          h('div', {
+            class: 'osjs-desktop-iconview__entry__icon'
+          }, [
+            h('img', {
+              src: entry.icon ? entry.icon : themeIcon(fileIcon(entry).name),
+              class: 'osjs-desktop-iconview__entry__icon__icon'
+            }),
+            entry.shortcut !== false
+              ? h('img', {
+                src: themeIcon('emblem-symbolic-link'),
+                class: 'osjs-desktop-iconview__entry__icon__shortcut'
+              })
+              : null
+          ]),
+          h('div', {
+            class: 'osjs-desktop-iconview__entry__label'
+          }, entry.filename)
+        ])
+      ]);
+    }),
+    h('div', {
+      class: 'osjs-desktop-iconview__entry osjs-desktop-iconview__entry--ghost',
+      style: {
+        display: state.ghost ? undefined : 'none'
+      }
+    })
+  ]);
 
 const createShortcuts = (root, readfile, writefile) => {
   const read = () => {
@@ -195,10 +209,10 @@ export class DesktopIconView extends EventEmitter {
     this.$root.style.right = `${rect.right}px`;
   }
 
-  _render(root) {
+  _render(settings) {
     const oldRoot = this.root;
-    if (root) {
-      this.root = root;
+    if (settings.path) {
+      this.root = settings.path;
     }
 
     if (this.$root) {
@@ -206,14 +220,16 @@ export class DesktopIconView extends EventEmitter {
         this.iconview.reload();
       }
 
+      this.iconview.toggleGrid(settings.grid);
+
       return false;
     }
 
     return true;
   }
 
-  render(root) {
-    if (!this._render(root)) {
+  render(settings) {
+    if (!this._render(settings)) {
       return;
     }
 
@@ -221,6 +237,7 @@ export class DesktopIconView extends EventEmitter {
     this.$root.className = 'osjs-desktop-iconview';
     this.core.$root.appendChild(this.$root);
 
+    const root = settings.path;
     const {droppable} = this.core.make('osjs/dnd');
     const {icon: fileIcon} = this.core.make('osjs/fs');
     const {icon: themeIcon} = this.core.make('osjs/theme');
@@ -231,7 +248,8 @@ export class DesktopIconView extends EventEmitter {
 
     this.iconview = app({
       selected: -1,
-      entries: []
+      entries: [],
+      ghost: false
     }, {
       setEntries: entries => ({entries}),
 
@@ -311,8 +329,11 @@ export class DesktopIconView extends EventEmitter {
         read()
           .then(entries => entries.filter(e => e.filename !== '..'))
           .then(entries => actions.setEntries(entries));
-      }
+      },
 
+      setGhost: ev => {
+        return {ghost: ev};
+      }
     }, view(fileIcon, themeIcon, droppable), this.$root);
 
     this.iconview.reload();

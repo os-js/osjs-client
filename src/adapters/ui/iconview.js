@@ -288,7 +288,8 @@ const createShortcuts = (root, readfile, writefile) => {
     const contents = JSON.stringify(shortcuts || []);
 
     return writefile(filename, contents)
-      .catch(() => 0);
+      .then(() => shortcuts.length - 1)
+      .catch(() => -1);
   };
 
   const add = entry => read(root)
@@ -468,9 +469,11 @@ export class DesktopIconView extends EventEmitter {
             }
 
             return copy(entry, dest)
+              .then(() => grid.move(ev, entry.filename))
               .then(() => actions.reload())
               .catch(error);
           })
+          .then(key => grid.move(ev, key))
           .then(() => actions.reload());
 
         return {selected: -1};

@@ -36,27 +36,12 @@ import {pathJoin} from '../../utils/vfs';
 
 const tapper = doubleTap();
 
-//
-// FIXME: Excessive render on drop events
-//
-
-// TODO: Needs real values
-const ICON_WIDTH = 5.0; // ems
-const ICON_HEIGHT = 6.5; // ems
-const ICON_MARGIN = 0.5; // ems
-
 const validVfsDrop = data => data && data.path;
 const validInternalDrop = data => data && data.internal;
 
-// TODO: Use internal storage
-const loadIconPositions = () => JSON.parse(
-  localStorage.getItem('___osjs_iconview_positions') || '[]'
-);
-
-// TODO: Use internal storage
-const saveIconPositions = positions =>
-  localStorage.setItem('___osjs_iconview_positions', JSON.stringify(positions || []));
-
+/**
+ * Drop handler
+ */
 const onDropAction = actions => (ev, data, files, shortcut = true) => {
   if (validVfsDrop(data)) {
     actions.addEntry({entry: data, shortcut, ev});
@@ -67,62 +52,34 @@ const onDropAction = actions => (ev, data, files, shortcut = true) => {
   }
 };
 
+/**
+ * Checks event is on a root element
+ */
 const isRootElement = ev =>
   ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper');
 
-const calculateGridSizes = el => {
-  const {offsetWidth, offsetHeight} = el;
-  // TODO: Might cause reflow, do cache here
-  const sizeX = emToPx(ICON_WIDTH) + (emToPx(ICON_MARGIN) * 2);
-  const sizeY = emToPx(ICON_HEIGHT) + (emToPx(ICON_MARGIN) * 2);
-  const cols = Math.floor(offsetWidth / sizeX);
-  const rows = Math.floor(offsetHeight / sizeY);
-  return [rows, cols, sizeX, sizeY];
-};
-
-const calculateIconPositions = (entries, positions, cols) => {
-  const savedPositions = entries.map(entry => {
-    const key = entry.shortcut === false ? entry.filename : entry.shortcut;
-    const found = positions.findIndex(s => s.key === key);
-    return found === -1 ? undefined : positions[found].position;
-  });
-
-  return entries.map((entry, index) => {
-    const x = index % cols;
-    const y = Math.floor(index / cols);
-    const _position = savedPositions[index] || [x, y];
-
-    return Object.assign(entry, {_position});
-  });
-};
-
-const isIconPositionBusy = (ev, {entries, grid: {sizeX, sizeY}}) => {
-  const col = Math.floor(ev.clientX / sizeX);
-  const row = Math.floor(ev.clientY / sizeY);
-
-  return entries.findIndex(e => {
-    return e._position[0] === col &&
-      e._position[1] === row;
-  }) !== -1;
-};
-
-const createIconStyle = (entry, index, {grid: {enabled, sizeX, sizeY}}) => {
-  const [left, top] = entry._position || [0, 0];
+/**
+ * Creates UI icon styles
+ */
+const createIconStyle = (entry, grid, enabled) => {
+  const [left, top] = grid.getPosition(entry._position || [0, 0]);
 
   return enabled ? {
     position: 'absolute',
-    top: String(top * sizeY) + 'px',
-    left: String(left * sizeX) + 'px'
+    top: String(top) + 'px',
+    left: String(left) + 'px'
   } : {};
 };
 
-const createGhostStyle = ({ghost, grid: {enabled, sizeX, sizeY}}) => {
+/**
+ * Creates UI drop ghost
+ */
+const createGhostStyle = (grid, ghost, enabled) => {
   const style = {};
   if (ghost instanceof Event) {
-    const col = Math.floor(ghost.clientX / sizeX);
-    const row = Math.floor(ghost.clientY / sizeY);
-    style.top = String(row * sizeY) + 'px';
-    style.left = String(col * sizeX) + 'px';
+    const [col, row] = grid.getEventPosition(ghost);
+    style.top = row + 'px';
+    style.left = col + 'px';
   }
 
   return Object.assign({
@@ -131,7 +88,10 @@ const createGhostStyle = ({ghost, grid: {enabled, sizeX, sizeY}}) => {
   }, style);
 };
 
-const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
+/**
+ * Creates UI view
+ */
+const view = (fileIcon, themeIcon, grid) => (state, actions) =>
   h('div', {
     class: 'osjs-desktop-iconview__wrapper',
     oncontextmenu: ev => {
@@ -164,7 +124,7 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
   }, [
     ...state.entries.map((entry, index) => {
       return h('div', {
-        style: createIconStyle(entry, index, state),
+        style: createIconStyle(entry, grid, state.grid),
         class: 'osjs-desktop-iconview__entry' + (
           state.selected === index
             ? ' osjs-desktop-iconview__entry--selected'
@@ -205,10 +165,115 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
     }),
     h('div', {
       class: 'osjs-desktop-iconview__entry osjs-desktop-iconview__entry--ghost',
-      style: createGhostStyle(state)
+      style: createGhostStyle(grid, state.ghost, state.grid)
     })
   ]);
 
+/**
+ * Handles grid
+ * FIXME: Excessive render on drop events
+ */
+const createGrid = (root) => {
+
+  // TODO: Needs real values
+  const ICON_WIDTH = 5.0; // ems
+  const ICON_HEIGHT = 6.5; // ems
+  const ICON_MARGIN = 0.5; // ems
+
+  /* eslint-disable no-unused-vars */
+  let rows = 0;
+  let cols = 0;
+  let sizeX = 0;
+  let sizeY = 0;
+  let positions = [];
+
+  const resize = () => {
+    const {offsetWidth, offsetHeight} = root;
+    sizeX = emToPx(ICON_WIDTH) + (emToPx(ICON_MARGIN) * 2);
+    sizeY = emToPx(ICON_HEIGHT) + (emToPx(ICON_MARGIN) * 2);
+    cols = Math.floor(offsetWidth / sizeX);
+    rows = Math.floor(offsetHeight / sizeY);
+  };
+
+  const load = () => {
+    // TODO: Use internal storage
+    positions = JSON.parse(
+      localStorage.getItem(
+        '___osjs_iconview_positions'
+      ) || '[]'
+    );
+  };
+
+  const save = () => {
+    // TODO: Use internal storage
+    return localStorage.setItem(
+      '___osjs_iconview_positions',
+      JSON.stringify(positions || [])
+    );
+  };
+
+  const getOffset = ev => ([
+    Math.floor(ev.clientX / sizeX),
+    Math.floor(ev.clientY / sizeY)
+  ]);
+
+  const getPosition = ([left, top]) => ([
+    left * sizeX,
+    top * sizeY
+  ]);
+
+  const getEventPosition = ev => {
+    const [col, row] = getOffset(ev);
+    return [col * sizeX, row * sizeY];
+  };
+
+  const isBusy = (ev, entries) => {
+    const [col, row] = getOffset(ev);
+
+    return entries.findIndex(e => {
+      return e._position[0] === col &&
+        e._position[1] === row;
+    }) !== -1;
+  };
+
+  const calculate = entries => {
+    const savedPositions = entries.map(entry => {
+      const key = entry.shortcut === false ? entry.filename : entry.shortcut;
+      const found = positions.findIndex(s => s.key === key);
+      return found === -1 ? undefined : positions[found].position;
+    });
+
+    return entries.map((entry, index) => {
+      const x = index % cols;
+      const y = Math.floor(index / cols);
+      const _position = savedPositions[index] || [x, y];
+
+      return Object.assign(entry, {_position});
+    });
+  };
+
+  const move = (ev, key) => {
+    const [col, row] = getOffset(ev);
+    const found = positions.findIndex(s => s.key === key);
+
+    const position = [col, row];
+    const value = {key, position};
+
+    if (found !== -1) {
+      positions[found] = value;
+    } else {
+      positions.push(value);
+    }
+
+    return save();
+  };
+
+  return {resize, load, save, calculate, move, isBusy, getPosition, getEventPosition};
+};
+
+/**
+ * Handles shortcuts
+ */
 const createShortcuts = (root, readfile, writefile) => {
   const read = () => {
     const filename = pathJoin(root, '.shortcuts.json');
@@ -240,6 +305,9 @@ const createShortcuts = (root, readfile, writefile) => {
   return {read, add, remove};
 };
 
+/**
+ * Wrapper for handling reading the desktop folder
+ */
 const readDesktopFolder = (root, readdir, shortcuts) => {
   const read = () => readdir(root, {
     showHiddenFiles: false
@@ -336,25 +404,19 @@ export class DesktopIconView extends EventEmitter {
     const error = err => console.error(err);
     const shortcuts = createShortcuts(root, readfile, writefile);
     const read = readDesktopFolder(root, readdir, shortcuts);
+    const grid = createGrid(this.$root);
 
-    const [rows, cols, sizeX, sizeY] = calculateGridSizes(this.$root);
+    grid.load();
 
     this.iconview = app({
       selected: -1,
       entries: [],
-      positions: loadIconPositions(),
       ghost: false,
-      grid: {
-        enabled: settings.grid,
-        rows,
-        cols,
-        sizeX,
-        sizeY
-      }
+      grid: settings.grid
     }, {
-      setEntries: entries => state => {
-        return {entries: calculateIconPositions(entries, state.positions, state.grid.cols)};
-      },
+      setEntries: entries => state => ({
+        entries: grid.calculate(entries)
+      }),
 
       openDropContextMenu: ({ev, data, files}) => {
         this.createDropContextMenu(ev, data, files);
@@ -429,27 +491,11 @@ export class DesktopIconView extends EventEmitter {
       },
 
       moveEntry: ({entry, ev}) => (state) => {
-        if (!isIconPositionBusy(ev, state)) {
-          const positions = state.positions;
+        if (!grid.isBusy(ev, state.entries)) {
           const key = entry.shortcut === false ? entry.filename : entry.shortcut;
-          const found = positions.findIndex(s => s.key === key);
-          const col = Math.floor(ev.clientX / sizeX);
-          const row = Math.floor(ev.clientY / sizeY);
-          const position = [col, row];
-          const value = {key, position};
+          grid.move(ev, key);
 
-          if (found !== -1) {
-            positions[found] = value;
-          } else {
-            positions.push(value);
-          }
-
-          saveIconPositions(positions);
-
-          return {
-            positions,
-            entries: calculateIconPositions(state.entries, positions, state.cols)
-          };
+          return {entries: grid.calculate(state.entries)};
         }
         return {};
       },
@@ -460,9 +506,8 @@ export class DesktopIconView extends EventEmitter {
           .then(entries => actions.setEntries(entries));
       },
 
-      resize: () => ({grid: {enabled}}) => {
-        const [rows, cols, sizeX, sizeY] = calculateGridSizes(this.$root);
-        return {grid: {enabled, rows, cols, sizeX, sizeY}};
+      resize: () => {
+        grid.resize();
       },
 
       toggleGrid: enabled => ({grid}) => {
@@ -472,7 +517,7 @@ export class DesktopIconView extends EventEmitter {
       setGhost: ev => {
         return {ghost: ev};
       }
-    }, view(fileIcon, themeIcon, droppable), this.$root);
+    }, view(fileIcon, themeIcon, grid), this.$root);
 
     this.iconview.reload();
   }

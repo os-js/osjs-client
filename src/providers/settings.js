@@ -58,7 +58,7 @@ export default class SettingsServiceProvider extends ServiceProvider {
   init() {
     this.core.singleton('osjs/settings', () => ({
       save: () => this.settings.save(),
-      load: () => this.settings.load(),
+      load: migrate => this.settings.load(migrate),
       clear: (...args) => this.settings.clear(...args),
       get: (...args) => this.settings.get(...args),
       set: (...args) => this.settings.set(...args)

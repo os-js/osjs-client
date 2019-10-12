@@ -144,7 +144,7 @@ export default class Core extends CoreBase {
             this.user = user;
 
             if (this.has('osjs/settings')) {
-              this.make('osjs/settings').load()
+              this.make('osjs/settings').load(true)
                 .then(() => done())
                 .catch(() => done());
             } else {

@@ -168,7 +168,8 @@ export const defaultConfiguration = {
       }],
       widgets: [],
       keybindings: {
-        'open-application-menu': 'alt+a'
+        'open-application-menu': 'alt+a',
+        'close-window': 'alt+w'
       },
       notifications: {
         position: 'top-right'

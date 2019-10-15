@@ -621,10 +621,15 @@ export default class Window extends EventEmitter {
    */
   _maximize(toggle) {
     if (this._toggleState('maximized', toggle, toggle ? 'maximize' : 'restore')) {
+      const emit = () => this.emit('resized', Object.assign({}, {
+        width: this.$element ? this.$element.offsetWidth : -1,
+        height: this.$element ? this.$element.offsetHeight : -1
+      }), this);
+
       if (supportsTransition()) {
-        this.once('transitionend', () => this.emit('resized'));
+        this.once('transitionend', emit);
       } else {
-        this.emit('resized');
+        emit();
       }
 
       return true;

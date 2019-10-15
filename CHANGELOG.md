@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.8
+
+* Add missing Window 'resized' event signatures (#77)
+
 ## 3.1.7
 
 * Use desktop contextmenu in iconview (#51)

@@ -28,40 +28,72 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * @property {string} [type] Optional data type
+ * @property {*} data
+ * @typedef CliboardData
+ */
+
 export default class Clipboard {
 
+  /**
+   * Create new clipboard
+   */
   constructor() {
-    this.value = undefined;
+    /**
+     * @type {CliboardData}
+     */
+    this.clipboard = undefined;
+
     this.clear();
   }
 
+  /**
+   * Destroy clipboard
+   */
   destroy() {
     this.clear();
   }
 
+  /**
+   * Clear clipboard
+   */
   clear() {
-    this.value = Promise.resolve();
+    this.clipboard = {data: undefined, type: undefined};
   }
 
-  set(v) {
-    this.value = v;
+  /**
+   * Set clipboard data
+   * @param {*} data Clipboard data. For async data, provide a function that returns a promise
+   * @param {string} [type] Optional type used by applications for identifying content
+   */
+  set(data, type) {
+    this.clipboard = {data, type};
   }
 
-  get(clear) {
-    const v = typeof this.value === 'function'
-      ? this.value()
-      : this.value;
+  /**
+   * Checks if current clipboard data has this type
+   * @return {boolean}
+   */
+  has(type) {
+    return this.clipboard.type === type;
+  }
 
-    const done = ret => {
-      if (clear) {
-        this.clear();
-      }
+  /**
+   * Gets clipboard data
+   * @param {boolean} [clear=false] Clear clipboard
+   * @return {Promise<*>}
+   */
+  get(clear = false) {
+    const {data} = this.clipboard;
+    const result = typeof data === 'function'
+      ? data()
+      : data;
 
-      return ret;
-    };
+    if (clear) {
+      this.clear();
+    }
 
-    return Promise.resolve(v)
-      .then(done)
-      .catch(done);
+    return Promise.resolve(result);
   }
 }

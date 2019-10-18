@@ -73,9 +73,14 @@ export default class Clipboard {
 
   /**
    * Checks if current clipboard data has this type
+   * @param {string|RegExp} type Data type
    * @return {boolean}
    */
   has(type) {
+    if (type instanceof RegExp) {
+      return typeof this.clipboard.type === 'string' &&
+        !!this.clipboard.type.match(type);
+    }
     return this.clipboard.type === type;
   }
 

@@ -22,10 +22,12 @@ describe('Clipboard', () => {
     expect(clipboard.has('vfs')).toBe(false);
     clipboard.set('value', 'vfs');
     expect(clipboard.has('vfs')).toBe(true);
+    expect(clipboard.has(/^vf/)).toBe(true);
+    expect(clipboard.has(/^foo/)).toBe(false);
     expect(clipboard.has('other')).toBe(false);
     clipboard.clear();
     expect(clipboard.has('vfs')).toBe(false);
-    expect(clipboard.has('other')).toBe(true);
+    expect(clipboard.has('other')).toBe(false);
   });
 
   test('#get + #clear', () => {

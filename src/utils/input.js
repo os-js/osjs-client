@@ -37,7 +37,7 @@ const modifierNames =  ['ctrl', 'shift', 'alt', 'meta'];
  * @return {boolean}
  */
 export const matchKeyCombo = (combo, ev) => {
-  const checkKeys = combo.toLowerCase().split('+');
+  const checkKeys = String(combo).toLowerCase().split('+');
   const keyName = String(ev.key).toLowerCase();
   const validKeypress = checkKeys.every(k => modifierNames.indexOf(k) !== -1
     ? ev[k + 'Key']

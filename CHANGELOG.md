@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.9
+
+* Added configuration option for window move keyboard shortcut (#81)
+
 ## 3.1.8
 
 * Add missing Window 'resized' event signatures (#77)

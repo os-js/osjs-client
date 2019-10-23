@@ -29,7 +29,7 @@
  */
 
 import {supportsPassive} from './utils/dom';
-import {getEvent} from './utils/input';
+import {getEvent, matchKeyCombo} from './utils/input';
 import {resizer, mover, getMediaQueryName, getCascadePosition} from './utils/windows';
 
 const isPassive = supportsPassive();
@@ -186,10 +186,10 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const {moveable, resizable} = win.attributes;
-    const {lofi} = this.core.config('windows');
+    const {lofi, moveKeybinding} = this.core.config('windows');
     const {clientX, clientY, touch, target} = getEvent(ev);
 
-    const checkMove = ev.ctrlKey
+    const checkMove = matchKeyCombo(moveKeybinding, ev)
       ? win.$element.contains(target)
       : target.classList.contains('osjs-window-header');
 

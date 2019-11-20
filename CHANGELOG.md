@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.11
+
+* Change property used in user mountpoint filter (#83)
+
 ## 3.1.10
 
 * Hide mountpoints based on user groups (#83)

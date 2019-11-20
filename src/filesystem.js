@@ -30,7 +30,7 @@
 
 import * as VFS from './vfs';
 import {EventEmitter} from '@osjs/event-emitter';
-import {parseMontpointPrefix} from './utils/vfs';
+import {parseMontpointPrefix, filterMountByGroups} from './utils/vfs';
 import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
@@ -308,6 +308,7 @@ export default class Filesystem extends EventEmitter {
    * @return {object[]}
    */
   getMounts(all = false) {
+    const user = this.core.getUser();
     const theme = this.core.make('osjs/theme');
     const icon = str => str
       ? (typeof str === 'string' ? str : theme.icon(str.name))
@@ -316,6 +317,7 @@ export default class Filesystem extends EventEmitter {
     return this.mounts
       .filter(m => all || m.mounted)
       .filter(m => m.enabled !== false)
+      .filter(filterMountByGroups(user.groups))
       .map(m => ({
         attributes: Object.assign({}, m.attributes),
         icon: icon(m.icon),
@@ -324,5 +326,4 @@ export default class Filesystem extends EventEmitter {
         root: m.root
       }));
   }
-
 }

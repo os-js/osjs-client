@@ -259,3 +259,17 @@ describe('utils.vfs#parseMontpointPrefix', () => {
     expect(vfs.parseMontpointPrefix('invalid/:/')).toBe(undefined);
   });
 });
+
+describe('utils.vfs#filterMountByGroups', () => {
+  test('Should be true', () => {
+    expect(vfs.filterMountByGroups([])({groups: []})).toBe(true);
+    expect(vfs.filterMountByGroups([])({groups: null})).toBe(true);
+    expect(vfs.filterMountByGroups(['a'])({groups: ['a']})).toBe(true);
+    expect(vfs.filterMountByGroups(['a', 'b'])({groups: ['a']})).toBe(true);
+  });
+
+  test('Should be false', () => {
+    expect(vfs.filterMountByGroups([])({groups: ['a']})).toBe(false);
+    expect(vfs.filterMountByGroups(['a'])({groups: ['a', 'b']})).toBe(false);
+  });
+});

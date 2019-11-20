@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.10
+
+* Hide mountpoints based on user groups (#83)
+
 ## 3.1.9
 
 * Added configuration option for window move keyboard shortcut (#81)

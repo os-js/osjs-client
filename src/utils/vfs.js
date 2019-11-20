@@ -333,7 +333,7 @@ export const parseMontpointPrefix = str => {
  * Filters a mountpoint by user groups
  * @return {boolean}
  */
-export const filterMountByGroups = userGroups => iter => iter.groups instanceof Array
-  ? iter.groups.every(g => userGroups.indexOf(g) !== -1)
+export const filterMountByGroups = userGroups => mountGroups => mountGroups instanceof Array
+  ? mountGroups.every(g => userGroups.indexOf(g) !== -1)
   : true;
 

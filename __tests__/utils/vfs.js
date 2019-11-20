@@ -262,14 +262,14 @@ describe('utils.vfs#parseMontpointPrefix', () => {
 
 describe('utils.vfs#filterMountByGroups', () => {
   test('Should be true', () => {
-    expect(vfs.filterMountByGroups([])({groups: []})).toBe(true);
-    expect(vfs.filterMountByGroups([])({groups: null})).toBe(true);
-    expect(vfs.filterMountByGroups(['a'])({groups: ['a']})).toBe(true);
-    expect(vfs.filterMountByGroups(['a', 'b'])({groups: ['a']})).toBe(true);
+    expect(vfs.filterMountByGroups([])([])).toBe(true);
+    expect(vfs.filterMountByGroups([])(null)).toBe(true);
+    expect(vfs.filterMountByGroups(['a'])(['a'])).toBe(true);
+    expect(vfs.filterMountByGroups(['a', 'b'])(['a'])).toBe(true);
   });
 
   test('Should be false', () => {
-    expect(vfs.filterMountByGroups([])({groups: ['a']})).toBe(false);
-    expect(vfs.filterMountByGroups(['a'])({groups: ['a', 'b']})).toBe(false);
+    expect(vfs.filterMountByGroups([])(['a'])).toBe(false);
+    expect(vfs.filterMountByGroups(['a'])(['a', 'b'])).toBe(false);
   });
 });

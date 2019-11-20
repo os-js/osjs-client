@@ -317,7 +317,7 @@ export default class Filesystem extends EventEmitter {
     return this.mounts
       .filter(m => all || m.mounted)
       .filter(m => m.enabled !== false)
-      .filter(filterMountByGroups(user.groups))
+      .filter(m => filterMountByGroups(user.groups)(m.attributes ? m.attributes.groups : []))
       .map(m => ({
         attributes: Object.assign({}, m.attributes),
         icon: icon(m.icon),

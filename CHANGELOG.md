@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.12
+
+* Added abitlity to make VFS group checking non-strict (#85)
+
 ## 3.1.11
 
 * Change property used in user mountpoint filter (#83)

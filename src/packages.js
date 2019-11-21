@@ -385,9 +385,13 @@ export default class Packages {
     const user = this.core.getUser();
     const metadata = this.metadata.map(m => Object.assign({}, m));
 
-    const filterGroups = iter => iter.groups instanceof Array
-      ? iter.groups.every(g => user.groups.indexOf(g) !== -1)
-      : true;
+    const filterGroups = iter => {
+      const m = iter.strictGroups === false ? 'some' : 'every';
+
+      return iter.groups instanceof Array
+        ? iter.groups[m](g => user.groups.indexOf(g) !== -1)
+        : true;
+    };
 
     const filterBlacklist = iter => user.blacklist instanceof Array
       ? user.blacklist.indexOf(iter.name) === -1

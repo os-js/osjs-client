@@ -266,10 +266,15 @@ describe('utils.vfs#filterMountByGroups', () => {
     expect(vfs.filterMountByGroups([])(null)).toBe(true);
     expect(vfs.filterMountByGroups(['a'])(['a'])).toBe(true);
     expect(vfs.filterMountByGroups(['a', 'b'])(['a'])).toBe(true);
+
+    expect(vfs.filterMountByGroups(['a'])(['a'], false)).toBe(true);
+    expect(vfs.filterMountByGroups(['a', 'b'])(['a'], false)).toBe(true);
+    expect(vfs.filterMountByGroups(['a'])(['a', 'b'], false)).toBe(true);
   });
 
   test('Should be false', () => {
     expect(vfs.filterMountByGroups([])(['a'])).toBe(false);
     expect(vfs.filterMountByGroups(['a'])(['a', 'b'])).toBe(false);
+    expect(vfs.filterMountByGroups(['b'])(['a'], false)).toBe(false);
   });
 });

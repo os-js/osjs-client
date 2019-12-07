@@ -147,5 +147,6 @@ export const en_EN = {
   LBL_UPLOAD: 'Upload',
   LBL_IMAGE: 'Image',
   LBL_CREATE_SHORTCUT: 'Create shortcut',
-  LBL_REMOVE_SHORTCUT: 'Remove shortcut'
+  LBL_REMOVE_SHORTCUT: 'Remove shortcut',
+  LBL_EDIT: 'Edit'
 };

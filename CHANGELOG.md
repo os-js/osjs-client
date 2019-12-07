@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.14
+
+* Added type identifier for clipboard data (#79)
+
 ## 3.1.13
 
 * Added abitlity to make Package group checking non-strict (#85)

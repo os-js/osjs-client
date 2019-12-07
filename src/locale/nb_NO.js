@@ -147,5 +147,6 @@ export const nb_NO = {
   LBL_UPLOAD: 'Last opp',
   LBL_IMAGE: 'Bilde',
   LBL_CREATE_SHORTCUT: 'Lag til snarvei',
-  LBL_REMOVE_SHORTCUT: 'Fjern snarvei'
+  LBL_REMOVE_SHORTCUT: 'Fjern snarvei',
+  LBL_EDIT: 'Rediger'
 };

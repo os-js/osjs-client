@@ -63,5 +63,82 @@
     "stylelint-scss": "^3.6.1",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "extends": "@osjs/eslint-config"
+  },
+  "stylelint": {
+    "extends": "stylelint-config-standard",
+    "plugins": [
+      "stylelint-scss"
+    ],
+    "rules": {
+      "at-rule-no-unknown": [true, {
+        "ignoreAtRules": ["extend", "mixin", "include", "each"]
+      }]
+    }
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
+  },
+  "esdoc": {
+    "source": "./src",
+    "destination": "./doc",
+    "plugins": [
+      {
+        "name": "esdoc-standard-plugin",
+        "option": {
+          "brand": {
+            "title": "OS.js Core API",
+            "description": "OS.js Core API Documentation",
+            "repository": "https://github.com/os-js/osjs-core",
+            "author": "Anders Evenrud <andersevenrud@gmail.com>"
+          },
+          "lint": {
+            "enable": false
+          },
+          "coverage": {
+            "enable": false
+          },
+          "undocumentIdentifier": {
+            "enable": false
+          }
+        }
+      },
+      {"name": "esdoc-publish-html-plugin"}
+    ]
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["lcov"],
+
+    "setupFilesAfterEnv": [
+      "<rootDir>/__mocks__/setup.js"
+    ],
+
+    "moduleNameMapper": {
+      "^osjs$": "<rootDir>/__mocks__/core.js",
+      "^.+\\.scss$": "<rootDir>/__mocks__/null-module.js",
+      "^.+\\.(png|jpe?g|gif)$": "<rootDir>/__mocks__/null-module.js"
+    },
+
+    "coveragePathIgnorePatterns": [
+      "src/config.js",
+      "src/providers",
+      "/node_modules/",
+      "/locale/"
+    ]
   }
 }

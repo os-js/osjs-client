@@ -3,4 +3,5 @@
 .flowconfig
 node_modules
 package-lock.json
-dist
+/dist
+/coverage

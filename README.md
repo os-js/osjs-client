@@ -31,7 +31,7 @@ import { Core /*, ... */ } from '@osjs/client';
 ### UMD
 
 ```
-<script src="https://cdn.jsdelivr.net/npm/@osjs/gui/dist/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@osjs/client/dist/main.js"></script>
 ```
 
 ```

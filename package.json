@@ -32,6 +32,7 @@
   "dependencies": {
     "@osjs/common": "^3.0.3",
     "@osjs/event-emitter": "^1.0.8",
+    "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
     "deepmerge": "^4.2.2",
     "hyperapp": "^1.2.10",
@@ -52,7 +53,6 @@
     "@osjs/stylelint-config": "^1.0.1",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.4.2",
-    "css-mediaquery": "^0.1.2",
     "eslint": "^6.8.0",
     "file-loader": "^5.0.2",
     "mini-css-extract-plugin": "^0.9.0",

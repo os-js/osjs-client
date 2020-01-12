@@ -30,44 +30,20 @@
  */
 import './index.scss';
 
-import Core from './src/core';
-import Window from './src/window';
-import Desktop from './src/desktop';
-import Application from './src/application';
-import Notification from './src/notification';
-import Notifications from './src/notifications';
-import WindowBehavior from './src/window-behavior';
-import Auth from './src/auth';
-import Login from './src/login';
-import Websocket from './src/websocket';
-
-import CoreServiceProvider from './src/providers/core';
-import DesktopServiceProvider from './src/providers/desktop';
-import NotificationServiceProvider from './src/providers/notifications';
-import VFSServiceProvider from './src/providers/vfs';
-import AuthServiceProvider from './src/providers/auth';
-import SettingsServiceProvider from './src/providers/settings';
-
-import logger from './src/logger';
-
-export {
-  Core,
-  Window,
-  Desktop,
-  Application,
-  Notification,
-  Notifications,
-  WindowBehavior,
-  Login,
-  Auth,
-  Websocket,
-
-  CoreServiceProvider,
-  DesktopServiceProvider,
-  NotificationServiceProvider,
-  VFSServiceProvider,
-  AuthServiceProvider,
-  SettingsServiceProvider,
-
-  logger
-};
+export {default as Core} from './src/core';
+export {default as Window} from './src/window';
+export {default as Desktop} from './src/desktop';
+export {default as Application} from './src/application';
+export {default as Notification} from './src/notification';
+export {default as Notifications} from './src/notifications';
+export {default as WindowBehavior} from './src/window-behavior';
+export {default as Auth} from './src/auth';
+export {default as Login} from './src/login';
+export {default as Websocket} from './src/websocket';
+export {default as CoreServiceProvider} from './src/providers/core';
+export {default as DesktopServiceProvider} from './src/providers/desktop';
+export {default as NotificationServiceProvider} from './src/providers/notifications';
+export {default as VFSServiceProvider} from './src/providers/vfs';
+export {default as AuthServiceProvider} from './src/providers/auth';
+export {default as SettingsServiceProvider} from './src/providers/settings';
+export {default as logger} from './src/logger';

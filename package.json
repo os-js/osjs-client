@@ -44,11 +44,12 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/plugin-transform-runtime": "^7.7.6",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/runtime": "^7.7.7",
+    "@babel/core": "^7.8.0",
+    "@babel/plugin-transform-runtime": "^7.8.0",
+    "@babel/preset-env": "^7.8.0",
+    "@babel/runtime": "^7.8.0",
     "@osjs/eslint-config": "^1.0.2",
+    "@osjs/stylelint-config": "^1.0.1",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.4.2",
     "css-mediaquery": "^0.1.2",
@@ -59,8 +60,6 @@
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "sass-loader": "^8.0.1",
     "stylelint": "^12.0.1",
-    "stylelint-config-standard": "^19.0.0",
-    "stylelint-scss": "^3.13.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
@@ -75,23 +74,7 @@
     "extends": "@osjs/eslint-config"
   },
   "stylelint": {
-    "extends": "stylelint-config-standard",
-    "plugins": [
-      "stylelint-scss"
-    ],
-    "rules": {
-      "at-rule-no-unknown": [
-        true,
-        {
-          "ignoreAtRules": [
-            "extend",
-            "mixin",
-            "include",
-            "each"
-          ]
-        }
-      ]
-    }
+    "extends": "@osjs/stylelint-config"
   },
   "babel": {
     "presets": [

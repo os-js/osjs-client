@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.1.15
+
+* Updated exports in main
+* Moved some devDependencies to dependencies
+* Now using @osjs/stylelint-config
+* Updated webpack config
+* Updated dependencies
+
 ## 3.1.14
 
 * Added type identifier for clipboard data (#79)

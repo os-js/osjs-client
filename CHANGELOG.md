@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.18
+
+* Updated dependencies
+
 ## 3.1.17
 
 * Updated VFS sort implementation

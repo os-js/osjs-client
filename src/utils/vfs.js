@@ -203,7 +203,7 @@ export const transformReaddir = ({path}, files, options = {}) => {
     : file => file.filename.substr(0, 1) !== '.';
 
   const sorter = sortMap[sortBy]
-    ? sortMap[sortBy]()
+    ? sortMap[sortBy]
     : sortFn('string');
 
   const modify = (file) => Object.assign(file, {

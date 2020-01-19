@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.16
+
+* Updated dependencies
+* Updated copyright notices in preambles
+
 ## 3.1.15
 
 * Updated exports in main

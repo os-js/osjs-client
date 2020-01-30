@@ -35,3 +35,4 @@ export * from './sl_SI';
 export * from './vi_VN';
 export * from './de_DE';
 export * from './zh_CN';
+export * from './fa_FA';

@@ -63,7 +63,8 @@ export const defaultConfiguration = {
     fr_FR: 'French',
     de_DE: 'German',
     sl_SI: 'Slovenian, Slovenščina',
-    zh_CN: 'Chinese (simplified)'
+    zh_CN: 'Chinese (simplified)',
+    fa_FA: 'Persian'
   },
 
   packages: {

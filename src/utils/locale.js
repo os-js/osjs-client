@@ -73,8 +73,14 @@ export const getLocale = (core, key) => {
  * @return {string}           The raw string
  */
 const getFromList = (list, ul, dl, k) => {
-  const localizedList = list[ul] || list[dl] || list[FALLBACK_LOCALE] || {};
-  return localizedList[k] || k;
+  const fallbackList = list[FALLBACK_LOCALE] || {};
+  const localizedList = list[ul] || list[dl] || {};
+
+  if (typeof localizedList[k] === 'undefined') {
+    return fallbackList[k] || k;
+  }
+
+  return localizedList[k];
 };
 
 /**
@@ -91,7 +97,7 @@ const getFromList = (list, ul, dl, k) => {
  * @param {...*}    args      A list of arguments that are defined in the translation string
  * @return {string}           The translated string
  */
-const translate = (list, ul, dl, k, ...args) => {
+export const translate = (list, ul, dl, k, ...args) => {
   const fmt = getFromList(list, ul, dl, k);
   return fmt.replace(sprintfRegex, sprintfMatcher(args));
 };

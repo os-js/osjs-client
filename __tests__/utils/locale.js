@@ -2,6 +2,7 @@ import {createInstance} from 'osjs';
 import {
   clientLocale,
   format,
+  translate,
   translatable,
   translatableFlat,
   getLocale
@@ -61,5 +62,31 @@ describe('Locale Utils', () => {
 
     expect(getLocale(core, 'format.shortDate'))
       .toEqual({defaultLocale: 'yyyy-mm-dd', userLocale: 'yyyy-mm-dd'});
+  });
+
+  test('translate', () => {
+    expect(translate(
+      {
+        en_EN: {
+          hello: 'Hello World'
+        }
+      },
+      'en_EN',
+      'en_EN',
+      'hello'
+    )).toBe('Hello World')
+
+    expect(translate(
+      {
+        en_EN: {
+          hello: 'Hello World'
+        },
+        foo_BAR: {
+        }
+      },
+      'foo_BAR',
+      'foo_BAR',
+      'hello'
+    )).toBe('Hello World')
   });
 });

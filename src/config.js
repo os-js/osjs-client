@@ -40,9 +40,21 @@ const pathname = createUri(window.location.pathname);
 
 const href = createUri(window.location.href);
 
+const languages = {
+  en_EN: 'English',
+  nb_NO: 'Norwegian, Norsk (bokmål)',
+  vi_VN: 'Vietnamese, Vietnamese',
+  fr_FR: 'French',
+  de_DE: 'German',
+  sl_SI: 'Slovenian, Slovenščina',
+  zh_CN: 'Chinese (simplified)',
+  fa_FA: 'Persian'
+};
+
 export const defaultConfiguration = {
   development: !(process.env.NODE_ENV || '').match(/^prod/i),
   standalone: false,
+  languages,
 
   http: {
     ping: true, // By default maxAge / 2
@@ -54,17 +66,6 @@ export const defaultConfiguration = {
     connectInterval: 5000,
     uri: href.replace(/^http/, 'ws'),
     disabled: false
-  },
-
-  languages: {
-    en_EN: 'English',
-    nb_NO: 'Norwegian, Norsk (bokmål)',
-    vi_VN: 'Vietnamese, Vietnamese',
-    fr_FR: 'French',
-    de_DE: 'German',
-    sl_SI: 'Slovenian, Slovenščina',
-    zh_CN: 'Chinese (simplified)',
-    fa_FA: 'Persian'
   },
 
   packages: {
@@ -187,7 +188,7 @@ export const defaultConfiguration = {
   },
 
   locale: {
-    language: clientLocale('en_EN'),
+    language: clientLocale('en_EN', Object.keys(languages)),
     rtl: ['az', 'fa', 'he', 'uz', 'ar'],
     format: {
       shortDate: 'yyyy-mm-dd',

@@ -4,7 +4,8 @@ import {
   format,
   translatable,
   translatableFlat,
-  getLocale
+  getLocale,
+  browserLocale
 } from '../../src/utils/locale.js';
 
 
@@ -61,5 +62,14 @@ describe('Locale Utils', () => {
 
     expect(getLocale(core, 'format.shortDate'))
       .toEqual({defaultLocale: 'yyyy-mm-dd', userLocale: 'yyyy-mm-dd'});
+  });
+
+  test('browserLocale', () => {
+    expect(browserLocale()).toBe(undefined);
+    expect(browserLocale({language: 'en'})).toBe('en_EN');
+    expect(browserLocale({language: 'en_EN'})).toBe('en_EN');
+    expect(browserLocale({languages: ['en']})).toBe('en_EN');
+    expect(browserLocale({languages: ['en', 'no']})).toBe('no_NO');
+    expect(browserLocale({languages: ['en'], language: 'foo'})).toBe('en_EN');
   });
 });

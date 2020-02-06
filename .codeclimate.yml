@@ -12,8 +12,6 @@ checks:
 plugins:
   eslint:
     enabled: true
-  stylelint:
-    enabled: true
 exclude_patterns:
   - src/locale/**
   - __tests__/**

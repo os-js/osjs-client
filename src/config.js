@@ -64,7 +64,8 @@ export const defaultConfiguration = {
     de_DE: 'German',
     sl_SI: 'Slovenian, Slovenščina',
     zh_CN: 'Chinese (simplified)',
-    fa_FA: 'Persian'
+    fa_FA: 'Persian',
+    pt_BR: 'Português (Brasil)'
   },
 
   packages: {

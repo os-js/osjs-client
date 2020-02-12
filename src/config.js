@@ -76,6 +76,7 @@ export const defaultConfiguration = {
   // FIXME: Move into packages above ?!
   application: {
     pinned: [],
+    autostart: [],
     categories: {
       development: {
         label: 'LBL_APP_CAT_DEVELOPMENT',

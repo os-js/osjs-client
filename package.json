@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.1.18",
+  "version": "3.1.19",
   "description": "OS.js v3 client",
   "main": "dist/main.js",
   "style": "dist/main.css",
@@ -14,8 +14,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "npm run eslint && npm run stylelint && npm run test:coverage",
-    "test:coverage": "jest",
+    "test": "npm run eslint && npm run stylelint && npm run jest",
+    "jest": "jest",
     "eslint": "eslint index.js 'src/**/*.js'",
     "build": "webpack",
     "watch": "webpack --watch",

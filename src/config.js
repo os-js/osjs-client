@@ -48,7 +48,8 @@ const languages = {
   de_DE: 'German',
   sl_SI: 'Slovenian, Slovenščina',
   zh_CN: 'Chinese (simplified)',
-  fa_FA: 'Persian'
+  fa_FA: 'Persian',
+  pt_BR: 'Português (Brasil)'
 };
 
 export const defaultConfiguration = {
@@ -75,6 +76,8 @@ export const defaultConfiguration = {
 
   // FIXME: Move into packages above ?!
   application: {
+    pinned: [],
+    autostart: [],
     categories: {
       development: {
         label: 'LBL_APP_CAT_DEVELOPMENT',

@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.1.20
+
+* Fixed some behavior relating to translation fallbacks (#92)
+* Don't use undefined locale as default for detection (#90) (#91)
+* Added autostart via configuration
+* Add portuguese translation (#93)
+* Updated package.json scripts
+
 ## 3.1.19
 
 * Add support for Persian/Farsi language (fa_FA)

@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.19
+
+* Add support for Persian/Farsi language (fa_FA)
+* Updated config
+
 ## 3.1.18
 
 * Updated dependencies

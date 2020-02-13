@@ -169,22 +169,39 @@ export const format = core => (date, fmt) => {
 };
 
 /**
- * Figures out what locale the browser is running as
- *
- * @param {string} [defaultLocale=en_EN] Default locale if none found
- * @return {string} The browser locale
+ * Returns the navigator language
+ * @param {object} [nav]
+ * @return {string}
  */
-export const clientLocale = (function() {
-  const nav = window.navigator || {};
+export const browserLocale = (nav = {}) => {
   const browserLanguage = nav.userLanguage || nav.language || '';
   const get = l => prefixMap[l] ? prefixMap[l] : (l.match(/_/)
     ? l
     : (l ? `${l}_${l.toUpperCase()}` : ''));
 
   const langs = (nav.languages || [browserLanguage])
-    .map(l => get(l.replace('-', '_')));
+    .map(l => get(l.replace('-', '_')))
+    .filter(str => !!str);
 
-  const lang = langs[langs.length - 1];
+  return langs[langs.length - 1];
+};
 
-  return (defaultLocale = 'en_EN') => (lang || defaultLocale);
+/**
+ * Figures out what locale the browser is running as
+ *
+ * @param {string} [defaultLocale=en_EN] Default locale if none found
+ * @return {string} The browser locale
+ */
+export const clientLocale = (() => {
+  const lang = browserLocale(navigator);
+
+  return (defaultLocale = FALLBACK_LOCALE, acceptedLocales = []) => {
+    const found = lang || defaultLocale;
+
+    if (acceptedLocales.lenght > 0 && acceptedLocales.indexOf(lang) === -1) {
+      return defaultLocale;
+    }
+
+    return found;
+  };
 })();

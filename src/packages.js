@@ -323,9 +323,14 @@ export default class Packages {
    * Autostarts tagged packages
    */
   _autostart() {
-    this.metadata
-      .filter(pkg => pkg.autostart === true)
-      .forEach(pkg => this.launch(pkg.name));
+    const meta = this.metadata
+      .filter(pkg => pkg.autostart === true);
+
+    const configured = this.core
+      .config('application.autostart', [])
+      .map(value => typeof value === 'string' ? {name: value} : value);
+
+    [...meta, ...configured].forEach(({name, args}) => this.launch(name, args || {}));
   }
 
   /**

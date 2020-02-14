@@ -532,7 +532,7 @@ export default class Desktop extends EventEmitter {
     }
 
     if (settings.enabled) {
-      this.iconview.render(settings.path);
+      this.iconview.render(settings);
       this.iconview.resize(this.getRect());
     } else {
       this.iconview.destroy();

@@ -253,3 +253,18 @@ export const createNativeNotification = (options, onclick) => {
 
   return Promise.reject('Unsupported');
 };
+
+/**
+ * Calculates pixel size from em
+ * @param {number}      em                      Em size
+ * @param {DOMElement}  [root=document.body]    Optional root element
+ * @return {number}                             Size in pixels
+ */
+export const emToPx = (em, root = document.body) => {
+  const px = parseInt(
+    getComputedStyle(root).fontSize,
+    10
+  );
+
+  return Math.round(px * em);
+};

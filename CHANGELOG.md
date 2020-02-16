@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.21
+
+* Updated dependencies
+* Now using @osjs/dev-meta
+
 ## 3.1.20
 
 * Fixed some behavior relating to translation fallbacks (#92)

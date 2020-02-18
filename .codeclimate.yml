@@ -9,9 +9,6 @@ checks:
   method-count:
     config:
       threshold: 50
-plugins:
-  eslint:
-    enabled: true
 exclude_patterns:
   - src/locale/**
   - __tests__/**

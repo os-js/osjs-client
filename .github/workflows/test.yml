@@ -1,12 +1,12 @@
-name: Test
-on: [push]
+name: Unit tests
+on: [push, pull_request]
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [ '13', '10', '8' ]
-    name: Node ${{ matrix.node }} test
+    name: Unit tests (node ${{ matrix.node }})
     steps:
       - uses: actions/checkout@v2
       - name: Setup node
@@ -15,4 +15,4 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install -g jest
       - run: npm install
-      - run: npm test
+      - run: npm run jest

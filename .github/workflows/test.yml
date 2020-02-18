@@ -1,18 +1,33 @@
 name: Unit tests
 on: [push, pull_request]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    name: Unit tests (node ${{ matrix.node }})
     strategy:
       matrix:
         node: [ '13', '10', '8' ]
-    name: Unit tests (node ${{ matrix.node }})
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
       - run: npm install -g jest
       - run: npm install
       - run: npm run jest
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    name: CodeClimate Coverage
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '13'
+      - run: npm install -g jest
+      - run: npm install
+      - uses: paambaati/codeclimate-action@v2.2.4
+        env:
+          CC_TEST_REPORTER_ID: 6261ba4f6e5890c37688f390015831023481b8bedf53a2fec3e23695b6223513
+        with:
+          coverageCommand: npm run coverage

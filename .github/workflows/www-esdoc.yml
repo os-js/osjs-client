@@ -1,0 +1,40 @@
+name: Deploy esdoc to os-js.org
+on:
+  push:
+    tags:
+      - 3.*
+jobs:
+  build:
+    if: github.actor == 'andersevenrud' || github.actor ==  'os-js'
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Dependencies
+        run: |
+          sudo npm install -g \
+          esdoc \
+          esdoc-standard-plugin \
+          esdoc-publish-html-plugin \
+          esdoc-lint-plugin \
+          esdoc-coverage-plugin \
+          esdoc-accessor-plugin \
+          esdoc-type-inference-plugin \
+          esdoc-external-ecmascript-plugin \
+          esdoc-brand-plugin \
+          esdoc-undocumented-identifier-plugin \
+          esdoc-unexported-identifier-plugin \
+          esdoc-integrate-test-plugin \
+          esdoc-integrate-manual-plugin
+      - name: Build
+        run: esdoc
+      - name: Deploy
+        uses: AEnterprise/rsync-deploy@v1.0
+        env:
+          DEPLOY_KEY: ${{ secrets.DOC_RSYNC_SSH_KEY }}
+          ARGS: "-r --delete-after --quiet"
+          SERVER_PORT: ${{ secrets.DOC_RSYNC_SSH_PORT }}
+          FOLDER: "./doc/*"
+          SERVER_IP: ${{ secrets.DOC_RSYNC_SSH_IP }}
+          USERNAME: ${{ secrets.DOC_RSYNC_SSH_USERNAME }}
+          SERVER_DESTINATION: ${{ secrets.DOC_RSYNC_SSH_PATH }}

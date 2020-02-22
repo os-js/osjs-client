@@ -1,11 +1,11 @@
 # Changelog for osjs-client
 
-## 3.1.21
+## 3.1.21 - 2020-02-16
 
 * Updated dependencies
 * Now using @osjs/dev-meta
 
-## 3.1.20
+## 3.1.20 - 2020-02-13
 
 * Fixed some behavior relating to translation fallbacks (#92)
 * Don't use undefined locale as default for detection (#90) (#91)
@@ -13,25 +13,25 @@
 * Add portuguese translation (#93)
 * Updated package.json scripts
 
-## 3.1.19
+## 3.1.19 - 2020-02-04
 
 * Add support for Persian/Farsi language (fa_FA)
 * Updated config
 
-## 3.1.18
+## 3.1.18 - 2020-01-19
 
 * Updated dependencies
 
-## 3.1.17
+## 3.1.17 - 2020-01-19
 
 * Updated VFS sort implementation
 
-## 3.1.16
+## 3.1.16 - 2020-01-19
 
 * Updated dependencies
 * Updated copyright notices in preambles
 
-## 3.1.15
+## 3.1.15 - 2020-01-15
 
 * Updated exports in main
 * Moved some devDependencies to dependencies
@@ -39,35 +39,35 @@
 * Updated webpack config
 * Updated dependencies
 
-## 3.1.14
+## 3.1.14 - 2019-12-07
 
 * Added type identifier for clipboard data (#79)
 
-## 3.1.13
+## 3.1.13 - 2019-11-21
 
 * Added abitlity to make Package group checking non-strict (#85)
 
-## 3.1.12
+## 3.1.12 - 2019-11-21
 
 * Added abitlity to make VFS group checking non-strict (#85)
 
-## 3.1.11
+## 3.1.11 - 2019-11-20
 
 * Change property used in user mountpoint filter (#83)
 
-## 3.1.10
+## 3.1.10 - 2019-11-20
 
 * Hide mountpoints based on user groups (#83)
 
-## 3.1.9
+## 3.1.9 - 2019-10-23
 
 * Added configuration option for window move keyboard shortcut (#81)
 
-## 3.1.8
+## 3.1.8 - 2019-10-15
 
 * Add missing Window 'resized' event signatures (#77)
 
-## 3.1.7
+## 3.1.7 - 2019-09-12
 
 * Use desktop contextmenu in iconview (#51)
 * Ensure desktop iconview root contextmenu appears in correct context (#51)
@@ -77,62 +77,62 @@
 * Add application shortcut support to iconview (#51)
 * Improved desktop iconview and added shortcuts (#51)
 
-## 3.1.6
+## 3.1.6 - 2019-08-30
 
 * Added support for blocking window destruction (#72)
 
-## 3.1.5
+## 3.1.5 - 2019-06-17
 
 * Updated iconview application launcher and context menu (#51)
 * Updated locales
 
-## 3.1.4
+## 3.1.4 - 2019-06-17
 
 * Don't use default app in desktop iconview (#51)
 
-## 3.1.3
+## 3.1.3 - 2019-06-14
 
 * Added desktop iconview (#51)
 
-## 3.1.2
+## 3.1.2 - 2019-06-11
 
 * Support more characters in vfs mountpoint names
 
-## 3.1.1
+## 3.1.1 - 2019-06-09
 
 * Updated logger bindings
 
-## 3.1.0
+## 3.1.0 - 2019-06-08
 
 * Added internal logger
 
-## 3.0.64
+## 3.0.64 - 2019-05-27
 
 * Updated dependencies
 * Added 'default application' for choice selection (closes #63)
 * Updated npm scripts
 
-## 3.0.63
+## 3.0.63 - 2019-05-04
 
 * Add support for static metadata
 * Fix base url when ending with filename (fixes #71)
 
-## 3.0.62
+## 3.0.62 - 2019-04-18
 
 * Window parent will now focus on destruction even if not modal
 
-## 3.0.61
+## 3.0.61 - 2019-04-16
 
 * Added internal keycombo input handler
 * Moved 'settings:load' event call
 * Updated unit test coverage
 * Updated pathJoin in utils to be more flexible
 
-## 3.0.60
+## 3.0.60 - 2019-04-13
 
 * Updated dependencies
 
-## 3.0.59
+## 3.0.59 - 2019-04-12
 
 * Added Auth#register and adapter support
 * Fixed unexpected 'this' in window contract
@@ -145,12 +145,12 @@
 * Updated Session service provision
 * Updated Tray service provision
 
-## 3.0.58
+## 3.0.58 - 2019-03-29
 
 * Added support for configuring notification position (#47)
 * Added support for adding className to Notification (#47)
 
-## 3.0.57
+## 3.0.57 - 2019-03-28
 
 * Updated Websocket reconnection implementation
 * Removed async keyword from Auth#login
@@ -163,22 +163,22 @@
 * Added unit tests
 * Some minor cleanups and fixes
 
-## 3.0.55
+## 3.0.55 - 2019-03-07
 
 * Allow arbitrary children in login ui fields
 
-## 3.0.54
+## 3.0.54 - 2019-03-04
 
 * Fixed package manifest update causing duplicates
 
-## 3.0.53
+## 3.0.53 - 2019-03-02
 
 * Correctly set window media state on maximize/restore (#37)
 * Updated Application#createWindow initialization (#37)
 * Fixed double slashes in apps vfs adapter readdir
 * Added a check in getActiveElement dom utility
 
-## 3.0.52
+## 3.0.52 - 2019-02-25
 
 * Updated classNames of Windows (Fixes #66)
 * Minor cleanup in Websocket class
@@ -197,25 +197,25 @@
 * Added missing mount check in Filesystem#_mountAction
 * Changed 'deepmerge' import
 
-## 3.0.51
+## 3.0.51 - 2019-02-23
 
 * Stripped away some unwanted stuff from build
 
-## 3.0.50
+## 3.0.50 - 2019-02-23
 
 * Updated Core#broadcast (#64)
 
-## 3.0.49
+## 3.0.49 - 2019-02-23
 
 * Added Core#broadcast (#64)
 * If wallpaper src is 'undefined' inherit CSS background (#59)
 * Add sound support to notification (#61)
 
-## 3.0.48
+## 3.0.48 - 2019-02-18
 
 * Added new iframe message handler
 
-## 3.0.47
+## 3.0.47 - 2019-02-17
 
 * Fixed WS connection URI behind proxy
 * Update manifest on signal even in production mode
@@ -251,46 +251,46 @@
 * Updated some logging
 * Split out Core#url into separate util file
 
-## 3.0.46
+## 3.0.46 - 2019-02-08
 
 * Improve Window#resizeFit (#60)
 
-## 3.0.45
+## 3.0.45 - 2019-02-02
 
 * Fixed parsing of certain backend error messages
 
-## 3.0.44
+## 3.0.44 - 2019-01-31
 
 * Updated system VFS request calls
 
-## 3.0.43
+## 3.0.43 - 2019-01-31
 
 * Updated server auth provider
 
-## 3.0.42
+## 3.0.42 - 2019-01-31
 
 * Support percentages as initial window position (#56)
 * Fixed request options getting corrupted
 * Support percentages as initial window dimension (#56)
 
-## 3.0.41
+## 3.0.41 - 2019-01-27
 
 * Updated @osjs/event-emitter
 
-## 3.0.40
+## 3.0.40 - 2019-01-26
 
 * HOTFIX: Added missing core class property
 
-## 3.0.39
+## 3.0.39 - 2019-01-26
 
 * Added support for setting 'fetch' options internally
 
-## 3.0.38
+## 3.0.38 - 2019-01-25
 
 * Updated websocket connection handling
 * Correctly detect attributes in maximize/minimize (#54)
 
-## 3.0.37
+## 3.0.37 - 2019-01-17
 
 * Fixed desktop panel space calculations (#48)
 * Added codeclimate badge to README
@@ -300,29 +300,29 @@
 * Updated some console warning/error messages
 * Updated locale esdoc
 
-## 3.0.36
+## 3.0.36 - 2019-01-09
 
 * Added Chinese (zh_CN) translations (#44)
 
-## 3.0.35
+## 3.0.35 - 2019-01-09
 
 * Updated standalone WS handling
 * Updated internal parent directory resolver in vfs
 * Updated a fetch call
 * Removed a leftover debug from application
 
-## 3.0.34
+## 3.0.34 - 2019-01-05
 
 * Updated README
 * Updated Vietnamese (vi_VN) translations (#40)
 * Updated eslintrc
 * Updated copyright(s)
 
-## 3.0.33
+## 3.0.33 - 2019-01-01
 
 * Updated RTL support (#38)
 
-## 3.0.32
+## 3.0.32 - 2019-01-01
 
 * Added direct support for core websocket in applications
 * Core now uses custom Websocket class
@@ -332,19 +332,19 @@
 * Bind DOM element references earlier in Window
 * Removed unused variable<Paste>
 
-## 3.0.31
+## 3.0.31 - 2018-12-29
 
 * Added a generic hook to prevent iframe event blocking
 
-## 3.0.30
+## 3.0.30 - 2018-12-29
 
 * Updated default path to 'home:/'
 
-## 3.0.29
+## 3.0.29 - 2018-12-29
 
 * Added a node check in Window#resizeFit
 
-## 3.0.28
+## 3.0.28 - 2018-12-28
 
 * Fixed an issue with restored window focus
 * Added some low-resolution optimization options (#33)
@@ -353,61 +353,61 @@
 * Update Slovenian (sl_SI) translations (#32)
 * Added 'lo-fi' window move/resize
 
-## 3.0.27
+## 3.0.27 - 2018-12-16
 
 * Updated default application
 * Updated mime icon mapping
 
-## 3.0.26
+## 3.0.26 - 2018-12-15
 
 * Updated dependencies
 * Updated locales
 
-## 3.0.25
+## 3.0.25 - 2018-12-13
 
 * Fixed clicks in search results popup
 * Desktop contextmenu now shows proper theme names
 * Improved WS establishment handling
 
-## 3.0.24
+## 3.0.24 - 2018-12-09
 
 * Updated application vfs adapter
 
-## 3.0.23
+## 3.0.23 - 2018-12-08
 
 * Update HTTP/WS path configuration and resolution
 
-## 3.0.22
+## 3.0.22 - 2018-12-08
 
 * Fixed issue with WS port not applied properly in some deployments
 
-## 3.0.21
+## 3.0.21 - 2018-12-05
 
 * Fixed arrow keys on input in Firefox (#31)
 
-## 3.0.20
+## 3.0.20 - 2018-12-05
 
 * Added 'running()' to 'osjs/packages' service (#29)
 
-## 3.0.19
+## 3.0.19 - 2018-12-03
 
 * Updated Window 'gravity' support
 * Added 'moveable' window attribute (#27)
 * Updated 'playSound' error handling
 * Add Slovenian (sl_SI) translation to config (#26)
 
-## 3.0.17
+## 3.0.17 - 2018-12-01
 
 * Reapply settings when clear from developer tray contextmenu
 * Update settings cache after clear
 * Developer tray context menu can now clear settings
 * Added Settings#clear for removing a setting by namespace
 
-## 3.0.16
+## 3.0.16 - 2018-12-01
 
 * Added some new translation strings
 
-## 3.0.15
+## 3.0.15 - 2018-12-01
 
 * Fire 'resized' event after maximized/restored (#20)
 * Added 'searchable' vfs mountpoint attribute
@@ -415,11 +415,11 @@
 * Search now focuses the last acive window on hide (#25)
 * Added 'last()' to window service provider
 
-## 3.0.14
+## 3.0.14 - 2018-11-30
 
 * Added customization to Core#url (#22)
 
-## 3.0.13
+## 3.0.13 - 2018-11-28
 
 * Window template can now be set via config
 * The 'windows.template' can now be set as a string.
@@ -428,7 +428,7 @@
 * Added update support on tray entries
 * Updated fetch() body serializer
 
-## 3.0.12
+## 3.0.12 - 2018-11-26
 
 * Updated contextmenu creation and provider options
 * Added 'sessionable' Application option
@@ -436,58 +436,58 @@
 * Updated desktop contextmenu enable check
 * Fixed launch notification sticking on invalid themes
 
-## 3.0.11
+## 3.0.11 - 2018-11-24
 
 * Updated webpack config to not inline css sourcemap in production
 
-## 3.0.10
+## 3.0.10 - 2018-11-24
 
 * Improved fetch() error handling
 
-## 3.0.9
+## 3.0.9 - 2018-11-23
 
 * Added german language to configurations
 
-## 3.0.8
+## 3.0.8 - 2018-11-23
 
 * Fixed incorrect datetime formats in config
 * Added German (de_DE) translations (#17)
 
-## 3.0.7
+## 3.0.7 - 2018-11-22
 
 * Updated url() in system vfs adapter
 
-## 3.0.6
+## 3.0.6 - 2018-11-22
 
 * Updated some theme resource resolution
 
-## 3.0.4
+## 3.0.4 - 2018-11-09
 
 * Added a check for applying wallpaper
 * Added 'desktop.contextmenu' configuration
 
-## 3.0.3
+## 3.0.3 - 2018-11-03
 
 * Updated configuration
 
-## 3.0.2
+## 3.0.2 - 2018-11-03
 
 * Fixed windows getting clamped outside viewport
 * Add Slovenian (sl_SI) translation (#18)
 
-## 3.0.1
+## 3.0.1 - 2018-10-28
 
 * Updated @osjs/common, added @osjs/event-emitter
 
-## 3.0.0-alpha.85
+## 3.0.0-alpha.85 - 2018-10-25
 
 * Added 'osjs/basic-application' as provider
 
-## 3.0.0-alpha.84
+## 3.0.0-alpha.84 - 2018-10-25
 
 * Application#request now reflects Core#request
 
-## 3.0.0-alpha.82
+## 3.0.0-alpha.82 - 2018-10-23
 
 * Added French (fr_FR) translations (#16)
 * Updated some destructors
@@ -499,11 +499,11 @@
 * Support custom window templates
 * Some optimization to window and behavior
 
-## 3.0.0-alpha.81
+## 3.0.0-alpha.81 - 2018-10-17
 
 * Updated sound configurations
 
-## 3.0.0-alpha.80
+## 3.0.0-alpha.80 - 2018-10-16
 
 * Don't mount similar mountpoints (duplicates)
 * Removed 'getWindows' from global OSjs namespace
@@ -514,7 +514,7 @@
 * Don't allow multiple render() in window
 * Run init() on window in render() if not inited
 
-## 3.0.0-alpha.79
+## 3.0.0-alpha.79 - 2018-10-15
 
 * Configuration of allowed global provider access
 * Some minor opimizations in keydown handler
@@ -522,38 +522,38 @@
 * Prevent tab character in text fields
 * Updated globally exposed providers
 
-## 3.0.0-alpha.78
+## 3.0.0-alpha.78 - 2018-10-13
 
 * Changed 'ev' in event signatures for window
 
-## 3.0.0-alpha.77
+## 3.0.0-alpha.77 - 2018-10-12
 
 * Added some more exports to library
 * Notification now supports native APIs
 * Windows now supports Shadow DOM
 * Moved some core provider services
 
-## 3.0.0-alpha.76
+## 3.0.0-alpha.76 - 2018-09-30
 
 * Updated dependencies
 
-## 3.0.0-alpha.75
+## 3.0.0-alpha.75 - 2018-09-29
 
 * Updated @osjs/common usage
 
-## 3.0.0-alpha.74
+## 3.0.0-alpha.74 - 2018-09-27
 
 * Updated @osjs/common for breaking Babel change
 
-## 3.0.0-alpha.73
+## 3.0.0-alpha.73 - 2018-09-27
 
 * Updated @osjs/common
 
-## 3.0.0-alpha.72
+## 3.0.0-alpha.72 - 2018-09-27
 
 * Updated dependencies
 
-## 3.0.0-alpha.71
+## 3.0.0-alpha.71 - 2018-09-20
 
 * Added default VFS adapter config
 * Added OSjs.register shortcut for package registration
@@ -562,41 +562,41 @@
 * Restrict removal of core events
 
 
-## 3.0.0-alpha.70
+## 3.0.0-alpha.70 - 2018-09-20
 
 * Improved background setting and options on desktop
 * Desktop wallpaper can now be VFS File object
 * Added languages to config
 
-## 3.0.0-alpha.69
+## 3.0.0-alpha.69 - 2018-09-16
 
 * Removed some deprecated services in core
 
-## 3.0.0-alpha.68
+## 3.0.0-alpha.68 - 2018-08-30
 
 * Added 'onerror' handler to Websocket class
 
-## 3.0.0-alpha.67
+## 3.0.0-alpha.67 - 2018-08-30
 
 * Updated dependencies
 * Added vi_VN locales (#15)
 * Windows now resizable from all corners (#14)
 * Removed '?_time=...' query parameter from preloads
 
-## 3.0.0-alpha.66
+## 3.0.0-alpha.66 - 2018-08-28
 
 * Fixed preloading of external resources in metadata
 
-## 3.0.0-alpha.65
+## 3.0.0-alpha.65 - 2018-08-24
 
 * Added configuration to disable search feature
 * Added proper fallback in locale functions
 
-## 3.0.0-alpha.64
+## 3.0.0-alpha.64 - 2018-08-21
 
 * Tiny fix for package manager metadata loading"
 
-## 3.0.0-alpha.63
+## 3.0.0-alpha.63 - 2018-08-21
 
 * Removed deprecated '_path' attribute in metadata
 * Updated WebSocket esdoc
@@ -604,31 +604,31 @@
 * Renamed 'ApplicationSocket' to 'Websocket'
 * Use browser locale by default
 
-## 3.0.0-alpha.62
+## 3.0.0-alpha.62 - 2018-08-18
 
 * Updated error dialog in package manager
 * Removed unused favicon.png
 
-## 3.0.0-alpha.61
+## 3.0.0-alpha.61 - 2018-08-18
 
 * Focus the first created application window (#12)
 * Updated locales
 * Added 'setLocale' and change event
 * Added 'nb_NO' locales
 
-## 3.0.0-alpha.60
+## 3.0.0-alpha.60 - 2018-08-17
 
 * Updated some window event signatures
 
-## 3.0.0-alpha.59
+## 3.0.0-alpha.59 - 2018-08-17
 
 * Fixed custom login UI configuration
 
-## 3.0.0-alpha.58
+## 3.0.0-alpha.58 - 2018-08-15
 
 * Hotfix for chrome behavioural change
 
-## 3.0.0-alpha.57
+## 3.0.0-alpha.57 - 2018-08-14
 
 * Updated some VFS method exposure
 * Updated some VFS method HTTP methods
@@ -637,16 +637,16 @@
 * Support 'passive' touch events on Windows
 * Updated some logging messages
 
-## 3.0.0-alpha.56
+## 3.0.0-alpha.56 - 2018-08-06
 
 * Support icon theme type packages
 
-## 3.0.0-alpha.55
+## 3.0.0-alpha.55 - 2018-08-04
 
 * Hot-reload CSS changes in dev mode
 * Update @osjs/common
 
-## 3.0.0-alpha.54
+## 3.0.0-alpha.54 - 2018-07-29
 
 * Added some missing events to global window getter
 * Added DnD to Windows
@@ -654,7 +654,7 @@
 * Added some native touch gesture prevention
 * Add shortcut of making tray entries<Paste>
 
-## 3.0.0-alpha.52
+## 3.0.0-alpha.52 - 2018-07-27
 
 * Added missing 'wid' for global window getter API
 * Add some restrictions to OSjs global object in prod mode
@@ -664,19 +664,19 @@
 * Throw Error on invalid notification creation
 * Fixed eslint comment warnings
 
-## 3.0.0-alpha.51
+## 3.0.0-alpha.51 - 2018-07-24
 
 * Removed a gitignore file leading to missing files in npm package
 
-## 3.0.0-alpha.50
+## 3.0.0-alpha.50 - 2018-07-24
 
 * Prebuild npm package
 
-## 3.0.0-alpha.49
+## 3.0.0-alpha.49 - 2018-07-21
 
 * Separate server root and client root
 
-## 3.0.0-alpha.48
+## 3.0.0-alpha.48 - 2018-07-21
 
 * Added http server configuration options
 * Mountpoint passed on in VFS adapter methods
@@ -688,7 +688,7 @@
 * Updated configuration
 * Support 'osjs/application' as mime for open()
 
-## 3.0.0-alpha.47
+## 3.0.0-alpha.47 - 2018-07-20
 
 * Window 'position' option can now alias as 'gravity' (Fixes #13)
 * Added all gravity positions (#13)
@@ -700,11 +700,11 @@
 * Added VFS search UI
 * Updated eslintrc
 
-## 3.0.0-alpha.46
+## 3.0.0-alpha.46 - 2018-07-19
 
 * Updated @osjs/common dependency
 
-## 3.0.0-alpha.45
+## 3.0.0-alpha.45 - 2018-07-18
 
 * Fixed using VFS paths with strings only
 * Added VFS search() method
@@ -714,28 +714,28 @@
 * Added stylelintrc
 
 
-## 3.0.0-alpha.44
+## 3.0.0-alpha.44 - 2018-07-16
 
 * Added 'download' for system vfs
 * Added native 'download' support in VFS
 * Better notifications, added icon support
 * Added basic clipboard provider
 
-## 3.0.0-alpha.43
+## 3.0.0-alpha.43 - 2018-07-16
 
 * Support registering custom contextmenu items on desktop
 
-## 3.0.0-alpha.42
+## 3.0.0-alpha.42 - 2018-07-14
 
 * Updated @osjs/common dependency
 * Added CSS to force acceleration in certain browsers
 * Flatten som styles in _window.scss
 
-## 3.0.0-alpha.41
+## 3.0.0-alpha.41 - 2018-07-14
 
 * Hotfix for auth ui login submission
 
-## 3.0.0-alpha.40
+## 3.0.0-alpha.40 - 2018-07-14
 
 * Hide login UI if autologin is set (prevent blink)
 * Added missing return statement
@@ -744,11 +744,11 @@
 * Updated zIndex handling of windows
 
 
-## 3.0.0-alpha.39
+## 3.0.0-alpha.39 - 2018-07-13
 
 * Added missing 'attributes' property from global getWindows() method
 
-## 3.0.0-alpha.38
+## 3.0.0-alpha.38 - 2018-07-13
 
 * VFS api now uses objects instead of strings for input paths
 * Moved a vfs util method
@@ -757,12 +757,12 @@
 * Added 'osjs/dom' provider
 * Added 'visiblity' attribute to Window
 
-## 3.0.0-alpha.37
+## 3.0.0-alpha.37 - 2018-07-11
 
 * Updated some settings handling
 * Ensure 'params' from websocket message
 
-## 3.0.0-alpha.36
+## 3.0.0-alpha.36 - 2018-07-06
 
 * Added 'ping' to server based on cookie lifetime
 * Themes now supports scripts and launching
@@ -773,19 +773,19 @@
 * Changed login logo to contain
 * Better import/export pattern for locales
 
-## 3.0.0-alpha.35
+## 3.0.0-alpha.35 - 2018-06-30
 
 * Only show choice selector when > 1 apps
 * Removed unwanted console message
 
-## 3.0.0-alpha.34
+## 3.0.0-alpha.34 - 2018-06-29
 
 * Add support for custom login ui via provider (#6)
 * Added logo support to login (#11)
 * Prevent window destroy observation event on application destroy
 
 
-## 3.0.0-alpha.33
+## 3.0.0-alpha.33 - 2018-06-21
 
 * Settings now uses namespaced tree
 * Added desktop contextmenu
@@ -793,7 +793,7 @@
 * Updated launch choice dialog usage
 * Updated application metadata docs
 
-## 3.0.0-alpha.32
+## 3.0.0-alpha.32 - 2018-06-18
 
 * Fixed custom post data in fetch()
 * Separated Settings from SettingsProvider
@@ -807,7 +807,7 @@
 * Updated packagemanager service provider
 * Added Core#getUser
 
-## 3.0.0-alpha.31
+## 3.0.0-alpha.31 - 2018-06-17
 
 * Added util function for getting browser locale
 * Fix fetch() not posting data
@@ -815,7 +815,7 @@
 * Updated emitAll() signature in application
 * Added parent window modal attribute support
 
-## 3.0.0-alpha.30
+## 3.0.0-alpha.30 - 2018-06-09
 
 * Added application settings save/load
 * Added date/time localization support
@@ -830,11 +830,11 @@
 * Added a try/catch in core boot
 * Fix notification z-index (#9)
 
-## 3.0.0-alpha.29
+## 3.0.0-alpha.29 - 2018-06-06
 
 * Fixed an issue relating to desktop settings (#8)
 
-## 3.0.0-alpha.28
+## 3.0.0-alpha.28 - 2018-06-05
 
 * Fixed reloading of singleton application (#7)
 * Updated package metadata documentation
@@ -842,7 +842,7 @@
 * Added 'osjs/desktop:transform' event when desktop rect changes
 * Removed some unused code from config.js
 
-## 3.0.0-alpha.27
+## 3.0.0-alpha.27 - 2018-05-25
 
 * Updated desktop space based on panels
 * Ctrl+click can now move windows from any spot
@@ -854,7 +854,7 @@
 * A small correction for some window documentation
 
 
-## 3.0.0-alpha.26
+## 3.0.0-alpha.26 - 2018-05-23
 
 * Added 'autostart' support for packages (#4)
 * Updated Window attributes (#5)
@@ -863,15 +863,15 @@
 * Updated desktop applySettings
 * Removed mapping in Window.getWindows
 
-## 3.0.0-alpha.25
+## 3.0.0-alpha.25 - 2018-05-21
 
 * Updated Application resouce() and socket()
 
-## 3.0.0-alpha.24
+## 3.0.0-alpha.24 - 2018-05-12
 
 * Added 'osjs/theme' service
 
-## 3.0.0-alpha.23
+## 3.0.0-alpha.23 - 2018-05-10
 
 * Added proper pathJoin method
 * Prevent navigating away when dropping files on desktop
@@ -886,50 +886,50 @@
 * Don't transform URIs in 'resource()' in application
 * Added 'worker()' method for creation in application
 
-## 3.0.0-alpha.22
+## 3.0.0-alpha.22 - 2018-05-10
 
 * Remove 'registerDefault' from Core options
 
 This requires the distribution to manually register base providers.
 See 'index.js' in the base repository.
 
-## 3.0.0-alpha.21
+## 3.0.0-alpha.21 - 2018-05-08
 
 * Fixed an issue relating to input form field generation
 
-## 3.0.0-alpha.20
+## 3.0.0-alpha.20 - 2018-05-08
 
 * Added Application#emitAll for event broadcasting
 * Improved login screen and customization options
 
-## 3.0.0-alpha.19
+## 3.0.0-alpha.19 - 2018-05-06
 
 * Added npmignore
 * Added CHANGELOG
 
-## v3.0.0-alpha.18
+## 3.0.0-alpha.18 - 2018-05-05
 
 * Added a method for getting file icon from stat
 * Remove previously registered packages
 * Added relaunch of apps from server signal
 * Fixed wrong assignment of getApplication in global namespace
 
-## v3.0.0-alpha.17
+## 3.0.0-alpha.17 - 2018-04-29
 
 * Added reconnection of websocket
 * Added message handling of internal websocket
 * Make sure file iters in VFS follow format
 * Use Promise style in VFS
 
-## v3.0.0-alpha.16
+## 3.0.0-alpha.16 - 2018-04-29
 
 * A more functional aproach in VFS
 
-## v3.0.0-alpha.15
+## 3.0.0-alpha.15 - 2018-04-29
 
 * A more functional approach for Auth + Settings
 
-## v3.0.0-alpha.13
+## 3.0.0-alpha.13 - 2018-04-28
 
 * Prevent background scroll on iOS
 * Updated boot flow
@@ -937,7 +937,7 @@ See 'index.js' in the base repository.
 * Fixed window buttons for iOS rendering issues
 * Correction in default settings configuration
 
-## v3.0.0-alpha.12
+## 3.0.0-alpha.12 - 2018-04-27
 
 * Better default settings handling and configuration
 * Added basic support for desktop settings
@@ -967,11 +967,11 @@ See 'index.js' in the base repository.
 * Added support for passing on default provider options
 * Fixed some Safari incompabilities
 
-## v3.0.0-alpha.11
+## 3.0.0-alpha.11 - 2018-04-22
 
 * Updated some errors in stylesheets
 
-## v3.0.0-alpha.10
+## 3.0.0-alpha.10 - 2018-04-22
 
 * Renamed npm module to '@osjs/client'
 * Added default 'home' mountpoint
@@ -998,7 +998,7 @@ See 'index.js' in the base repository.
 * Accept 'message' on window and route to appropriate proc
 * Added 'emit()' for application in getApplications map
 
-## v3.0.0-alpha.9
+## 3.0.0-alpha.9 - 2018-04-15
 
 * Added default favicon
 * Use destruct state in notification destructor
@@ -1012,12 +1012,12 @@ See 'index.js' in the base repository.
 * Started on VFS transport abstraction
 * Implemented writefile() in VFS
 
-## v3.0.0-alpha.8
+## 3.0.0-alpha.8 - 2018-04-07
 
 * Added theme loading
 * Updated application categories
 
-## v3.0.0-alpha.7
+## 3.0.0-alpha.7 - 2018-03-31
 
 * Added esdoc config
 * Added more exports to index
@@ -1033,7 +1033,7 @@ See 'index.js' in the base repository.
 * Moved a preventDefault in window behavior
 
 
-## v3.0.0-alpha.6
+## 3.0.0-alpha.6 - 2018-03-25
 
 * Updated verbosity of service provider registartion logs
 * Prevent NaN in human readable size conversion
@@ -1068,6 +1068,6 @@ See 'index.js' in the base repository.
 * EventHandler now accepts comma spearated string or string[] as event names
 * Corrected URLs in package.json
 
-## v3.0.0-alpha.5
+## 3.0.0-alpha.5 - 2018-03-19
 
 Initial public release

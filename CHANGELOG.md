@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.25 - 2020-02-25
+
+* Reverted previous update
+
 ## 3.1.24 - 2020-02-25
 
 * Added default 'omit' settings to Core by default

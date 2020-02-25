@@ -53,24 +53,19 @@ export default class Core extends CoreBase {
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
   constructor(config = {}, options = {}) {
-    const coreOptions = Object.assign({}, {
-      omit: [],
+    options = Object.assign({}, {
       classNames: ['osjs-root'],
       root: document.body
     }, options || {});
 
-    if (coreOptions.omit.indexOf('desktop.settings.panels') === -1) {
-      coreOptions.omit.push('desktop.settings.panels');
-    }
-
-    super(defaultConfiguration, config, coreOptions);
+    super(defaultConfiguration, config, options);
 
     this.logger = logger;
     this.ws = null;
     this.ping = null;
     this.splash = new Splash(this);
-    this.$root = coreOptions.root;
-    this.$resourceRoot = coreOptions.resourceRoot || document.querySelector('head');
+    this.$root = options.root;
+    this.$resourceRoot = options.resourceRoot || document.querySelector('head');
     this.requestOptions = {};
     this.urlResolver = urlResolver(this.configuration);
     this.user = {

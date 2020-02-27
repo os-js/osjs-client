@@ -314,6 +314,12 @@ export default class Application extends EventEmitter {
         instance.setPosition(restore.position, true);
         instance.setDimension(restore.dimension);
 
+        if (restore.minimized) {
+          instance.minimize();
+        } else if (restore.maximized) {
+          instance.maximize();
+        }
+
         this.options.restore.windows.splice(found, 1);
       }
     }

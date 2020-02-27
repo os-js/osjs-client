@@ -475,7 +475,9 @@ export default class Desktop extends EventEmitter {
     };
 
     applyCss(newSettings);
-    applyOverlays('osjs/panels', newSettings.panels);
+
+    // TODO: Multiple panels
+    applyOverlays('osjs/panels', (newSettings.panels || []).slice(-1));
     applyOverlays('osjs/widgets', newSettings.widgets);
 
     this.applyTheme(newSettings.theme);

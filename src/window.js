@@ -814,6 +814,8 @@ export default class Window extends EventEmitter {
   getSession() {
     return this.attributes.sessionable === false ? null : {
       id: this.id,
+      maximized: this.state.maximized,
+      minimized: this.state.minimized,
       position: Object.assign({}, this.state.position),
       dimension: Object.assign({}, this.state.dimension)
     };

@@ -201,6 +201,8 @@ describe('Window', () => {
   test('#getSession', () => {
     expect(win.getSession()).toEqual({
       id: 'Jest',
+      minimized: false,
+      maximized: false,
       dimension: {
         width: 640,
         height: 480

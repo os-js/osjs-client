@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.26 - 2020-02-25
+
+* Only initialize the last panel in the list
+
 ## 3.1.25 - 2020-02-25
 
 * Reverted previous update

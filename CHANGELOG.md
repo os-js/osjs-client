@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.1.27 - 2020-03-01
+
+* Updated dependencies
+* Updated README.md
+* Apply window minimized/maximized state in session (#99)
+
 ## 3.1.26 - 2020-02-25
 
 * Only initialize the last panel in the list

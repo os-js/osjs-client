@@ -32,7 +32,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.6",
+    "@osjs/common": "^3.0.7",
     "@osjs/event-emitter": "^1.0.8",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^1.0.2"
+    "@osjs/dev-meta": "^1.0.3"
   },
   "eslintConfig": {
     "env": {

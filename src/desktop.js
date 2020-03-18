@@ -131,6 +131,7 @@ export default class Desktop extends EventEmitter {
     this.contextmenuEntries = [];
     this.search = core.config('search.enabled') ? new Search(core) : null;
     this.iconview = new DesktopIconView(this.core);
+    this.keyboardContext = null;
 
     this.subtract = {
       left: 0,
@@ -273,9 +274,14 @@ export default class Desktop extends EventEmitter {
       }
     };
 
-    const isWithinWindow = (w, target) => {
-      return w && w.$element.contains(target);
-    };
+    const isWithinContext = (target) => this.keyboardContext &&
+      this.keyboardContext.contains(target);
+
+    const isWithinWindow = (w, target) => w &&
+      w.$element.contains(target);
+
+    const isWithin = (w, target) => isWithinWindow(w, target) ||
+      isWithinContext(target);
 
     ['keydown', 'keyup', 'keypress'].forEach(n => {
       this.core.$root.addEventListener(n, e => forwardKeyEvent(n, e));
@@ -297,7 +303,7 @@ export default class Desktop extends EventEmitter {
         const isInput = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].indexOf(tagName) !== -1;
         const w = Window.lastWindow();
 
-        if (isWithinWindow(w, e.target)) {
+        if (isWithin(w, e.target)) {
           if (isInput) {
             if (tagName === 'TEXTAREA') {
               handleTabOnTextarea(e);
@@ -711,6 +717,17 @@ export default class Desktop extends EventEmitter {
         position: ev
       });
     }
+  }
+
+  /**
+   * Sets the keyboard context.
+   *
+   * Used for tabbing and other special events
+   *
+   * @param {Element} [ctx]
+   */
+  setKeyboardContext(ctx) {
+    this.keyboardContext = ctx;
   }
 
   /**

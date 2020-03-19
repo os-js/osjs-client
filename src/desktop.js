@@ -423,6 +423,7 @@ export default class Desktop extends EventEmitter {
   _updateIconview() {
     if (this.iconview) {
       this.iconview.resize(this.getRect());
+      this.iconview.applySettings();
     }
   }
 
@@ -478,6 +479,7 @@ export default class Desktop extends EventEmitter {
       this.core.$root.style.fontFamily = `${font}, sans-serif`;
 
       applyBackgroundStyles(this.core, background);
+
     };
 
     applyCss(newSettings);

@@ -31,6 +31,7 @@ import {EventEmitter} from '@osjs/event-emitter';
 import {h, app} from 'hyperapp';
 import {doubleTap} from '../../utils/input';
 import {pathJoin} from '../../utils/vfs';
+import {invertHex} from '../../utils/colors';
 
 const tapper = doubleTap();
 
@@ -315,6 +316,7 @@ export class DesktopIconView extends EventEmitter {
 
     }, view(fileIcon, themeIcon, droppable), this.$root);
 
+    this.applySettings();
     this.iconview.reload();
   }
 
@@ -356,5 +358,34 @@ export class DesktopIconView extends EventEmitter {
   createRootContextMenu(ev) {
     this.core.make('osjs/desktop')
       .openContextMenu(ev);
+  }
+
+  applySettings() {
+    if (!this.$root) {
+      return;
+    }
+
+    const settings = this.core
+      .make('osjs/settings');
+
+    const defaults = this.core
+      .config('desktop.settings');
+
+    const fontColorStyle = settings
+      .get('osjs/desktop', 'iconview.fontColorStyle', defaults.iconview.fontColorStyle);
+
+    const fontColor = settings
+      .get('osjs/desktop', 'iconview.fontColor', '#ffffff', defaults.iconview.fontColor);
+
+    const backgroundColor = settings
+      .get('osjs/desktop', 'background.color', defaults.background.color);
+
+    const styles = {
+      system: 'inherit',
+      invert: invertHex(backgroundColor),
+      custom: fontColor
+    };
+
+    this.$root.style.color = styles[fontColorStyle];
   }
 }

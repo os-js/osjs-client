@@ -185,7 +185,9 @@ export const defaultConfiguration = {
       },
       iconview: {
         enabled: false,
-        path: 'home:/.desktop'
+        path: 'home:/.desktop',
+        fontColorStyle: 'system',
+        fontColor: '#ffffff'
       }
     }
   },

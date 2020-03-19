@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.28 - 2020-03-19
+
+* Added desktop API for setting keyboard context (#102)
+
 ## 3.1.27 - 2020-03-01
 
 * Updated dependencies

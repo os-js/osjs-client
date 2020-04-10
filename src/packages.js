@@ -369,6 +369,7 @@ export default class Packages {
     if (list instanceof Array) {
       const append = list
         .map(iter => Object.assign({
+          _user: false,
           type: 'application',
           files: []
         }, iter));

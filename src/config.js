@@ -70,7 +70,7 @@ export const defaultConfiguration = {
   },
 
   packages: {
-    manifest: '/metadata.json',
+    manifest: '/api/packages/manifest',
     metadata: []
   },
 

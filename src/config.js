@@ -70,7 +70,7 @@ export const defaultConfiguration = {
   },
 
   packages: {
-    manifest: '/api/packages/manifest',
+    manifest: '/api/packages/metadata',
     vfsPaths: [
       'home:/.packages'
     ],

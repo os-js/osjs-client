@@ -354,8 +354,12 @@ export default class Packages {
     return this.core
       .request('/api/packages/install', {
         method: 'post',
-        body
-      });
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      .then(response => response.json());
   }
 
   /**

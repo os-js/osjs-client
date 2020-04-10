@@ -334,6 +334,27 @@ export default class Packages {
   }
 
   /**
+   * Installs a package
+   * @param {string} url URL to package
+   * @param {options} [options]
+   * @param {boolean} [options.system] Install as system package
+   */
+  install(url, options = {}) {
+    const body = {
+      url,
+      options: Object.assign({}, {
+        system: false
+      }, options)
+    };
+
+    return this.core
+      .request('/api/packages/install', {
+        method: 'post',
+        body
+      });
+  }
+
+  /**
    * Registers a package
    *
    * @param {string} name Package name

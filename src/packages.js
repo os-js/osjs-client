@@ -361,7 +361,12 @@ export default class Packages {
         },
         body: JSON.stringify(body)
       })
-      .then(response => response.json());
+      .then(response => response.json())
+      .then((body) => {
+        if (body.reload) {
+          this.init();
+        }
+      });
   }
 
   /**

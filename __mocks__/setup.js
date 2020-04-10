@@ -28,6 +28,12 @@ class Worker {
 
 const noop = () => {};
 
+const dummyMetadata = [{
+  name: 'ValidApplication',
+  mimes: ['valid/bazz'],
+  files: []
+}];
+
 const fetchMocks = {
   text: {
 
@@ -46,11 +52,8 @@ const fetchMocks = {
 
     '/apps/Jest/test': true,
 
-    '/metadata.json': [{
-      name: 'ValidApplication',
-      mimes: ['valid/bazz'],
-      files: []
-    }],
+    '/metadata.json': dummyMetadata,
+    '/api/packages/metadata': dummyMetadata,
 
     '/settings': ({method}) => String(method).toLowerCase() === 'post'
       ? true

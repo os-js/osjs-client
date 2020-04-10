@@ -134,8 +134,12 @@ export default class Packages {
 
     const manifest = this.core.config('packages.manifest');
 
+    const query = this.core.config('packages.vfsPaths', [])
+      .map(str => `root[]=${encodeURIComponent(str)}`)
+      .join('&');
+
     return manifest
-      ? this.core.request(manifest, {}, 'json')
+      ? this.core.request(`${manifest}?${query}`, {}, 'json')
         .then(metadata => this.addPackages(metadata))
         .then(() => true)
         .catch(error => logger.error(error))
@@ -390,7 +394,7 @@ export default class Packages {
     if (list instanceof Array) {
       const append = list
         .map(iter => Object.assign({
-          _user: false,
+          _vfs: null,
           type: 'application',
           files: []
         }, iter));

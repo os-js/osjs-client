@@ -52,8 +52,8 @@ export const urlResolver = configuration => {
         metadata.type === 'icons' ? 'icons' : 'apps'
       );
 
-      if (metadata._user) {
-        url = `vfs/readfile?path=${encodeURIComponent(`home:/.packages/${metadata.name}${path}`)}`;
+      if (metadata._vfs) {
+        url = `vfs/readfile?path=${encodeURIComponent(`${metadata._vfs}/${metadata.name}${path}`)}`;
       } else {
         url = `${type}/${metadata.name}${path}`;
       }

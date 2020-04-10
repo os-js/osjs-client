@@ -56,6 +56,21 @@ import logger from './logger';
  */
 
 /**
+ * @property {string} root Installation root (except on system)
+ * @property {boolean} [system] Install on system
+ * @property {object} [headers] Forward HTTP headers
+ * @typedef PackageInstallationOption
+ */
+
+/**
+ * @return {PackageInstallationOption}
+ */
+const createPackageInstallationOptions = options => Object.assign({}, {
+  root: 'home:/.packages',
+  system: false
+}, options);
+
+/**
  * Package Manager
  *
  * @desc Handles indexing, loading and launching of OS.js packages
@@ -338,35 +353,55 @@ export default class Packages {
   }
 
   /**
+   * Uninstalls a package
+   * @param {string} name Package name
+   * @param {PackageInstallationOption} [options]
+   */
+  uninstall(name, options = {}) {
+    return this._apiRequest('uninstall', {
+      name,
+      options: createPackageInstallationOptions(options)
+    })
+      .then((body) => {
+        if (body.reload) {
+          this.init();
+        }
+      });
+  }
+
+  /**
    * Installs a package
    * @param {string} url URL to package
-   * @param {options} [options]
-   * @param {boolean} [options.system] Install as system package
-   * @param {string} [options.root] Root installation path
+   * @param {PackageInstallationOption} [options]
    */
   install(url, options = {}) {
-    const body = {
+    return this._apiRequest('install', {
       url,
-      options: Object.assign({}, {
-        root: 'home:/.packages',
-        system: false
-      }, options)
-    };
+      options: createPackageInstallationOptions(options)
+    })
+      .then((body) => {
+        if (body.reload) {
+          this.init();
+        }
+      });
+  }
 
+  /**
+   * Creates a new API request
+   * @param {string} endpoint
+   * @param {object} body
+   * @return {object} JSON
+   */
+  _apiRequest(endpoint, body) {
     return this.core
-      .request('/api/packages/install', {
+      .request(`/api/packages/${endpoint}`, {
         method: 'post',
         headers: {
           'content-type': 'application/json'
         },
         body: JSON.stringify(body)
       })
-      .then(response => response.json())
-      .then((body) => {
-        if (body.reload) {
-          this.init();
-        }
-      });
+      .then(response => response.json());
   }
 
   /**

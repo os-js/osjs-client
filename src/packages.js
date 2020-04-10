@@ -342,11 +342,13 @@ export default class Packages {
    * @param {string} url URL to package
    * @param {options} [options]
    * @param {boolean} [options.system] Install as system package
+   * @param {string} [options.root] Root installation path
    */
   install(url, options = {}) {
     const body = {
       url,
       options: Object.assign({}, {
+        root: 'home:/.packages',
         system: false
       }, options)
     };

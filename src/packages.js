@@ -358,15 +358,7 @@ export default class Packages {
    * @param {PackageInstallationOption} [options]
    */
   uninstall(name, options = {}) {
-    return this._apiRequest('uninstall', {
-      name,
-      options: createPackageInstallationOptions(options)
-    })
-      .then((body) => {
-        if (body.reload) {
-          this.init();
-        }
-      });
+    return this._manageApiRequest('uninstall', options, {name});
   }
 
   /**
@@ -375,10 +367,20 @@ export default class Packages {
    * @param {PackageInstallationOption} [options]
    */
   install(url, options = {}) {
-    return this._apiRequest('install', {
-      url,
+    return this._manageApiRequest('install', options, {url});
+  }
+
+  /**
+   * Creates a new API request for package management
+   * @param {string} endpoint
+   * @param {object} body
+   * @param {object} append
+   * @return {object} JSON
+   */
+  _manageApiRequest(endpoint, options, append) {
+    return this._apiRequest(endpoint, Object.assign({
       options: createPackageInstallationOptions(options)
-    })
+    }, append))
       .then((body) => {
         if (body.reload) {
           this.init();

@@ -56,6 +56,21 @@ import logger from './logger';
  */
 
 /**
+ * @property {string} root Installation root (except on system)
+ * @property {boolean} [system] Install on system
+ * @property {object} [headers] Forward HTTP headers
+ * @typedef PackageInstallationOption
+ */
+
+/**
+ * @return {PackageInstallationOption}
+ */
+const createPackageInstallationOptions = options => Object.assign({}, {
+  root: 'home:/.packages',
+  system: false
+}, options);
+
+/**
  * Package Manager
  *
  * @desc Handles indexing, loading and launching of OS.js packages
@@ -134,8 +149,12 @@ export default class Packages {
 
     const manifest = this.core.config('packages.manifest');
 
+    const query = this.core.config('packages.vfsPaths', [])
+      .map(str => `root[]=${encodeURIComponent(str)}`)
+      .join('&');
+
     return manifest
-      ? this.core.request(manifest, {}, 'json')
+      ? this.core.request(`${manifest}?${query}`, {}, 'json')
         .then(metadata => this.addPackages(metadata))
         .then(() => true)
         .catch(error => logger.error(error))
@@ -334,6 +353,60 @@ export default class Packages {
   }
 
   /**
+   * Uninstalls a package
+   * @param {string} name Package name
+   * @param {PackageInstallationOption} [options]
+   */
+  uninstall(name, options = {}) {
+    return this._manageApiRequest('uninstall', options, {name});
+  }
+
+  /**
+   * Installs a package
+   * @param {string} url URL to package
+   * @param {PackageInstallationOption} [options]
+   */
+  install(url, options = {}) {
+    return this._manageApiRequest('install', options, {url});
+  }
+
+  /**
+   * Creates a new API request for package management
+   * @param {string} endpoint
+   * @param {object} body
+   * @param {object} append
+   * @return {object} JSON
+   */
+  _manageApiRequest(endpoint, options, append) {
+    return this._apiRequest(endpoint, Object.assign({
+      options: createPackageInstallationOptions(options)
+    }, append))
+      .then((body) => {
+        if (body.reload) {
+          this.init();
+        }
+      });
+  }
+
+  /**
+   * Creates a new API request
+   * @param {string} endpoint
+   * @param {object} body
+   * @return {object} JSON
+   */
+  _apiRequest(endpoint, body) {
+    return this.core
+      .request(`/api/packages/${endpoint}`, {
+        method: 'post',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      .then(response => response.json());
+  }
+
+  /**
    * Registers a package
    *
    * @param {string} name Package name
@@ -369,6 +442,7 @@ export default class Packages {
     if (list instanceof Array) {
       const append = list
         .map(iter => Object.assign({
+          _vfs: null,
           type: 'application',
           files: []
         }, iter));

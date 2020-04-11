@@ -52,7 +52,11 @@ export const urlResolver = configuration => {
         metadata.type === 'icons' ? 'icons' : 'apps'
       );
 
-      url = `${type}/${metadata.name}${path}`;
+      if (metadata._vfs) {
+        url = `vfs/readfile?path=${encodeURIComponent(`${metadata._vfs}/${metadata.name}${path}`)}`;
+      } else {
+        url = `${type}/${metadata.name}${path}`;
+      }
     }
 
     return prefix

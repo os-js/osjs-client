@@ -89,7 +89,7 @@ export default class Core extends CoreBase {
    */
   destroy() {
     if (this.destroyed) {
-      return;
+      return Promise.resolve();
     }
 
     this.emit('osjs/core:destroy');
@@ -108,7 +108,7 @@ export default class Core extends CoreBase {
     this.connectfailed = false;
     this.ping = null;
 
-    super.destroy();
+    return super.destroy();
   }
 
   /**

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.30 - 2020-04-12
+
+* Made Core#destroy async
+
 ## 3.1.29 - 2020-03-21
 
 * Improve text alignment in iconview

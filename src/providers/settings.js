@@ -41,9 +41,10 @@ export default class SettingsServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {
     super(core);
 
-    this.settings = new Settings(core, Object.assign({
-      config: {}
-    }, args));
+    this.settings = new Settings(core, {
+      config: {},
+      ...args
+    });
   }
 
   /**

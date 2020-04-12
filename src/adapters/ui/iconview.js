@@ -143,10 +143,10 @@ const readDesktopFolder = (root, readdir, shortcuts) => {
   const read = () => readdir(root, {
     showHiddenFiles: false
   })
-    .then(files => files.map(s => Object.assign({shortcut: false}, s)));
+    .then(files => files.map(s => ({shortcut: false, ...s})));
 
   const readShortcuts = () => shortcuts.read()
-    .then(shortcuts => shortcuts.map((s, index) => Object.assign({shortcut: index}, s)));
+    .then(shortcuts => shortcuts.map((s, index) => ({shortcut: index, ...s})));
 
   return () => {
     return Promise.all([readShortcuts(), read()])

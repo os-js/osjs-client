@@ -128,7 +128,7 @@ export default class Packages {
     }
 
     this.metadata = this.core.config('packages.metadata', [])
-      .map(iter => Object.assign({type: 'application'}, iter));
+      .map(iter => ({type: 'application', ...iter}));
 
     this.inited = true;
 
@@ -224,17 +224,18 @@ export default class Packages {
    */
   _launchTheme(name, metadata) {
     const preloads = (metadata.files || [])
-      .map(f => this.core.url(f, {}, Object.assign({
-        type: metadata.type
-      }, metadata)));
+      .map(f => this.core.url(f, {}, ({
+        type: metadata.type,
+        ...metadata
+      })));
 
     return this.preloader.load(preloads)
       .then(result => {
-        return Object.assign(
-          {elements: {}},
-          result,
-          this.packages.find(pkg => pkg.metadata.name === name) || {}
-        );
+        return {
+          elements: {},
+          ...result,
+          ...this.packages.find(pkg => pkg.metadata.name === name) || {}
+        };
       });
   }
 
@@ -272,7 +273,7 @@ export default class Packages {
     };
 
     const preloads = metadata.files
-      .map(f => this.core.url(f, {}, Object.assign({type: 'apps'}, metadata)));
+      .map(f => this.core.url(f, {}, {type: 'apps', ...metadata}));
 
     const create = found => {
       let app;
@@ -368,10 +369,11 @@ export default class Packages {
   addPackages(list) {
     if (list instanceof Array) {
       const append = list
-        .map(iter => Object.assign({
+        .map(iter => ({
           type: 'application',
-          files: []
-        }, iter));
+          files: [],
+          ...iter
+        }));
 
       this.metadata = [...this.metadata, ...append];
     }
@@ -388,7 +390,7 @@ export default class Packages {
     filter = filter || (() => true);
 
     const user = this.core.getUser();
-    const metadata = this.metadata.map(m => Object.assign({}, m));
+    const metadata = this.metadata.map(m => ({...m}));
 
     const filterGroups = iter => {
       const m = iter.strictGroups === false ? 'some' : 'every';

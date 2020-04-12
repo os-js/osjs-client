@@ -85,13 +85,14 @@ export default class Tray {
 
     handler = handler || (() => {});
 
-    const entry = Object.assign({}, {
+    const entry = {
       icon: defaultIcon,
       title: defaultTitle,
       onclick: handler,
       oncontextmenu: handler,
-      handler
-    }, options);
+      handler,
+      ...options
+    };
 
     logger.debug('Created new tray entry', entry);
 

@@ -287,10 +287,10 @@ export default class WindowBehavior {
       }
 
       if (this.lastAction === 'move') {
-        win.emit('moved', Object.assign({}, win.state.position), win);
+        win.emit('moved', {...win.state.position}, win);
         win._setState('moving', false);
       } else if (this.lastAction === 'resize') {
-        win.emit('resized', Object.assign({}, win.state.dimension), win);
+        win.emit('resized', {...win.state.dimension}, win);
         win._setState('resizing', false);
       }
 

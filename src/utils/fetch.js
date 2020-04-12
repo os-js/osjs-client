@@ -49,17 +49,19 @@ const bodyTypes = [
  * Creates fetch() options
  */
 const createFetchOptions = (url, options, type) => {
-  const fetchOptions = Object.assign({}, {
+  const fetchOptions = {
     credentials: 'same-origin',
     method: 'get',
-    headers: {}
-  }, options);
+    headers: {},
+    ...options
+  };
 
   if (type === 'json') {
-    fetchOptions.headers = Object.assign(fetchOptions.headers, {
+    fetchOptions.headers = {
+      ...fetchOptions.headers,
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
-    });
+    };
   }
 
   if (fetchOptions.body && fetchOptions.method.toLowerCase() === 'get') {

@@ -183,11 +183,12 @@ export const humanFileSize = (bytes, si = false) => {
  * @return {Object[]}
  */
 export const transformReaddir = ({path}, files, options = {}) => {
-  options = Object.assign({}, {
+  options = {
     showHiddenFiles: false,
     sortBy: 'filename',
-    sortDir: 'asc'
-  }, options);
+    sortDir: 'asc',
+    ...options
+  };
 
   let {sortDir, sortBy, filter} = options;
   if (typeof filter !== 'function') {
@@ -206,7 +207,8 @@ export const transformReaddir = ({path}, files, options = {}) => {
     ? sortMap[sortBy]
     : sortFn('string');
 
-  const modify = (file) => Object.assign(file, {
+  const modify = (file) => ({
+    ...file,
     humanSize: humanFileSize(file.size)
   });
 
@@ -279,7 +281,7 @@ export const getFileIcon = map => {
  * @param {object} stat file stat
  * @return {object}
  */
-export const createFileIter = stat => Object.assign({
+export const createFileIter = stat => ({
   isDirectory: false,
   isFile: true,
   mime: 'application/octet-stream',
@@ -290,8 +292,9 @@ export const createFileIter = stat => Object.assign({
   label: null,
   stat: {},
   id: null,
-  parent_id: null
-}, stat);
+  parent_id: null,
+  ...stat
+});
 
 /**
  * Get basename of a file

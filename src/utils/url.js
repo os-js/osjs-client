@@ -38,10 +38,11 @@ export const urlResolver = configuration => {
       return endpoint;
     }
 
-    const {type, prefix} = Object.assign({}, {
+    const {type, prefix} = {
       type: null,
-      prefix: options.type === 'websocket'
-    }, options);
+      prefix: options.type === 'websocket',
+      ...options
+    };
 
     const str = type === 'websocket' ? ws.uri : http.uri;
 

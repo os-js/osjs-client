@@ -67,10 +67,11 @@ export default class Filesystem extends EventEmitter {
    * @param {Mountpoint[]} [options.mounts] Mountpoints
    */
   constructor(core, options = {}) {
-    options = Object.assign({}, {
+    options = {
       adapters: {},
-      mounts: []
-    }, options);
+      mounts: [],
+      ...options
+    };
 
     super('Filesystem');
 
@@ -84,10 +85,12 @@ export default class Filesystem extends EventEmitter {
      * Adapter registry
      * @type {Map<string, Adapter>}
      */
-    this.adapters = Object.assign({}, {
+    this.adapters = {
       system: systemAdapter,
-      apps: appsAdapter
-    }, this.core.config('vfs.adapters', {}), options.adapters);
+      apps: appsAdapter,
+      ...this.core.config('vfs.adapters', {}),
+      ...options.adapters
+    };
 
     /**
      * Mountpoints
@@ -106,9 +109,10 @@ export default class Filesystem extends EventEmitter {
      * @type {Map<string, Function>}
      */
     this.proxy = Object.keys(VFS).reduce((result, method) => {
-      return Object.assign({
-        [method]: (...args) => this._request(method, ...args)
-      }, result);
+      return {
+        [method]: (...args) => this._request(method, ...args),
+        ...result
+      };
     }, {});
   }
 
@@ -259,7 +263,7 @@ export default class Filesystem extends EventEmitter {
    */
   createMountpoint(props) {
     const name = props.adapter || this.core.config('vfs.defaultAdapter');
-    const adapter = Object.assign({}, defaultAdapter, this.adapters[name](this.core));
+    const adapter = {...defaultAdapter, ...this.adapters[name](this.core)};
 
     const result = merge({
       enabled: true,
@@ -273,11 +277,12 @@ export default class Filesystem extends EventEmitter {
       }
     }, props);
 
-    return Object.assign({
+    return {
       _adapter: adapter,
       label: name,
-      root: `${result.name || name}:/`
-    }, result);
+      root: `${result.name || name}:/`,
+      ...result
+    };
   }
 
   /**
@@ -323,7 +328,7 @@ export default class Filesystem extends EventEmitter {
         return filterMountByGroups(user.groups)(mg, ms);
       })
       .map(m => ({
-        attributes: Object.assign({}, m.attributes),
+        attributes: {...m.attributes},
         icon: icon(m.icon),
         name: m.name,
         label: m.label,

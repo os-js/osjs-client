@@ -58,12 +58,13 @@ export class BasicApplication extends EventEmitter {
     this.proc = proc;
     this.win = win;
 
-    this.options = Object.assign({
+    this.options = {
       mimeTypes: proc.metadata.mimes || [],
       loadMimeTypes: [],
       saveMimeTypes: [],
-      defaultFilename: 'New File'
-    }, options);
+      defaultFilename: 'New File',
+      ...options
+    };
   }
 
   /**
@@ -212,7 +213,7 @@ export class BasicApplication extends EventEmitter {
    * @param {string} eventName Event to fire
    */
   _setFile(item, eventName) {
-    this.proc.args.file = Object.assign({}, item);
+    this.proc.args.file = {...item};
     this.emit(eventName, item);
     this.updateWindowTitle();
   }

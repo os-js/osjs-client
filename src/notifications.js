@@ -105,8 +105,9 @@ export default class Notifications {
     }
 
     return ['left', 'right', 'top', 'bottom']
-      .reduce((carry, key) => Object.assign({
-        [key]: position.indexOf(key) === -1 ? 'auto' : '0'
-      }, carry), {});
+      .reduce((carry, key) => ({
+        [key]: position.indexOf(key) === -1 ? 'auto' : '0',
+        ...carry
+      }), {});
   }
 }

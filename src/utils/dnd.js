@@ -110,13 +110,14 @@ const setDataTransfer = (type, effect, data, setDragImage) => {
  * @return {object} An object with a destructor
  */
 export const draggable = (el, options = {}) => {
-  const {type, effect, data, ondragstart, ondragend, setDragImage} = Object.assign({}, {
+  const {type, effect, data, ondragstart, ondragend, setDragImage} = {
     type: 'application/json',
     effect: 'move',
     ondragstart: () => true,
     ondragend: () => true,
-    setDragImage: null
-  }, options);
+    setDragImage: null,
+    ...options
+  };
 
   const setter = setDataTransfer(type, effect, data, setDragImage);
 
@@ -161,14 +162,15 @@ export const draggable = (el, options = {}) => {
  * @return {object} An object with a destructor
  */
 export const droppable = (el, options = {}) => {
-  const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = Object.assign({}, {
+  const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = {
     type: 'application/json',
     effect: 'move',
     ondragenter: () => true,
     ondragover: () => true,
     ondragleave: () => true,
-    ondrop: () => true
-  }, options);
+    ondrop: () => true,
+    ...options
+  };
 
   const dragenter = ev => ondragenter(ev);
 

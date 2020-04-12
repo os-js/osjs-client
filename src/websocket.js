@@ -58,11 +58,12 @@ export default class Websocket extends EventEmitter {
     this.connecting = false;
     this.reconnecting = false;
     this.connectfailed = false;
-    this.options = Object.assign({
+    this.options = {
       reconnect: true,
       interval: 1000,
-      open: true
-    }, options);
+      open: true,
+      ...options
+    };
 
     /**
      * The Websocket

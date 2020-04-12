@@ -51,7 +51,7 @@ export default class Login extends EventEmitter {
 
     this.$container = null;
     this.core = core;
-    this.options = Object.assign({
+    this.options = {
       id: 'osjs-login',
       title: 'Welcome to OS.js',
       stamp: core.config('version'),
@@ -79,8 +79,9 @@ export default class Login extends EventEmitter {
           type: 'submit',
           value: 'Login'
         }
-      }]
-    }, options);
+      }],
+      ...options
+    };
   }
 
   /**

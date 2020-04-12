@@ -105,6 +105,10 @@ const createPanelSubtraction = (panel, panels) => {
   return subtraction;
 };
 
+const isVisible = w => w &&
+  !w.getState('minimized') &&
+  w.getState('focused');
+
 /**
  * Desktop Class
  *
@@ -263,11 +267,6 @@ export default class Desktop extends EventEmitter {
   }
 
   initKeyboardEvents() {
-    // Forward keypress events
-    const isVisible = w => w &&
-      !w.getState('minimized') &&
-      w.getState('focused');
-
     const forwardKeyEvent = (n, e) => {
       const w = Window.lastWindow();
       if (isVisible(w)) {
@@ -342,6 +341,15 @@ export default class Desktop extends EventEmitter {
     this.core.on('osjs/settings:load', reload);
     this.core.on('osjs/settings:save', reload);
     this.core.on('osjs/core:started', reload);
+
+    const closeBindingName = 'osjs/desktop:keybinding:close-window';
+    const closeBindingCallback = () => {
+      const w = Window.lastWindow();
+      if (isVisible(w)) {
+        w.close();
+      }
+    };
+    this.core.on(closeBindingName, closeBindingCallback);
   }
 
   initMouseEvents() {

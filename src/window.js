@@ -363,6 +363,7 @@ export default class Window extends EventEmitter {
     this._initTemplate();
     this._initBehavior();
 
+
     this.inited = true;
     this.emit('init', this);
     this.core.emit('osjs/window:create', this);
@@ -415,16 +416,7 @@ export default class Window extends EventEmitter {
       ondrop: (...args) => this.emit('drop', ...args, this)
     });
 
-    // Keybindings
-    const closeBindingName = 'osjs/desktop:keybinding:close-window';
-    const closeBindingCallback = () => this.close();
-    this.core.on(closeBindingName, closeBindingCallback);
-
-    // Cleanups
-    this.on('destroy', () => {
-      this.core.off(closeBindingName, closeBindingCallback);
-      d.destroy();
-    });
+    this.on('destroy', () => d.destroy());
   }
 
   /**

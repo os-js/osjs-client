@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.32 - 2020-04-12
+
+* Added better keybinding for closing window (#55)
+
 ## 3.1.31 - 2020-04-12
 
 * Updated dependencies

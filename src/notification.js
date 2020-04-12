@@ -84,15 +84,16 @@ export default class Notification {
      * Options
      * @type {Object}
      */
-    this.options = Object.assign({
+    this.options = {
       icon: null,
       title: defaultLabel,
       message: defaultLabel,
       timeout: 5000,
       native: core.config('notifications.native', false),
       sound: 'message',
-      className: ''
-    }, options);
+      className: '',
+      ...options
+    };
 
     this.core.emit('osjs/notification:create', this);
   }

@@ -162,7 +162,7 @@ export default class Window extends EventEmitter {
    * @param {WindowState} [options.state] Apply Window state
    */
   constructor(core, options = {}) {
-    options = Object.assign({
+    options = {
       id: null,
       title: null,
       parent: null,
@@ -171,8 +171,9 @@ export default class Window extends EventEmitter {
       attributes: {},
       position: {},
       dimension: {},
-      state: {}
-    }, options);
+      state: {},
+      ...options
+    };
 
     logger.debug('Window::constructor()', options);
 
@@ -621,10 +622,10 @@ export default class Window extends EventEmitter {
    */
   _maximize(toggle) {
     if (this._toggleState('maximized', toggle, toggle ? 'maximize' : 'restore')) {
-      const emit = () => this.emit('resized', Object.assign({}, {
+      const emit = () => this.emit('resized', {
         width: this.$element ? this.$element.offsetWidth : -1,
         height: this.$element ? this.$element.offsetHeight : -1
-      }), this);
+      }, this);
 
       if (supportsTransition()) {
         this.once('transitionend', emit);
@@ -668,11 +669,10 @@ export default class Window extends EventEmitter {
 
     const rect = this.core.make('osjs/desktop').getRect();
 
-    this.state.position = Object.assign(
-      {},
-      this.state.position,
-      clampPosition(rect, this.state)
-    );
+    this.state.position = {
+      ...this.state.position,
+      ...clampPosition(rect, this.state)
+    };
 
     if (update) {
       this._updateDOM();
@@ -706,7 +706,7 @@ export default class Window extends EventEmitter {
    * @param {WindowDimension} dimension The dimension
    */
   setDimension(dimension) {
-    const {width, height} = Object.assign({}, this.state.dimension, dimension || {});
+    const {width, height} = {...this.state.dimension, ...dimension || {}};
 
     this.state.dimension.width = width;
     this.state.dimension.height = height;
@@ -720,7 +720,7 @@ export default class Window extends EventEmitter {
    * @param {boolean} [preventDefault=false] Prevents any future position setting in init procedure
    */
   setPosition(position, preventDefault = false) {
-    const {left, top} = Object.assign({}, this.state.position, position || {});
+    const {left, top} = {...this.state.position, ...position || {}};
 
     this.state.position.top = top;
     this.state.position.left = left;
@@ -803,7 +803,7 @@ export default class Window extends EventEmitter {
     const value = this.state[n];
 
     return ['position', 'dimension', 'styles'].indexOf(n) !== -1
-      ? Object.assign({}, value)
+      ? {...value}
       : value;
   }
 
@@ -816,8 +816,8 @@ export default class Window extends EventEmitter {
       id: this.id,
       maximized: this.state.maximized,
       minimized: this.state.minimized,
-      position: Object.assign({}, this.state.position),
-      dimension: Object.assign({}, this.state.dimension)
+      position: {...this.state.position},
+      dimension: {...this.state.dimension}
     };
   }
 
@@ -931,13 +931,14 @@ export default class Window extends EventEmitter {
       minimizable: attributes.minimizable
     };
 
-    const cssText = createCssText(Object.assign({
+    const cssText = createCssText({
       top: String(top) + 'px',
       left: String(left) + 'px',
       height: String(height) + 'px',
       width: String(width) + 'px',
-      zIndex: (attrs.ontop ? ONTOP_ZINDEX : 0) + zIndex
-    }, styles));
+      zIndex: (attrs.ontop ? ONTOP_ZINDEX : 0) + zIndex,
+      ...styles
+    });
 
     if ($title) {
       $title.innerHTML = escapeHtml(title);

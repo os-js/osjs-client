@@ -35,9 +35,10 @@ import {
 } from './utils/vfs';
 
 // Makes sure our input paths are object(s)
-const pathToObject = path => Object.assign({
+const pathToObject = path => ({
   id: null,
-}, typeof path === 'string' ? {path} : path);
+  ...typeof path === 'string' ? {path} : path
+});
 
 // Handles directory listing result(s)
 const handleDirectoryList = (path, options) => result =>

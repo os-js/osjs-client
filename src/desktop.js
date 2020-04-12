@@ -121,9 +121,10 @@ export default class Desktop extends EventEmitter {
     super('Desktop');
 
     this.core = core;
-    this.options = Object.assign({
+    this.options = {
       contextmenu: [],
-    }, options);
+      ...options
+    };
     this.$theme = [];
     this.$icons = [];
     this.$styles = document.createElement('style');
@@ -495,7 +496,7 @@ export default class Desktop extends EventEmitter {
 
     this.core.emit('osjs/desktop:applySettings');
 
-    return Object.assign({}, newSettings);
+    return {...newSettings};
   }
 
   /**

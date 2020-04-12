@@ -35,16 +35,17 @@ const createAttributes = (props, field, disabled) => {
   disabled = disabled ? 'disabled' : undefined;
   if (field.tagName === 'input') {
     if (field.attributes.type !== 'submit') {
-      return Object.assign({}, {
+      return {
         autocapitalize: 'off',
         autocomplete: 'new-' + field.attributes.name,
         disabled,
-        oncreate: el => (el.value = props[field.attributes.name] || field.value || '')
-      }, field.attributes);
+        oncreate: el => (el.value = props[field.attributes.name] || field.value || ''),
+        ...field.attributes
+      };
     }
   }
 
-  return Object.assign({disabled}, field.attributes);
+  return {disabled, ...field.attributes};
 };
 
 const createFields = (props, fields, disabled) => {
@@ -149,9 +150,10 @@ const createView = (options) => {
 const create = (options, login, startHidden, $container) => {
   const ee = new EventEmitter('LoginUI');
   const view = createView(options);
-  const a = app(Object.assign({
-    hidden: startHidden
-  }, login), {
+  const a = app({
+    hidden: startHidden,
+    ...login
+  }, {
     setLoading: loading => ({loading}),
     setError: error => ({error, hidden: false}),
     submit: ev => state => {
@@ -163,7 +165,7 @@ const create = (options, login, startHidden, $container) => {
 
       const values = Array.from(ev.target.elements)
         .filter(el => el.type !== 'submit')
-        .reduce((o, el) => Object.assign(o, {[el.name] : el.value}), {});
+        .reduce((o, el) => ({...o, [el.name] : el.value}), {});
 
       ee.emit('login:post', values);
     }

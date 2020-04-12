@@ -98,7 +98,7 @@ export default class Preloader {
     return {
       errors: failed.map(failed => failed.entry),
       elements: successes.reduce((result, iter) => {
-        return Object.assign({}, result, {[iter.entry]: iter.el});
+        return {...result, [iter.entry]: iter.el};
       }, {})
     };
   }

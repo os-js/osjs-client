@@ -39,7 +39,7 @@ const MINIMUM_HEIGHT = 100;
 /*
  * Creates window attributes from an object
  */
-export const createAttributes = (attrs) => Object.assign({
+export const createAttributes = attrs => ({
   classNames: [],
   modal: false,
   ontop: false,
@@ -68,13 +68,14 @@ export const createAttributes = (attrs) => Object.assign({
   maxDimension: {
     width: -1,
     height: -1
-  }
-}, attrs);
+  },
+  ...attrs
+});
 
 /*
  * Creates window state from an object
  */
-export const createState = (state, options, attrs) => Object.assign({
+export const createState = (state, options, attrs) => ({
   title: options.title || options.id,
   icon: options.icon || defaultIcon,
   media: null,
@@ -86,15 +87,18 @@ export const createState = (state, options, attrs) => Object.assign({
   minimized: false,
   zIndex: 1,
   styles: {},
-  position: Object.assign({}, {
+  position: {
     left: null,
-    top: null
-  }, options.position),
-  dimension: Object.assign({}, {
+    top: null,
+    ...options.position
+  },
+  dimension: {
     width: Math.max(attrs.minDimension.width, MINIMUM_WIDTH),
-    height: Math.max(attrs.minDimension.height, MINIMUM_HEIGHT)
-  }, options.dimension)
-}, state);
+    height: Math.max(attrs.minDimension.height, MINIMUM_HEIGHT),
+    ...options.dimension
+  },
+  ...state
+});
 
 /*
  * Clamps position to viewport

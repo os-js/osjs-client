@@ -53,10 +53,11 @@ export default class Core extends CoreBase {
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    */
   constructor(config = {}, options = {}) {
-    options = Object.assign({}, {
+    options = {
       classNames: ['osjs-root'],
-      root: document.body
-    }, options || {});
+      root: document.body,
+      ...options || {}
+    };
 
     super(defaultConfiguration, config, options);
 
@@ -382,7 +383,10 @@ export default class Core extends CoreBase {
     if (!url.match(/^((http|ws|ftp)s?:)/i)) {
       url = this.url(url);
       // FIXME: Deep merge
-      options = Object.assign({}, options || {}, this.requestOptions || {});
+      options = {
+        ...options || {},
+        ...this.requestOptions || {}
+      };
     }
 
     return fetch(url, options, type)
@@ -466,7 +470,7 @@ export default class Core extends CoreBase {
     const args = {
       title: _('LBL_LAUNCH_SELECT'),
       message: _('LBL_LAUNCH_SELECT_MESSAGE', file.path),
-      choices: compatible.reduce((o, i) => Object.assign(o, {[i.name]: i.name}), {}),
+      choices: compatible.reduce((o, i) => ({...o, [i.name]: i.name}), {}),
       value
     };
 
@@ -532,7 +536,7 @@ export default class Core extends CoreBase {
    * @param {object} options Request options
    */
   setRequestOptions(options) {
-    this.requestOptions = Object.assign({}, options);
+    this.requestOptions = {...options};
   }
 
   /**
@@ -540,7 +544,7 @@ export default class Core extends CoreBase {
    * @return {Map<string,*>} User object
    */
   getUser() {
-    return Object.assign({}, this.user);
+    return {...this.user};
   }
 
 }

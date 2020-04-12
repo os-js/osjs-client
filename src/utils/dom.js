@@ -154,9 +154,10 @@ export const supportsPassive = (function() {
  * @return {Promise<HTMLAudioElement>}
  */
 export const playSound = (src, options = {}) => {
-  const opts = Object.assign({
-    volume: 1.0
-  }, options);
+  const opts = {
+    volume: 1.0,
+    ...options
+  };
 
   const audio = new Audio();
   audio.voule = opts.volume;
@@ -193,9 +194,10 @@ export const supportedMedia = () => {
 
   const reduce = (list, elem) => Object.keys(list)
     .reduce((result, format) => {
-      return Object.assign({
-        [format]: elem.canPlayType(list[format]) === 'probably'
-      }, result);
+      return {
+        [format]: elem.canPlayType(list[format]) === 'probably',
+        ...result
+      };
     }, {});
 
   return {

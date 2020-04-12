@@ -59,16 +59,17 @@ export default class Application extends EventEmitter {
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
-    data = Object.assign({}, {
+    data = {
       args: {},
       options: {},
-      metadata: {}
-    }, data);
+      metadata: {},
+      ...data
+    };
 
     logger.debug('Application::constructor()', data);
 
     const defaultSettings = data.options.settings
-      ? Object.assign({}, data.options.settings)
+      ? {...data.options.settings}
       : {};
 
     const name = data.metadata && data.metadata.name
@@ -99,10 +100,11 @@ export default class Application extends EventEmitter {
      * Application options
      * @type {object}
      */
-    this.options = Object.assign({
+    this.options = {
       sessionable: true,
-      windowAutoFocus: true
-    }, data.options);
+      windowAutoFocus: true,
+      ...data.options
+    };
 
     /**
      * Application metadata
@@ -202,10 +204,11 @@ export default class Application extends EventEmitter {
     this.destroy();
 
     setTimeout(() => {
-      this.core.run(this.metadata.name, Object.assign({}, this.args), Object.assign({}, this.options, {
+      this.core.run(this.metadata.name, {...this.args}, {
+        ...this.options,
         forcePreload: this.core.config('development'),
         restore: {windows}
-      }));
+      });
     }, 1);
   }
 
@@ -243,9 +246,10 @@ export default class Application extends EventEmitter {
    * @return {Websocket}
    */
   socket(path = '/socket', options = {}) {
-    options = Object.assign({}, {
-      socket: {}
-    }, options);
+    options = {
+      socket: {},
+      ...options
+    };
 
     const uri = this.resource(path, {type: 'websocket'});
     const ws = new Websocket(this.metadata.name, uri, options.socket);
@@ -279,9 +283,10 @@ export default class Application extends EventEmitter {
    */
   worker(filename, options = {}) {
     const uri = this.resource(filename);
-    const worker =  new Worker(uri, Object.assign({
-      credentials: 'same-origin'
-    }, options));
+    const worker =  new Worker(uri, {
+      credentials: 'same-origin',
+      ...options
+    });
 
     this.workers.push(worker);
 
@@ -362,7 +367,7 @@ export default class Application extends EventEmitter {
    */
   getSession() {
     const session = {
-      args: Object.assign({}, this.args),
+      args: {...this.args},
       name: this.metadata.name,
       windows: this.windows
         .map(w => w.getSession())

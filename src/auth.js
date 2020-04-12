@@ -62,13 +62,14 @@ export default class Auth {
       ? args.login(core, args.config || {})
       : new Login(core, args.ui || defaultUi);
 
-    this.adapter = Object.assign({
+    this.adapter = {
       login: () => Promise.reject(new Error('Not implemented')),
       logout: () => Promise.reject(new Error('Not implemented')),
       register: () => Promise.reject(new Error('Not implemented')),
       init: () => Promise.resolve(true),
-      destroy: () => {}
-    }, adapter(core, args.config || {}));
+      destroy: () => {},
+      ...adapter(core, args.config || {})
+    };
 
     this.callback = function() {};
     this.core = core;

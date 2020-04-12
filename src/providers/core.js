@@ -298,9 +298,10 @@ export default class CoreServiceProvider extends ServiceProvider {
     const found = this.core.$resourceRoot.querySelectorAll('link[rel=stylesheet]');
     const map = Array.from(found).reduce((result, item) => {
       const src = item.getAttribute('href').split('?')[0].replace(/^\//, '');
-      return Object.assign({
-        [src]: item
-      }, result);
+      return {
+        [src]: item,
+        ...result
+      };
     }, {});
 
     if (map[url]) {

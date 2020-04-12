@@ -51,13 +51,14 @@ export default class Settings {
         ? args.adapter
         : defaultAdapters[args.adapter || 'localStorage'];
 
-    this.adapter = Object.assign({
+    this.adapter = {
       load: () => Promise.reject(new Error('Not implemented')),
       save: () => Promise.reject(new Error('Not implemented')),
       init: () => Promise.resolve(true),
       clear: () => Promise.resolve(true),
-      destroy: () => {}
-    }, adapter(core, args.config));
+      destroy: () => {},
+      ...adapter(core, args.config)
+    };
 
     /**
      * Internal timeout reference used for debouncing
@@ -139,7 +140,7 @@ export default class Settings {
    */
   get(ns, key, defaultValue) {
     if (typeof ns === 'undefined') {
-      return Object.assign({}, this.settings);
+      return {...this.settings};
     } else if (typeof this.settings[ns] === 'undefined') {
       return key ? defaultValue : {};
     }
@@ -178,7 +179,7 @@ export default class Settings {
         logger.warn('Error while setting settings for', key, e);
       }
     } else {
-      this.settings[ns] = Object.assign({}, value);
+      this.settings[ns] = {...value};
     }
 
     return this;

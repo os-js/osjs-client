@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.1.31 - 2020-04-12
+
+* Updated dependencies
+* Added keybinding for closing window (#55)
+* Updated keybindings (#55)
+* Updated @osjs/eslint-config (and refactored code)
+
 ## 3.1.30 - 2020-04-12
 
 * Made Core#destroy async

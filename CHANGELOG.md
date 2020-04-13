@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.33 - 20202-04-14
+
+* Fixed manifest fetching in standalone mode
+
 ## 3.1.32 - 2020-04-12
 
 * Added better keybinding for closing window (#55)

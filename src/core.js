@@ -369,14 +369,15 @@ export default class Core extends CoreBase {
    * @param {string} url The endpoint
    * @param {Options} [options] fetch options
    * @param {string} [type] Request / Response type
+   * @param {boolean} [force=false] Force request even when in standalone mode
    * @return {*}
    */
-  request(url, options = {}, type = null) {
+  request(url, options = {}, type = null, force = false) {
     const _ = this.has('osjs/locale')
       ? this.make('osjs/locale').translate
       : t => t;
 
-    if (this.config('standalone')) {
+    if (this.config('standalone') && !force) {
       return Promise.reject(new Error(_('ERR_REQUEST_STANDALONE')));
     }
 

@@ -135,7 +135,7 @@ export default class Packages {
     const manifest = this.core.config('packages.manifest');
 
     return manifest
-      ? this.core.request(manifest, {}, 'json')
+      ? this.core.request(manifest, {}, 'json', true)
         .then(metadata => this.addPackages(metadata))
         .then(() => true)
         .catch(error => logger.error(error))

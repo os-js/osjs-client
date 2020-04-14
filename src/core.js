@@ -51,6 +51,7 @@ export default class Core extends CoreBase {
    * @param {Element} [options.root] The root DOM element for elements
    * @param {Element} [options.resourceRoot] The root DOM element for resources
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
+   * @param {Function} [options.splash] Custom callback function for creating splash screen
    */
   constructor(config = {}, options = {}) {
     options = {
@@ -64,7 +65,7 @@ export default class Core extends CoreBase {
     this.logger = logger;
     this.ws = null;
     this.ping = null;
-    this.splash = new Splash(this);
+    this.splash = options.splash ? options.splash(this) : new Splash(this);
     this.$root = options.root;
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
     this.requestOptions = {};
@@ -83,6 +84,8 @@ export default class Core extends CoreBase {
 
       this.configuration.ws.uri = protocol.replace(/^http/, 'ws') + '//' + host + uri.replace(/^\/+/, '/');
     }
+
+    this.splash.init();
   }
 
   /**

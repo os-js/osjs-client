@@ -47,3 +47,4 @@ export {default as VFSServiceProvider} from './src/providers/vfs';
 export {default as AuthServiceProvider} from './src/providers/auth';
 export {default as SettingsServiceProvider} from './src/providers/settings';
 export {default as logger} from './src/logger';
+export {default as Splash} from './src/splash';

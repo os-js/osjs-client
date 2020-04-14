@@ -1,6 +1,10 @@
 # Changelog for osjs-client
 
-## 3.1.33 - 20202-04-14
+## 3.1.34 - 2020-04-15
+
+* Added posibility to override Splash screen (#110) (#111)
+
+## 3.1.33 - 2020-04-14
 
 * Fixed manifest fetching in standalone mode
 

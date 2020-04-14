@@ -33,12 +33,15 @@ export default class Splash {
     this.core = core;
     this.$loading = document.createElement('div');
     this.$loading.className = 'osjs-boot-splash';
-    this.$loading.appendChild(document.createTextNode('Loading...'));
 
     core.on('osjs/core:boot', () => this.show());
     core.on('osjs/core:booted', () => this.destroy());
     core.on('osjs/core:logged-in', () => this.show());
     core.on('osjs/core:started', () => this.destroy());
+  }
+
+  init() {
+    this.$loading.appendChild(document.createTextNode('Loading...'));
   }
 
   show() {

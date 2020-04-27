@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.35 - 2020-04-27
+
+* Updated French (fr_FR) translations (#112)
+
 ## 3.1.34 - 2020-04-15
 
 * Added posibility to override Splash screen (#110) (#111)

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.36 - 2020-04-29
+
+* Added window attribute for disabling droppable (#113) (#114)
+
 ## 3.1.35 - 2020-04-27
 
 * Updated French (fr_FR) translations (#112)

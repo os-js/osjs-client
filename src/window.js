@@ -77,6 +77,7 @@ import logger from './logger';
  * @property {boolean} [controls=true] Show controls
  * @property {string} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
  * @property {boolean} [clamp=true] Clamp the window position upon creation
+ * @property {boolean} [droppable=true] If window should have the default drop action
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {Map<string,string>} [mediaQueries] A map of matchMedia to name
@@ -409,14 +410,16 @@ export default class Window extends EventEmitter {
     }
 
     // DnD functionality
-    const d = droppable(this.$element, {
-      ondragenter: (...args) => this.emit('dragenter', ...args, this),
-      ondragover: (...args) => this.emit('dragover', ...args, this),
-      ondragleave: (...args) => this.emit('dragleave', ...args, this),
-      ondrop: (...args) => this.emit('drop', ...args, this)
-    });
+    if (this.attributes.droppable) {
+      const d = droppable(this.$element, {
+        ondragenter: (...args) => this.emit('dragenter', ...args, this),
+        ondragover: (...args) => this.emit('dragover', ...args, this),
+        ondragleave: (...args) => this.emit('dragleave', ...args, this),
+        ondrop: (...args) => this.emit('drop', ...args, this)
+      });
 
-    this.on('destroy', () => d.destroy());
+      this.on('destroy', () => d.destroy());
+    }
   }
 
   /**

@@ -6,7 +6,7 @@ jobs:
     name: Unit tests (node ${{ matrix.node }})
     strategy:
       matrix:
-        node: [ '13', '10', '8' ]
+        node: [ '13', '10' ]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1

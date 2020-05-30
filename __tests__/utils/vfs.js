@@ -200,9 +200,15 @@ describe('utils.vfs#transformArrayBuffer', () => {
       .then(result => expect(result).toBe('foo')));
       */
 
-  test('Should create data url', () =>
-    create('uri')
-      .then(result => expect(result).toBe('data:text/plain;charset=undefined,f%00o%00o%00')));
+  test('Should create data url', async () => {
+    const result = await create('uri');
+    const index = [
+      'data:text/plain;charset=undefined,f%00o%00o%00',
+      'data:text/plain;base64,ZgBvAG8A'
+    ].indexOf(result);
+
+    expect(index).not.toBe(-1);
+  });
 
   /* FIXME
   test('Should create blob', () =>

@@ -119,7 +119,20 @@ export const defaultConfiguration = {
         label: 'LBL_APP_CAT_OTHER',
         icon: 'applications-other'
       }
-    }
+    },
+    windows: [
+      /*
+      {
+        application: string | RegExp | undefined,
+        window: string | RegExp | undefined,
+        options: {
+          dimension: object | undefined,
+          position: object | undefined,
+          attributes: object | undefined
+        }
+      }
+      */
+    ]
   },
 
   auth: {

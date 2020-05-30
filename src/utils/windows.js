@@ -332,3 +332,32 @@ export const getMediaQueryName = (win) => Object.keys(win.attributes.mediaQuerie
     height: win.$element.offsetHeight || win.state.dimension.height
   }))
   .pop();
+
+/**
+ * Loads [certain] window options from configuration
+ */
+export const loadOptionsFromConfig = (config, appName, windowId) => {
+  const matchStringOrRegex = (str, matcher) => matcher instanceof RegExp
+    ? !!str.match(matcher)
+    : str === matcher;
+
+  const found = config.find(({application, window}) => {
+    if (!application && !window) {
+      return false;
+    } else if (application && !matchStringOrRegex(appName, application)) {
+      return false;
+    } else if (window && !matchStringOrRegex(windowId || '', window)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const foundOptions = found && found.options ? found.options : {};
+  const allowedProperties = ['position', 'dimension', 'attributes'];
+
+  return allowedProperties.reduce((obj, key) => (foundOptions[key]
+    ? {...obj, [key]: foundOptions[key]}
+    : obj),
+  {});
+};

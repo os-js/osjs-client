@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.37 - 2020-05-31
+
+* Add config option to override application window options (#115) (#116)
+* Updated unit tests
+
 ## 3.1.36 - 2020-04-29
 
 * Added window attribute for disabling droppable (#113) (#114)

@@ -215,3 +215,72 @@ describe('Window Resizer', () => {
   test('resize W', () => expect(resizer('w', -10, 10)).toEqual({top: 100, left: 90, width: 110, height: 100}));
   test('resize NW', () => expect(resizer('nw', -10, -10)).toEqual({top: 90, left: 90, width: 110, height: 110}));
 });
+
+describe('Load options from config', () => {
+  const config = [{
+    application: 'Application1',
+    options: {
+      attributes: {
+        foo: 'bar'
+      }
+    }
+  }, {
+    application: 'Application2',
+    window: 'Gaga',
+    options: {
+      attributes: {
+        bass: 'jazz'
+      }
+    }
+  }, {
+    window: /^RegExp_/,
+    options: {
+      attributes: {
+        test: 'jest'
+      }
+    }
+  }, {
+  }];
+
+  test('all application windows', () => {
+    const result = {attributes: {foo: 'bar'}};
+    expect(windows.loadOptionsFromConfig(config, 'Application1', 'Koko')).toEqual(result);
+    expect(windows.loadOptionsFromConfig(config, 'Application1', 'Kokoko')).toEqual(result);
+    expect(windows.loadOptionsFromConfig(config, 'Application1')).toEqual(result);
+    expect(windows.loadOptionsFromConfig(config, 'Application2', 'Koko')).toEqual({});
+  });
+
+  test('application spesific window', () => {
+    expect(windows.loadOptionsFromConfig(config, 'Application2', 'Gaga')).toEqual({
+      attributes: {
+        bass: 'jazz'
+      }
+    });
+
+    expect(windows.loadOptionsFromConfig(config, 'Application2', 'Gagaga')).toEqual({});
+  });
+
+  test('global window', () => {
+    expect(windows.loadOptionsFromConfig(config, 'undefined', 'RegExp_123')).toEqual({
+      attributes: {
+        test: 'jest'
+      }
+    });
+
+    expect(windows.loadOptionsFromConfig([
+      ...config,
+      {
+        window: /(.*)/,
+        options: {
+          attributes: {
+            all: 'thethings'
+          }
+        }
+      }
+    ], 'undefined')).toEqual({
+      attributes: {
+        all: 'thethings'
+      }
+    });
+  });
+});

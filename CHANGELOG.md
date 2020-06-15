@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.38 - 2020-06-15
+
+* Fix icon overflow in desktop icon view (#117)
+
 ## 3.1.37 - 2020-05-31
 
 * Add config option to override application window options (#115) (#116)

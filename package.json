@@ -1,10 +1,13 @@
 {
   "name": "@osjs/client",
-  "version": "3.1.37",
+  "version": "3.1.38",
   "description": "OS.js client",
   "main": "dist/main.js",
   "style": "dist/main.css",
+  "module": "index.js",
   "files": [
+    "src",
+    "index.js",
     "dist/main.js",
     "dist/main.js.map",
     "dist/main.css",

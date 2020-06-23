@@ -49,7 +49,8 @@ const languages = {
   sl_SI: 'Slovenian, Slovenščina',
   zh_CN: 'Chinese (simplified)',
   fa_FA: 'Persian',
-  pt_BR: 'Português (Brasil)'
+  pt_BR: 'Português (Brasil)',
+  ru_RU: 'Русский (Russian)'
 };
 
 export const defaultConfiguration = {

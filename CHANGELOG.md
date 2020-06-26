@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.40 - 2020-06-27
+
+* Make sure user properties defaults are kept upon login
+
 ## 3.1.39 - 2020-06-23
 
 * Add Russian (ru_RU) translation (#119)

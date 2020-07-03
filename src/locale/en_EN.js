@@ -72,6 +72,7 @@ export const en_EN = {
   LBL_SEARCH_PLACEHOLDER: 'Search filesystems...',
   LBL_SEARCH_WAIT: 'Searching...',
   LBL_SEARCH_RESULT: 'Showing {0} results',
+  LBL_DESKTOP_SET_AS_WALLPAPER: 'Set as wallpaper',
 
   // FS
   LBL_FS_B: 'B',

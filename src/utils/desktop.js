@@ -28,54 +28,14 @@
  * @licence Simplified BSD License
  */
 
-import {ServiceProvider} from '@osjs/common';
-import Desktop from '../desktop';
+const imageDropMimes = [
+  'image/png',
+  'image/jpe?g',
+  'image/webp',
+  'image/gif'
+];
 
-/**
- * OS.js Desktop Service Provider
- *
- * @desc Provides desktop features
- */
-export default class DesktopServiceProvider extends ServiceProvider {
+export const validVfsDrop = data => data && data.path;
 
-  constructor(core, options = {}) {
-    super(core, options || {});
-
-    this.desktop = null;
-  }
-
-  destroy() {
-    this.desktop = this.desktop.destroy();
-  }
-
-  /**
-   * Get a list of services this provider registers
-   */
-  provides() {
-    return [
-      'osjs/desktop'
-    ];
-  }
-
-  init() {
-    this.desktop = new Desktop(this.core, this.options);
-    this.desktop.init();
-
-    this.core.singleton('osjs/desktop', () => ({
-      setKeyboardContext: ctx => this.desktop.setKeyboardContext(ctx),
-      openContextMenu: ev => this.desktop.onContextMenu(ev),
-      addContextMenuEntries: entries => this.desktop.addContextMenu(entries),
-      applySettings: settings => this.desktop.applySettings(settings),
-      createDropContextMenu: data => this.desktop.createDropContextMenu(data),
-      getRect: () => this.desktop.getRect()
-    }));
-
-    this.core.on('osjs/core:started', () => {
-      this.desktop.applySettings();
-    });
-  }
-
-  start() {
-    this.desktop.start();
-  }
-}
+export const isDroppingImage = data => validVfsDrop(data) &&
+  imageDropMimes.some(re => !!data.mime.match(re));

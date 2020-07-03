@@ -72,6 +72,7 @@ export const nb_NO = {
   LBL_SEARCH_PLACEHOLDER: 'Søker filsystemer...',
   LBL_SEARCH_WAIT: 'Søker...',
   LBL_SEARCH_RESULT: 'Viser {0} resultater',
+  LBL_DESKTOP_SET_AS_WALLPAPER: 'Sett som bakgrunnsbilde',
 
   // FS
   LBL_FS_B: 'B',

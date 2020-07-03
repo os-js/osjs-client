@@ -32,10 +32,9 @@ import {h, app} from 'hyperapp';
 import {doubleTap} from '../../utils/input';
 import {pathJoin} from '../../utils/vfs';
 import {invertHex} from '../../utils/colors';
+import {isDroppingImage, validVfsDrop} from '../../utils/desktop';
 
 const tapper = doubleTap();
-
-const validVfsDrop = data => data && data.path;
 
 const onDropAction = actions => (ev, data, files, shortcut = true) => {
   if (validVfsDrop(data)) {
@@ -64,7 +63,9 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
     oncreate: el => {
       droppable(el, {
         ondrop: (ev, data, files) => {
-          if (ev.shiftKey && validVfsDrop(data)) {
+          const droppedImage = isDroppingImage(data);
+
+          if (droppedImage || (ev.shiftKey && validVfsDrop(data))) {
             actions.openDropContextMenu({ev, data, files});
           } else {
             onDropAction(actions)(ev, data, files);
@@ -236,8 +237,8 @@ export class DesktopIconView extends EventEmitter {
     }, {
       setEntries: entries => ({entries}),
 
-      openDropContextMenu: ({ev, data, files}) => {
-        this.createDropContextMenu(ev, data, files);
+      openDropContextMenu: ({ev, data, files, droppedImage}) => {
+        this.createDropContextMenu(ev, data, files, droppedImage);
       },
 
       openContextMenu: ({ev, entry, index}) => {
@@ -339,19 +340,22 @@ export class DesktopIconView extends EventEmitter {
   }
 
   createDropContextMenu(ev, data, files) {
+    const desktop = this.core.make('osjs/desktop');
     const _ = this.core.make('osjs/locale').translate;
 
     const action = shortcut => onDropAction(this.iconview)(ev, data, files, shortcut);
 
+    const menu = [{
+      label: _('LBL_COPY'),
+      onclick: () => action(false)
+    }, {
+      label: _('LBL_CREATE_SHORTCUT'),
+      onclick: () => action(true)
+    }, ...desktop.createDropContextMenu(data)];
+
     this.core.make('osjs/contextmenu', {
       position: ev,
-      menu: [{
-        label: _('LBL_COPY'),
-        onclick: () => action(false)
-      }, {
-        label: _('LBL_CREATE_SHORTCUT'),
-        onclick: () => action(true)
-      }]
+      menu
     });
   }
 

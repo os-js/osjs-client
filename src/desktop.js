@@ -33,6 +33,7 @@ import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
 import {matchKeyCombo} from './utils/input';
 import {DesktopIconView} from './adapters/ui/iconview';
+import {isDroppingImage} from './utils/desktop';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
@@ -256,13 +257,15 @@ export default class Desktop extends EventEmitter {
   }
 
   initDragEvents() {
-    // Handles dnd
-    this.core.$root.addEventListener('dragover', e => {
-      e.preventDefault();
-    });
+    const {droppable} = this.core.make('osjs/dnd');
 
-    this.core.$root.addEventListener('drop', e => {
-      e.preventDefault();
+    droppable(this.core.$root, {
+      ondrop: (ev, data, files) => {
+        const droppedImage = isDroppingImage(data);
+        if (droppedImage) {
+          this.onDropContextMenu(ev, data);
+        }
+      }
     });
   }
 
@@ -617,6 +620,28 @@ export default class Desktop extends EventEmitter {
       .then(() => this.applySettings());
   }
 
+  createDropContextMenu(data) {
+    const _ = this.core.make('osjs/locale').translate;
+    const settings = this.core.make('osjs/settings');
+    const desktop = this.core.make('osjs/desktop');
+    const droppedImage = isDroppingImage(data);
+    const menu = [];
+
+    const setWallpaper = () => settings
+      .set('osjs/desktop', 'background.src', data)
+      .save()
+      .then(() => desktop.applySettings());
+
+    if (droppedImage) {
+      menu.push({
+        label: _('LBL_DESKTOP_SET_AS_WALLPAPER'),
+        onclick: setWallpaper
+      });
+    }
+
+    return menu;
+  }
+
   onDeveloperMenu(ev) {
     const _ = this.core.make('osjs/locale').translate;
     const s = this.core.make('osjs/settings').get();
@@ -659,6 +684,15 @@ export default class Desktop extends EventEmitter {
           items: storageItems
         }
       ]
+    });
+  }
+
+  onDropContextMenu(ev, data) {
+    const menu = this.createDropContextMenu(data);
+
+    this.core.make('osjs/contextmenu', {
+      position: ev,
+      menu
     });
   }
 

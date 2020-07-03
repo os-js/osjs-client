@@ -39,18 +39,6 @@ import Search from './search';
 import merge from 'deepmerge';
 import logger from './logger';
 
-const TEMPLATE = subtract => `
-  .osjs-root[data-mobile=true] .osjs-window,
-  .osjs-window[data-maximized=true] {
-    top: ${subtract.top}px !important;
-    left: ${subtract.left}px !important;
-    right: ${subtract.right}px !important;
-    bottom: ${subtract.bottom}px !important;
-    width: calc(100% -  ${subtract.left + subtract.right}px) !important;
-    height: calc(100% - ${subtract.top + subtract.bottom}px) !important;
-  }
-`;
-
 /*
  * Creates a set of styles based on background settings
  */
@@ -132,8 +120,6 @@ export default class Desktop extends EventEmitter {
     };
     this.$theme = [];
     this.$icons = [];
-    this.$styles = document.createElement('style');
-    this.$styles.setAttribute('type', 'text/css');
     this.contextmenuEntries = [];
     this.search = core.config('search.enabled') ? new Search(core) : null;
     this.iconview = new DesktopIconView(this.core);
@@ -159,12 +145,6 @@ export default class Desktop extends EventEmitter {
       this.iconview.destroy();
     }
 
-    if (this.$styles && this.$styles.parentNode) {
-      this.$styles.remove();
-    }
-
-    this.$styles = null;
-
     this._removeIcons();
     this._removeTheme();
   }
@@ -182,8 +162,6 @@ export default class Desktop extends EventEmitter {
     this.initBaseEvents();
     this.initLocales();
     this.initDeveloperTray();
-
-    this.core.$resourceRoot.appendChild(this.$styles);
   }
 
   initConnectionEvents() {
@@ -227,10 +205,10 @@ export default class Desktop extends EventEmitter {
       try {
         this._updateCSS();
         Window.getWindows().forEach(w => w.clampToViewport());
-        this._updateIconview();
       } catch (e) {
         logger.warn('Panel event error', e);
       }
+
       this.core.emit('osjs/desktop:transform', this.getRect());
     });
 
@@ -429,29 +407,20 @@ export default class Desktop extends EventEmitter {
     }
 
     this._updateCSS();
-    this._updateIconview();
-  }
-
-  _updateIconview() {
-    if (this.iconview) {
-      this.iconview.resize(this.getRect());
-      this.iconview.applySettings();
-    }
   }
 
   /**
    * Update CSS
    */
   _updateCSS() {
-    if (!this.$styles) {
-      return;
-    }
-
     const mobile = this.core.config('windows.mobile');
     const isMobile = !mobile ? false : this.core.$root.offsetWidth <= mobile;
     this.core.$root.setAttribute('data-mobile', isMobile);
 
-    this.$styles.innerHTML = TEMPLATE(this.subtract);
+    this.core.$contents.style.top = `${this.subtract.top}px`;
+    this.core.$contents.style.left = `${this.subtract.left}px`;
+    this.core.$contents.style.right = `${this.subtract.right}px`;
+    this.core.$contents.style.bottom = `${this.subtract.bottom}px`;
   }
 
   addContextMenu(entries) {
@@ -555,7 +524,6 @@ export default class Desktop extends EventEmitter {
 
     if (settings.enabled) {
       this.iconview.render(settings.path);
-      this.iconview.resize(this.getRect());
     } else {
       this.iconview.destroy();
     }

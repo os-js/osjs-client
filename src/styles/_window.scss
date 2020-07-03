@@ -30,6 +30,13 @@
 
 $direction-list: "nw" "sw" "ne" "se" "n" "s" "w" "e";
 
+@mixin osjs-window-maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .osjs-window-behavior-lofi {
   position: absolute;
   border: 2px solid #000;
@@ -184,6 +191,8 @@ $direction-list: "nw" "sw" "ne" "se" "n" "s" "w" "e";
   }
 
   &[data-maximized=true] {
+    @include osjs-window-maximized();
+
     .osjs-window-resize {
       cursor: inherit !important;
     }
@@ -230,6 +239,8 @@ $direction-list: "nw" "sw" "ne" "se" "n" "s" "w" "e";
 
 .osjs-root[data-mobile="true"] {
   .osjs-window {
+    @include osjs-window-maximized();
+
     opacity: 1;
 
     .osjs-window-button[data-action=maximize] {

@@ -124,10 +124,7 @@ export default class WindowBehavior {
       }
     });
 
-    const rect = this.core.has('osjs/desktop')
-      ? this.core.make('osjs/desktop').getRect()
-      : {top: 0, left: 0};
-
+    const rect = {top: 0, left: 0};
     const {top, left} = getCascadePosition(win, rect, win.state.position);
     win.state.position.top = top;
     win.state.position.left = left;
@@ -202,7 +199,7 @@ export default class WindowBehavior {
       : null;
 
     const move = checkMove
-      ? mover(win, rect)
+      ? mover(win, {top: 0, left: 0})
       : null;
 
     let actionCallback;

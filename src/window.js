@@ -503,7 +503,7 @@ export default class Window extends EventEmitter {
       this.clampToViewport(false);
     }
 
-    this.core.$root.appendChild(this.$element);
+    this.core.$contents.appendChild(this.$element);
 
     renderCallback(this, callback);
 

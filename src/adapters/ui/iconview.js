@@ -174,27 +174,13 @@ export class DesktopIconView extends EventEmitter {
 
   destroy() {
     if (this.$root && this.$root.parentNode) {
-      this.$root.parentNode.removeChild(this.$root);
+      this.$root.remove();
     }
 
     this.iconview = null;
     this.$root = null;
 
     this.emit('destroy');
-  }
-
-  /**
-   * @param {object} rect Rectangle from desktop
-   */
-  resize(rect) {
-    if (!this.$root) {
-      return;
-    }
-
-    this.$root.style.top = `${rect.top}px`;
-    this.$root.style.left = `${rect.left}px`;
-    this.$root.style.bottom = `${rect.bottom}px`;
-    this.$root.style.right = `${rect.right}px`;
   }
 
   _render(root) {
@@ -221,7 +207,7 @@ export class DesktopIconView extends EventEmitter {
 
     this.$root = document.createElement('div');
     this.$root.className = 'osjs-desktop-iconview';
-    this.core.$root.appendChild(this.$root);
+    this.core.$contents.appendChild(this.$root);
 
     const {droppable} = this.core.make('osjs/dnd');
     const {icon: fileIcon} = this.core.make('osjs/fs');

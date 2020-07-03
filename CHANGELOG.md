@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.41 - 2020-07-03
+
+* Created new root for widget contents (#94) (#95)
+* Added wallpaper select contextmenu on desktop drops (#122) (#123)
+
 ## 3.1.40 - 2020-06-27
 
 * Make sure user properties defaults are kept upon login

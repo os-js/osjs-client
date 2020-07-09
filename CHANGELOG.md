@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.42 - 2020-07-09
+
+* Emit event when VFS action promises has settled (#124)
+
 ## 3.1.41 - 2020-07-03
 
 * Created new root for widget contents (#94) (#95)

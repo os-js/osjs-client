@@ -231,8 +231,24 @@ export default class Filesystem extends EventEmitter {
    * @return {*}
    */
   _request(method, ...args) {
-    this.core.emit(`osjs/vfs:${method}`, ...args);
+    const ev = `osjs/vfs:${method}`;
 
+    const done = () => this.core.emit(`${ev}:done`, ...args);
+
+    this.core.emit(ev, ...args);
+
+    return this._requestAction(method, ...args)
+      .then(result => {
+        done();
+        return result;
+      })
+      .catch(error => {
+        done();
+        throw error;
+      });
+  }
+
+  _requestAction(method, ...args) {
     if (['rename', 'move', 'copy'].indexOf(method) !== -1) {
       const [src, dest] = args;
       const srcMount = this.getMountpointFromPath(src);

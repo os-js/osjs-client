@@ -37,6 +37,12 @@ import {fetch} from './utils/fetch';
 import {urlResolver} from './utils/url';
 import logger from './logger';
 
+const defaultUserData = {
+  id: null,
+  username: 'osjs',
+  groups: []
+};
+
 /**
  * Core
  *
@@ -74,11 +80,7 @@ export default class Core extends CoreBase {
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
     this.requestOptions = {};
     this.urlResolver = urlResolver(this.configuration);
-    this.user = {
-      id: null,
-      username: 'osjs',
-      groups: []
-    };
+    this.user = {...defaultUserData};
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
 
@@ -115,7 +117,7 @@ export default class Core extends CoreBase {
       this.$contents = undefined;
     }
 
-    this.user = null;
+    this.user = {...defaultUserData};
     this.ws = null;
     this.connecting = false;
     this.connectfailed = false;
@@ -156,8 +158,8 @@ export default class Core extends CoreBase {
         if (this.has('osjs/auth')) {
           return this.make('osjs/auth').show(user => {
             this.user = {
-              ...this.user,
-              user
+              ...defaultUserData,
+              ...user
             };
 
             if (this.has('osjs/settings')) {

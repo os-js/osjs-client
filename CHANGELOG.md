@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.43 - 2020-07-10
+
+* Fixed malformed user session data (#125)
+
 ## 3.1.42 - 2020-07-09
 
 * Emit event when VFS action promises has settled (#124)

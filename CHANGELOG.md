@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.44 - 2020-07-14
+
+* Fixed contextmenu on desktop not appearing
+
 ## 3.1.43 - 2020-07-10
 
 * Fixed malformed user session data (#125)

@@ -335,8 +335,8 @@ export default class Desktop extends EventEmitter {
 
   initMouseEvents() {
     // Custom context menu
-    this.core.$root.addEventListener('contextmenu', ev => {
-      if (ev.target === this.core.$root) {
+    this.core.$contents.addEventListener('contextmenu', ev => {
+      if (ev.target === this.core.$contents) {
         this.onContextMenu(ev);
       }
     });

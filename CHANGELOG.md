@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.45 - 2020-07-15
+
+* Updated z-index of window container
+
 ## 3.1.44 - 2020-07-14
 
 * Fixed contextmenu on desktop not appearing

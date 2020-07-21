@@ -134,11 +134,11 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   /**
    * @param {Object} core OS.js Core
-   * @param {Object} [args] Arguments
-   * @param {Function} [args.windowBehavior] Custom Window Behavior
+   * @param {Object} [options] Arguments
+   * @param {Function} [options.windowBehavior] Custom Window Behavior
    */
-  constructor(core, args = {}) {
-    super(core);
+  constructor(core, options = {}) {
+    super(core, options);
 
     this.session = new Session(core);
     this.tray = new Tray(core);

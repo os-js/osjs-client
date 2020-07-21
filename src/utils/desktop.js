@@ -29,6 +29,7 @@
  */
 
 import logger from '../logger';
+import {supportedMedia} from './dom';
 
 const imageDropMimes = [
   'image/png',
@@ -100,3 +101,48 @@ export const createPanelSubtraction = (panel, panels) => {
 export const isVisible = w => w &&
   !w.getState('minimized') &&
   w.getState('focused');
+
+/*
+ * Resolves various resources
+ * TODO: Move all of this (and related) stuff to a Theme class
+ */
+export const resourceResolver = (core) => {
+  const media = supportedMedia();
+
+  const getThemeName = (type) => {
+    const defaultTheme = core.config('desktop.settings.' + type);
+    return core.make('osjs/settings').get('osjs/desktop', type, defaultTheme);
+  };
+
+  const themeResource = path => {
+    const theme = getThemeName('theme');
+
+    return core.url(`themes/${theme}/${path}`); // FIXME: Use metadata ?
+  };
+
+  const getSoundThemeName = () => getThemeName('sounds');
+
+  const soundResource = path => {
+    if (!path.match(/\.([a-z]+)$/)) {
+      const defaultExtension = 'mp3';
+      const checkExtensions = ['oga', 'mp3'];
+      const found = checkExtensions.find(str => media.audio[str] === true);
+      const use = found || defaultExtension;
+
+      path += '.' + use;
+    }
+
+    const theme = getSoundThemeName();
+
+    return theme ? core.url(`sounds/${theme}/${path}`) : null; // FIXME: Use metadata ?
+  };
+
+  const soundsEnabled = () => !!getSoundThemeName();
+
+  const icon = path => {
+    const theme = getThemeName('icons');
+    return core.url(`icons/${theme}/icons/${path}`); // FIXME: Use metadata ?
+  };
+
+  return {themeResource, soundResource, soundsEnabled, icon};
+};

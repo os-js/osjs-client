@@ -38,93 +38,14 @@ import Websocket from '../websocket';
 import Clipboard from '../clipboard';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat, getLocale} from '../utils/locale';
-import {style, script, supportedMedia, playSound} from '../utils/dom';
+import {style, script, playSound} from '../utils/dom';
+import {resourceResolver} from '../utils/desktop';
 import * as dnd from '../utils/dnd';
 import {BasicApplication} from '../basic-application.js';
 import {ServiceProvider} from '@osjs/common';
 import {EventEmitter} from '@osjs/event-emitter';
 import logger from '../logger';
 import merge from 'deepmerge';
-
-
-/*
- * Resolves various resources
- * TODO: Move all of this (and related) stuff to a Theme class
- */
-const resourceResolver = (core) => {
-  const media = supportedMedia();
-
-  const getThemeName = (type) => {
-    const defaultTheme = core.config('desktop.settings.' + type);
-    return core.make('osjs/settings').get('osjs/desktop', type, defaultTheme);
-  };
-
-  const themeResource = path => {
-    const theme = getThemeName('theme');
-
-    return core.url(`themes/${theme}/${path}`); // FIXME: Use metadata ?
-  };
-
-  const getSoundThemeName = () => getThemeName('sounds');
-
-  const soundResource = path => {
-    if (!path.match(/\.([a-z]+)$/)) {
-      const defaultExtension = 'mp3';
-      const checkExtensions = ['oga', 'mp3'];
-      const found = checkExtensions.find(str => media.audio[str] === true);
-      const use = found || defaultExtension;
-
-      path += '.' + use;
-    }
-
-    const theme = getSoundThemeName();
-
-    return theme ? core.url(`sounds/${theme}/${path}`) : null; // FIXME: Use metadata ?
-  };
-
-  const soundsEnabled = () => !!getSoundThemeName();
-
-  const icon = path => {
-    const theme = getThemeName('icons');
-    return core.url(`icons/${theme}/icons/${path}`); // FIXME: Use metadata ?
-  };
-
-  return {themeResource, soundResource, soundsEnabled, icon};
-};
-
-/*
- * Provides localization
- * TODO: Move to a Locale class
- */
-const localeContract = (core, strs) => {
-  const translate = translatable(core)(strs);
-
-  return {
-    format: format(core),
-    translate,
-    translatable: translatable(core),
-    translatableFlat: translatableFlat(core),
-    getLocale: (key = 'language') => {
-      const ref = getLocale(core, key);
-      return ref.userLocale || ref.defaultLocale;
-    },
-    setLocale: name => name in strs
-      ? core.make('osjs/settings')
-        .set('osjs/locale', 'language', name)
-        .save()
-        .then(() => core.emit('osjs/locale:change', name))
-      : Promise.reject(translate('ERR_INVALID_LOCALE', name))
-  };
-};
-
-/*
- * Provides window contract
- */
-const windowContract = core => ({
-  create: (options = {}) => new Window(core, options),
-  list: () => Window.getWindows(),
-  last: () => Window.lastWindow()
-});
 
 /**
  * OS.js Core Service Provider
@@ -201,8 +122,6 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   initBaseProviders() {
-    const strs = merge(translations, this.options.locales || {});
-
     this.core.instance('osjs/window', (options = {}) => new Window(this.core, options));
     this.core.instance('osjs/application', (data = {}) => new Application(this.core, data));
     this.core.instance('osjs/basic-application', (...args) => new BasicApplication(this.core, ...args));
@@ -213,8 +132,8 @@ export default class CoreServiceProvider extends ServiceProvider {
       ? this.tray.create(options)
       : this.tray);
 
-    this.core.singleton('osjs/windows', () => windowContract(this.core));
-    this.core.singleton('osjs/locale', () => localeContract(this.core, strs));
+    this.core.singleton('osjs/windows', () => this._createWindowContract());
+    this.core.singleton('osjs/locale', () => this._createLocaleContract());
     this.core.singleton('osjs/session', () => this.session);
     this.core.singleton('osjs/packages', () => this.pm);
     this.core.singleton('osjs/clipboard', () => this.clipboard);
@@ -322,5 +241,42 @@ export default class CoreServiceProvider extends ServiceProvider {
     Application.getApplications()
       .filter(proc => proc.metadata.name === name)
       .forEach(proc => proc.relaunch());
+  }
+
+  /**
+   * Provides localization
+   * TODO: Move to a Locale class
+   */
+  _createLocaleContract() {
+    const strs = merge(translations, this.options.locales || {});
+    const translate = translatable(this.core)(strs);
+
+    return {
+      format: format(this.core),
+      translate,
+      translatable: translatable(this.core),
+      translatableFlat: translatableFlat(this.core),
+      getLocale: (key = 'language') => {
+        const ref = getLocale(this.core, key);
+        return ref.userLocale || ref.defaultLocale;
+      },
+      setLocale: name => name in strs
+        ? this.core.make('osjs/settings')
+          .set('osjs/locale', 'language', name)
+          .save()
+          .then(() => this.core.emit('osjs/locale:change', name))
+        : Promise.reject(translate('ERR_INVALID_LOCALE', name))
+    };
+  }
+
+  /**
+   * Provides window contract
+   */
+  _createWindowContract() {
+    return {
+      create: (options = {}) => new Window(this.core, options),
+      list: () => Window.getWindows(),
+      last: () => Window.lastWindow()
+    };
   }
 }

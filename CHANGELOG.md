@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.46 - 2020-07-21
+
+* Moved default user data to configuration
+* Moved some desktop function to utils
+
 ## 3.1.45 - 2020-07-15
 
 * Updated z-index of window container

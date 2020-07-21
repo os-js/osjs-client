@@ -33,70 +33,16 @@ import Application from './application';
 import {handleTabOnTextarea} from './utils/dom';
 import {matchKeyCombo} from './utils/input';
 import {DesktopIconView} from './adapters/ui/iconview';
-import {isDroppingImage} from './utils/desktop';
+import {
+  isDroppingImage,
+  applyBackgroundStyles,
+  createPanelSubtraction,
+  isVisible
+} from './utils/desktop';
 import Window from './window';
 import Search from './search';
 import merge from 'deepmerge';
 import logger from './logger';
-
-/*
- * Creates a set of styles based on background settings
- */
-const applyBackgroundStyles = (core, background) => {
-  const {$root} = core;
-
-  const styles = {
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: '50% 50%',
-    backgroundSize: 'auto',
-    backgroundColor: background.color,
-    backgroundImage: 'none'
-  };
-
-  if (background.style === 'cover' || background.style === 'contain') {
-    styles.backgroundSize = background.style;
-  } else if (background.style === 'repeat') {
-    styles.backgroundRepeat = 'repeat';
-  }
-
-  if (background.style !== 'color') {
-    if (background.src === undefined) {
-      styles.backgroundImage = undefined;
-    } else if (typeof background.src === 'string') {
-      styles.backgroundImage = `url(${background.src})`;
-    } else if (background.src) {
-      core.make('osjs/vfs')
-        .url(background.src)
-        .then(src => {
-          setTimeout(() => ($root.style.backgroundImage = `url(${src})`), 1);
-        })
-        .catch(error => logger.warn('Error while setting wallpaper from VFS', error));
-    }
-  }
-
-  Object.keys(styles).forEach(k => ($root.style[k] = styles[k]));
-};
-
-/*
- * Creates a rectangle with the realestate panels takes up
- */
-const createPanelSubtraction = (panel, panels) => {
-  const subtraction = {top: 0, left: 0, right: 0, bottom: 0};
-  const set = p => (subtraction[p.options.position] = p.$element.offsetHeight);
-
-  if (panels.length > 0) {
-    panels.forEach(set);
-  } else {
-    // Backward compability
-    set(panel);
-  }
-
-  return subtraction;
-};
-
-const isVisible = w => w &&
-  !w.getState('minimized') &&
-  w.getState('focused');
 
 /**
  * Desktop Class

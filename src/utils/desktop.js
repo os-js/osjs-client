@@ -28,6 +28,8 @@
  * @licence Simplified BSD License
  */
 
+import logger from '../logger';
+
 const imageDropMimes = [
   'image/png',
   'image/jpe?g',
@@ -39,3 +41,62 @@ export const validVfsDrop = data => data && data.path;
 
 export const isDroppingImage = data => validVfsDrop(data) &&
   imageDropMimes.some(re => !!data.mime.match(re));
+
+/*
+ * Creates a set of styles based on background settings
+ */
+export const applyBackgroundStyles = (core, background) => {
+  const {$root} = core;
+
+  const styles = {
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50% 50%',
+    backgroundSize: 'auto',
+    backgroundColor: background.color,
+    backgroundImage: 'none'
+  };
+
+  if (background.style === 'cover' || background.style === 'contain') {
+    styles.backgroundSize = background.style;
+  } else if (background.style === 'repeat') {
+    styles.backgroundRepeat = 'repeat';
+  }
+
+  if (background.style !== 'color') {
+    if (background.src === undefined) {
+      styles.backgroundImage = undefined;
+    } else if (typeof background.src === 'string') {
+      styles.backgroundImage = `url(${background.src})`;
+    } else if (background.src) {
+      core.make('osjs/vfs')
+        .url(background.src)
+        .then(src => {
+          setTimeout(() => ($root.style.backgroundImage = `url(${src})`), 1);
+        })
+        .catch(error => logger.warn('Error while setting wallpaper from VFS', error));
+    }
+  }
+
+  Object.keys(styles).forEach(k => ($root.style[k] = styles[k]));
+};
+
+/*
+ * Creates a rectangle with the realestate panels takes up
+ */
+export const createPanelSubtraction = (panel, panels) => {
+  const subtraction = {top: 0, left: 0, right: 0, bottom: 0};
+  const set = p => (subtraction[p.options.position] = p.$element.offsetHeight);
+
+  if (panels.length > 0) {
+    panels.forEach(set);
+  } else {
+    // Backward compability
+    set(panel);
+  }
+
+  return subtraction;
+};
+
+export const isVisible = w => w &&
+  !w.getState('minimized') &&
+  w.getState('focused');

@@ -137,6 +137,7 @@ export default class CoreServiceProvider extends ServiceProvider {
    * @param {Object} core OS.js Core
    * @param {Object} [options] Arguments
    * @param {Function} [options.windowBehavior] Custom Window Behavior
+   * @param {Object} [options.locales] Override locales
    */
   constructor(core, options = {}) {
     super(core, options);
@@ -200,7 +201,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   initBaseProviders() {
-    const strs = merge(translations, this.core.options.locales || {});
+    const strs = merge(translations, this.options.locales || {});
 
     this.core.instance('osjs/window', (options = {}) => new Window(this.core, options));
     this.core.instance('osjs/application', (data = {}) => new Application(this.core, data));

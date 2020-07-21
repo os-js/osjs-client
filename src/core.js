@@ -52,7 +52,6 @@ export default class Core extends CoreBase {
    * @param {Element} [options.resourceRoot] The root DOM element for resources
    * @param {String[]} [options.classNames] List of class names to apply to root dom element
    * @param {Function} [options.splash] Custom callback function for creating splash screen
-   * @param {Object} [options.locales] Override locales
    */
   constructor(config = {}, options = {}) {
     options = {

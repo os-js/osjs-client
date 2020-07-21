@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.48 - 2020-07-21
+
+* Moved some provider method abstractions
+
 ## 3.1.47 - 2020-07-21
 
 * Locales now overriable via Core Provider

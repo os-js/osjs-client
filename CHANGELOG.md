@@ -2,6 +2,10 @@
 
 ## 3.1.47 - 2020-07-21
 
+* Locales now overriable via Core Provider
+
+## 3.1.47 - 2020-07-21
+
 * Locales now overriable via Core
 * Fixed windowBehavior option in CoreServiceProvider
 

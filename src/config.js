@@ -138,10 +138,18 @@ export const defaultConfiguration = {
 
   auth: {
     ui: {},
+
     login: {
       username: null,
       password: null
     },
+
+    // NOTE: These are the fallback default values
+    defaultUserData: {
+      id: null,
+      username: 'osjs',
+      groups: []
+    }
   },
 
   settings: {

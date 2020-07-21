@@ -44,6 +44,7 @@ import {BasicApplication} from '../basic-application.js';
 import {ServiceProvider} from '@osjs/common';
 import {EventEmitter} from '@osjs/event-emitter';
 import logger from '../logger';
+import merge from 'deepmerge';
 
 
 /*
@@ -95,8 +96,8 @@ const resourceResolver = (core) => {
  * Provides localization
  * TODO: Move to a Locale class
  */
-const localeContract = core => {
-  const translate = translatable(core)(translations);
+const localeContract = (core, strs) => {
+  const translate = translatable(core)(strs);
 
   return {
     format: format(core),
@@ -107,7 +108,7 @@ const localeContract = core => {
       const ref = getLocale(core, key);
       return ref.userLocale || ref.defaultLocale;
     },
-    setLocale: name => name in translations
+    setLocale: name => name in strs
       ? core.make('osjs/settings')
         .set('osjs/locale', 'language', name)
         .save()
@@ -199,6 +200,8 @@ export default class CoreServiceProvider extends ServiceProvider {
   }
 
   initBaseProviders() {
+    const strs = merge(translations, this.core.options.locales || {});
+
     this.core.instance('osjs/window', (options = {}) => new Window(this.core, options));
     this.core.instance('osjs/application', (data = {}) => new Application(this.core, data));
     this.core.instance('osjs/basic-application', (...args) => new BasicApplication(this.core, ...args));
@@ -210,7 +213,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       : this.tray);
 
     this.core.singleton('osjs/windows', () => windowContract(this.core));
-    this.core.singleton('osjs/locale', () => localeContract(this.core));
+    this.core.singleton('osjs/locale', () => localeContract(this.core, strs));
     this.core.singleton('osjs/session', () => this.session);
     this.core.singleton('osjs/packages', () => this.pm);
     this.core.singleton('osjs/clipboard', () => this.clipboard);

@@ -97,7 +97,7 @@ import logger from './logger';
  * @property {boolean} [maximized=false] If maximized
  * @property {boolean} [mimimized=false] If mimimized
  * @property {boolean} [modal=false] If modal to the parent
- * @property {number} [zIndex=1] The z-index (auto calculated)
+ * @property {number} [zIndex=10] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension
  * @typedef WindowState

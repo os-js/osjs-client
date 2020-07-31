@@ -87,7 +87,7 @@ export const createState = (state, options, attrs) => ({
   focused: false,
   maximized: false,
   minimized: false,
-  zIndex: 1,
+  zIndex: 10,
   styles: {},
   position: {
     left: null,
@@ -153,7 +153,7 @@ export const createDOMStyles = (
   left: String(left) + 'px',
   height: String(height) + 'px',
   width: String(width) + 'px',
-  zIndex: (ontop ? ONTOP_ZINDEX : 0) + zIndex,
+  zIndex: (ontop ? ONTOP_ZINDEX : 10) + zIndex,
   ...styles
 });
 

@@ -895,6 +895,14 @@ export default class Window extends EventEmitter {
     return zIndex < max;
   }
 
+  /*
+   * FIXME: Backward compability with themes
+   */
+  _updateDOM() {
+    this._updateAttributes();
+    this._updateStyles();
+  }
+
   /**
    * Updates the window buttons in DOM
    */

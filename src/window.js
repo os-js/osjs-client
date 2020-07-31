@@ -509,31 +509,27 @@ export default class Window extends EventEmitter {
 
   /**
    * Close the window
+   * @return {Window} This instance
    */
   close() {
-    if (this.destroyed) {
-      return false;
+    if (!this.destroyed) {
+      this.emit('close', this);
+      this.destroy();
     }
 
-    this.emit('close', this);
-
-    this.destroy();
-
-    return true;
+    return this;
   }
 
   /**
    * Focus the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   focus() {
     if (!this.state.minimized && this._toggleState('focused', true, 'focus')) {
       this._focus();
-
-      return true;
     }
 
-    return false;
+    return this;
   }
 
   /**
@@ -551,7 +547,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Blur (un-focus) the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   blur() {
     // Forces blur-ing of browser input element belonging to this window
@@ -560,51 +556,53 @@ export default class Window extends EventEmitter {
       activeElement.blur();
     }
 
-    return this._toggleState('focused', false, 'blur');
+    this._toggleState('focused', false, 'blur');
+
+    return this;
   }
 
   /**
    * Minimize (hide) the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   minimize() {
     if (this.attributes.minimizable) {
       if (this._toggleState('minimized', true, 'minimize')) {
         this.blur();
-
-        return true;
       }
     }
 
-    return false;
+    return this;
   }
 
   /**
    * Raise (un-minimize) the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   raise() {
-    return this._toggleState('minimized', false, 'raise');
+    this._toggleState('minimized', false, 'raise');
+    return this;
   }
 
   /**
    * Maximize the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   maximize() {
     if (this.attributes.maximizable) {
-      return this._maximize(true);
+      this._maximize(true);
     }
 
-    return false;
+    return this;
   }
 
   /**
    * Restore (un-maximize) the window
-   * @return {boolean}
+   * @return {Window} This instance
    */
   restore() {
-    return this._maximize(false);
+    this._maximize(false);
+    return this;
   }
 
   /**
@@ -634,6 +632,7 @@ export default class Window extends EventEmitter {
   /**
    * Resize to fit to current container
    * @param {Element} [container] The DOM element to use
+   * @return {Window} This instance
    */
   resizeFit(container) {
     container = container || this.$content.firstChild;
@@ -648,11 +647,14 @@ export default class Window extends EventEmitter {
         this.setDimension({width, height});
       }
     }
+
+    return this;
   }
 
   /**
    * Clamps the position to viewport
    * @param {boolean} [update=true] Update DOM
+   * @return {Window} This instance
    */
   clampToViewport(update = true) {
     if (!this.core.has('osjs/desktop')) {
@@ -669,21 +671,27 @@ export default class Window extends EventEmitter {
     if (update) {
       this._updateStyles();
     }
+
+    return this;
   }
 
   /**
    * Set the Window icon
    * @param {string} uri Icon URI
+   * @return {Window} This instance
    */
   setIcon(uri) {
     this.state.icon = uri;
 
     this._updateIconStyles();
+
+    return this;
   }
 
   /**
    * Set the Window title
    * @param {string} title Title
+   * @return {Window} This instance
    */
   setTitle(title) {
     this.state.title = title || '';
@@ -691,11 +699,14 @@ export default class Window extends EventEmitter {
     this._updateTitle();
 
     this.core.emit('osjs/window:change', this, 'title', title);
+
+    return this;
   }
 
   /**
    * Set the Window dimension
    * @param {WindowDimension} dimension The dimension
+   * @return {Window} This instance
    */
   setDimension(dimension) {
     const {width, height} = {...this.state.dimension, ...dimension || {}};
@@ -704,12 +715,15 @@ export default class Window extends EventEmitter {
     this.state.dimension.height = height;
 
     this._updateStyles();
+
+    return this;
   }
 
   /**
    * Set the Window position
    * @param {WindowPosition} position The position
    * @param {boolean} [preventDefault=false] Prevents any future position setting in init procedure
+   * @return {Window} This instance
    */
   setPosition(position, preventDefault = false) {
     const {left, top} = {...this.state.position, ...position || {}};
@@ -722,22 +736,28 @@ export default class Window extends EventEmitter {
     }
 
     this._updateStyles();
+
+    return this;
   }
 
   /**
    * Set the Window z index
    * @param {Number} zIndex the index
+   * @return {Window} This instance
    */
   setZindex(zIndex) {
     this.state.zIndex = zIndex;
     logger.debug('Window::setZindex()', zIndex);
 
     this._updateStyles();
+
+    return this;
   }
 
   /**
    * Sets the Window to next z index
    * @param {boolean} [force] Force next index
+   * @return {Window} This instance
    */
   setNextZindex(force) {
     const setNext = force || this._checkNextZindex();
@@ -746,6 +766,8 @@ export default class Window extends EventEmitter {
       this.setZindex(nextZindex);
       nextZindex++;
     }
+
+    return this;
   }
 
   /**
@@ -754,6 +776,7 @@ export default class Window extends EventEmitter {
    * @param {*} value State value
    * @param {boolean} [update=true] Update the DOM
    * @see {WindowState}
+   * @return {Window} This instance
    */
   setState(name, value, update = true) {
     const set = () => this._setState(name, value, update);
@@ -770,11 +793,14 @@ export default class Window extends EventEmitter {
     }
 
     set();
+
+    return this;
   }
 
   /**
    * Gravitates window towards a certain area
    * @param {string} gravity Gravity
+   * @return {Window} This instance
    */
   gravitate(gravity) {
     if (!this.core.has('osjs/desktop')) {
@@ -785,6 +811,8 @@ export default class Window extends EventEmitter {
     const position = positionFromGravity(this, rect, gravity);
 
     this.setPosition(position);
+
+    return this;
   }
 
   /**

@@ -35,6 +35,7 @@ import logger from '../logger';
 const CASCADE_DISTANCE = 10;
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;
+const ONTOP_ZINDEX = 8388635;
 
 /*
  * Creates window attributes from an object
@@ -99,6 +100,61 @@ export const createState = (state, options, attrs) => ({
     ...options.dimension
   },
   ...state
+});
+
+/**
+ * Creates data attributes for window DOM
+ * @param {string} id
+ * @param {WindowState} state
+ * @param {WindowAttributes} attributes
+ * @return {object}
+ */
+export const createDOMAttributes = (id, state, attributes) => ({
+  id: id,
+  media: state.media,
+  moving: state.moving,
+  resizing: state.resizing,
+  loading: state.loading,
+  focused: state.focused,
+  maximized: state.maximized,
+  minimized: state.minimized,
+  modal: attributes.modal,
+  ontop: attributes.ontop,
+  resizable: attributes.resizable,
+  moveable: attributes.moveable,
+  maximizable: attributes.maximizable,
+  minimizable: attributes.minimizable
+});
+
+/**
+ * Creates styles for window DOM
+ * @param {WindowState} state
+ * @param {WindowAttributes} attributes
+ * @return {object}
+ */
+export const createDOMStyles = (
+  {
+    zIndex,
+    styles,
+    position: {
+      top,
+      left
+    },
+    dimension: {
+      width,
+      height
+    }
+  },
+  {
+    ontop
+  }
+) => ({
+  top: String(top) + 'px',
+  left: String(left) + 'px',
+  height: String(height) + 'px',
+  width: String(width) + 'px',
+  zIndex: (ontop ? ONTOP_ZINDEX : 0) + zIndex,
+  ...styles
 });
 
 /*

@@ -33,6 +33,8 @@ import {escapeHtml, createCssText, supportsTransition, getActiveElement} from '.
 import {
   createAttributes,
   createState,
+  createDOMAttributes,
+  createDOMStyles,
   clampPosition,
   renderCallback,
   transformVectors,
@@ -100,8 +102,6 @@ import logger from './logger';
  * @property {WindowDimension} [dimension] Dimension
  * @typedef WindowState
  */
-
-const ONTOP_ZINDEX = 8388635;
 
 let windows = [];
 let windowCount = 0;
@@ -295,6 +295,18 @@ export default class Window extends EventEmitter {
      */
     this._ondestroy = options.ondestroy || (() => true);
 
+    /**
+     * Last DOM update CSS text
+     * @type {string}
+     */
+    this._lastCssText = '';
+
+    /**
+     * Last DOM update data attributes
+     * @type {object}
+     */
+    this._lastAttributes = {};
+
     windows.push(this);
   }
 
@@ -423,33 +435,6 @@ export default class Window extends EventEmitter {
   }
 
   /**
-   * Updates the window buttons
-   */
-  _updateButtons() {
-    const hideButton = action =>
-      this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
-        .style.display = 'none';
-
-    const buttonmap = {
-      maximizable: 'maximize',
-      minimizable: 'minimize',
-      closeable: 'close'
-    };
-
-    if (this.attributes.controls) {
-      Object.keys(buttonmap)
-        .forEach(key => {
-          if (!this.attributes[key]) {
-            hideButton(buttonmap[key]);
-          }
-        });
-    } else {
-      Array.from(this.$header.querySelectorAll('.osjs-window-button'))
-        .forEach(el => el.style.display = 'none');
-    }
-  }
-
-  /**
    * Checks the modal state of the window upon render
    */
   _checkModal() {
@@ -491,7 +476,11 @@ export default class Window extends EventEmitter {
 
     this._setClassNames();
     this._updateButtons();
-    this._updateDOM();
+    this._updateAttributes();
+    this._updateStyles();
+    this._updateTitle();
+    this._updateIconStyles();
+    this._updateHeaderStyles();
     this._checkModal();
 
     if (!this._preventDefaultPosition) {
@@ -678,7 +667,7 @@ export default class Window extends EventEmitter {
     };
 
     if (update) {
-      this._updateDOM();
+      this._updateStyles();
     }
   }
 
@@ -689,7 +678,7 @@ export default class Window extends EventEmitter {
   setIcon(uri) {
     this.state.icon = uri;
 
-    this._updateDOM();
+    this._updateIconStyles();
   }
 
   /**
@@ -699,7 +688,7 @@ export default class Window extends EventEmitter {
   setTitle(title) {
     this.state.title = title || '';
 
-    this._updateDOM();
+    this._updateTitle();
 
     this.core.emit('osjs/window:change', this, 'title', title);
   }
@@ -714,7 +703,7 @@ export default class Window extends EventEmitter {
     this.state.dimension.width = width;
     this.state.dimension.height = height;
 
-    this._updateDOM();
+    this._updateStyles();
   }
 
   /**
@@ -732,7 +721,7 @@ export default class Window extends EventEmitter {
       this._preventDefaultPosition = true;
     }
 
-    this._updateDOM();
+    this._updateStyles();
   }
 
   /**
@@ -743,7 +732,7 @@ export default class Window extends EventEmitter {
     this.state.zIndex = zIndex;
     logger.debug('Window::setZindex()', zIndex);
 
-    this._updateDOM();
+    this._updateStyles();
   }
 
   /**
@@ -846,6 +835,7 @@ export default class Window extends EventEmitter {
    * @param {string} name State name
    * @param {*} value State value
    * @param {boolean} [update=true] Update the DOM
+   * @param {boolean} [updateAll=true] Update the entire DOM
    */
   _setState(name, value, update = true) {
     const oldValue = this.state[name];
@@ -856,7 +846,8 @@ export default class Window extends EventEmitter {
         logger.debug('Window::_setState()', name, value);
       }
 
-      this._updateDOM();
+      this._updateAttributes();
+      this._updateStyles();
     }
   }
 
@@ -879,7 +870,7 @@ export default class Window extends EventEmitter {
     this.core.emit('osjs/window:change', this, name, value);
 
     if (update) {
-      this._updateDOM();
+      this._updateAttributes();
     }
 
     return true;
@@ -905,62 +896,93 @@ export default class Window extends EventEmitter {
   }
 
   /**
-   * Updated the Window DOM
+   * Updates the window buttons in DOM
    */
-  _updateDOM() {
-    if (!this.inited) {
-      return;
-    }
+  _updateButtons() {
+    const hideButton = action =>
+      this.$header.querySelector(`.osjs-window-button[data-action=${action}]`)
+        .style.display = 'none';
 
-    const {$element, $title, $icon, $header, id, state, attributes} = this;
-    const {width, height} = state.dimension;
-    const {top, left} = state.position;
-    const {title, icon, zIndex, styles} = state;
-
-    const attrs = {
-      id: id,
-      media: state.media,
-      moving: state.moving,
-      resizing: state.resizing,
-      loading: state.loading,
-      focused: state.focused,
-      maximized: state.maximized,
-      minimized: state.minimized,
-      modal: attributes.modal,
-      ontop: attributes.ontop,
-      resizable: attributes.resizable,
-      moveable: attributes.moveable,
-      maximizable: attributes.maximizable,
-      minimizable: attributes.minimizable
+    const buttonmap = {
+      maximizable: 'maximize',
+      minimizable: 'minimize',
+      closeable: 'close'
     };
 
-    const cssText = createCssText({
-      top: String(top) + 'px',
-      left: String(left) + 'px',
-      height: String(height) + 'px',
-      width: String(width) + 'px',
-      zIndex: (attrs.ontop ? ONTOP_ZINDEX : 0) + zIndex,
-      ...styles
-    });
-
-    if ($title) {
-      $title.innerHTML = escapeHtml(title);
-    }
-
-    if ($icon) {
-      $icon.style.backgroundImage = `url(${icon})`;
-    }
-
-    if ($header) {
-      $header.style.display = attributes.header ? undefined : 'none';
-    }
-
-    if ($element) {
-      Object.keys(attrs)
-        .forEach(a => $element.setAttribute(`data-${a}`, String(attrs[a])));
-
-      $element.style.cssText = cssText;
+    if (this.attributes.controls) {
+      Object.keys(buttonmap)
+        .forEach(key => {
+          if (!this.attributes[key]) {
+            hideButton(buttonmap[key]);
+          }
+        });
+    } else {
+      Array.from(this.$header.querySelectorAll('.osjs-window-button'))
+        .forEach(el => el.style.display = 'none');
     }
   }
 
+  /**
+   * Updates window title in DOM
+   */
+  _updateTitle() {
+    if (this.$title) {
+      const escapedTitle = escapeHtml(this.state.title);
+      if (this.$title.innerHTML !== escapedTitle) {
+        this.$title.innerHTML = escapedTitle;
+      }
+    }
+  }
+
+  /**
+   * Updates window icon decoration in DOM
+   */
+  _updateIconStyles() {
+    if (this.$icon) {
+      const iconSource = `url(${this.state.icon})`;
+      if (this.$icon.style.backgroundImage !== iconSource) {
+        this.$icon.style.backgroundImage = iconSource;
+      }
+    }
+  }
+
+  /**
+   * Updates window header decoration in DOM
+   */
+  _updateHeaderStyles() {
+    if (this.$header) {
+      const headerDisplay = this.attributes.header ? undefined : 'none';
+      if (this.$header.style.display !== headerDisplay) {
+        this.$header.style.display = headerDisplay;
+      }
+    }
+  }
+
+  /**
+   * Updates window data in DOM
+   */
+  _updateAttributes() {
+    if (this.$element) {
+      const attrs = createDOMAttributes(this.id, this.state, this.attributes);
+      const applyAttrs = Object.keys(attrs).filter(k => attrs[k] !== this._lastAttributes[k]);
+
+      if (applyAttrs.length > 0) {
+        applyAttrs.forEach(a => this.$element.setAttribute(`data-${a}`, String(attrs[a])));
+        this._lastAttributes = attrs;
+      }
+    }
+  }
+
+  /**
+   * Updates window style in DOM
+   */
+  _updateStyles() {
+    if (this.$element) {
+      const cssText = createCssText(createDOMStyles(this.state, this.attributes));
+      if (cssText !== this._lastCssText) {
+        this.$element.style.cssText = cssText;
+        this._lastCssText = cssText;
+      }
+    }
+  }
 }

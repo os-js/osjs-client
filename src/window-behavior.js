@@ -255,7 +255,7 @@ export default class WindowBehavior {
       }
 
       if (this.lastAction) {
-        win._setState(this.lastAction === 'move' ? 'moving' : 'resizing', true); // NOTE: This also updates DOM!
+        win._setState(this.lastAction === 'move' ? 'moving' : 'resizing', true);
 
         if (!attributeSet) {
           this.core.$root.setAttribute('data-window-action', String(true));

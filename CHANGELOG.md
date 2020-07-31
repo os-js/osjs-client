@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.50 - 2020-07-31
+
+* Updated minimum z-index for windows
+* Improve performance in DOM updates for windows (#127)
+
 ## 3.1.48 - 2020-07-21
 
 * Moved some provider method abstractions

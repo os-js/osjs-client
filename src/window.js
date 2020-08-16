@@ -492,12 +492,13 @@ export default class Window extends EventEmitter {
       this.clampToViewport(false);
     }
 
+    this.setNextZindex(true);
+
     this.core.$contents.appendChild(this.$element);
 
     renderCallback(this, callback);
 
     this.rendered = true;
-    this.setNextZindex(true);
 
     setTimeout(() => {
       this.emit('render', this);

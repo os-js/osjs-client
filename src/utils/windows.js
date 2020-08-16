@@ -36,6 +36,7 @@ const CASCADE_DISTANCE = 10;
 const MINIMUM_WIDTH = 100;
 const MINIMUM_HEIGHT = 100;
 const ONTOP_ZINDEX = 8388635;
+const BOTTOM_ZINDEX = 10;
 
 /*
  * Creates window attributes from an object
@@ -87,7 +88,7 @@ export const createState = (state, options, attrs) => ({
   focused: false,
   maximized: false,
   minimized: false,
-  zIndex: 10,
+  zIndex: 1,
   styles: {},
   position: {
     left: null,
@@ -153,7 +154,7 @@ export const createDOMStyles = (
   left: String(left) + 'px',
   height: String(height) + 'px',
   width: String(width) + 'px',
-  zIndex: (ontop ? ONTOP_ZINDEX : 10) + zIndex,
+  zIndex: BOTTOM_ZINDEX + (ontop ? ONTOP_ZINDEX : 0) + zIndex,
   ...styles
 });
 

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.52 - 2020-08-16
+
+* Move up z-index setter in window rendering
+
 ## 3.1.51 - 2020-08-16
 
 * Fixed wrong z-index calulation

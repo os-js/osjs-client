@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.51 - 2020-08-16
+
+* Fixed wrong z-index calulation
+
 ## 3.1.50 - 2020-07-31
 
 * Updated minimum z-index for windows

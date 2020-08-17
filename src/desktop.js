@@ -363,10 +363,12 @@ export default class Desktop extends EventEmitter {
     const isMobile = !mobile ? false : this.core.$root.offsetWidth <= mobile;
     this.core.$root.setAttribute('data-mobile', isMobile);
 
-    this.core.$contents.style.top = `${this.subtract.top}px`;
-    this.core.$contents.style.left = `${this.subtract.left}px`;
-    this.core.$contents.style.right = `${this.subtract.right}px`;
-    this.core.$contents.style.bottom = `${this.subtract.bottom}px`;
+    if (this.core.$contents) {
+      this.core.$contents.style.top = `${this.subtract.top}px`;
+      this.core.$contents.style.left = `${this.subtract.left}px`;
+      this.core.$contents.style.right = `${this.subtract.right}px`;
+      this.core.$contents.style.bottom = `${this.subtract.bottom}px`;
+    }
   }
 
   addContextMenu(entries) {

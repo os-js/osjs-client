@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.53 - 2020-08-17
+
+* Added client side directory VFS watch (#57)
+
 ## 3.1.52 - 2020-08-16
 
 * Move up z-index setter in window rendering

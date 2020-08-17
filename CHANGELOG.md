@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.54 - 2020-08-17
+
+* Prevent some errors after shutdown
+
 ## 3.1.53 - 2020-08-17
 
 * Added client side directory VFS watch (#57)

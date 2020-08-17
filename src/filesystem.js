@@ -30,7 +30,7 @@
 
 import * as VFS from './vfs';
 import {EventEmitter} from '@osjs/event-emitter';
-import {parseMontpointPrefix, filterMountByGroups} from './utils/vfs';
+import {parseMontpointPrefix, filterMountByGroups, createWatchEvents} from './utils/vfs';
 import defaultAdapter from './adapters/vfs/null';
 import systemAdapter from './adapters/vfs/system';
 import appsAdapter from './adapters/vfs/apps';
@@ -233,7 +233,14 @@ export default class Filesystem extends EventEmitter {
   _request(method, ...args) {
     const ev = `osjs/vfs:${method}`;
 
-    const done = () => this.core.emit(`${ev}:done`, ...args);
+    const done = (error) => {
+      this.core.emit(`${ev}:done`, ...args);
+
+      if (!error && this.core.config('vfs.watch')) {
+        const eva = createWatchEvents(method, args);
+        eva.forEach(([e, a]) => this.core.emit(e, a));
+      }
+    };
 
     this.core.emit(ev, ...args);
 
@@ -243,7 +250,7 @@ export default class Filesystem extends EventEmitter {
         return result;
       })
       .catch(error => {
-        done();
+        done(error);
         throw error;
       });
   }

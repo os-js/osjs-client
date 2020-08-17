@@ -232,6 +232,8 @@ describe('utils.vfs#basename', () => {
 describe('utils.vfs#pathname', () => {
   test('Should resolve', () => {
     expect(vfs.pathname('home:/foo/bar')).toBe('home:/foo');
+    expect(vfs.pathname('home:/foo')).toBe('home:/');
+    expect(vfs.pathname('home:/')).toBe('home:/');
   });
 });
 

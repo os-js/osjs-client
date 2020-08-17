@@ -236,7 +236,7 @@ export const defaultConfiguration = {
   },
 
   vfs: {
-    watch: false,
+    watch: true,
     defaultPath: 'home:/',
     defaultAdapter: 'system',
     adapters: {},

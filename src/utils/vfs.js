@@ -310,7 +310,12 @@ export const basename = path => path.split('/').reverse()[0];
  */
 export const pathname = path => {
   const split = path.split('/');
-  split.splice(split.length - 1, 1);
+  if (split.length === 2) {
+    split[1] = '';
+  } else {
+    split.splice(split.length - 1, 1);
+  }
+
   return split.join('/');
 };
 
@@ -341,3 +346,39 @@ export const filterMountByGroups = userGroups => (mountGroups, strict = true) =>
     ? mountGroups[strict ? 'every' : 'some'](g => userGroups.indexOf(g) !== -1)
     : true;
 
+
+/**
+ * Creates a list of VFS events to simulate server-side
+ * file watching
+ * @return {object[]}
+ */
+export const createWatchEvents = (method, args) => {
+  const events = [];
+  const options = args[args.length - 1] || {};
+
+  const movement = ['move', 'rename', 'copy'].indexOf(method) !== -1;
+  const invalid = ['readdir', 'download', 'url', 'exists', 'readfile', 'search', 'stat'].indexOf(method) !== -1;
+  const path = i => typeof i === 'string' ? i : i.path;
+
+  if (!invalid) {
+    const obj = {
+      method,
+      source: path(args[0]),
+      pid: options.pid
+    };
+
+    events.push(['osjs/vfs:directoryChanged', {
+      ...obj,
+      path: pathname(path(args[0])),
+    }]);
+
+    if (movement) {
+      events.push(['osjs/vfs:directoryChanged', {
+        ...obj,
+        path: pathname(path(args[1]))
+      }]);
+    }
+  }
+
+  return events;
+};

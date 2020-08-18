@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.58 - 2020-08-19
+
+* Enable desktop icons by default (#51)
+
 ## 3.1.57 - 2020-08-19
 
 * Supress failed desktop icons file lookups

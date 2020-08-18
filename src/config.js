@@ -158,7 +158,9 @@ export const defaultConfiguration = {
     defaults: {
       'osjs/default-application': {},
       'osjs/session': [],
-      'osjs/desktop': {},
+      'osjs/desktop': {
+        __revision__: 0
+      },
       'osjs/locale': {}
     }
   },

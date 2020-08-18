@@ -107,9 +107,10 @@ export default class Settings {
 
   /**
    * Loads settings
+   * @param {boolean} [migrate] Run migrations
    * @return {Promise<boolean,  Error>}
    */
-  load() {
+  load(migrate) {
     const defaults = this.core.config('settings.defaults', {});
 
     return this.adapter.load()
@@ -118,6 +119,9 @@ export default class Settings {
           arrayMerge: (dest, source) => source
         });
 
+        return migrate ? this.migrate() : Promise.resolve();
+      })
+      .then(() => {
         this.core.emit('osjs/settings:load');
 
         return true;
@@ -127,6 +131,38 @@ export default class Settings {
 
         return false;
       });
+  }
+
+  /**
+   * Runs migrations for settings
+   */
+  migrate() {
+    const defaults = this.core.config('settings.defaults', {});
+
+    const revisionsChanged = Object.keys(defaults)
+      .filter(key => {
+        const currentRevision = defaults[key].__revision__;
+        const userRevision = this.settings[key]
+          ? this.settings[key].__revision__
+          : undefined;
+
+        if (typeof currentRevision === 'undefined') {
+          return false;
+        }
+
+        return userRevision < currentRevision;
+      });
+
+    if (revisionsChanged.length > 0) {
+      revisionsChanged.forEach(key => {
+        this.settings[key] = merge(defaults[key], {});
+      });
+
+      return this.save()
+        .catch(err => console.warn('Settings#migrate', 'failed to save after migration', err));
+    }
+
+    return Promise.resolve();
   }
 
   /**

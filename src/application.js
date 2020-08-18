@@ -52,7 +52,7 @@ export default class Application extends EventEmitter {
    *
    * @param {Core} core Core reference
    * @param {object} data Application data
-   * @param {Map<string, *>} data.args Launch arguments
+   * @param {{foo: *}} data.args Launch arguments
    * @param {object} [data.options] Options
    * @param {object} [data.options.settings] Initial settings
    * @param {object} [data.options.restore] Restore data
@@ -94,7 +94,7 @@ export default class Application extends EventEmitter {
 
     /**
      * Application arguments
-     * @type {Map<string, *>}
+     * @type {{foo: *}}
      */
     this.args = data.args;
 
@@ -233,7 +233,7 @@ export default class Application extends EventEmitter {
    * @param {string} [path=/] Append this to endpoint
    * @param {Options} [options] fetch options
    * @param {string} [type='json'] Request / Response type
-   * @return {Promise<*, Error>} ArrayBuffer or JSON
+   * @return {Promise<*>} ArrayBuffer or JSON
    */
   request(path = '/', options = {}, type = 'json') {
     const uri = this.resource(path);
@@ -404,7 +404,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Saves settings
-   * @return {Promise<Boolean, Error>}
+   * @return {Promise<boolean>}
    */
   saveSettings() {
     const service = this.core.make('osjs/settings');

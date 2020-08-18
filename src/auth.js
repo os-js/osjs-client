@@ -114,7 +114,7 @@ export default class Auth {
 
   /**
    * Shows Login UI
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   show(cb) {
     const login = this.core.config('auth.login', {});

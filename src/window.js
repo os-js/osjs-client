@@ -82,7 +82,7 @@ import logger from './logger';
  * @property {boolean} [droppable=true] If window should have the default drop action
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
- * @property {Map<string,string>} [mediaQueries] A map of matchMedia to name
+ * @property {{name: string}} [mediaQueries] A map of matchMedia to name
  * @typedef WindowAttributes
  */
 

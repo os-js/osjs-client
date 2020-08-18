@@ -122,7 +122,7 @@ export default class Core extends CoreBase {
 
   /**
    * Boots up OS.js
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   boot() {
     const done = e => {
@@ -175,7 +175,7 @@ export default class Core extends CoreBase {
 
   /**
    * Starts all core services
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   start() {
     const connect = () => new Promise((resolve, reject) => {
@@ -555,7 +555,7 @@ export default class Core extends CoreBase {
 
   /**
    * Gets the current user
-   * @return {Map<string,*>} User object
+   * @return {{key: *}} User object
    */
   getUser() {
     return {...this.user};

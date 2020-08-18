@@ -36,7 +36,7 @@ const supportsNativeNotification = 'Notification' in window;
  * Creates a new CSS DOM element
  * @param {Element} root Root node
  * @param {string} src Source
- * @return {Promise<ScriptElement, Error>}
+ * @return {Promise<ScriptElement>}
  */
 export const style = (root, src) => new Promise((resolve, reject) => {
   const el = document.createElement('link');
@@ -55,7 +55,7 @@ export const style = (root, src) => new Promise((resolve, reject) => {
  * Creates a new Script DOM element
  * @param {Element} root Root node
  * @param {string} src Source
- * @return {Promise<StyleElement>, Error>}
+ * @return {Promise<StyleElement>}
  */
 export const script = (root, src) => new Promise((resolve, reject) => {
   const el = document.createElement('script');

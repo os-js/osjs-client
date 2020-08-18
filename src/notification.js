@@ -116,7 +116,7 @@ export default class Notification {
 
   /**
    * Render notification
-   * @return {<Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   render() {
     const onclick = () => this.destroy();

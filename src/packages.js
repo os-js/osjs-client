@@ -50,8 +50,8 @@ import logger from './logger';
  * @property {string} [server] Server script filename
  * @property {string[]} [groups] Only available for users in this group
  * @property {string[]} [files] Files to preload
- * @property {Map<String, String>} title A map of locales and titles
- * @property {Map<String, String>} description A map of locales and titles
+ * @property {{key: string}} title A map of locales and titles
+ * @property {{key: string}} description A map of locales and titles
  * @typedef PackageMetadata
  */
 
@@ -118,7 +118,7 @@ export default class Packages {
 
   /**
    * Initializes package manager
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   init() {
     logger.debug('Packages::init()');
@@ -151,7 +151,7 @@ export default class Packages {
    * @param {boolean} [options.forcePreload=false] Force preload reloading
    * @see PackageServiceProvider
    * @throws {Error}
-   * @return {Promise<Application, Error>}
+   * @return {Promise<Application>}
    */
   launch(name, args = {}, options = {}) {
     logger.debug('Packages::launch()', name, args, options);
@@ -174,7 +174,7 @@ export default class Packages {
    *
    * @param {string} name Application package name
    * @param {Metadata} metadata Application metadata
-   * @param {Map<string, *>} args Launch arguments
+   * @param {{foo: *}} args Launch arguments
    * @param {object} options Launch options
    */
   _launchApplication(name, metadata, args, options) {
@@ -220,7 +220,7 @@ export default class Packages {
    * @param {string} name Package name
    * @param {Metadata} metadata Application metadata
    * @throws {Error}
-   * @return {Promise<object, Error>}
+   * @return {Promise<object>}
    */
   _launchTheme(name, metadata) {
     const preloads = (metadata.files || [])

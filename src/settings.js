@@ -68,7 +68,7 @@ export default class Settings {
 
     /**
      * The settings tree
-     * @type {Map<string, any>}
+     * @type {{name: *}}
      */
     this.settings = {};
 
@@ -81,7 +81,7 @@ export default class Settings {
 
   /**
    * Saves settings
-   * @return {Promise<boolean,  Error>}
+   * @return {Promise<boolean>}
    */
   save() {
     return new Promise((resolve, reject) => {
@@ -107,7 +107,7 @@ export default class Settings {
 
   /**
    * Loads settings
-   * @return {Promise<boolean,  Error>}
+   * @return {Promise<boolean>}
    */
   load() {
     const defaults = this.core.config('settings.defaults', {});
@@ -157,7 +157,7 @@ export default class Settings {
    * @desc Sets a setting, but does not save.
    * @param {string} ns The namespace
    * @param {string} [key] The key to set
-   * @param {*} value The value to set
+   * @param {*} [value] The value to set
    * @return {Settings} This
    */
   set(ns, key, value) {
@@ -188,7 +188,7 @@ export default class Settings {
   /**
    * Clears a namespace by root key
    * @param {string} ns The namespace
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   clear(ns) {
     return this.adapter.clear(ns)

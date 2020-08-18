@@ -63,7 +63,7 @@ export default class Filesystem extends EventEmitter {
    *
    * @param {Core} core Core reference
    * @param {object} [options] Options
-   * @param {Map<string,Adapter>} [options.adapters] Adapter registry
+   * @param {{name: Adapter}} [options.adapters] Adapter registry
    * @param {Mountpoint[]} [options.mounts] Mountpoints
    */
   constructor(core, options = {}) {
@@ -83,7 +83,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * Adapter registry
-     * @type {Map<string, Adapter>}
+     * @type {{name: Adapter}}
      */
     this.adapters = {
       system: systemAdapter,
@@ -106,7 +106,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * A wrapper for VFS method requests
-     * @type {Map<string, Function>}
+     * @type {{key: Function}}
      */
     this.proxy = Object.keys(VFS).reduce((result, method) => {
       return {
@@ -172,7 +172,7 @@ export default class Filesystem extends EventEmitter {
    *
    * @param {Mountpoint} mountpoint The mountpoint
    * @param {boolean} [unmount=false] If action is unmounting
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   _mountpointAction(mountpoint, unmount = false) {
     const eventName = unmount ? 'unmounted' : 'mounted';
@@ -196,7 +196,7 @@ export default class Filesystem extends EventEmitter {
    *
    * @param {string} name Mountpoint name
    * @param {boolean} [unmount=false] If action is unmounting
-   * @return {Promise<boolean, Error>}
+   * @return {Promise<boolean>}
    */
   _mountAction(name, unmount) {
     return Promise.resolve(this.mounts.find(m => m.name === name))
@@ -218,7 +218,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets the proxy for VFS methods
-   * @return {Map<String, Function>} A map of VFS functions
+   * @return {{key: Function}} A map of VFS functions
    */
   request() {
     return this.proxy;

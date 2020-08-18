@@ -32,8 +32,8 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.8",
-    "@osjs/event-emitter": "^1.0.8",
+    "@osjs/common": "^3.0.9",
+    "@osjs/event-emitter": "^1.0.9",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
     "deepmerge": "^4.2.2",
@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^1.1.1"
+    "@osjs/dev-meta": "^1.1.2"
   },
   "eslintConfig": {
     "env": {
@@ -99,7 +99,9 @@
       },
       {
         "name": "esdoc-ecmascript-proposal-plugin",
-        "option": {"all": true}
+        "option": {
+          "all": true
+        }
       }
     ]
   },

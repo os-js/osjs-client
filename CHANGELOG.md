@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.57 - 2020-08-19
+
+* Supress failed desktop icons file lookups
+
 ## 3.1.56 - 2020-08-19
 
 * Workaround for integer cast in window vector calculation (#87)

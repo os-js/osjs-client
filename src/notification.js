@@ -45,9 +45,7 @@ import logger from './logger';
  */
 
 /**
- * Notification
- *
- * @desc Class that creates a notification
+ * Notification Implementation
  */
 export default class Notification {
 

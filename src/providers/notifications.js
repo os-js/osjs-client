@@ -33,8 +33,6 @@ import {ServiceProvider} from '@osjs/common';
 
 /**
  * OS.js Notification Service Provider
- *
- * @desc Provides methods to create notifications
  */
 export default class NotificationServiceProvider extends ServiceProvider {
 

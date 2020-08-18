@@ -49,8 +49,6 @@ import merge from 'deepmerge';
 
 /**
  * OS.js Core Service Provider
- *
- * @desc Provides base services
  */
 export default class CoreServiceProvider extends ServiceProvider {
 

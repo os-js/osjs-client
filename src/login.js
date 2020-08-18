@@ -40,8 +40,6 @@ import createUI from './adapters/ui/login';
 
 /**
  * OS.js Login UI
- *
- * @desc Handles the Login UI and its events
  */
 export default class Login extends EventEmitter {
 

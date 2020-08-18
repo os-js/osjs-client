@@ -35,7 +35,7 @@ import {basename, pathname} from './utils/vfs';
 /**
  * Basic Application Helper
  *
- * @desc A class for helping creating basic applications with open/load/create functionality.
+ * A class for helping creating basic applications with open/load/create functionality.
  * Also sets the internal proc args for sessions.
  */
 export class BasicApplication extends EventEmitter {
@@ -155,7 +155,9 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Opens given file
-   * @desc Does not do any actual VFS operation
+   *
+   * Does not do any actual VFS operation
+   *
    * @param {object} file A file object
    */
   open(item) {
@@ -164,7 +166,9 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Saves given file
-   * @desc Does not do any actual VFS operation
+   *
+   * Does not do any actual VFS operation
+   *
    * @param {object} file A file object
    */
   save(item) {
@@ -173,7 +177,8 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Create new file
-   * @desc Does not do any actual VFS operation
+   *
+   * Does not do any actual VFS operation
    */
   create() {
     this.proc.args.file = null;

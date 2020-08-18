@@ -144,9 +144,8 @@ export default class Settings {
   }
 
   /**
-   * Gets a settings entry by key
+   * Gets a settings entry by key (cached)
    *
-   * @desc Gets a setting (from cache)
    * @param {string} [ns] The namespace
    * @param {string} [key] The key to get the value from
    * @param {*} [defaultValue] If result is undefined, return this instead
@@ -167,8 +166,8 @@ export default class Settings {
   }
 
   /**
-   * Sets a settings entry by root key.
-   * @desc Sets a setting, but does not save.
+   * Sets a settings entry by root key (but does not save).
+   *
    * @param {string} ns The namespace
    * @param {string} [key] The key to set
    * @param {*} [value] The value to set

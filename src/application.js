@@ -51,9 +51,7 @@ const getSettingsKey = metadata =>
  */
 
 /**
- * Application
- *
- * @desc Base class for an Application
+ * Base class for an Application
  */
 export default class Application extends EventEmitter {
 
@@ -223,7 +221,7 @@ export default class Application extends EventEmitter {
   /**
    * Gets a URI to a resource for this application
    *
-   * @desc If given path is an URI it will just return itself.
+   * If given path is an URI it will just return itself.
    *
    * @param {string} path The path
    * @param {object} [options] Options for url() in core
@@ -269,7 +267,8 @@ export default class Application extends EventEmitter {
 
   /**
    * Sends a message over websocket via the core connection.
-   * @desc This does not create a new connection, but rather uses the core connection.
+   *
+   * This does not create a new connection, but rather uses the core connection.
    * For subscribing to messages from the server use the 'ws:message' event
    */
   send(...args) {

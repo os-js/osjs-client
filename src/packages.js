@@ -60,7 +60,7 @@ import logger from './logger';
 /**
  * Package Manager
  *
- * @desc Handles indexing, loading and launching of OS.js packages
+ * Handles indexing, loading and launching of OS.js packages
  */
 export default class Packages {
 
@@ -90,7 +90,9 @@ export default class Packages {
 
     /**
      * A list of running application names
-     * @desc Mainly used for singleton awareness
+     *
+     * Mainly used for singleton awareness
+     *
      * @type {string[]}
      */
     this._running = [];

@@ -33,8 +33,6 @@ import Settings from '../settings';
 
 /**
  * OS.js Settings Service Provider
- *
- * @desc Provides services for settings
  */
 export default class SettingsServiceProvider extends ServiceProvider {
 

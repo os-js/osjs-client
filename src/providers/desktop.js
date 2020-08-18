@@ -33,8 +33,6 @@ import Desktop from '../desktop';
 
 /**
  * OS.js Desktop Service Provider
- *
- * @desc Provides desktop features
  */
 export default class DesktopServiceProvider extends ServiceProvider {
 

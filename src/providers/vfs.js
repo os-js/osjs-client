@@ -34,8 +34,6 @@ import * as utils from '../utils/vfs';
 
 /**
  * OS.js Virtual Filesystem Service Provider
- *
- * @desc Provides methods to interact with filesystems
  */
 export default class VFSServiceProvider extends ServiceProvider {
   constructor(core, args = {}) {

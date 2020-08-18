@@ -48,9 +48,7 @@ import logger from './logger';
  */
 
 /**
- * Core
- *
- * @desc Main class for OS.js service providers and bootstrapping.
+ * Main Core class for OS.js service providers and bootstrapping.
  */
 export default class Core extends CoreBase {
 
@@ -365,7 +363,7 @@ export default class Core extends CoreBase {
   /**
    * Creates an URL based on configured public path
    *
-   * @desc If you give a options.type, the URL will be resolved
+   * If you give a options.type, the URL will be resolved
    * to the correct resource.
    *
    * @param {string} [endpoint=/] Endpoint
@@ -383,8 +381,9 @@ export default class Core extends CoreBase {
   /**
    * Make a HTTP request
    *
-   * @desc This is a wrapper for making a 'fetch' request with some helpers
+   * This is a wrapper for making a 'fetch' request with some helpers
    * and integration with OS.js
+   *
    * @param {string} url The endpoint
    * @param {Options} [options] fetch options
    * @param {string} [type] Request / Response type

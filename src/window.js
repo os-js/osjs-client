@@ -60,12 +60,6 @@ import logger from './logger';
 /**
  * Window attributes definition
  *
- * @desc Contains attributes for a window.
- * Media queries will add a given name as a `data-media` attribute to the window
- * root DOM element.
- *
- * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Testing_media_queries
- *
  * @typedef {Object} WindowAttributes
  * @property {string[]} [classNames=[]] A list of class names
  * @property {boolean} [ontop=false] If always on top
@@ -157,9 +151,7 @@ const TEMPLATE = `<div class="osjs-window-inner">
 </div>`.replace(/\n\s+/g, '').trim();
 
 /**
- * Window
- *
- * @desc Class for a OS.js Window
+ * Window Implementation
  */
 export default class Window extends EventEmitter {
 

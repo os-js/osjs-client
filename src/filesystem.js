@@ -61,9 +61,7 @@ import merge from 'deepmerge';
  */
 
 /**
- * Filesystem Manager
- *
- * @desc Class that manages filesystems
+ * Filesystem Class that manages filesystems and adapters
  */
 export default class Filesystem extends EventEmitter {
 

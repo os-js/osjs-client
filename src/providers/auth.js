@@ -34,7 +34,7 @@ import Auth from '../auth';
 /**
  * OS.js Auth Service Provider
  *
- * @desc Creates the login prompt and handles authentication flow
+ * Creates the login prompt and handles authentication flow
  */
 export default class AuthServiceProvider extends ServiceProvider {
 

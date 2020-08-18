@@ -53,8 +53,6 @@ import logger from './logger';
 
 /**
  * Desktop Class
- *
- * @desc Handles the Desktop
  */
 export default class Desktop extends EventEmitter {
 
@@ -702,7 +700,8 @@ export default class Desktop extends EventEmitter {
   /**
    * Gets the rectangle of available space
    *
-   * @desc This is based on any panels etc taking up space
+   * This is based on any panels etc taking up space
+   *
    * @return {object}
    */
   getRect() {

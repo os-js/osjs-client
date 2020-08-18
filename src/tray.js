@@ -41,8 +41,6 @@ import defaultIcon from './styles/logo-blue-32x32.png';
 
 /**
  * Tray Handler
- *
- * @desc Handles OS.js Tray Icons
  */
 export default class Tray {
 

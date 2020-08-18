@@ -47,7 +47,7 @@ const actionMap = {
 /**
  * Default Window Behavior
  *
- * @desc Controls certain events and their interaction with a window
+ * Controls certain events and their interaction with a window
  */
 export default class WindowBehavior {
   /**

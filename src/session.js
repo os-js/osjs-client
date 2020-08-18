@@ -33,8 +33,6 @@ import logger from './logger';
 
 /**
  * Session Handler
- *
- * @desc Handles Sessions
  */
 export default class Session {
 

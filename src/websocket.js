@@ -44,9 +44,8 @@ const eventNames = ['open', 'close', 'message', 'error'];
 /**
  * Application Socket
  *
- * @desc This is just an abstraction above the standard browser provided `WebSocket` class.
+ * This is just an abstraction above the standard browser provided `WebSocket` class.
  * Since this class implements the EventHandler, use the `.on('event')` pattern instead of `.onevent`.
- *
  */
 export default class Websocket extends EventEmitter {
 

@@ -32,7 +32,7 @@ import Notification from './notification';
 import {createCssText} from './utils/dom';
 
 /**
- * Handles Notifications
+ * Notification Factory
  */
 export default class Notifications {
 

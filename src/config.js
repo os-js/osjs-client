@@ -207,7 +207,7 @@ export const defaultConfiguration = {
         style: 'cover'
       },
       iconview: {
-        enabled: false,
+        enabled: true,
         path: 'home:/.desktop',
         fontColorStyle: 'system',
         fontColor: '#ffffff'

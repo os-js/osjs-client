@@ -45,6 +45,13 @@ import merge from 'deepmerge';
 import logger from './logger';
 
 /**
+ * Desktop Options
+ *
+ * @typedef {Object} DeskopOptions
+ * @property {object[]} [contextmenu={}] Default Context menu items
+ */
+
+/**
  * Desktop Class
  *
  * @desc Handles the Desktop
@@ -55,8 +62,9 @@ export default class Desktop extends EventEmitter {
    * Create Desktop
    *
    * @param {Core} core Core reference
+   * @param {DesktopOptions} [options={}] Options
    */
-  constructor(core, options) {
+  constructor(core, options = {}) {
     super('Desktop');
 
     this.core = core;

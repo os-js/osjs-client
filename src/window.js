@@ -104,6 +104,22 @@ import logger from './logger';
  * @property {WindowDimension} [dimension] Dimension
  */
 
+/**
+ * Window options definition
+ *
+ * @typedef {Object} WindowOptions
+ * @property {string} id Window Id (not globaly unique)
+ * @property {string} [title] Window Title
+ * @property {string} [icon] Window Icon
+ * @property {Window} [parent] The parent Window reference
+ * @property {string|Function} [template] The Window HTML template (or function with signature (el, win) for programatic construction)
+ * @property {Function} [ondestroy] A callback function when window destructs to interrupt the procedure
+ * @property {WindowPosition|string} [position] Window position
+ * @property {WindowDimension} [dimension] Window dimension
+ * @property {WindowAttributes} [attributes] Apply Window attributes
+ * @property {WindowState} [state] Apply Window state
+ */
+
 let windows = [];
 let windowCount = 0;
 let nextZindex = 1;
@@ -151,17 +167,7 @@ export default class Window extends EventEmitter {
    * Create window
    *
    * @param {Core} core Core reference
-   * @param {object} options Options
-   * @param {string} options.id Window Id (not globaly unique)
-   * @param {string} [options.title] Window Title
-   * @param {string} [options.icon] Window Icon
-   * @param {Window} [options.parent] The parent Window reference
-   * @param {string|Function} [options.template] The Window HTML template (or function with signature (el, win) for programatic construction)
-   * @param {Function} [options.ondestroy] A callback function when window destructs to interrupt the procedure
-   * @param {WindowPosition|string} [options.position] Window position
-   * @param {WindowDimension} [options.dimension] Window dimension
-   * @param {WindowAttributes} [options.attributes] Apply Window attributes
-   * @param {WindowState} [options.state] Apply Window state
+   * @param {WindowOptions} [options={}] Options
    */
   constructor(core, options = {}) {
     options = {

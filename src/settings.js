@@ -40,16 +40,30 @@ const defaultAdapters = {
 };
 
 /**
+ * Settings Options
+ *
+ * @typedef {Object} SettingsOptions
+ * @property {Function|Object} [adapter] Adapter to use
+ * @property {Object} [config] Adapter configuration
+ */
+
+/**
  * OS.js Settings Manager
  */
 export default class Settings {
 
-  constructor(core, args) {
+  /**
+   * Create application
+   *
+   * @param {Core} core Core reference
+   * @param {SettingsOptions} options Options
+   */
+  constructor(core, options) {
     const adapter = core.config('standalone')
       ? localStorageSettings
-      : typeof args.adapter === 'function'
-        ? args.adapter
-        : defaultAdapters[args.adapter || 'localStorage'];
+      : typeof options.adapter === 'function'
+        ? options.adapter
+        : defaultAdapters[options.adapter || 'localStorage'];
 
     this.adapter = {
       load: () => Promise.reject(new Error('Not implemented')),
@@ -57,7 +71,7 @@ export default class Settings {
       init: () => Promise.resolve(true),
       clear: () => Promise.resolve(true),
       destroy: () => {},
-      ...adapter(core, args.config)
+      ...adapter(core, options.config)
     };
 
     /**

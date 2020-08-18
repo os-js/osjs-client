@@ -30,6 +30,13 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import createUI from './adapters/ui/login';
 
+/**
+ * Login Options
+ *
+ * @typedef {Object} LoginOptions
+ * @property {string} [title] Title
+ * @property {object[]} [fields] Fields
+ */
 
 /**
  * OS.js Login UI
@@ -42,9 +49,7 @@ export default class Login extends EventEmitter {
    * Create authentication handler
    *
    * @param {Core} core Core reference
-   * @param {object} [options] Options
-   * @param {string} [options.title] Title
-   * @param {object[]} [options.fields] Fields
+   * @param {LoginOptions} [options] Options
    */
   constructor(core, options) {
     super('Login');

@@ -41,6 +41,16 @@ const getSettingsKey = metadata =>
   'osjs/application/' + metadata.name;
 
 /**
+ * Application Options
+ *
+ * @typedef {Object} ApplicationOptions
+ * @property {object} [settings] Initial settings
+ * @property {object} [restore] Restore data
+ * @property {boolean} [windowAutoFocus=true] Auto-focus first created window
+ * @property {boolean} [sessionable=true] Allow session storage
+ */
+
+/**
  * Application
  *
  * @desc Base class for an Application
@@ -53,11 +63,7 @@ export default class Application extends EventEmitter {
    * @param {Core} core Core reference
    * @param {object} data Application data
    * @param {{foo: *}} data.args Launch arguments
-   * @param {object} [data.options] Options
-   * @param {object} [data.options.settings] Initial settings
-   * @param {object} [data.options.restore] Restore data
-   * @param {boolean} [data.options.windowAutoFocus=true] Auto-focus first created window
-   * @param {boolean} [data.options.sessionable=true] Allow session storage
+   * @param {ApplicationOptions} [data.options] Options
    * @param {PackageMetadata} [data.metadata] Package Metadata
    */
   constructor(core, data) {
@@ -244,7 +250,7 @@ export default class Application extends EventEmitter {
   /**
    * Creates a new Websocket
    * @param {string} [path=/socket] Append this to endpoint
-   * @param {object} [options] Connection options
+   * @param {WebsocketOptions} [options={}] Connection options
    * @return {Websocket}
    */
   socket(path = '/socket', options = {}) {
@@ -297,8 +303,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Create a new window belonging to this application
-   * @param {object} options Window options
-   * @see {Window}
+   * @param {WindowOptions} [options={}] Window options
    * @return {Window}
    */
   createWindow(options = {}) {

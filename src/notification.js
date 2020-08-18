@@ -33,6 +33,18 @@ import {createNativeNotification} from './utils/dom';
 import logger from './logger';
 
 /**
+ * Notification Options
+ *
+ * @typedef {Object} NotificationOptions
+ * @property {string} title Title
+ * @property {string} message Message
+ * @property {string} [sound=message] Sound to play
+ * @property {string} [icon] Icon source
+ * @property {number} [timeout=5000] Timeout value (0=infinite)
+ * @property {string} [className] Adds a DOM class name to notification
+ */
+
+/**
  * Notification
  *
  * @desc Class that creates a notification
@@ -44,13 +56,7 @@ export default class Notification {
    *
    * @param {Core} core Core reference
    * @param {Element} root Root DOM element
-   * @param {object} options Options
-   * @param {string} options.title Title
-   * @param {string} options.message Message
-   * @param {string} [options.sound=message] Sound to play
-   * @param {string} [options.icon] Icon source
-   * @param {number} [options.timeout=5000] Timeout value (0=infinite)
-   * @param {string} [options.className] Adds a DOM class name to notification
+   * @param {NotificationOptions} options Options
    */
   constructor(core, root, options = {}) {
     const defaultLabel = core.make('osjs/locale')

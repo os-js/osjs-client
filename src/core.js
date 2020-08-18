@@ -38,6 +38,16 @@ import {urlResolver} from './utils/url';
 import logger from './logger';
 
 /**
+ * Core Options
+ *
+ * @typedef {Object} CoreOptions
+ * @property {Element} [root] The root DOM element for elements
+ * @property {Element} [resourceRoot] The root DOM element for resources
+ * @property {String[]} [classNames] List of class names to apply to root dom element
+ * @property {Function} [splash] Custom callback function for creating splash screen
+ */
+
+/**
  * Core
  *
  * @desc Main class for OS.js service providers and bootstrapping.
@@ -47,11 +57,7 @@ export default class Core extends CoreBase {
   /**
    * Create core instance
    * @param {object} config Configuration tree
-   * @param {object} [options] Options
-   * @param {Element} [options.root] The root DOM element for elements
-   * @param {Element} [options.resourceRoot] The root DOM element for resources
-   * @param {String[]} [options.classNames] List of class names to apply to root dom element
-   * @param {Function} [options.splash] Custom callback function for creating splash screen
+   * @param {CoreOptions} [options={}] Options
    */
   constructor(config = {}, options = {}) {
     options = {

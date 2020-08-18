@@ -34,6 +34,14 @@ import logger from './logger';
 const eventNames = ['open', 'close', 'message', 'error'];
 
 /**
+ * Websocket options
+ * @typedef {Object} WebsocketOptions
+ * @property {boolean} [reconnect=true] Enable reconnection
+ * @property {number} [interval=1000] Reconnect interval
+ * @property {boolean} [open=true] Immediately open socket after creation
+ */
+
+/**
  * Application Socket
  *
  * @desc This is just an abstraction above the standard browser provided `WebSocket` class.
@@ -45,7 +53,7 @@ export default class Websocket extends EventEmitter {
   /**
    * Create a new Websocket
    * @param {string} uri Connection URI
-   * @param {object} options Websocket options
+   * @param {WebsocketOptions} [options={}] Websocket options
    */
   constructor(name, uri, options = {}) {
     logger.debug('Websocket::constructor()', name, uri);

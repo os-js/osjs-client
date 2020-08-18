@@ -53,6 +53,14 @@ import merge from 'deepmerge';
  */
 
 /**
+ * Filesystem Options
+ *
+ * @typedef {Object} FilesystemOptions
+ * @property {{name: Adapter}} [adapters] Adapter registry
+ * @property {Mountpoint[]} [mounts] Mountpoints
+ */
+
+/**
  * Filesystem Manager
  *
  * @desc Class that manages filesystems
@@ -63,9 +71,7 @@ export default class Filesystem extends EventEmitter {
    * Create filesystem manager
    *
    * @param {Core} core Core reference
-   * @param {object} [options] Options
-   * @param {{name: Adapter}} [options.adapters] Adapter registry
-   * @param {Mountpoint[]} [options.mounts] Mountpoints
+   * @param {FilesystemOptions} [options] Options
    */
   constructor(core, options = {}) {
     options = {

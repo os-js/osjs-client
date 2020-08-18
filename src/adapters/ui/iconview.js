@@ -141,13 +141,17 @@ const createShortcuts = (root, readfile, writefile) => {
 };
 
 const readDesktopFolder = (root, readdir, shortcuts) => {
+  const supressError = () => [];
+
   const read = () => readdir(root, {
     showHiddenFiles: false
   })
-    .then(files => files.map(s => ({shortcut: false, ...s})));
+    .then(files => files.map(s => ({shortcut: false, ...s})))
+    .catch(supressError);
 
   const readShortcuts = () => shortcuts.read()
-    .then(shortcuts => shortcuts.map((s, index) => ({shortcut: index, ...s})));
+    .then(shortcuts => shortcuts.map((s, index) => ({shortcut: index, ...s})))
+    .catch(supressError);
 
   return () => {
     return Promise.all([readShortcuts(), read()])

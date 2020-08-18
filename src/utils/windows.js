@@ -276,7 +276,7 @@ export const dimensionFromElement = (win, rect, container) => {
 export const transformVectors = (rect, {width, height}, {top, left}) => {
   const transform = (val, attr) => {
     if (!isNaN(val)) {
-      return Number.isInteger(val)
+      return val > 1 && Number.isInteger(val)
         ? val
         : Math.round(rect[attr] * parseFloat(val));
     }

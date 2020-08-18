@@ -126,6 +126,28 @@ describe('Window Utils', () => {
         top: 500
       }
     });
+
+    expect(windows.transformVectors({
+      width: 1000,
+      height: 1000,
+      left: 0,
+      top: 0
+    }, {
+      width: 1.0,
+      height: 0.5
+    }, {
+      top: 0.5,
+      left: 1.0
+    })).toEqual({
+      dimension: {
+        width: 1000,
+        height: 500
+      },
+      position: {
+        left: 1000,
+        top: 500
+      }
+    });
   });
 
   test('getCascadePosition', () => {

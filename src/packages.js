@@ -34,13 +34,16 @@ import logger from './logger';
 
 /**
  * A registered package reference
- * @property {Object} metadata Package metadata
+ *
+ * @typedef {Object} PackageReference
+ * @property {PackageMetadata} metadata Package metadata
  * @property {Function} callback Callback to instanciate
- * @typedef PackageReference
  */
 
 /**
  * A package metadata
+ *
+ * @typedef {Object} PackageMetadata
  * @property {string} name The package name
  * @property {string} [category] Package category
  * @property {string} [icon] Package icon
@@ -52,7 +55,6 @@ import logger from './logger';
  * @property {string[]} [files] Files to preload
  * @property {{key: string}} title A map of locales and titles
  * @property {{key: string}} description A map of locales and titles
- * @typedef PackageMetadata
  */
 
 /**

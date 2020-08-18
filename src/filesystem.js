@@ -39,6 +39,8 @@ import merge from 'deepmerge';
 
 /**
  * VFS Mountpoint
+ *
+ * @typedef {Object} Mountpoint
  * @param {string} name Name
  * @param {string} label Label
  * @param {string} adapter Adater name
@@ -48,7 +50,6 @@ import merge from 'deepmerge';
  * @param {boolean} [attributes.local=true] Local filesystem ?
  * @param {boolean} [attributes.searchable=true] If can be searched
  * @param {boolean} [attributes.readOnly=false] Readonly
- * @typedef Mountpoint
  */
 
 /**

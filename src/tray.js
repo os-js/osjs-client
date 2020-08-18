@@ -33,10 +33,10 @@ import defaultIcon from './styles/logo-blue-32x32.png';
 
 /**
  * A Tray Icon ("Entry")
+ * @typedef {Object} TrayEntry
  * @property {Object} entry The given entry data
  * @property {Function} update Updates entry with given data
  * @property {Function} destroy Destroy the entry
- * @typedef TrayEntry
  */
 
 /**

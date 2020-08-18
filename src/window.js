@@ -45,16 +45,16 @@ import logger from './logger';
 
 /**
  * Window dimension definition
+ * @typedef {Object} WindowDimension
  * @property {number} width Width in pixels
  * @property {number} height Height in pixels
- * @typedef WindowDimension
  */
 
 /**
  * Window position definition
+ * @typedef {Object} WindowPosition
  * @property {number} left Left in pixels
  * @property {number} top Top in pixels
- * @typedef WindowPosition
  */
 
 /**
@@ -66,6 +66,7 @@ import logger from './logger';
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Testing_media_queries
  *
+ * @typedef {Object} WindowAttributes
  * @property {string[]} [classNames=[]] A list of class names
  * @property {boolean} [ontop=false] If always on top
  * @property {string} [gravity] Gravity (center/top/left/right/bottom or any combination)
@@ -83,11 +84,12 @@ import logger from './logger';
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {{name: string}} [mediaQueries] A map of matchMedia to name
- * @typedef WindowAttributes
  */
 
 /**
  * Window state definition
+ *
+ * @typedef {Object} WindowState
  * @property {string} title Title
  * @property {string} icon Icon
  * @property {boolean} [moving=false] If moving
@@ -100,7 +102,6 @@ import logger from './logger';
  * @property {number} [zIndex=10] The z-index (auto calculated)
  * @property {WindowPosition} [position] Position
  * @property {WindowDimension} [dimension] Dimension
- * @typedef WindowState
  */
 
 let windows = [];

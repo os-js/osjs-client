@@ -29,9 +29,11 @@
  */
 
 /**
+ * Clipboard Data
+ *
+ * @typedef {Object} CliboardData
  * @property {string} [type] Optional data type
  * @property {*} data
- * @typedef CliboardData
  */
 
 export default class Clipboard {

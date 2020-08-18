@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.56 - 2020-08-19
+
+* Workaround for integer cast in window vector calculation (#87)
+
 ## 3.1.55 - 2020-08-18
 
 * Added TS type definitions

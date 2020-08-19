@@ -900,9 +900,9 @@ declare class Core extends CoreBase {
 	ping: number;
 	/**
 	 * Splash instance
-	 * @type {SplashCallback|Splash}
+	 * @type {Splash}
 	 */
-	splash: SplashCallback | Splash;
+	splash: Splash;
 	/**
 	 * Main DOM element
 	 * @type {Element}
@@ -1035,6 +1035,7 @@ declare class Core extends CoreBase {
 		key: any;
 	};
 }
+export type SplashCallback = (core: Core) => Splash;
 /**
  * Core Options
  */
@@ -1054,9 +1055,8 @@ export type CoreOptions = {
 	/**
 	 * Custom callback function for creating splash screen
 	 */
-	splash?: Function;
+	splash?: SplashCallback | Splash;
 };
-export type SplashCallback = (arg0: any, arg1: Core) => Splash;
 declare class Search {
 	/**
 	 * Create Search instance

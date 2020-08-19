@@ -68,11 +68,15 @@ const createAdapter = (core, options) => {
  */
 
 /**
- * @typedef {function(core:Core):AuthAdapter} AuthAdapterCallback
+ * @callback AuthAdapterCallback
+ * @param {Core} core
+ * @return {AuthAdapter}
  */
 
 /**
- * @typedef {function(core:Core):Login} LoginAdapterCallback
+ * @callback LoginAdapterCallback
+ * @param {Core} core
+ * @return {Login}
  */
 
 /**

@@ -38,17 +38,19 @@ import {urlResolver} from './utils/url';
 import logger from './logger';
 
 /**
+ * @callback SplashCallback
+ * @param {Core} core
+ * @return {Splash}
+ */
+
+/**
  * Core Options
  *
  * @typedef {Object} CoreOptions
  * @property {Element} [root] The root DOM element for elements
  * @property {Element} [resourceRoot] The root DOM element for resources
  * @property {String[]} [classNames] List of class names to apply to root dom element
- * @property {Function} [splash] Custom callback function for creating splash screen
- */
-
-/**
- * @typedef {function(core:Core):Splash} SplashCallback
+ * @property {SplashCallback|Splash} [splash] Custom callback function for creating splash screen
  */
 
 /**
@@ -89,7 +91,7 @@ export default class Core extends CoreBase {
 
     /**
      * Splash instance
-     * @type {SplashCallback|Splash}
+     * @type {Splash}
      */
     this.splash = options.splash ? options.splash(this) : new Splash(this);
 

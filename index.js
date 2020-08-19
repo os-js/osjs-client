@@ -24,9 +24,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @author  Anders Evenrud <andersevenrud@gmail.com>
+ * @author Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
- * @preserve
+ * @preserve Copyright (c) Anders Evenrud <andersevenrud@gmail.com>
  */
 import './index.scss';
 

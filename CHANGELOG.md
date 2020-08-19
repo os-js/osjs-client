@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.59 - 2020-08-20
+
+* Added client VFS watch support to desktop icons (#51)
+
 ## 3.1.58 - 2020-08-19
 
 * Enable desktop icons by default (#51)

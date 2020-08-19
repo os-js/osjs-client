@@ -39,11 +39,37 @@ const defaultAdapters = {
   localStorage: localStorageSettings
 };
 
+const createAdapter = (core, options) => {
+  const adapter = core.config('standalone')
+    ? localStorageSettings
+    : typeof options.adapter === 'function'
+      ? options.adapter
+      : defaultAdapters[options.adapter || 'localStorage'];
+
+  return {
+    load: () => Promise.reject(new Error('Not implemented')),
+    save: () => Promise.reject(new Error('Not implemented')),
+    init: () => Promise.resolve(true),
+    clear: () => Promise.resolve(true),
+    destroy: () => {},
+    ...adapter(core, options.config)
+  };
+}
+
+/**
+ * TODO: typedef
+ * @typedef {Object} SettingsAdapter
+ */
+
+/**
+ * @typedef {function(core:Core):SettingsAdapter} SettingsAdapterCallback
+ */
+
 /**
  * Settings Options
  *
  * @typedef {Object} SettingsOptions
- * @property {Function|Object} [adapter] Adapter to use
+ * @property {SettingsAdapterCallback|SettingsAdapter} [adapter] Adapter to use
  * @property {Object} [config] Adapter configuration
  */
 
@@ -59,20 +85,12 @@ export default class Settings {
    * @param {SettingsOptions} options Options
    */
   constructor(core, options) {
-    const adapter = core.config('standalone')
-      ? localStorageSettings
-      : typeof options.adapter === 'function'
-        ? options.adapter
-        : defaultAdapters[options.adapter || 'localStorage'];
 
-    this.adapter = {
-      load: () => Promise.reject(new Error('Not implemented')),
-      save: () => Promise.reject(new Error('Not implemented')),
-      init: () => Promise.resolve(true),
-      clear: () => Promise.resolve(true),
-      destroy: () => {},
-      ...adapter(core, options.config)
-    };
+    /**
+     * The settings adapter
+     * @type {SettingsAdapter}
+     */
+    this.adapter = createAdapter(core, options);
 
     /**
      * Internal timeout reference used for debouncing
@@ -86,9 +104,16 @@ export default class Settings {
      */
     this.settings = {};
 
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
   }
 
+  /**
+   * Initializes settings adapter
+   */
   init() {
     return this.adapter.init();
   }

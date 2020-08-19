@@ -182,6 +182,7 @@ export default class Packages {
    * @param {Metadata} metadata Application metadata
    * @param {{foo: *}} args Launch arguments
    * @param {object} options Launch options
+   * @return {Promise<Application>}
    */
   _launchApplication(name, metadata, args, options) {
     let signaled = false;

@@ -40,6 +40,10 @@ export default class Notifications {
    * @param {Core} core OS.js Core instance reference
    */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
   }
 

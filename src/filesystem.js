@@ -267,6 +267,9 @@ export default class Filesystem extends EventEmitter {
   /**
    * Request action wrapper
    * @private
+   * @param {string} method
+   * @param {*} ...args Arguments
+   * @return {Promise<*>}
    */
   _requestAction(method, ...args) {
     if (['rename', 'move', 'copy'].indexOf(method) !== -1) {

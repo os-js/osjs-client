@@ -54,10 +54,29 @@ export class BasicApplication extends EventEmitter {
   constructor(core, proc, win, options = {}) {
     super('BasicApplication<' + proc.name + '>');
 
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Application instance reference
+     * @type {Application}
+     */
     this.proc = proc;
+
+    /**
+     * Window instance reference
+     * @type {Window}
+     */
     this.win = win;
 
+    /**
+     * Basic Application Options
+     * TODO: typedef
+     * @type {Object}
+     */
     this.options = {
       mimeTypes: proc.metadata.mimes || [],
       loadMimeTypes: [],
@@ -76,6 +95,7 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Initializes the application
+   * @return {Promise<boolean>}
    */
   init() {
     if (this.proc.args.file) {

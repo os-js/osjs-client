@@ -176,7 +176,7 @@ export const humanFileSize = (bytes, si = false) => {
  * @param {object} root The path to the readdir root
  * @param Object[] files An array of readdir results
  * @param {object} options Options
- * @param {Boolean} [options.showHiddenFiles=true] Show hidden files
+ * @param {Boolean} [options.showHiddenFiles=false] Show hidden files
  * @param {Function} [options.filter] A filter
  * @param {string} [options.sortBy='filename'] Sort by this attribute
  * @param {string} [options.sortDir='asc'] Sort in this direction

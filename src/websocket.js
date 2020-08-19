@@ -51,6 +51,7 @@ export default class Websocket extends EventEmitter {
 
   /**
    * Create a new Websocket
+   * @param {string} name Instance name
    * @param {string} uri Connection URI
    * @param {WebsocketOptions} [options={}] Websocket options
    */
@@ -59,12 +60,46 @@ export default class Websocket extends EventEmitter {
 
     super('Websocket@' + name);
 
+    /**
+     * Socket URI
+     * @type {string}
+     */
     this.uri = uri;
+
+    /**
+     * If socket is closed
+     * @type {boolean}
+     */
     this.closed = false;
+
+    /**
+     * If socket is connected
+     * @type {boolean}
+     */
     this.connected = false;
+
+    /**
+     * If socket is connecting
+     * @type {boolean}
+     */
     this.connecting = false;
+
+    /**
+     * If socket is reconnecting
+     * @type {boolean}
+     */
     this.reconnecting = false;
+
+    /**
+     * If socket failed to connect
+     * @type {boolean}
+     */
     this.connectfailed = false;
+
+    /**
+     * Options
+     * @type {WebsocketOptions}
+     */
     this.options = {
       reconnect: true,
       interval: 1000,

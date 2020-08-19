@@ -32,6 +32,56 @@ import serverAuth  from './adapters/auth/server';
 import localStorageAuth from './adapters/auth/localstorage';
 import logger from './logger';
 
+const defaultAdapters = {
+  server: serverAuth,
+  localStorage: localStorageAuth
+};
+
+const createUi = (core, options) => {
+  const defaultUi = core.config('auth.ui', {});
+
+  return options.login
+    ? options.login(core, options.config || {})
+    : new Login(core, options.ui || defaultUi);
+};
+
+const createAdapter = (core, options) => {
+  const adapter = core.config('standalone')
+    ? localStorageAuth
+    : typeof options.adapter === 'function'
+      ? options.adapter
+      : defaultAdapters[options.adapter || 'server'];
+
+  return {
+    login: () => Promise.reject(new Error('Not implemented')),
+    logout: () => Promise.reject(new Error('Not implemented')),
+    register: () => Promise.reject(new Error('Not implemented')),
+    init: () => Promise.resolve(true),
+    destroy: () => {},
+    ...adapter(core, options.config || {})
+  };
+};
+
+/**
+ * TODO: typedef
+ * @typedef {Object} AuthAdapter
+ */
+
+/**
+ * @typedef {function(core:Core):AuthAdapter} AuthAdapterCallback
+ */
+
+/**
+ * @typedef {function(core:Core):Login} LoginAdapterCallback
+ */
+
+/**
+ * @typedef {Object} AuthSettings
+ * @property {AuthAdapterCallback|AuthAdapter} [adapter] Adapter to use
+ * @property {LoginAdapterCallback|Login} [login] Login Adapter to use
+ * @property {Object} [config] Adapter configuration
+ */
+
 /**
  * Handles Authentication
  */
@@ -39,39 +89,31 @@ export default class Auth {
 
   /**
    * @param {Core} core OS.js Core instance reference
-   * @param {object} [args.ui] Options for default login UI adapter
-   * @param {Function} [args.adapter] Custom login adapter
-   * @param {Function} [args.login] Custom UI
-   * @param {object} [args.config] Configuration object to be passed on
+   * @param {AuthSettings} [options={}] Auth Options
    */
-  constructor(core, args = {}) {
-    const defaultUi = core.config('auth.ui', {});
+  constructor(core, options = {}) {
+    /**
+     * Authentication UI
+     * @type {Login}
+     */
+    this.ui = createUi(core, options);
 
-    const defaultAdapters = {
-      server: serverAuth,
-      localStorage: localStorageAuth
-    };
+    /**
+     * Authentication adapter
+     * @type {AuthAdapter}
+     */
+    this.adapter = createAdapter(core, options);
 
-    const adapter = core.config('standalone')
-      ? localStorageAuth
-      : typeof args.adapter === 'function'
-        ? args.adapter
-        : defaultAdapters[args.adapter || 'server'];
-
-    this.ui = args.login
-      ? args.login(core, args.config || {})
-      : new Login(core, args.ui || defaultUi);
-
-    this.adapter = {
-      login: () => Promise.reject(new Error('Not implemented')),
-      logout: () => Promise.reject(new Error('Not implemented')),
-      register: () => Promise.reject(new Error('Not implemented')),
-      init: () => Promise.resolve(true),
-      destroy: () => {},
-      ...adapter(core, args.config || {})
-    };
-
+    /**
+     * Authentication callback function
+     * @type {function(data: Object)}
+     */
     this.callback = function() {};
+
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
   }
 
@@ -93,6 +135,7 @@ export default class Auth {
 
   /**
    * Run the shutdown procedure
+   * @param {boolean} [reload] Reload afterwards
    */
   shutdown(reload) {
     try {
@@ -114,6 +157,7 @@ export default class Auth {
 
   /**
    * Shows Login UI
+   * @param {function(data: Object):boolean} cb Authentication callback
    * @return {Promise<boolean>}
    */
   show(cb) {
@@ -132,7 +176,8 @@ export default class Auth {
 
   /**
    * Performs a login
-   * @param {object} values Form values as JSON
+   * @param {Object} values Form values as JSON
+   * @return {Promise<boolean>}
    */
   login(values) {
     this.ui.emit('login:start');
@@ -167,6 +212,7 @@ export default class Auth {
   /**
    * Performs a logout
    * @param {boolean} [reload=true] Reload client afterwards
+   * @return {Promise<boolean>}
    */
   logout(reload = true) {
     return this.adapter.logout(reload)

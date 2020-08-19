@@ -63,6 +63,9 @@ export default class Tray {
     this.entries = [];
   }
 
+  /**
+   * Destroys instance
+   */
   destroy() {
     this.entries = [];
   }

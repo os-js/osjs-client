@@ -29,8 +29,21 @@
  */
 
 export default class Splash {
+  /**
+   * Create Splash
+   * @param {Core} core Core reference
+   */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Splash root element
+     * @type {Element}
+     */
     this.$loading = document.createElement('div');
     this.$loading.className = 'osjs-boot-splash';
 
@@ -40,16 +53,25 @@ export default class Splash {
     core.on('osjs/core:started', () => this.destroy());
   }
 
+  /**
+   * Initializes splash
+   */
   init() {
     this.$loading.appendChild(document.createTextNode('Loading...'));
   }
 
+  /**
+   * Shows splash
+   */
   show() {
     if (!this.$loading.parentNode) {
       this.core.$root.appendChild(this.$loading);
     }
   }
 
+  /**
+   * Destroys splash
+   */
   destroy() {
     if (this.$loading.parentNode) {
       this.$loading.remove();

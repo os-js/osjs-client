@@ -519,6 +519,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Close the window
+   * @return {boolean}
    */
   close() {
     if (this.destroyed) {
@@ -548,6 +549,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal for focus
+   * @private
    */
   _focus() {
     if (lastWindow && lastWindow !== this) {
@@ -892,6 +894,7 @@ export default class Window extends EventEmitter {
   /**
    * Check if we have to set next zindex
    * @private
+   * @return {boolean}
    */
   _checkNextZindex() {
     const {ontop} = this.attributes;

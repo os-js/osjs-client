@@ -65,18 +65,62 @@ export default class Desktop extends EventEmitter {
   constructor(core, options = {}) {
     super('Desktop');
 
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Desktop Options
+     * @type {DeskopOptions}
+     */
     this.options = {
       contextmenu: [],
       ...options
     };
+
+    /**
+     * Theme DOM elements
+     * @type {Element[]}
+     */
     this.$theme = [];
+
+    /**
+     * Icon DOM elements
+     * @type {Element[]}
+     */
     this.$icons = [];
+
+    /**
+     * Default context menu entries
+     * @type {Object[]}
+     */
     this.contextmenuEntries = [];
+
+    /**
+     * Search instance
+     * @type {Search|null}
+     */
     this.search = core.config('search.enabled') ? new Search(core) : null;
+
+    /**
+     * Icon View instance
+     * @type {DesktopIconView}
+     */
     this.iconview = new DesktopIconView(this.core);
+
+    /**
+     * Keyboard context dom element
+     * @type {Element|null}
+     */
     this.keyboardContext = null;
 
+    /**
+     * Desktop subtraction rectangle
+     * TODO: typedef
+     * @type {Object}
+     */
     this.subtract = {
       left: 0,
       top: 0,
@@ -116,6 +160,9 @@ export default class Desktop extends EventEmitter {
     this.initDeveloperTray();
   }
 
+  /**
+   * Initializes connection events
+   */
   initConnectionEvents() {
     this.core.on('osjs/core:disconnect', ev => {
       logger.warn('Connection closed', ev);
@@ -150,6 +197,9 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * Initializes user interface events
+   */
   initUIEvents() {
     this.core.on(['osjs/panel:create', 'osjs/panel:destroy'], (panel, panels = []) => {
       this.subtract = createPanelSubtraction(panel, panels);
@@ -173,6 +223,9 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * Initializes development tray icons
+   */
   initDeveloperTray() {
     if (!this.core.config('development')) {
       return;
@@ -186,6 +239,9 @@ export default class Desktop extends EventEmitter {
     this.core.on('destroy', () => tray.destroy());
   }
 
+  /**
+   * Initializes drag-and-drop events
+   */
   initDragEvents() {
     const {droppable} = this.core.make('osjs/dnd');
 
@@ -199,6 +255,9 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * Initializes keyboard events
+   */
   initKeyboardEvents() {
     const forwardKeyEvent = (n, e) => {
       const w = Window.lastWindow();
@@ -251,6 +310,9 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * Initializes global keyboard events
+   */
   initGlobalKeyboardEvents() {
     let keybindings = [];
 
@@ -285,6 +347,9 @@ export default class Desktop extends EventEmitter {
     this.core.on(closeBindingName, closeBindingCallback);
   }
 
+  /**
+   * Initializes mouse events
+   */
   initMouseEvents() {
     // Custom context menu
     this.core.$contents.addEventListener('contextmenu', ev => {
@@ -318,6 +383,9 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * Initializes base events
+   */
   initBaseEvents() {
     // Resize hook
     let resizeDebounce;
@@ -336,6 +404,9 @@ export default class Desktop extends EventEmitter {
     this.core.$root.addEventListener('touchmove', e => e.preventDefault());
   }
 
+  /**
+   * Initializes locales
+   */
   initLocales() {
     // Right-to-left support triggers
     const rtls = this.core.config('locale.rtl');
@@ -353,6 +424,9 @@ export default class Desktop extends EventEmitter {
     this.core.on('osjs/core:started', checkRTL);
   }
 
+  /**
+   * Starts desktop services
+   */
   start() {
     if (this.search) {
       this.search.init();
@@ -378,6 +452,10 @@ export default class Desktop extends EventEmitter {
     }
   }
 
+  /**
+   * Adds something to the default contextmenu entries
+   * @param {Object[]} entries
+   */
   addContextMenu(entries) {
     this.contextmenuEntries = this.contextmenuEntries.concat(entries);
   }
@@ -385,6 +463,7 @@ export default class Desktop extends EventEmitter {
   /**
    * Applies settings and updates desktop
    * @param {object} [settings] Use this set instead of loading from settings
+   * @return {object} New settings
    */
   applySettings(settings) {
     const lockSettings = this.core.config('desktop.lock');
@@ -473,6 +552,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Adds or removes the icon view
+   * @param {Object} settings
    */
   applyIconView(settings) {
     if (!this.iconview) {
@@ -488,6 +568,8 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Sets the current icon theme from settings
+   * @param {string} name Icon theme name
+   * @return {Promise<undefined>}
    */
   applyIcons(name) {
     name = name || this.core.config('desktop.icons');
@@ -504,6 +586,8 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Sets the current style theme from settings
+   * @param {string} name Theme name
+   * @return {Promise<undefined>}
    */
   applyTheme(name) {
     name = name || this.core.config('desktop.theme');
@@ -529,8 +613,10 @@ export default class Desktop extends EventEmitter {
   /**
    * Apply theme wrapper
    * @private
+   * @param {string} name Theme name
+   * @return {Promise<undefined>}
    */
-  _applyTheme(name, cb) {
+  _applyTheme(name) {
     return this.core.make('osjs/packages')
       .launch(name)
       .then(result => {
@@ -545,6 +631,9 @@ export default class Desktop extends EventEmitter {
   /**
    * Apply settings by key
    * @private
+   * @param {string} k Key
+   * @param {*} v Value
+   * @return {Promise<boolean>}
    */
   _applySettingsByKey(k, v) {
     return this.core.make('osjs/settings')
@@ -553,6 +642,11 @@ export default class Desktop extends EventEmitter {
       .then(() => this.applySettings());
   }
 
+  /**
+   * Create drop context menu entries
+   * @param {Object} Drop data
+   * @return {Object[]}
+   */
   createDropContextMenu(data) {
     const _ = this.core.make('osjs/locale').translate;
     const settings = this.core.make('osjs/settings');
@@ -575,6 +669,10 @@ export default class Desktop extends EventEmitter {
     return menu;
   }
 
+  /**
+   * When developer menu is shown
+   * @param {Event} ev
+   */
   onDeveloperMenu(ev) {
     const _ = this.core.make('osjs/locale').translate;
     const s = this.core.make('osjs/settings').get();
@@ -620,6 +718,11 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * When drop menu is shown
+   * @param {Event} ev
+   * @param {Object} data
+   */
   onDropContextMenu(ev, data) {
     const menu = this.createDropContextMenu(data);
 
@@ -629,6 +732,10 @@ export default class Desktop extends EventEmitter {
     });
   }
 
+  /**
+   * When context menu is shown
+   * @param {Event} ev
+   */
   onContextMenu(ev) {
     const lockSettings = this.core.config('desktop.lock');
     const extras = [].concat(...this.contextmenuEntries.map(e => typeof e === 'function' ? e() : e));

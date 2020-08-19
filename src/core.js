@@ -48,6 +48,10 @@ import logger from './logger';
  */
 
 /**
+ * @typedef {function(core:Core):Splash} SplashCallback
+ */
+
+/**
  * Main Core class for OS.js service providers and bootstrapping.
  */
 export default class Core extends CoreBase {
@@ -70,14 +74,61 @@ export default class Core extends CoreBase {
     $contents.className = 'osjs-contents';
 
     this.logger = logger;
+
+    /**
+     * Websocket connection
+     * @type {Websocket}
+     */
     this.ws = null;
+
+    /**
+     * Ping (stay alive) interval
+     * @type {number}
+     */
     this.ping = null;
+
+    /**
+     * Splash instance
+     * @type {SplashCallback|Splash}
+     */
     this.splash = options.splash ? options.splash(this) : new Splash(this);
+
+    /**
+     * Main DOM element
+     * @type {Element}
+     */
     this.$root = options.root;
+
+    /**
+     * Windows etc DOM element
+     * @type {Element}
+     */
     this.$contents = $contents;
+
+    /**
+     * Resource script container DOM element
+     * @type {Element}
+     */
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
+
+    /**
+     * Default fetch request options
+     * @type {Object}
+     */
     this.requestOptions = {};
+
+    /**
+     * Url Resolver
+     * TODO: typedef
+     * @type {function(): string}
+     */
     this.urlResolver = urlResolver(this.configuration);
+
+    /**
+     * Current user data
+     * TODO: typedef
+     * @type {Object}
+     */
     this.user = this.config('auth.defaultUserData');
 
     this.options.classNames.forEach(n => this.$root.classList.add(n));
@@ -94,6 +145,7 @@ export default class Core extends CoreBase {
 
   /**
    * Destroy core instance
+   * @return {boolean}
    */
   destroy() {
     if (this.destroyed) {
@@ -338,6 +390,7 @@ export default class Core extends CoreBase {
 
   /**
    * Creates event listeners*
+   * @private
    */
   _createListeners() {
     const handle = data => {
@@ -518,7 +571,10 @@ export default class Core extends CoreBase {
 
   /**
    * Removes an event handler
-   * @see EventHandler#off
+   * @param {string} name
+   * @param {Function} [callback=null]
+   * @param {boolean} [force=false]
+   * @return {Core} this
    */
   off(name, callback = null, force = false) {
     if (name.match(/^osjs\//) && typeof callback !== 'function') {

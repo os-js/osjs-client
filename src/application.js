@@ -51,6 +51,15 @@ const getSettingsKey = metadata =>
  */
 
 /**
+ * Application Data
+ *
+ * @typedef {Object} ApplicationData
+ * @property {object} args Launch arguments
+ * @property {ApplicationOptions} [options] Options
+ * @property {PackageMetadata} [metadata] Package Metadata
+ */
+
+/**
  * Base class for an Application
  */
 export default class Application extends EventEmitter {
@@ -59,10 +68,7 @@ export default class Application extends EventEmitter {
    * Create application
    *
    * @param {Core} core Core reference
-   * @param {object} data Application data
-   * @param {{foo: *}} data.args Launch arguments
-   * @param {ApplicationOptions} [data.options] Options
-   * @param {PackageMetadata} [data.metadata] Package Metadata
+   * @param {ApplicationData} data Application data
    */
   constructor(core, data) {
     data = {
@@ -271,6 +277,8 @@ export default class Application extends EventEmitter {
    *
    * This does not create a new connection, but rather uses the core connection.
    * For subscribing to messages from the server use the 'ws:message' event
+   *
+   * @param {*} ...args Arguments to pass to message
    */
   send(...args) {
     this.core.ws.send(JSON.stringify({
@@ -372,6 +380,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Gets a snapshot of the application session
+   * TODO: typedef
    * @return {object}
    */
   getSession() {

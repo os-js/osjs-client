@@ -52,8 +52,23 @@ export default class Login extends EventEmitter {
   constructor(core, options) {
     super('Login');
 
+    /**
+     * Login root DOM element
+     * @type {Element}
+     */
     this.$container = null;
+
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Login options
+     * TODO: typedef
+     * @type {Object}
+     */
     this.options = {
       id: 'osjs-login',
       title: 'Welcome to OS.js',

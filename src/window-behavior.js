@@ -56,9 +56,22 @@ export default class WindowBehavior {
    * @param {Core} core Core reference
    */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
 
+    /**
+     * Last action
+     * @type {string}
+     */
     this.lastAction = null;
+
+    /**
+     * LoFi DOM Element
+     * @type {Element}
+     */
     this.$lofi = document.createElement('div');
     this.$lofi.className = 'osjs-window-behavior-lofi';
   }

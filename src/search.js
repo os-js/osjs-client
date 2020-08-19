@@ -35,13 +35,39 @@ import logger from './logger';
  * Search Service
  */
 export default class Search {
+  /**
+   * Create Search instance
+   * @param {Core} core Core reference
+   */
   constructor(core) {
+    /**
+     * Core instance reference
+     * @type {Core}
+     */
     this.core = core;
+
+    /**
+     * Wired actions
+     * @type {Object}
+     */
     this.ui = null;
+
+    /**
+     * Last focused window
+     * @type {Window}
+     */
     this.focusLastWindow = null;
+
+    /**
+     * Search root DOM element
+     * @type {Element}
+     */
     this.$element = document.createElement('div');
   }
 
+  /**
+   * Destroy Search instance
+   */
   destroy() {
     if (this.ui) {
       this.ui.destroy();

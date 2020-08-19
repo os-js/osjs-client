@@ -57,6 +57,7 @@ export default class Session {
 
   /**
    * Saves session
+   * @return {Promise<boolean>}
    */
   save() {
     const apps = Application.getApplications()
@@ -72,6 +73,7 @@ export default class Session {
   /**
    * Loads session
    * @param {boolean} [fresh=false] Kill all current applications first
+   * @return {Promise<boolean>}
    */
   load(fresh = false) {
     if (fresh) {

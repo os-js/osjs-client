@@ -62,7 +62,7 @@ const createAdapter = (core, options) => {
  */
 
 /**
- * @typedef {function(core:Core):SettingsAdapter} SettingsAdapterCallback
+ * @typedef {function(Core):SettingsAdapter} SettingsAdapterCallback
  */
 
 /**

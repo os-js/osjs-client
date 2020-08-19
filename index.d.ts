@@ -900,9 +900,9 @@ declare class Core extends CoreBase {
 	ping: number;
 	/**
 	 * Splash instance
-	 * @type {SplashCallback|Splash}
+	 * @type {Splash}
 	 */
-	splash: SplashCallback | Splash;
+	splash: Splash;
 	/**
 	 * Main DOM element
 	 * @type {Element}
@@ -1035,6 +1035,7 @@ declare class Core extends CoreBase {
 		key: any;
 	};
 }
+export type SplashCallback = (arg0: Core) => Splash;
 /**
  * Core Options
  */
@@ -1054,9 +1055,8 @@ export type CoreOptions = {
 	/**
 	 * Custom callback function for creating splash screen
 	 */
-	splash?: Function;
+	splash?: SplashCallback;
 };
-export type SplashCallback = (arg0: any, arg1: Core) => Splash;
 declare class Search {
 	/**
 	 * Create Search instance
@@ -1570,9 +1570,9 @@ declare class Auth {
 	adapter: AuthAdapter;
 	/**
 	 * Authentication callback function
-	 * @type {function(data: Object)}
+	 * @type {function(Object)}
 	 */
-	callback: (arg0: any, arg1: any) => any;
+	callback: (arg0: any) => any;
 	/**
 	 * Core instance reference
 	 * @type {Core}
@@ -1593,10 +1593,10 @@ declare class Auth {
 	shutdown(reload?: boolean): void;
 	/**
 	 * Shows Login UI
-	 * @param {function(data: Object):boolean} cb Authentication callback
+	 * @param {function(Object):boolean} cb Authentication callback
 	 * @return {Promise<boolean>}
 	 */
-	show(cb: (arg0: any, arg1: any) => boolean): Promise<boolean>;
+	show(cb: (arg0: any) => boolean): Promise<boolean>;
 	/**
 	 * Performs a login
 	 * @param {Object} values Form values as JSON
@@ -1620,8 +1620,8 @@ declare class Auth {
  * TODO: typedef
  */
 export type AuthAdapter = any;
-export type AuthAdapterCallback = (arg0: any, arg1: any) => AuthAdapter;
-export type LoginAdapterCallback = (arg0: any, arg1: any) => Login;
+export type AuthAdapterCallback = (arg0: any) => AuthAdapter;
+export type LoginAdapterCallback = (arg0: any) => Login;
 export type AuthSettings = {
 	/**
 	 * Adapter to use
@@ -2260,7 +2260,7 @@ declare class Settings {
  * TODO: typedef
  */
 export type SettingsAdapter = any;
-export type SettingsAdapterCallback = (arg0: any, arg1: any) => SettingsAdapter;
+export type SettingsAdapterCallback = (arg0: any) => SettingsAdapter;
 /**
  * Settings Options
  */

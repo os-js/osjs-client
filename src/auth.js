@@ -68,11 +68,11 @@ const createAdapter = (core, options) => {
  */
 
 /**
- * @typedef {function(core:Core):AuthAdapter} AuthAdapterCallback
+ * @typedef {function(Core):AuthAdapter} AuthAdapterCallback
  */
 
 /**
- * @typedef {function(core:Core):Login} LoginAdapterCallback
+ * @typedef {function(Core):Login} LoginAdapterCallback
  */
 
 /**
@@ -106,7 +106,7 @@ export default class Auth {
 
     /**
      * Authentication callback function
-     * @type {function(data: Object)}
+     * @type {function(Object)}
      */
     this.callback = function() {};
 
@@ -157,7 +157,7 @@ export default class Auth {
 
   /**
    * Shows Login UI
-   * @param {function(data: Object):boolean} cb Authentication callback
+   * @param {function(Object):boolean} cb Authentication callback
    * @return {Promise<boolean>}
    */
   show(cb) {

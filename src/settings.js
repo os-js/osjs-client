@@ -54,7 +54,7 @@ const createAdapter = (core, options) => {
     destroy: () => {},
     ...adapter(core, options.config)
   };
-}
+};
 
 /**
  * TODO: typedef

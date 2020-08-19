@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.63 - 2020-08-20
+
+* Updated TS type definitions
+
 ## 3.1.62 - 2020-08-20
 
 * Updated TS type definitions

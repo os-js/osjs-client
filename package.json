@@ -34,7 +34,7 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.9",
+    "@osjs/common": "^3.0.10",
     "@osjs/event-emitter": "^1.0.9",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",

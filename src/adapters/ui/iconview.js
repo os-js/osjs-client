@@ -173,7 +173,7 @@ export class DesktopIconView extends EventEmitter {
     this.core = core;
     this.$root = null;
     this.iconview = null;
-    this.root = 'home:/.desktop';
+    this.root = 'home:/.desktop'; // Default path, changed later
   }
 
   destroy() {
@@ -277,10 +277,10 @@ export class DesktopIconView extends EventEmitter {
             }
 
             return copy(entry, dest)
-              .then(() => actions.reload())
+              .then(() => actions.reload(true))
               .catch(error);
           })
-          .then(() => actions.reload());
+          .then(() => actions.reload(true));
 
         return {selected: -1};
       },
@@ -288,18 +288,22 @@ export class DesktopIconView extends EventEmitter {
       removeEntry: entry => (state, actions) => {
         if (entry.shortcut !== false) {
           shortcuts.remove(entry.shortcut)
-            .then(() => actions.reload())
+            .then(() => actions.reload(true))
             .catch(error);
         } else {
           unlink(entry)
-            .then(() => actions.reload())
+            .then(() => actions.reload(true))
             .catch(error);
         }
 
         return {selected: -1};
       },
 
-      reload: () => (state, actions) => {
+      reload: (fromUI) => (state, actions) => {
+        if (fromUI && this.core.config('vfs.watch')) {
+          return;
+        }
+
         read()
           .then(entries => entries.filter(e => e.filename !== '..'))
           .then(entries => actions.setEntries(entries));
@@ -309,6 +313,7 @@ export class DesktopIconView extends EventEmitter {
 
     this.applySettings();
     this.iconview.reload();
+    this._createWatcher();
   }
 
   createFileContextMenu(ev, entry) {
@@ -352,6 +357,19 @@ export class DesktopIconView extends EventEmitter {
   createRootContextMenu(ev) {
     this.core.make('osjs/desktop')
       .openContextMenu(ev);
+  }
+
+  _createWatcher() {
+    const listener = (args) => {
+      const currentPath = String(this.root).replace(/\/$/, '');
+      const watchPath = String(args.path).replace(/\/$/, '');
+      if (currentPath === watchPath) {
+        this.iconview.reload();
+      }
+    };
+
+    this.core.on('osjs/vfs:directoryChanged', listener);
+    this.on('destroy', () => this.core.off('osjs/vfs:directoryChanged', listener));
   }
 
   applySettings() {

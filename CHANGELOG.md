@@ -1,6 +1,12 @@
 # Changelog for osjs-client
 
-## 3.1.59 - 2020-08-20
+## 3.1.60 - 2020-08-19
+
+* Settings#get now properly returns defaults when no key is set
+* Updated documentation
+* Updated TS type definitions
+
+## 3.1.59 - 2020-08-19
 
 * Added client VFS watch support to desktop icons (#51)
 

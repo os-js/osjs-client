@@ -41,6 +41,9 @@ describe('Settings', () => {
     expect(settings.get('osjs/jest', 'foo')).toBe('Hello World');
     expect(settings.get('osjs/jest', 'bar')).toBe(undefined);
     expect(settings.get('osjs/jest', 'baz', 'default')).toBe('default');
+    expect(settings.get('osjs/jest')).toEqual({
+      foo: 'Hello World'
+    });
     expect(settings.get()).toEqual({
       'osjs/default-application': {},
       'osjs/desktop': {},

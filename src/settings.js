@@ -180,7 +180,7 @@ export default class Settings {
     if (typeof ns === 'undefined') {
       return {...this.settings};
     } else if (typeof this.settings[ns] === 'undefined') {
-      return key ? defaultValue : {};
+      return key ? defaultValue : defaultValue || {};
     }
 
     const tree = simplejsonconf(this.settings[ns]);

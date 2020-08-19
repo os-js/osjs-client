@@ -212,6 +212,8 @@ export const transformReaddir = ({path}, files, options = {}) => {
     humanSize: humanFileSize(file.size)
   });
 
+  // FIXME: Optimize this to one chain!
+
   const sortedSpecial = createSpecials(path)
     .sort(sorter(sortBy, sortDir))
     .map(modify);

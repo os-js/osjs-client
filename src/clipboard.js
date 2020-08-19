@@ -36,6 +36,9 @@
  * @property {*} data
  */
 
+/**
+ * Clipboard Manager
+ */
 export default class Clipboard {
 
   /**

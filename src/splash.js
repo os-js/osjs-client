@@ -28,6 +28,9 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * Splash Screen UI
+ */
 export default class Splash {
   /**
    * Create Splash

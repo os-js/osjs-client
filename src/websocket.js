@@ -87,6 +87,8 @@ export default class Websocket extends EventEmitter {
 
   /**
    * Destroys the current connection
+   * @return {void}
+   * @private
    */
   _destroyConnection() {
     if (!this.connection) {
@@ -103,6 +105,7 @@ export default class Websocket extends EventEmitter {
 
   /**
    * Attaches internal events
+   * @private
    */
   _attachEvents() {
     this.on('open', ev => {

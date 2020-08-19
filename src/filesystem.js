@@ -175,6 +175,7 @@ export default class Filesystem extends EventEmitter {
   /**
    * Internal wrapper for mounting/unmounting
    *
+   * @private
    * @param {Mountpoint} mountpoint The mountpoint
    * @param {boolean} [unmount=false] If action is unmounting
    * @return {Promise<boolean>}
@@ -199,6 +200,7 @@ export default class Filesystem extends EventEmitter {
   /**
    * Internal wrapper for mounting/unmounting by name
    *
+   * @private
    * @param {string} name Mountpoint name
    * @param {boolean} [unmount=false] If action is unmounting
    * @return {Promise<boolean>}
@@ -231,6 +233,8 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Perform a VFS method request
+   *
+   * @private
    * @param {string} method VFS method name
    * @param {*} ...args Arguments
    * @return {*}
@@ -260,6 +264,10 @@ export default class Filesystem extends EventEmitter {
       });
   }
 
+  /**
+   * Request action wrapper
+   * @private
+   */
   _requestAction(method, ...args) {
     if (['rename', 'move', 'copy'].indexOf(method) !== -1) {
       const [src, dest] = args;

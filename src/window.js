@@ -271,6 +271,7 @@ export default class Window extends EventEmitter {
     /**
      * Internal variable to signal not to use default position
      * given by user (used for restore)
+     * @private
      * @type {boolean}
      */
     this._preventDefaultPosition = false;
@@ -278,30 +279,35 @@ export default class Window extends EventEmitter {
     /**
      * Internal timeout reference used for triggering the loading
      * overlay.
+     * @private
      * @type {boolean}
      */
     this._loadingDebounce = null;
 
     /**
      * The window template
+     * @private
      * @type {string|Function}
      */
     this._template = options.template;
 
     /**
      * Custom destructor callback
+     * @private
      * @type {Function}
      */
     this._ondestroy = options.ondestroy || (() => true);
 
     /**
      * Last DOM update CSS text
+     * @private
      * @type {string}
      */
     this._lastCssText = '';
 
     /**
      * Last DOM update data attributes
+     * @private
      * @type {object}
      */
     this._lastAttributes = {};
@@ -385,6 +391,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Initializes window template
+   * @private
    */
   _initTemplate() {
     const tpl = this.core.config('windows.template') || TEMPLATE;
@@ -404,6 +411,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Initializes window behavior
+   * @private
    */
   _initBehavior() {
     // Transform percentages in dimension to pixels etc
@@ -435,6 +443,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Checks the modal state of the window upon render
+   * @private
    */
   _checkModal() {
     // TODO: Global modal
@@ -450,6 +459,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Sets the initial class names
+   * @private
    */
   _setClassNames() {
     const classNames = ['osjs-window', ...this.attributes.classNames];
@@ -609,6 +619,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal for Maximize or restore
+   * @private
    * @param {boolean} toggle Maximize or restore
    * @return {boolean}
    */
@@ -832,6 +843,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal method for setting state
+   * @private
    * @param {string} name State name
    * @param {*} value State value
    * @param {boolean} [update=true] Update the DOM
@@ -853,6 +865,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Internal method for toggling state
+   * @private
    * @param {string} name State name
    * @param {any} value State value
    * @param {string} eventName Name of event to emit
@@ -878,6 +891,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Check if we have to set next zindex
+   * @private
    */
   _checkNextZindex() {
     const {ontop} = this.attributes;
@@ -905,6 +919,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates the window buttons in DOM
+   * @private
    */
   _updateButtons() {
     const hideButton = action =>
@@ -932,6 +947,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates window title in DOM
+   * @private
    */
   _updateTitle() {
     if (this.$title) {
@@ -944,6 +960,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates window icon decoration in DOM
+   * @private
    */
   _updateIconStyles() {
     if (this.$icon) {
@@ -956,6 +973,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates window header decoration in DOM
+   * @private
    */
   _updateHeaderStyles() {
     if (this.$header) {
@@ -968,6 +986,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates window data in DOM
+   * @private
    */
   _updateAttributes() {
     if (this.$element) {
@@ -983,6 +1002,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Updates window style in DOM
+   * @private
    */
   _updateStyles() {
     if (this.$element) {

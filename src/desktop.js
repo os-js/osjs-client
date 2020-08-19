@@ -363,6 +363,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Update CSS
+   * @private
    */
   _updateCSS() {
     const mobile = this.core.config('windows.mobile');
@@ -435,6 +436,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Removes current style theme from DOM
+   * @private
    */
   _removeTheme() {
     this.emit('theme:destroy');
@@ -457,6 +459,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Removes current icon theme from DOM
+   * @private
    */
   _removeIcons() {
     this.$icons.forEach(el => {
@@ -523,6 +526,10 @@ export default class Desktop extends EventEmitter {
       });
   }
 
+  /**
+   * Apply theme wrapper
+   * @private
+   */
   _applyTheme(name, cb) {
     return this.core.make('osjs/packages')
       .launch(name)
@@ -535,6 +542,10 @@ export default class Desktop extends EventEmitter {
       });
   }
 
+  /**
+   * Apply settings by key
+   * @private
+   */
   _applySettingsByKey(k, v) {
     return this.core.make('osjs/settings')
       .set('osjs/desktop', k, v)

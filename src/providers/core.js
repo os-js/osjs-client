@@ -244,6 +244,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   /**
    * Provides localization
    * TODO: Move to a Locale class
+   * @private
    */
   _createLocaleContract() {
     const strs = merge(translations, this.options.locales || {});
@@ -269,6 +270,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
   /**
    * Provides window contract
+   * @private
    */
   _createWindowContract() {
     return {

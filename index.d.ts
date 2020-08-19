@@ -68,12 +68,15 @@ declare class Websocket extends EventEmitter {
 	connection: WebSocket;
 	/**
 	 * Destroys the current connection
+	 * @return {void}
+	 * @private
 	 */
-	_destroyConnection(): void;
+	private _destroyConnection;
 	/**
 	 * Attaches internal events
+	 * @private
 	 */
-	_attachEvents(): void;
+	private _attachEvents;
 	/**
 	 * Opens the connection
 	 * @param {boolean} [reconnect=false] Force reconnection
@@ -197,35 +200,41 @@ declare class Window extends EventEmitter {
 	/**
 	 * Internal variable to signal not to use default position
 	 * given by user (used for restore)
+	 * @private
 	 * @type {boolean}
 	 */
-	_preventDefaultPosition: boolean;
+	private _preventDefaultPosition;
 	/**
 	 * Internal timeout reference used for triggering the loading
 	 * overlay.
+	 * @private
 	 * @type {boolean}
 	 */
-	_loadingDebounce: boolean;
+	private _loadingDebounce;
 	/**
 	 * The window template
+	 * @private
 	 * @type {string|Function}
 	 */
-	_template: string | Function;
+	private _template;
 	/**
 	 * Custom destructor callback
+	 * @private
 	 * @type {Function}
 	 */
-	_ondestroy: Function;
+	private _ondestroy;
 	/**
 	 * Last DOM update CSS text
+	 * @private
 	 * @type {string}
 	 */
-	_lastCssText: string;
+	private _lastCssText;
 	/**
 	 * Last DOM update data attributes
+	 * @private
 	 * @type {object}
 	 */
-	_lastAttributes: object;
+	private _lastAttributes;
 	/**
 	 * Destroy window
 	 */
@@ -237,20 +246,24 @@ declare class Window extends EventEmitter {
 	inited: boolean;
 	/**
 	 * Initializes window template
+	 * @private
 	 */
-	_initTemplate(): void;
+	private _initTemplate;
 	/**
 	 * Initializes window behavior
+	 * @private
 	 */
-	_initBehavior(): void;
+	private _initBehavior;
 	/**
 	 * Checks the modal state of the window upon render
+	 * @private
 	 */
-	_checkModal(): void;
+	private _checkModal;
 	/**
 	 * Sets the initial class names
+	 * @private
 	 */
-	_setClassNames(): void;
+	private _setClassNames;
 	/**
 	 * Render window
 	 * @param {Function} [callback] Callback when window DOM has been constructed
@@ -297,10 +310,11 @@ declare class Window extends EventEmitter {
 	restore(): boolean;
 	/**
 	 * Internal for Maximize or restore
+	 * @private
 	 * @param {boolean} toggle Maximize or restore
 	 * @return {boolean}
 	 */
-	_maximize(toggle: boolean): boolean;
+	private _maximize;
 	/**
 	 * Resize to fit to current container
 	 * @param {Element} [container] The DOM element to use
@@ -367,49 +381,58 @@ declare class Window extends EventEmitter {
 	getSession(): any;
 	/**
 	 * Internal method for setting state
+	 * @private
 	 * @param {string} name State name
 	 * @param {*} value State value
 	 * @param {boolean} [update=true] Update the DOM
 	 * @param {boolean} [updateAll=true] Update the entire DOM
 	 */
-	_setState(name: string, value: any, update?: boolean): void;
+	private _setState;
 	/**
 	 * Internal method for toggling state
+	 * @private
 	 * @param {string} name State name
 	 * @param {any} value State value
 	 * @param {string} eventName Name of event to emit
 	 * @param {boolean} [update=true] Update the DOM
 	 */
-	_toggleState(name: string, value: any, eventName: string, update?: boolean): boolean;
+	private _toggleState;
 	/**
 	 * Check if we have to set next zindex
+	 * @private
 	 */
-	_checkNextZindex(): boolean;
+	private _checkNextZindex;
 	_updateDOM(): void;
 	/**
 	 * Updates the window buttons in DOM
+	 * @private
 	 */
-	_updateButtons(): void;
+	private _updateButtons;
 	/**
 	 * Updates window title in DOM
+	 * @private
 	 */
-	_updateTitle(): void;
+	private _updateTitle;
 	/**
 	 * Updates window icon decoration in DOM
+	 * @private
 	 */
-	_updateIconStyles(): void;
+	private _updateIconStyles;
 	/**
 	 * Updates window header decoration in DOM
+	 * @private
 	 */
-	_updateHeaderStyles(): void;
+	private _updateHeaderStyles;
 	/**
 	 * Updates window data in DOM
+	 * @private
 	 */
-	_updateAttributes(): void;
+	private _updateAttributes;
 	/**
 	 * Updates window style in DOM
+	 * @private
 	 */
-	_updateStyles(): void;
+	private _updateStyles;
 }
 /**
  * Window dimension definition
@@ -661,9 +684,10 @@ declare class Application extends EventEmitter {
 	options: object;
 	/**
 	 * Application metadata
+	 * @private
 	 * @type {PackageMetadata}
 	 */
-	metadata: any;
+	private metadata;
 	/**
 	 * Window list
 	 * @type {Window[]}
@@ -818,14 +842,17 @@ declare class Core extends CoreBase {
 	connectfailed: boolean;
 	/**
 	 * Attaches some internal events
+	 * @private
 	 */
-	_attachEvents(): void;
+	private _attachEvents;
 	/**
 	 * Creates the main connection to server
+	 *
+	 * @private
 	 * @param {Function} cb Callback function
 	 * @return {boolean}
 	 */
-	_createConnection(cb: Function): boolean;
+	private _createConnection;
 	/**
 	 * Creates event listeners*
 	 */
@@ -884,8 +911,9 @@ declare class Core extends CoreBase {
 	}): boolean | Application;
 	/**
 	 * Wrapper method to create an application choice dialog
+	 * @private
 	 */
-	_openApplicationDialog(options: any, compatible: any, file: any, run: any): void;
+	private _openApplicationDialog;
 	/**
 	 * Sends a 'broadcast' event with given arguments
 	 * to all applications matching given filter
@@ -975,6 +1003,7 @@ declare class DesktopIconView extends EventEmitter {
 	createFileContextMenu(ev: any, entry: any): void;
 	createDropContextMenu(ev: any, data: any, files: any): void;
 	createRootContextMenu(ev: any): void;
+	_createWatcher(): void;
 	applySettings(): void;
 }
 declare class Desktop extends EventEmitter {
@@ -1019,8 +1048,9 @@ declare class Desktop extends EventEmitter {
 	start(): void;
 	/**
 	 * Update CSS
+	 * @private
 	 */
-	_updateCSS(): void;
+	private _updateCSS;
 	addContextMenu(entries: any): void;
 	/**
 	 * Applies settings and updates desktop
@@ -1029,12 +1059,14 @@ declare class Desktop extends EventEmitter {
 	applySettings(settings?: object): any;
 	/**
 	 * Removes current style theme from DOM
+	 * @private
 	 */
-	_removeTheme(): void;
+	private _removeTheme;
 	/**
 	 * Removes current icon theme from DOM
+	 * @private
 	 */
-	_removeIcons(): void;
+	private _removeIcons;
 	/**
 	 * Adds or removes the icon view
 	 */
@@ -1047,8 +1079,16 @@ declare class Desktop extends EventEmitter {
 	 * Sets the current style theme from settings
 	 */
 	applyTheme(name: any): any;
-	_applyTheme(name: any, cb: any): any;
-	_applySettingsByKey(k: any, v: any): any;
+	/**
+	 * Apply theme wrapper
+	 * @private
+	 */
+	private _applyTheme;
+	/**
+	 * Apply settings by key
+	 * @private
+	 */
+	private _applySettingsByKey;
 	createDropContextMenu(data: any): {
 		label: any;
 		onclick: () => any;
@@ -1478,9 +1518,10 @@ declare class Packages {
 	 *
 	 * Mainly used for singleton awareness
 	 *
+	 * @private
 	 * @type {string[]}
 	 */
-	_running: string[];
+	private _running;
 	/**
 	 * Preloader
 	 * @type {Preloader}
@@ -1517,36 +1558,38 @@ declare class Packages {
 	/**
 	 * Launches an application package
 	 *
+	 * @private
 	 * @param {string} name Application package name
 	 * @param {Metadata} metadata Application metadata
 	 * @param {{foo: *}} args Launch arguments
 	 * @param {object} options Launch options
 	 */
-	_launchApplication(name: string, metadata: any, args: {
-		foo: any;
-	}, options: object): Promise<any>;
+	private _launchApplication;
 	/**
 	 * Launches a (theme) package
 	 *
+	 * @private
 	 * @param {string} name Package name
 	 * @param {Metadata} metadata Application metadata
 	 * @throws {Error}
 	 * @return {Promise<object>}
 	 */
-	_launchTheme(name: string, metadata: any): Promise<object>;
+	private _launchTheme;
 	/**
 	 * Wrapper for launching a (application) package
 	 *
+	 * @private
 	 * @param {string} name Package name
 	 * @param {object} args Launch arguments
 	 * @param {object} options Launch options
 	 * @return {Promise<Application>}
 	 */
-	_launch(name: string, metadata: any, args: object, options: object): Promise<Application>;
+	private _launch;
 	/**
 	 * Autostarts tagged packages
+	 * @private
 	 */
-	_autostart(): void;
+	private _autostart;
 	/**
 	 * Registers a package
 	 *
@@ -1718,23 +1761,14 @@ declare class CoreServiceProvider extends ServiceProvider {
 	/**
 	 * Provides localization
 	 * TODO: Move to a Locale class
+	 * @private
 	 */
-	_createLocaleContract(): {
-		format: string;
-		translate: any;
-		translatable: Function;
-		translatableFlat: string;
-		getLocale: (key?: string) => any;
-		setLocale: (name: any) => any;
-	};
+	private _createLocaleContract;
 	/**
 	 * Provides window contract
+	 * @private
 	 */
-	_createWindowContract(): {
-		create: (options?: {}) => Window;
-		list: () => Window[];
-		last: () => Window;
-	};
+	private _createWindowContract;
 }
 declare class DesktopServiceProvider extends ServiceProvider {
 	constructor(core: any, options?: {});
@@ -1800,19 +1834,21 @@ declare class Filesystem extends EventEmitter {
 	/**
 	 * Internal wrapper for mounting/unmounting
 	 *
+	 * @private
 	 * @param {Mountpoint} mountpoint The mountpoint
 	 * @param {boolean} [unmount=false] If action is unmounting
 	 * @return {Promise<boolean>}
 	 */
-	_mountpointAction(mountpoint: Mountpoint, unmount?: boolean): Promise<boolean>;
+	private _mountpointAction;
 	/**
 	 * Internal wrapper for mounting/unmounting by name
 	 *
+	 * @private
 	 * @param {string} name Mountpoint name
 	 * @param {boolean} [unmount=false] If action is unmounting
 	 * @return {Promise<boolean>}
 	 */
-	_mountAction(name: string, unmount?: boolean): Promise<boolean>;
+	private _mountAction;
 	/**
 	 * Gets the proxy for VFS methods
 	 * @return {{key: Function}} A map of VFS functions
@@ -1822,12 +1858,18 @@ declare class Filesystem extends EventEmitter {
 	};
 	/**
 	 * Perform a VFS method request
+	 *
+	 * @private
 	 * @param {string} method VFS method name
 	 * @param {*} ...args Arguments
 	 * @return {*}
 	 */
-	_request(method: string, ...args: any[]): any;
-	_requestAction(method: any, ...args: any[]): any;
+	private _request;
+	/**
+	 * Request action wrapper
+	 * @private
+	 */
+	private _requestAction;
 	/**
 	 * Creates a new mountpoint based on given properties
 	 * @param {object} props Properties (see Mountpoint)
@@ -2062,16 +2104,20 @@ export class BasicApplication extends EventEmitter {
 	createOpenDialog(options?: object): void;
 	/**
 	 * Sets file from open/save action
+	 *
+	 * @private
 	 * @param {object} item File
 	 * @param {string} eventName Event to fire
 	 */
-	_setFile(item: object, eventName: string): void;
+	private _setFile;
 	/**
 	 * Creates the window title
+	 *
+	 * @private
 	 * @param {string} prefix Title prefix
 	 * @return {string}
 	 */
-	_createTitle(prefix: string): string;
+	private _createTitle;
 }
 
 export {

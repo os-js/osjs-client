@@ -214,6 +214,8 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Sets file from open/save action
+   *
+   * @private
    * @param {object} item File
    * @param {string} eventName Event to fire
    */
@@ -225,6 +227,8 @@ export class BasicApplication extends EventEmitter {
 
   /**
    * Creates the window title
+   *
+   * @private
    * @param {string} prefix Title prefix
    * @return {string}
    */

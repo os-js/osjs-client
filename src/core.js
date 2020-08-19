@@ -232,6 +232,7 @@ export default class Core extends CoreBase {
 
   /**
    * Attaches some internal events
+   * @private
    */
   _attachEvents() {
     // Attaches sounds for certain events
@@ -280,6 +281,8 @@ export default class Core extends CoreBase {
 
   /**
    * Creates the main connection to server
+   *
+   * @private
    * @param {Function} cb Callback function
    * @return {boolean}
    */
@@ -470,6 +473,7 @@ export default class Core extends CoreBase {
 
   /**
    * Wrapper method to create an application choice dialog
+   * @private
    */
   _openApplicationDialog(options, compatible, file, run) {
     const _ = this.make('osjs/locale').translate;

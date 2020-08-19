@@ -93,6 +93,7 @@ export default class Packages {
      *
      * Mainly used for singleton awareness
      *
+     * @private
      * @type {string[]}
      */
     this._running = [];
@@ -176,6 +177,7 @@ export default class Packages {
   /**
    * Launches an application package
    *
+   * @private
    * @param {string} name Application package name
    * @param {Metadata} metadata Application metadata
    * @param {{foo: *}} args Launch arguments
@@ -221,6 +223,7 @@ export default class Packages {
   /**
    * Launches a (theme) package
    *
+   * @private
    * @param {string} name Package name
    * @param {Metadata} metadata Application metadata
    * @throws {Error}
@@ -246,6 +249,7 @@ export default class Packages {
   /**
    * Wrapper for launching a (application) package
    *
+   * @private
    * @param {string} name Package name
    * @param {object} args Launch arguments
    * @param {object} options Launch options
@@ -326,6 +330,7 @@ export default class Packages {
 
   /**
    * Autostarts tagged packages
+   * @private
    */
   _autostart() {
     const meta = this.metadata

@@ -114,6 +114,7 @@ export default class Application extends EventEmitter {
 
     /**
      * Application metadata
+     * @private
      * @type {PackageMetadata}
      */
     this.metadata = data.metadata;

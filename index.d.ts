@@ -1620,8 +1620,8 @@ declare class Auth {
  * TODO: typedef
  */
 export type AuthAdapter = any;
-export type AuthAdapterCallback = (arg0: any, arg1: any) => AuthAdapter;
-export type LoginAdapterCallback = (arg0: any, arg1: any) => Login;
+export type AuthAdapterCallback = (core: any) => AuthAdapter;
+export type LoginAdapterCallback = (core: any) => Login;
 export type AuthSettings = {
 	/**
 	 * Adapter to use
@@ -2260,7 +2260,7 @@ declare class Settings {
  * TODO: typedef
  */
 export type SettingsAdapter = any;
-export type SettingsAdapterCallback = (arg0: any, arg1: any) => SettingsAdapter;
+export type SettingsAdapterCallback = (core: any) => SettingsAdapterCallback;
 /**
  * Settings Options
  */

@@ -37,30 +37,46 @@ import { EventEmitter } from '@osjs/event-emitter';
 declare class Websocket extends EventEmitter {
 	/**
 	 * Create a new Websocket
+	 * @param {string} name Instance name
 	 * @param {string} uri Connection URI
 	 * @param {WebsocketOptions} [options={}] Websocket options
 	 */
-	constructor(name: any, uri: string, options?: WebsocketOptions);
+	constructor(name: string, uri: string, options?: WebsocketOptions);
+	/**
+	 * Socket URI
+	 * @type {string}
+	 */
 	uri: string;
+	/**
+	 * If socket is closed
+	 * @type {boolean}
+	 */
 	closed: boolean;
+	/**
+	 * If socket is connected
+	 * @type {boolean}
+	 */
 	connected: boolean;
+	/**
+	 * If socket is connecting
+	 * @type {boolean}
+	 */
 	connecting: boolean;
+	/**
+	 * If socket is reconnecting
+	 * @type {boolean}
+	 */
 	reconnecting: boolean;
+	/**
+	 * If socket failed to connect
+	 * @type {boolean}
+	 */
 	connectfailed: boolean;
-	options: {
-		/**
-		 * Enable reconnection
-		 */
-		reconnect: boolean;
-		/**
-		 * Reconnect interval
-		 */
-		interval: number;
-		/**
-		 * Immediately open socket after creation
-		 */
-		open: boolean;
-	};
+	/**
+	 * Options
+	 * @type {WebsocketOptions}
+	 */
+	options: WebsocketOptions;
 	/**
 	 * The Websocket
 	 * @type {WebSocket}
@@ -108,6 +124,35 @@ export type WebsocketOptions = {
 	 */
 	open?: boolean;
 };
+declare class Splash {
+	/**
+	 * Create Splash
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: any;
+	/**
+	 * Splash root element
+	 * @type {Element}
+	 */
+	$loading: Element;
+	/**
+	 * Initializes splash
+	 */
+	init(): void;
+	/**
+	 * Shows splash
+	 */
+	show(): void;
+	/**
+	 * Destroys splash
+	 */
+	destroy(): void;
+}
 declare class Window extends EventEmitter {
 	/**
 	 * Get a list of all windows
@@ -272,6 +317,7 @@ declare class Window extends EventEmitter {
 	render(callback?: Function): Window;
 	/**
 	 * Close the window
+	 * @return {boolean}
 	 */
 	close(): boolean;
 	/**
@@ -281,8 +327,9 @@ declare class Window extends EventEmitter {
 	focus(): boolean;
 	/**
 	 * Internal for focus
+	 * @private
 	 */
-	_focus(): void;
+	private _focus;
 	/**
 	 * Blur (un-focus) the window
 	 * @return {boolean}
@@ -400,6 +447,7 @@ declare class Window extends EventEmitter {
 	/**
 	 * Check if we have to set next zindex
 	 * @private
+	 * @return {boolean}
 	 */
 	private _checkNextZindex;
 	_updateDOM(): void;
@@ -648,18 +696,9 @@ declare class Application extends EventEmitter {
 	 * Create application
 	 *
 	 * @param {Core} core Core reference
-	 * @param {object} data Application data
-	 * @param {{foo: *}} data.args Launch arguments
-	 * @param {ApplicationOptions} [data.options] Options
-	 * @param {PackageMetadata} [data.metadata] Package Metadata
+	 * @param {ApplicationData} data Application data
 	 */
-	constructor(core: any, data: {
-		args: {
-			foo: any;
-		};
-		options: ApplicationOptions;
-		metadata: any;
-	});
+	constructor(core: any, data: ApplicationData);
 	/**
 	 * The Application ID
 	 * @type {Number}
@@ -762,6 +801,8 @@ declare class Application extends EventEmitter {
 	 *
 	 * This does not create a new connection, but rather uses the core connection.
 	 * For subscribing to messages from the server use the 'ws:message' event
+	 *
+	 * @param {*} ...args Arguments to pass to message
 	 */
 	send(...args: any[]): void;
 	/**
@@ -784,6 +825,7 @@ declare class Application extends EventEmitter {
 	removeWindow(filter: Function): void;
 	/**
 	 * Gets a snapshot of the application session
+	 * TODO: typedef
 	 * @return {object}
 	 */
 	getSession(): object;
@@ -822,6 +864,23 @@ export type ApplicationOptions = {
 	 */
 	sessionable?: boolean;
 };
+/**
+ * Application Data
+ */
+export type ApplicationData = {
+	/**
+	 * Launch arguments
+	 */
+	args: object;
+	/**
+	 * Options
+	 */
+	options?: ApplicationOptions;
+	/**
+	 * Package Metadata
+	 */
+	metadata?: any;
+};
 declare class Core extends CoreBase {
 	/**
 	 * Create core instance
@@ -829,14 +888,52 @@ declare class Core extends CoreBase {
 	 * @param {CoreOptions} [options={}] Options
 	 */
 	constructor(config?: object, options?: CoreOptions);
+	/**
+	 * Websocket connection
+	 * @type {Websocket}
+	 */
 	ws: Websocket;
-	ping: any;
-	splash: any;
+	/**
+	 * Ping (stay alive) interval
+	 * @type {number}
+	 */
+	ping: number;
+	/**
+	 * Splash instance
+	 * @type {SplashCallback|Splash}
+	 */
+	splash: SplashCallback | Splash;
+	/**
+	 * Main DOM element
+	 * @type {Element}
+	 */
 	$root: Element;
-	$contents: HTMLDivElement;
+	/**
+	 * Windows etc DOM element
+	 * @type {Element}
+	 */
+	$contents: Element;
+	/**
+	 * Resource script container DOM element
+	 * @type {Element}
+	 */
 	$resourceRoot: Element;
-	requestOptions: {};
-	urlResolver: (endpoint?: string, options?: {}, metadata?: {}) => any;
+	/**
+	 * Default fetch request options
+	 * @type {Object}
+	 */
+	requestOptions: any;
+	/**
+	 * Url Resolver
+	 * TODO: typedef
+	 * @type {function(): string}
+	 */
+	urlResolver: () => string;
+	/**
+	 * Current user data
+	 * TODO: typedef
+	 * @type {Object}
+	 */
 	user: any;
 	connecting: boolean;
 	connectfailed: boolean;
@@ -855,8 +952,9 @@ declare class Core extends CoreBase {
 	private _createConnection;
 	/**
 	 * Creates event listeners*
+	 * @private
 	 */
-	_createListeners(): void;
+	private _createListeners;
 	/**
 	 * Creates an URL based on configured public path
 	 *
@@ -958,12 +1056,36 @@ export type CoreOptions = {
 	 */
 	splash?: Function;
 };
+export type SplashCallback = (arg0: any, arg1: Core) => Splash;
 declare class Search {
+	/**
+	 * Create Search instance
+	 * @param {Core} core Core reference
+	 */
 	constructor(core: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
-	ui: import("@osjs/event-emitter").EventEmitter;
-	focusLastWindow: boolean;
-	$element: HTMLDivElement;
+	/**
+	 * Wired actions
+	 * @type {Object}
+	 */
+	ui: any;
+	/**
+	 * Last focused window
+	 * @type {Window}
+	 */
+	focusLastWindow: Window;
+	/**
+	 * Search root DOM element
+	 * @type {Element}
+	 */
+	$element: Element;
+	/**
+	 * Destroy Search instance
+	 */
 	destroy(): void;
 	/**
 	 * Initializes Search Service
@@ -1014,20 +1136,52 @@ declare class Desktop extends EventEmitter {
 	 * @param {DesktopOptions} [options={}] Options
 	 */
 	constructor(core: any, options?: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
-	options: any;
-	$theme: any[];
-	$icons: any[];
+	/**
+	 * Desktop Options
+	 * @type {DeskopOptions}
+	 */
+	options: DeskopOptions;
+	/**
+	 * Theme DOM elements
+	 * @type {Element[]}
+	 */
+	$theme: Element[];
+	/**
+	 * Icon DOM elements
+	 * @type {Element[]}
+	 */
+	$icons: Element[];
+	/**
+	 * Default context menu entries
+	 * @type {Object[]}
+	 */
 	contextmenuEntries: any[];
-	search: Search;
+	/**
+	 * Search instance
+	 * @type {Search|null}
+	 */
+	search: Search | null;
+	/**
+	 * Icon View instance
+	 * @type {DesktopIconView}
+	 */
 	iconview: DesktopIconView;
-	keyboardContext: Element;
-	subtract: {
-		left: number;
-		top: number;
-		right: number;
-		bottom: number;
-	};
+	/**
+	 * Keyboard context dom element
+	 * @type {Element|null}
+	 */
+	keyboardContext: Element | null;
+	/**
+	 * Desktop subtraction rectangle
+	 * TODO: typedef
+	 * @type {Object}
+	 */
+	subtract: any;
 	/**
 	 * Destroy Desktop
 	 */
@@ -1036,27 +1190,62 @@ declare class Desktop extends EventEmitter {
 	 * Initializes Desktop
 	 */
 	init(): void;
+	/**
+	 * Initializes connection events
+	 */
 	initConnectionEvents(): void;
+	/**
+	 * Initializes user interface events
+	 */
 	initUIEvents(): void;
+	/**
+	 * Initializes development tray icons
+	 */
 	initDeveloperTray(): void;
+	/**
+	 * Initializes drag-and-drop events
+	 */
 	initDragEvents(): void;
+	/**
+	 * Initializes keyboard events
+	 */
 	initKeyboardEvents(): void;
+	/**
+	 * Initializes global keyboard events
+	 */
 	initGlobalKeyboardEvents(): void;
+	/**
+	 * Initializes mouse events
+	 */
 	initMouseEvents(): void;
+	/**
+	 * Initializes base events
+	 */
 	initBaseEvents(): void;
+	/**
+	 * Initializes locales
+	 */
 	initLocales(): void;
+	/**
+	 * Starts desktop services
+	 */
 	start(): void;
 	/**
 	 * Update CSS
 	 * @private
 	 */
 	private _updateCSS;
-	addContextMenu(entries: any): void;
+	/**
+	 * Adds something to the default contextmenu entries
+	 * @param {Object[]} entries
+	 */
+	addContextMenu(entries: any[]): void;
 	/**
 	 * Applies settings and updates desktop
 	 * @param {object} [settings] Use this set instead of loading from settings
+	 * @return {object} New settings
 	 */
-	applySettings(settings?: object): any;
+	applySettings(settings?: object): object;
 	/**
 	 * Removes current style theme from DOM
 	 * @private
@@ -1069,33 +1258,58 @@ declare class Desktop extends EventEmitter {
 	private _removeIcons;
 	/**
 	 * Adds or removes the icon view
+	 * @param {Object} settings
 	 */
 	applyIconView(settings: any): void;
 	/**
 	 * Sets the current icon theme from settings
+	 * @param {string} name Icon theme name
+	 * @return {Promise<undefined>}
 	 */
-	applyIcons(name: any): any;
+	applyIcons(name: string): Promise<undefined>;
 	/**
 	 * Sets the current style theme from settings
+	 * @param {string} name Theme name
+	 * @return {Promise<undefined>}
 	 */
-	applyTheme(name: any): any;
+	applyTheme(name: string): Promise<undefined>;
 	/**
 	 * Apply theme wrapper
 	 * @private
+	 * @param {string} name Theme name
+	 * @return {Promise<undefined>}
 	 */
 	private _applyTheme;
 	/**
 	 * Apply settings by key
 	 * @private
+	 * @param {string} k Key
+	 * @param {*} v Value
+	 * @return {Promise<boolean>}
 	 */
 	private _applySettingsByKey;
-	createDropContextMenu(data: any): {
-		label: any;
-		onclick: () => any;
-	}[];
-	onDeveloperMenu(ev: any): void;
-	onDropContextMenu(ev: any, data: any): void;
-	onContextMenu(ev: any): void;
+	/**
+	 * Create drop context menu entries
+	 * @param {Object} Drop data
+	 * @return {Object[]}
+	 */
+	createDropContextMenu(data: any): any[];
+	/**
+	 * When developer menu is shown
+	 * @param {Event} ev
+	 */
+	onDeveloperMenu(ev: Event): void;
+	/**
+	 * When drop menu is shown
+	 * @param {Event} ev
+	 * @param {Object} data
+	 */
+	onDropContextMenu(ev: Event, data: any): void;
+	/**
+	 * When context menu is shown
+	 * @param {Event} ev
+	 */
+	onContextMenu(ev: Event): void;
 	/**
 	 * Sets the keyboard context.
 	 *
@@ -1113,6 +1327,15 @@ declare class Desktop extends EventEmitter {
 	 */
 	getRect(): object;
 }
+/**
+ * Desktop Options
+ */
+export type DeskopOptions = {
+	/**
+	 * Default Context menu items
+	 */
+	contextmenu?: object[];
+};
 declare class Notification {
 	/**
 	 * Create notification
@@ -1191,6 +1414,10 @@ declare class Notifications {
 	 * @param {Core} core OS.js Core instance reference
 	 */
 	constructor(core: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
 	/**
 	 * Destroy notification handler
@@ -1224,9 +1451,21 @@ declare class WindowBehavior {
 	 * @param {Core} core Core reference
 	 */
 	constructor(core: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
+	/**
+	 * Last action
+	 * @type {string}
+	 */
 	lastAction: string;
-	$lofi: HTMLDivElement;
+	/**
+	 * LoFi DOM Element
+	 * @type {Element}
+	 */
+	$lofi: Element;
 	/**
 	 * Initializes window behavior
 	 * @param {Window} win Window reference
@@ -1263,53 +1502,6 @@ declare class WindowBehavior {
 	 */
 	iconClick(ev: Event, win: Window): void;
 }
-declare class Auth {
-	/**
-	 * @param {Core} core OS.js Core instance reference
-	 * @param {object} [args.ui] Options for default login UI adapter
-	 * @param {Function} [args.adapter] Custom login adapter
-	 * @param {Function} [args.login] Custom UI
-	 * @param {object} [args.config] Configuration object to be passed on
-	 */
-	constructor(core: any, args?: {});
-	ui: any;
-	adapter: any;
-	callback: () => void;
-	core: any;
-	/**
-	 * Initializes authentication handler
-	 */
-	init(): any;
-	/**
-	 * Destroy authentication handler
-	 */
-	destroy(): void;
-	/**
-	 * Run the shutdown procedure
-	 */
-	shutdown(reload: any): void;
-	/**
-	 * Shows Login UI
-	 * @return {Promise<boolean>}
-	 */
-	show(cb: any): Promise<boolean>;
-	/**
-	 * Performs a login
-	 * @param {object} values Form values as JSON
-	 */
-	login(values: object): any;
-	/**
-	 * Performs a logout
-	 * @param {boolean} [reload=true] Reload client afterwards
-	 */
-	logout(reload?: boolean): any;
-	/**
-	 * Performs a register call
-	 * @param {object} values Form values as JSON
-	 * @return {Promise<*>}
-	 */
-	register(values: object): Promise<any>;
-}
 declare class Login extends EventEmitter {
 	/**
 	 * Create authentication handler
@@ -1318,40 +1510,22 @@ declare class Login extends EventEmitter {
 	 * @param {LoginOptions} [options] Options
 	 */
 	constructor(core: any, options?: LoginOptions);
-	$container: HTMLDivElement;
+	/**
+	 * Login root DOM element
+	 * @type {Element}
+	 */
+	$container: Element;
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
-	options: {
-		/**
-		 * Title
-		 */
-		title: string;
-		/**
-		 * Fields
-		 */
-		fields: any[] | ({
-			tagName: string;
-			attributes: {
-				name: string;
-				type: string;
-				placeholder: string;
-				value?: undefined;
-			};
-		} | {
-			tagName: string;
-			attributes: {
-				type: string;
-				value: string;
-				name?: undefined;
-				placeholder?: undefined;
-			};
-		})[];
-		id: string;
-		stamp: any;
-		logo: {
-			position: string;
-			src: any;
-		};
-	};
+	/**
+	 * Login options
+	 * TODO: typedef
+	 * @type {Object}
+	 */
+	options: any;
 	/**
 	 * Initializes the UI
 	 */
@@ -1378,6 +1552,90 @@ export type LoginOptions = {
 	 */
 	fields?: object[];
 };
+declare class Auth {
+	/**
+	 * @param {Core} core OS.js Core instance reference
+	 * @param {AuthSettings} [options={}] Auth Options
+	 */
+	constructor(core: any, options?: AuthSettings);
+	/**
+	 * Authentication UI
+	 * @type {Login}
+	 */
+	ui: Login;
+	/**
+	 * Authentication adapter
+	 * @type {AuthAdapter}
+	 */
+	adapter: AuthAdapter;
+	/**
+	 * Authentication callback function
+	 * @type {function(data: Object)}
+	 */
+	callback: (arg0: any, arg1: any) => any;
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: any;
+	/**
+	 * Initializes authentication handler
+	 */
+	init(): any;
+	/**
+	 * Destroy authentication handler
+	 */
+	destroy(): void;
+	/**
+	 * Run the shutdown procedure
+	 * @param {boolean} [reload] Reload afterwards
+	 */
+	shutdown(reload?: boolean): void;
+	/**
+	 * Shows Login UI
+	 * @param {function(data: Object):boolean} cb Authentication callback
+	 * @return {Promise<boolean>}
+	 */
+	show(cb: (arg0: any, arg1: any) => boolean): Promise<boolean>;
+	/**
+	 * Performs a login
+	 * @param {Object} values Form values as JSON
+	 * @return {Promise<boolean>}
+	 */
+	login(values: any): Promise<boolean>;
+	/**
+	 * Performs a logout
+	 * @param {boolean} [reload=true] Reload client afterwards
+	 * @return {Promise<boolean>}
+	 */
+	logout(reload?: boolean): Promise<boolean>;
+	/**
+	 * Performs a register call
+	 * @param {object} values Form values as JSON
+	 * @return {Promise<*>}
+	 */
+	register(values: object): Promise<any>;
+}
+/**
+ * TODO: typedef
+ */
+export type AuthAdapter = any;
+export type AuthAdapterCallback = (arg0: any, arg1: any) => AuthAdapter;
+export type LoginAdapterCallback = (arg0: any, arg1: any) => Login;
+export type AuthSettings = {
+	/**
+	 * Adapter to use
+	 */
+	adapter?: AuthAdapterCallback | AuthAdapter;
+	/**
+	 * Login Adapter to use
+	 */
+	login?: LoginAdapterCallback | Login;
+	/**
+	 * Adapter configuration
+	 */
+	config?: any;
+};
 declare class Session {
 	/**
 	 * Creates the Session Handler
@@ -1396,11 +1654,13 @@ declare class Session {
 	destroy(): void;
 	/**
 	 * Saves session
+	 * @return {Promise<boolean>}
 	 */
-	save(): any;
+	save(): Promise<boolean>;
 	/**
 	 * Loads session
 	 * @param {boolean} [fresh=false] Kill all current applications first
+	 * @return {Promise<boolean>}
 	 */
 	load(fresh?: boolean): Promise<boolean>;
 }
@@ -1421,6 +1681,9 @@ declare class Tray {
 	 * @type {TrayEntry[]}
 	 */
 	entries: TrayEntry[];
+	/**
+	 * Destroys instance
+	 */
 	destroy(): void;
 	/**
 	 * Creates a new Tray entry
@@ -1563,6 +1826,7 @@ declare class Packages {
 	 * @param {Metadata} metadata Application metadata
 	 * @param {{foo: *}} args Launch arguments
 	 * @param {object} options Launch options
+	 * @return {Promise<Application>}
 	 */
 	private _launchApplication;
 	/**
@@ -1868,6 +2132,9 @@ declare class Filesystem extends EventEmitter {
 	/**
 	 * Request action wrapper
 	 * @private
+	 * @param {string} method
+	 * @param {*} ...args Arguments
+	 * @return {Promise<*>}
 	 */
 	private _requestAction;
 	/**
@@ -1928,7 +2195,11 @@ declare class Settings {
 	 * @param {SettingsOptions} options Options
 	 */
 	constructor(core: any, options: SettingsOptions);
-	adapter: any;
+	/**
+	 * The settings adapter
+	 * @type {SettingsAdapter}
+	 */
+	adapter: SettingsAdapter;
 	/**
 	 * Internal timeout reference used for debouncing
 	 * @type {object}
@@ -1941,7 +2212,14 @@ declare class Settings {
 	settings: {
 		name: any;
 	};
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
+	/**
+	 * Initializes settings adapter
+	 */
 	init(): any;
 	/**
 	 * Saves settings
@@ -1979,13 +2257,18 @@ declare class Settings {
 	clear(ns: string): Promise<boolean>;
 }
 /**
+ * TODO: typedef
+ */
+export type SettingsAdapter = any;
+export type SettingsAdapterCallback = (arg0: any, arg1: any) => SettingsAdapter;
+/**
  * Settings Options
  */
 export type SettingsOptions = {
 	/**
 	 * Adapter to use
 	 */
-	adapter?: Function | any;
+	adapter?: SettingsAdapterCallback | SettingsAdapter;
 	/**
 	 * Adapter configuration
 	 */
@@ -1998,14 +2281,6 @@ declare class SettingsServiceProvider extends ServiceProvider {
 declare namespace instance {
 	export function addMiddleware(m: any): void;
 	export function clearMiddleware(): void;
-}
-declare class Splash {
-	constructor(core: any);
-	core: any;
-	$loading: HTMLDivElement;
-	init(): void;
-	show(): void;
-	destroy(): void;
 }
 /**
  * Basic Application Helper
@@ -2031,21 +2306,34 @@ export class BasicApplication extends EventEmitter {
 		saveMimeTypes: string[];
 		defaultFilename: string;
 	});
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
 	core: any;
+	/**
+	 * Application instance reference
+	 * @type {Application}
+	 */
 	proc: any;
+	/**
+	 * Window instance reference
+	 * @type {Window}
+	 */
 	win: Window;
-	options: {
-		mimeTypes: any;
-		loadMimeTypes: any[] | string[];
-		saveMimeTypes: any[] | string[];
-		defaultFilename: string;
-	};
+	/**
+	 * Basic Application Options
+	 * TODO: typedef
+	 * @type {Object}
+	 */
+	options: any;
 	/**
 	 * Destroys all Basic Application internals
 	 */
 	destroy(): void;
 	/**
 	 * Initializes the application
+	 * @return {Promise<boolean>}
 	 */
 	init(): Promise<boolean>;
 	/**

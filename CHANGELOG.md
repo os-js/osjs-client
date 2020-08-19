@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.1.61 - 2020-08-20
+
+* Updated dependencies
+* Updated documentation
+
 ## 3.1.60 - 2020-08-19
 
 * Settings#get now properly returns defaults when no key is set

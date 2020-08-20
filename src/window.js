@@ -58,6 +58,16 @@ import logger from './logger';
  */
 
 /**
+ * Window session
+ * @typedef {Object} WindowSession
+ * @property {number} id
+ * @property {boolean} maximized
+ * @property {boolean} minimized
+ * @property {WindowPosition} position
+ * @property {WindowDimension} dimension
+ */
+
+/**
  * Window attributes definition
  *
  * @typedef {Object} WindowAttributes
@@ -308,7 +318,7 @@ export default class Window extends EventEmitter {
     /**
      * Last DOM update data attributes
      * @private
-     * @type {object}
+     * @type {WindowAttributes}
      */
     this._lastAttributes = {};
 
@@ -814,7 +824,7 @@ export default class Window extends EventEmitter {
 
   /**
    * Get a snapshot of the Window session
-   * @return {Object}
+   * @return {WindowSession}
    */
   getSession() {
     return this.attributes.sessionable === false ? null : {

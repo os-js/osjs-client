@@ -68,6 +68,17 @@ const createAdapter = (core, options) => {
  */
 
 /**
+ * TODO: typedef
+ * @typedef {Object} AuthAdapterConfig
+ */
+
+/**
+ * @typedef {Object} AuthForm
+ * @property {string} [username]
+ * @property {string} [password]
+ */
+
+/**
  * @callback AuthAdapterCallback
  * @param {Core} core
  * @return {AuthAdapter}
@@ -80,10 +91,16 @@ const createAdapter = (core, options) => {
  */
 
 /**
+ * @callback AuthCallback
+ * @param {AuthForm} data
+ * @return {boolean}
+ */
+
+/**
  * @typedef {Object} AuthSettings
  * @property {AuthAdapterCallback|AuthAdapter} [adapter] Adapter to use
  * @property {LoginAdapterCallback|Login} [login] Login Adapter to use
- * @property {Object} [config] Adapter configuration
+ * @property {AuthAdapterConfig} [config] Adapter configuration
  */
 
 /**
@@ -110,7 +127,7 @@ export default class Auth {
 
     /**
      * Authentication callback function
-     * @type {function(data: Object)}
+     * @type {AuthCallback}
      */
     this.callback = function() {};
 
@@ -161,7 +178,7 @@ export default class Auth {
 
   /**
    * Shows Login UI
-   * @param {function(data: Object):boolean} cb Authentication callback
+   * @param {AuthCallback} cb Authentication callback
    * @return {Promise<boolean>}
    */
   show(cb) {
@@ -180,7 +197,7 @@ export default class Auth {
 
   /**
    * Performs a login
-   * @param {Object} values Form values as JSON
+   * @param {AuthForm} values Form values as JSON
    * @return {Promise<boolean>}
    */
   login(values) {
@@ -233,7 +250,7 @@ export default class Auth {
 
   /**
    * Performs a register call
-   * @param {object} values Form values as JSON
+   * @param {AuthForm} values Form values as JSON
    * @return {Promise<*>}
    */
   register(values) {

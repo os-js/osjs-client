@@ -44,6 +44,14 @@ import logger from './logger';
  */
 
 /**
+ * User Data
+ * @typedef {Object} CoreUserData
+ * @property {string} username
+ * @property {number} [id]
+ * @property {string[]} [groups=[]]
+ */
+
+/**
  * Core Options
  *
  * @typedef {Object} CoreOptions
@@ -53,6 +61,14 @@ import logger from './logger';
  * @property {SplashCallback|Splash} [splash] Custom callback function for creating splash screen
  */
 
+/*
+ * Core Open File Options
+ *
+ * @typedef {Object} CoreOpenOptions
+ * @property {boolean} [useDefault] Use saved default application preference
+ * @property {boolean} [forceDialog] Force application choice dialog on multiple choices
+ */
+
 /**
  * Main Core class for OS.js service providers and bootstrapping.
  */
@@ -60,7 +76,7 @@ export default class Core extends CoreBase {
 
   /**
    * Create core instance
-   * @param {object} config Configuration tree
+   * @param {CoreConfig} [config={}] Configuration tree
    * @param {CoreOptions} [options={}] Options
    */
   constructor(config = {}, options = {}) {
@@ -128,8 +144,7 @@ export default class Core extends CoreBase {
 
     /**
      * Current user data
-     * TODO: typedef
-     * @type {Object}
+     * @type {CoreUserData}
      */
     this.user = this.config('auth.defaultUserData');
 
@@ -478,8 +493,8 @@ export default class Core extends CoreBase {
    * Create an application from a package
    *
    * @param {string} name Package name
-   * @param {object} [args] Launch arguments
-   * @param {object} [options] Launch options
+   * @param {{foo: *}} [args] Launch arguments
+   * @param {PackageLaunchOptions} [options] Launch options
    * @see {Packages}
    * @return {Application}
    */
@@ -491,10 +506,8 @@ export default class Core extends CoreBase {
 
   /**
    * Spawns an application based on the file given
-   * @param {object} file A file object
-   * @param {object} [options] Options
-   * @param {boolean} [options.useDefault] Use saved default application preference
-   * @param {boolean} [options.forceDialog] Force application choice dialog on multiple choices
+   * @param {VFSFile} file A file object
+   * @param {CoreOpenOptions} [options] Options
    * @return {Boolean|Application}
    */
   open(file, options = {}) {
@@ -622,7 +635,7 @@ export default class Core extends CoreBase {
 
   /**
    * Gets the current user
-   * @return {{key: *}} User object
+   * @return {CoreUserData} User object
    */
   getUser() {
     return {...this.user};

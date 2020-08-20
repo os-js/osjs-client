@@ -86,7 +86,7 @@ export default class Notification {
 
     /**
      * Options
-     * @type {Object}
+     * @type {NotificationOptions}
      */
     this.options = {
       icon: null,

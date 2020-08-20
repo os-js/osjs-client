@@ -54,9 +54,18 @@ const getSettingsKey = metadata =>
  * Application Data
  *
  * @typedef {Object} ApplicationData
- * @property {object} args Launch arguments
+ * @property {{foo: *}} args Launch arguments
  * @property {ApplicationOptions} [options] Options
  * @property {PackageMetadata} [metadata] Package Metadata
+ */
+
+/**
+ * Application Session
+ *
+ * @typedef {Object} ApplicationSession
+ * @property {{foo: string}} args
+ * @property {string} name
+ * @property {WindowSession[]} windows
  */
 
 /**
@@ -110,7 +119,7 @@ export default class Application extends EventEmitter {
 
     /**
      * Application options
-     * @type {object}
+     * @type {ApplicationOptions}
      */
     this.options = {
       sessionable: true,
@@ -151,7 +160,7 @@ export default class Application extends EventEmitter {
 
     /**
      * Application settings
-     * @type {object}
+     * @type {{foo: *}}
      */
     this.settings = core.make('osjs/settings')
       .get(getSettingsKey(this.metadata), null, defaultSettings);
@@ -380,8 +389,7 @@ export default class Application extends EventEmitter {
 
   /**
    * Gets a snapshot of the application session
-   * TODO: typedef
-   * @return {object}
+   * @return {ApplicationSession}
    */
   getSession() {
     const session = {

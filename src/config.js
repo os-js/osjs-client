@@ -32,6 +32,11 @@ import {clientLocale} from './utils/locale.js';
 import defaultWallpaper from './styles/wallpaper.png';
 import defaultIcon from './styles/logo-blue-32x32.png';
 
+/**
+ * TODO: typedef
+ * @typedef {Object} CoreConfig
+ */
+
 const createUri = str => str
   .replace(/(index\.(html?|php))$/, '')
   .replace(/\/?$/, '/');

@@ -34,6 +34,1300 @@ export as namespace osjs__client;
 import { CoreBase, ServiceProvider } from '@osjs/common';
 import { EventEmitter } from '@osjs/event-emitter';
 
+declare class Application extends EventEmitter {
+	/**
+	 * Get a list of all running applications
+	 *
+	 * @return {Application[]}
+	 */
+	static getApplications(): Application[];
+	/**
+	 * Kills all running applications
+	 */
+	static destroyAll(): void;
+	/**
+	 * Create application
+	 *
+	 * @param {Core} core Core reference
+	 * @param {ApplicationData} data Application data
+	 */
+	constructor(core: Core, data: ApplicationData);
+	/**
+	 * The Application ID
+	 * @type {Number}
+	 */
+	pid: number;
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Application arguments
+	 * @type {{foo: *}}
+	 */
+	args: {
+		foo: any;
+	};
+	/**
+	 * Application options
+	 * @type {ApplicationOptions}
+	 */
+	options: ApplicationOptions;
+	/**
+	 * Application metadata
+	 * @private
+	 * @type {PackageMetadata}
+	 */
+	private metadata;
+	/**
+	 * Window list
+	 * @type {Window[]}
+	 */
+	windows: Window[];
+	/**
+	 * Worker instances
+	 * @type {Worker[]}
+	 */
+	workers: Worker[];
+	/**
+	 * Options for internal fetch/requests
+	 * @type {object}
+	 */
+	requestOptions: object;
+	/**
+	 * The application destruction state
+	 * @type {boolean}
+	 */
+	destroyed: boolean;
+	/**
+	 * Application settings
+	 * @type {{foo: *}}
+	 */
+	settings: {
+		foo: any;
+	};
+	/**
+	 * Application started time
+	 * @type {Date}
+	 */
+	started: Date;
+	/**
+	 * Application WebSockets
+	 * @type {Websocket[]}
+	 */
+	sockets: Websocket[];
+	/**
+	 * Destroy application
+	 */
+	destroy(remove?: boolean): void;
+	/**
+	 * Re-launch this application
+	 */
+	relaunch(): void;
+	/**
+	 * Gets a URI to a resource for this application
+	 *
+	 * If given path is an URI it will just return itself.
+	 *
+	 * @param {string} path The path
+	 * @param {object} [options] Options for url() in core
+	 * @return {string} A complete URI
+	 */
+	resource(path?: string, options?: object): string;
+	/**
+	 * Performs a request to the OS.js server with the application
+	 * as the endpoint.
+	 * @param {string} [path=/] Append this to endpoint
+	 * @param {Options} [options] fetch options
+	 * @param {string} [type='json'] Request / Response type
+	 * @return {Promise<*>} ArrayBuffer or JSON
+	 */
+	request(path?: string, options?: any, type?: string): Promise<any>;
+	/**
+	 * Creates a new Websocket
+	 * @param {string} [path=/socket] Append this to endpoint
+	 * @param {WebsocketOptions} [options={}] Connection options
+	 * @return {Websocket}
+	 */
+	socket(path?: string, options?: any): Websocket;
+	/**
+	 * Sends a message over websocket via the core connection.
+	 *
+	 * This does not create a new connection, but rather uses the core connection.
+	 * For subscribing to messages from the server use the 'ws:message' event
+	 *
+	 * @param {*} ...args Arguments to pass to message
+	 */
+	send(...args: any[]): void;
+	/**
+	 * Creates a new Worker
+	 * @param {string} filename Worker filename
+	 * @param {object} [options] Worker options
+	 * @return {Worker}
+	 */
+	worker(filename: string, options?: object): Worker;
+	/**
+	 * Create a new window belonging to this application
+	 * @param {WindowOptions} [options={}] Window options
+	 * @return {Window}
+	 */
+	createWindow(options?: any): Window;
+	/**
+	 * Removes window(s) based on given filter
+	 * @param {Function} filter Filter function
+	 */
+	removeWindow(filter: Function): void;
+	/**
+	 * Gets a snapshot of the application session
+	 * @return {ApplicationSession}
+	 */
+	getSession(): ApplicationSession;
+	/**
+	 * Emits an event across all (or filtered) applications
+	 *
+	 * @deprecated
+	 * @param {Function} [filter] A method to filter what applications to send to
+	 * @return {Function} Function with 'emit()' signature
+	 */
+	emitAll(filter?: Function): Function;
+	/**
+	 * Saves settings
+	 * @return {Promise<boolean>}
+	 */
+	saveSettings(): Promise<boolean>;
+}
+declare class Auth {
+	/**
+	 * @param {Core} core OS.js Core instance reference
+	 * @param {AuthSettings} [options={}] Auth Options
+	 */
+	constructor(core: Core, options?: AuthSettings);
+	/**
+	 * Authentication UI
+	 * @type {Login}
+	 */
+	ui: Login;
+	/**
+	 * Authentication adapter
+	 * @type {AuthAdapter}
+	 */
+	adapter: AuthAdapter;
+	/**
+	 * Authentication callback function
+	 * @type {AuthCallback}
+	 */
+	callback: AuthCallback;
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Initializes authentication handler
+	 */
+	init(): any;
+	/**
+	 * Destroy authentication handler
+	 */
+	destroy(): void;
+	/**
+	 * Run the shutdown procedure
+	 * @param {boolean} [reload] Reload afterwards
+	 */
+	shutdown(reload?: boolean): void;
+	/**
+	 * Shows Login UI
+	 * @param {AuthCallback} cb Authentication callback
+	 * @return {Promise<boolean>}
+	 */
+	show(cb: AuthCallback): Promise<boolean>;
+	/**
+	 * Performs a login
+	 * @param {AuthForm} values Form values as JSON
+	 * @return {Promise<boolean>}
+	 */
+	login(values: AuthForm): Promise<boolean>;
+	/**
+	 * Performs a logout
+	 * @param {boolean} [reload=true] Reload client afterwards
+	 * @return {Promise<boolean>}
+	 */
+	logout(reload?: boolean): Promise<boolean>;
+	/**
+	 * Performs a register call
+	 * @param {AuthForm} values Form values as JSON
+	 * @return {Promise<*>}
+	 */
+	register(values: AuthForm): Promise<any>;
+}
+declare class AuthServiceProvider extends ServiceProvider {
+	/**
+	 * @param {Object} core OS.js Core
+	 * @param {Object} [args] Arguments
+	 * @see Auth
+	 */
+	constructor(core: Core, args?: any);
+	auth: Auth;
+}
+declare class Clipboard {
+	/**
+	 * @type {CliboardData}
+	 */
+	clipboard: CliboardData;
+	/**
+	 * Destroy clipboard
+	 */
+	destroy(): void;
+	/**
+	 * Clear clipboard
+	 */
+	clear(): void;
+	/**
+	 * Set clipboard data
+	 * @param {*} data Clipboard data. For async data, provide a function that returns a promise
+	 * @param {string} [type] Optional type used by applications for identifying content
+	 */
+	set(data: any, type?: string): void;
+	/**
+	 * Checks if current clipboard data has this type
+	 * @param {string|RegExp} type Data type
+	 * @return {boolean}
+	 */
+	has(type: string | RegExp): boolean;
+	/**
+	 * Gets clipboard data
+	 * @param {boolean} [clear=false] Clear clipboard
+	 * @return {Promise<*>}
+	 */
+	get(clear?: boolean): Promise<any>;
+}
+declare class Core extends CoreBase {
+	/**
+	 * Create core instance
+	 * @param {CoreConfig} [config={}] Configuration tree
+	 * @param {CoreOptions} [options={}] Options
+	 */
+	constructor(config?: any, options?: CoreOptions);
+	/**
+	 * Websocket connection
+	 * @type {Websocket}
+	 */
+	ws: Websocket;
+	/**
+	 * Ping (stay alive) interval
+	 * @type {number}
+	 */
+	ping: number;
+	/**
+	 * Splash instance
+	 * @type {Splash}
+	 */
+	splash: Splash;
+	/**
+	 * Main DOM element
+	 * @type {Element}
+	 */
+	$root: Element;
+	/**
+	 * Windows etc DOM element
+	 * @type {Element}
+	 */
+	$contents: Element;
+	/**
+	 * Resource script container DOM element
+	 * @type {Element}
+	 */
+	$resourceRoot: Element;
+	/**
+	 * Default fetch request options
+	 * @type {Object}
+	 */
+	requestOptions: any;
+	/**
+	 * Url Resolver
+	 * TODO: typedef
+	 * @type {function(): string}
+	 */
+	urlResolver: () => string;
+	/**
+	 * Current user data
+	 * @type {CoreUserData}
+	 */
+	user: CoreUserData;
+	connecting: boolean;
+	connectfailed: boolean;
+	/**
+	 * Attaches some internal events
+	 * @private
+	 */
+	private _attachEvents;
+	/**
+	 * Creates the main connection to server
+	 *
+	 * @private
+	 * @param {Function} cb Callback function
+	 * @return {boolean}
+	 */
+	private _createConnection;
+	/**
+	 * Creates event listeners*
+	 * @private
+	 */
+	private _createListeners;
+	/**
+	 * Creates an URL based on configured public path
+	 *
+	 * If you give a options.type, the URL will be resolved
+	 * to the correct resource.
+	 *
+	 * @param {string} [endpoint=/] Endpoint
+	 * @param {object} [options] Additional options for resolving url
+	 * @param {boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
+	 * @param {string} [options.type] Optional URL type (websocket)
+	 * @param {PackageMetadata} [metadata] A package metadata
+	 * @return {string}
+	 */
+	url(endpoint?: string, options?: {
+		prefix: boolean;
+		type: string;
+	}, metadata?: any): string;
+	/**
+	 * Make a HTTP request
+	 *
+	 * This is a wrapper for making a 'fetch' request with some helpers
+	 * and integration with OS.js
+	 *
+	 * @param {string} url The endpoint
+	 * @param {Options} [options] fetch options
+	 * @param {string} [type] Request / Response type
+	 * @param {boolean} [force=false] Force request even when in standalone mode
+	 * @return {*}
+	 */
+	request(url: string, options?: any, type?: string, force?: boolean): any;
+	/**
+	 * Create an application from a package
+	 *
+	 * @param {string} name Package name
+	 * @param {{foo: *}} [args] Launch arguments
+	 * @param {PackageLaunchOptions} [options] Launch options
+	 * @see {Packages}
+	 * @return {Application}
+	 */
+	run(name: string, args?: {
+		foo: any;
+	}, options?: any): Application;
+	/**
+	 * Spawns an application based on the file given
+	 * @param {VFSFile} file A file object
+	 * @param {CoreOpenOptions} [options] Options
+	 * @return {Boolean|Application}
+	 */
+	open(file: any, options?: any): boolean | Application;
+	/**
+	 * Wrapper method to create an application choice dialog
+	 * @private
+	 */
+	private _openApplicationDialog;
+	/**
+	 * Sends a 'broadcast' event with given arguments
+	 * to all applications matching given filter
+	 *
+	 * @param {string|Function} pkg The filter
+	 * @param {string} name The event name
+	 * @param {*} ...args Arguments to pass to emit
+	 * @return {string[]} List of application names emitted to
+	 */
+	broadcast(pkg: string | Function, name: string, ...args: any[]): string[];
+	/**
+	 * Set the internal fetch/request options
+	 * @param {object} options Request options
+	 */
+	setRequestOptions(options: object): void;
+	/**
+	 * Gets the current user
+	 * @return {CoreUserData} User object
+	 */
+	getUser(): CoreUserData;
+}
+declare class CoreServiceProvider extends ServiceProvider {
+	/**
+	 * @param {Object} core OS.js Core
+	 * @param {Object} [options] Arguments
+	 * @param {Function} [options.windowBehavior] Custom Window Behavior
+	 * @param {Object} [options.locales] Override locales
+	 */
+	constructor(core: Core, options?: {
+		windowBehavior: Function;
+		locales: any;
+	});
+	session: Session;
+	tray: Tray;
+	pm: Packages;
+	clipboard: Clipboard;
+	initBaseProviders(): void;
+	initResourceProviders(): void;
+	createGlobalApi(): Readonly<{
+		make: (...args: any[]) => any;
+		register: (...args: any[]) => void;
+		url: (...args: any[]) => any;
+		run: (...args: any[]) => any;
+		open: (...args: any[]) => any;
+		request: (...args: any[]) => any;
+	}>;
+	onDistChanged(filename: any): void;
+	onPackageChanged(name: any): void;
+	/**
+	 * Provides localization
+	 * TODO: Move to a Locale class
+	 * @private
+	 */
+	private _createLocaleContract;
+	/**
+	 * Provides window contract
+	 * @private
+	 */
+	private _createWindowContract;
+}
+declare class Desktop extends EventEmitter {
+	/**
+	 * Create Desktop
+	 *
+	 * @param {Core} core Core reference
+	 * @param {DesktopOptions} [options={}] Options
+	 */
+	constructor(core: Core, options?: any);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Desktop Options
+	 * @type {DeskopOptions}
+	 */
+	options: DeskopOptions;
+	/**
+	 * Theme DOM elements
+	 * @type {Element[]}
+	 */
+	$theme: Element[];
+	/**
+	 * Icon DOM elements
+	 * @type {Element[]}
+	 */
+	$icons: Element[];
+	/**
+	 * Default context menu entries
+	 * @type {DesktopContextMenuEntry[]}
+	 */
+	contextmenuEntries: DesktopContextMenuEntry[];
+	/**
+	 * Search instance
+	 * @type {Search|null}
+	 */
+	search: Search | null;
+	/**
+	 * Icon View instance
+	 * @type {DesktopIconView}
+	 */
+	iconview: DesktopIconView;
+	/**
+	 * Keyboard context dom element
+	 * @type {Element|null}
+	 */
+	keyboardContext: Element | null;
+	/**
+	 * Desktop subtraction rectangle
+	 * TODO: typedef
+	 * @type {DesktopViewportRectangle}
+	 */
+	subtract: DesktopViewportRectangle;
+	/**
+	 * Destroy Desktop
+	 */
+	destroy(): void;
+	/**
+	 * Initializes Desktop
+	 */
+	init(): void;
+	/**
+	 * Initializes connection events
+	 */
+	initConnectionEvents(): void;
+	/**
+	 * Initializes user interface events
+	 */
+	initUIEvents(): void;
+	/**
+	 * Initializes development tray icons
+	 */
+	initDeveloperTray(): void;
+	/**
+	 * Initializes drag-and-drop events
+	 */
+	initDragEvents(): void;
+	/**
+	 * Initializes keyboard events
+	 */
+	initKeyboardEvents(): void;
+	/**
+	 * Initializes global keyboard events
+	 */
+	initGlobalKeyboardEvents(): void;
+	/**
+	 * Initializes mouse events
+	 */
+	initMouseEvents(): void;
+	/**
+	 * Initializes base events
+	 */
+	initBaseEvents(): void;
+	/**
+	 * Initializes locales
+	 */
+	initLocales(): void;
+	/**
+	 * Starts desktop services
+	 */
+	start(): void;
+	/**
+	 * Update CSS
+	 * @private
+	 */
+	private _updateCSS;
+	/**
+	 * Adds something to the default contextmenu entries
+	 * @param {DesktopContextMenuEntry[]} entries
+	 */
+	addContextMenu(entries: DesktopContextMenuEntry[]): void;
+	/**
+	 * Applies settings and updates desktop
+	 * @param {DesktopSettings} [settings] Use this set instead of loading from settings
+	 * @return {DesktopSettings} New settings
+	 */
+	applySettings(settings?: DesktopSettings): DesktopSettings;
+	/**
+	 * Removes current style theme from DOM
+	 * @private
+	 */
+	private _removeTheme;
+	/**
+	 * Removes current icon theme from DOM
+	 * @private
+	 */
+	private _removeIcons;
+	/**
+	 * Adds or removes the icon view
+	 * @param {DesktopIconViewSettings} settings
+	 */
+	applyIconView(settings: DesktopIconViewSettings): void;
+	/**
+	 * Sets the current icon theme from settings
+	 * @param {string} name Icon theme name
+	 * @return {Promise<undefined>}
+	 */
+	applyIcons(name: string): Promise<undefined>;
+	/**
+	 * Sets the current style theme from settings
+	 * @param {string} name Theme name
+	 * @return {Promise<undefined>}
+	 */
+	applyTheme(name: string): Promise<undefined>;
+	/**
+	 * Apply theme wrapper
+	 * @private
+	 * @param {string} name Theme name
+	 * @return {Promise<undefined>}
+	 */
+	private _applyTheme;
+	/**
+	 * Apply settings by key
+	 * @private
+	 * @param {string} k Key
+	 * @param {*} v Value
+	 * @return {Promise<boolean>}
+	 */
+	private _applySettingsByKey;
+	/**
+	 * Create drop context menu entries
+	 * @param {Object} data Drop data
+	 * @return {Object[]}
+	 */
+	createDropContextMenu(data: any): any[];
+	/**
+	 * When developer menu is shown
+	 * @param {Event} ev
+	 */
+	onDeveloperMenu(ev: Event): void;
+	/**
+	 * When drop menu is shown
+	 * @param {Event} ev
+	 * @param {Object} data
+	 */
+	onDropContextMenu(ev: Event, data: any): void;
+	/**
+	 * When context menu is shown
+	 * @param {Event} ev
+	 */
+	onContextMenu(ev: Event): void;
+	/**
+	 * Sets the keyboard context.
+	 *
+	 * Used for tabbing and other special events
+	 *
+	 * @param {Element} [ctx]
+	 */
+	setKeyboardContext(ctx?: Element): void;
+	/**
+	 * Gets the rectangle of available space
+	 *
+	 * This is based on any panels etc taking up space
+	 *
+	 * @return {DesktopViewportRectangle}
+	 */
+	getRect(): DesktopViewportRectangle;
+}
+declare class DesktopIconView extends EventEmitter {
+	/**
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	core: Core;
+	$root: HTMLDivElement;
+	iconview: any;
+	root: string;
+	destroy(): void;
+	_render(root: any): boolean;
+	render(root: any): void;
+	createFileContextMenu(ev: any, entry: any): void;
+	createDropContextMenu(ev: any, data: any, files: any): void;
+	createRootContextMenu(ev: any): void;
+	_createWatcher(): void;
+	applySettings(): void;
+}
+declare class DesktopServiceProvider extends ServiceProvider {
+	constructor(core: Core, options?: {});
+	desktop: any;
+}
+declare class Filesystem extends EventEmitter {
+	/**
+	 * Create filesystem manager
+	 *
+	 * @param {Core} core Core reference
+	 * @param {FilesystemOptions} [options] Options
+	 */
+	constructor(core: Core, options?: FilesystemOptions);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Adapter registry
+	 * @type {{name: Adapter}}
+	 */
+	adapters: {
+		name: any;
+	};
+	/**
+	 * Mountpoints
+	 * @type {Mountpoint[]}
+	 */
+	mounts: Mountpoint[];
+	/**
+	 * Options
+	 * @type {FilesystemOptions}
+	 */
+	options: FilesystemOptions;
+	/**
+	 * A wrapper for VFS method requests
+	 * @type {{key: Function}}
+	 */
+	proxy: {
+		key: Function;
+	};
+	/**
+	 * Mounts all configured mountpoints
+	 */
+	mountAll(stopOnError?: boolean): Promise<any[]>;
+	/**
+	 * Mount given filesystem
+	 * @param {string} name Filesystem name
+	 * @throws {Error} On invalid name or if already mounted
+	 */
+	mount(name: string): Promise<boolean>;
+	/**
+	 * Unmount given filesystem
+	 * @param {string} name Filesystem name
+	 * @throws {Error} On invalid name or if already unmounted
+	 */
+	unmount(name: string): Promise<boolean>;
+	/**
+	 * Internal wrapper for mounting/unmounting
+	 *
+	 * @private
+	 * @param {Mountpoint} mountpoint The mountpoint
+	 * @param {boolean} [unmount=false] If action is unmounting
+	 * @return {Promise<boolean>}
+	 */
+	private _mountpointAction;
+	/**
+	 * Internal wrapper for mounting/unmounting by name
+	 *
+	 * @private
+	 * @param {string} name Mountpoint name
+	 * @param {boolean} [unmount=false] If action is unmounting
+	 * @return {Promise<boolean>}
+	 */
+	private _mountAction;
+	/**
+	 * Gets the proxy for VFS methods
+	 * @return {{key: Function}} A map of VFS functions
+	 */
+	request(): {
+		key: Function;
+	};
+	/**
+	 * Perform a VFS method request
+	 *
+	 * @private
+	 * @param {string} method VFS method name
+	 * @param {*} ...args Arguments
+	 * @return {*}
+	 */
+	private _request;
+	/**
+	 * Request action wrapper
+	 * @private
+	 * @param {string} method
+	 * @param {*} ...args Arguments
+	 * @return {Promise<*>}
+	 */
+	private _requestAction;
+	/**
+	 * Creates a new mountpoint based on given properties
+	 * @param {Mountpoint} props Properties
+	 * @return {Mountpoint}
+	 */
+	createMountpoint(props: Mountpoint): Mountpoint;
+	/**
+	 * Gets mountpoint from given path
+	 * @param {string|VFSFile} file The file
+	 * @return {Mountpoint|null}
+	 */
+	getMountpointFromPath(file: string | any): Mountpoint | null;
+	/**
+	 * Gets all mountpoints
+	 * @return {Mountpoint[]}
+	 */
+	getMounts(all?: boolean): Mountpoint[];
+}
+declare class Login extends EventEmitter {
+	/**
+	 * Create authentication handler
+	 *
+	 * @param {Core} core Core reference
+	 * @param {LoginOptions} [options] Options
+	 */
+	constructor(core: Core, options?: LoginOptions);
+	/**
+	 * Login root DOM element
+	 * @type {Element}
+	 */
+	$container: Element;
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Login options
+	 * TODO: typedef
+	 * @type {Object}
+	 */
+	options: any;
+	/**
+	 * Initializes the UI
+	 */
+	init(startHidden: any): void;
+	/**
+	 * Destroys the UI
+	 */
+	destroy(): void;
+	/**
+	 * Renders the UI
+	 */
+	render(startHidden: any): void;
+}
+declare class Notification {
+	/**
+	 * Create notification
+	 *
+	 * @param {Core} core Core reference
+	 * @param {Element} root Root DOM element
+	 * @param {NotificationOptions} options Options
+	 */
+	constructor(core: Core, root: Element, options?: NotificationOptions);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Root node reference
+	 * @type {Element}
+	 */
+	$root: Element;
+	/**
+	 * Notification DOM node
+	 * @type {Element}
+	 */
+	$element: Element;
+	/**
+	 * The notification destruction state
+	 * @type {Boolean}
+	 */
+	destroyed: boolean;
+	/**
+	 * Options
+	 * @type {NotificationOptions}
+	 */
+	options: NotificationOptions;
+	/**
+	 * Destroy notification
+	 */
+	destroy(): void;
+	/**
+	 * Render notification
+	 * @return {Promise<boolean>}
+	 */
+	render(): Promise<boolean>;
+}
+declare class NotificationServiceProvider extends ServiceProvider {
+	constructor(core: Core);
+	notifications: Notifications;
+}
+declare class Notifications {
+	/**
+	 * @param {Core} core OS.js Core instance reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Destroy notification handler
+	 */
+	destroy(): void;
+	$element: HTMLDivElement;
+	/**
+	 * Initialize notification handler
+	 */
+	init(): void;
+	/**
+	 * Create a new notification
+	 * @param {NotificationOptions} options See notification class for options
+	 * @return {Notification}
+	 */
+	create(options: NotificationOptions): Notification;
+	/**
+	 * Sets the element styles
+	 */
+	setElementStyles(): void;
+	/**
+	 * Creates a new CSS style object
+	 * @return {{property: string}}
+	 */
+	createElementStyles(): {
+		property: string;
+	};
+}
+declare class Packages {
+	/**
+	 * Create package manage
+	 *
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * A list of registered packages
+	 * @type {PackageReference[]}
+	 */
+	packages: PackageReference[];
+	/**
+	 * The lost of loaded package metadata
+	 * @type {PackageMetadata[]}
+	 */
+	metadata: PackageMetadata[];
+	/**
+	 * A list of running application names
+	 *
+	 * Mainly used for singleton awareness
+	 *
+	 * @private
+	 * @type {string[]}
+	 */
+	private _running;
+	/**
+	 * Preloader
+	 * @type {Preloader}
+	 */
+	preloader: Preloader;
+	/**
+	 * If inited
+	 * @type {boolean}
+	 */
+	inited: boolean;
+	/**
+	 * Destroy package manager
+	 */
+	destroy(): void;
+	/**
+	 * Initializes package manager
+	 * @return {Promise<boolean>}
+	 */
+	init(): Promise<boolean>;
+	/**
+	 * Launches a (application) package
+	 *
+	 * @param {string} name Package name
+	 * @param {{foo: *}} [args={}] Launch arguments
+	 * @param {PackageLaunchOptions} [options={}] Launch options
+	 * @see PackageServiceProvider
+	 * @throws {Error}
+	 * @return {Promise<Application>}
+	 */
+	launch(name: string, args?: {
+		foo: any;
+	}, options?: PackageLaunchOptions): Promise<Application>;
+	/**
+	 * Launches an application package
+	 *
+	 * @private
+	 * @param {string} name Application package name
+	 * @param {Metadata} metadata Application metadata
+	 * @param {{foo: *}} args Launch arguments
+	 * @param {PackageLaunchOptions} options Launch options
+	 * @return {Promise<Application>}
+	 */
+	private _launchApplication;
+	/**
+	 * Launches a (theme) package
+	 *
+	 * @private
+	 * @param {string} name Package name
+	 * @param {Metadata} metadata Application metadata
+	 * @throws {Error}
+	 * @return {Promise<object>}
+	 */
+	private _launchTheme;
+	/**
+	 * Wrapper for launching a (application) package
+	 *
+	 * @private
+	 * @param {string} name Package name
+	 * @param {{foo: *}} args Launch arguments
+	 * @param {PackageLaunchOptions} options Launch options
+	 * @return {Promise<Application>}
+	 */
+	private _launch;
+	/**
+	 * Autostarts tagged packages
+	 * @private
+	 */
+	private _autostart;
+	/**
+	 * Registers a package
+	 *
+	 * @param {string} name Package name
+	 * @param {Function} callback Callback function to construct application instance
+	 * @throws {Error}
+	 */
+	register(name: string, callback: Function): void;
+	/**
+	 * Adds a set of packages
+	 * @param {PackageMetadata[]} list Package list
+	 * @return {PackageMetadata[]} Current list of packages
+	 */
+	addPackages(list: PackageMetadata[]): PackageMetadata[];
+	/**
+	 * Gets a list of packages (metadata)
+	 * @param {Function} [filter] A filter function
+	 * @return {PackageMetadata[]}
+	 */
+	getPackages(filter?: Function): PackageMetadata[];
+	/**
+	 * Gets a list of packages compatible with the given mime type
+	 * @param {string} mimeType MIME Type
+	 * @see PackageManager#getPackages
+	 * @return {PackageMetadata[]}
+	 */
+	getCompatiblePackages(mimeType: string): PackageMetadata[];
+	/**
+	 * Gets a list of running packages
+	 * @return {string[]}
+	 */
+	running(): string[];
+}
+declare class Preloader {
+	constructor(root: any);
+	/**
+	 * A list of cached preloads
+	 * @type {String[]}
+	 */
+	loaded: string[];
+	$root: any;
+	destroy(): void;
+	/**
+	 * Loads all resources required for a package
+	 * @param {string[]} list A list of resources
+	 * @param {boolean} [force=false] Force loading even though previously cached
+	 * @return {Promise<string[]>} A list of failed resources
+	 */
+	load(list: string[], force?: boolean): Promise<string[]>;
+	/**
+	 * Checks the loaded list
+	 * @param {Object[]} results Preload results
+	 * @param {string[]} cached Already cached preloads
+	 */
+	_load(results: any[], cached: string[]): {
+		errors: any[];
+		elements: any;
+	};
+}
+declare class Search {
+	/**
+	 * Create Search instance
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Wired actions
+	 * @type {Object}
+	 */
+	ui: any;
+	/**
+	 * Last focused window
+	 * @type {Window}
+	 */
+	focusLastWindow: Window;
+	/**
+	 * Search root DOM element
+	 * @type {Element}
+	 */
+	$element: Element;
+	/**
+	 * Destroy Search instance
+	 */
+	destroy(): void;
+	/**
+	 * Initializes Search Service
+	 */
+	init(): void;
+	/**
+	 * Performs a search across all mounts
+	 * @param {string} pattern Search query
+	 * @return {Promise<FileMetadata[]>}
+	 */
+	search(pattern: string): Promise<any[]>;
+	/**
+	 * Focuses UI
+	 */
+	focus(): void;
+	/**
+	 * Hides UI
+	 */
+	hide(): void;
+	/**
+	 * Shows UI
+	 */
+	show(): void;
+}
+declare class Session {
+	/**
+	 * Creates the Session Handler
+	 *
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Destroys instance
+	 */
+	destroy(): void;
+	/**
+	 * Saves session
+	 * @return {Promise<boolean>}
+	 */
+	save(): Promise<boolean>;
+	/**
+	 * Loads session
+	 * @param {boolean} [fresh=false] Kill all current applications first
+	 * @return {Promise<boolean>}
+	 */
+	load(fresh?: boolean): Promise<boolean>;
+}
+declare class Settings {
+	/**
+	 * Create application
+	 *
+	 * @param {Core} core Core reference
+	 * @param {SettingsOptions} options Options
+	 */
+	constructor(core: Core, options: SettingsOptions);
+	/**
+	 * The settings adapter
+	 * @type {SettingsAdapter}
+	 */
+	adapter: SettingsAdapter;
+	/**
+	 * Internal timeout reference used for debouncing
+	 * @type {object}
+	 */
+	debounce: object;
+	/**
+	 * The settings tree
+	 * @type {{name: *}}
+	 */
+	settings: {
+		name: any;
+	};
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Initializes settings adapter
+	 */
+	init(): any;
+	/**
+	 * Saves settings
+	 * @return {Promise<boolean>}
+	 */
+	save(): Promise<boolean>;
+	/**
+	 * Loads settings
+	 * @return {Promise<boolean>}
+	 */
+	load(): Promise<boolean>;
+	/**
+	 * Gets a settings entry by key (cached)
+	 *
+	 * @param {string} [ns] The namespace
+	 * @param {string} [key] The key to get the value from
+	 * @param {*} [defaultValue] If result is undefined, return this instead
+	 * @return {*}
+	 */
+	get(ns?: string, key?: string, defaultValue?: any): any;
+	/**
+	 * Sets a settings entry by root key (but does not save).
+	 *
+	 * @param {string} ns The namespace
+	 * @param {string} [key] The key to set
+	 * @param {*} [value] The value to set
+	 * @return {Settings} This
+	 */
+	set(ns: string, key?: string, value?: any): Settings;
+	/**
+	 * Clears a namespace by root key
+	 * @param {string} ns The namespace
+	 * @return {Promise<boolean>}
+	 */
+	clear(ns: string): Promise<boolean>;
+}
+declare class SettingsServiceProvider extends ServiceProvider {
+	constructor(core: Core, args?: {});
+	settings: Settings;
+}
+declare class Splash {
+	/**
+	 * Create Splash
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Splash root element
+	 * @type {Element}
+	 */
+	$loading: Element;
+	/**
+	 * Initializes splash
+	 */
+	init(): void;
+	/**
+	 * Shows splash
+	 */
+	show(): void;
+	/**
+	 * Destroys splash
+	 */
+	destroy(): void;
+}
+declare class Tray {
+	/**
+	 * Creates the Tray Handler
+	 *
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * All Tray entries
+	 * @type {TrayEntry[]}
+	 */
+	entries: TrayEntry[];
+	/**
+	 * Destroys instance
+	 */
+	destroy(): void;
+	/**
+	 * Creates a new Tray entry
+	 * @param {TrayEntryData} options Options
+	 * @param {Function} [handler] The callback function for all events
+	 * @return {TrayEntry}
+	 */
+	create(options: TrayEntryData, handler?: Function): TrayEntry;
+	/**
+	 * Removes a Tray entry
+	 * @param {TrayEntry} entry The tray entry
+	 */
+	remove(entry: TrayEntry): void;
+	/**
+	 * @return {TrayEntry[]}
+	 */
+	list(): TrayEntry[];
+}
+declare class VFSServiceProvider extends ServiceProvider {
+	constructor(core: Core, args?: {});
+	fs: Filesystem;
+}
 declare class Websocket extends EventEmitter {
 	/**
 	 * Create a new Websocket
@@ -107,52 +1401,6 @@ declare class Websocket extends EventEmitter {
 	 */
 	close(...args: any[]): void;
 }
-/**
- * Websocket options
- */
-export type WebsocketOptions = {
-	/**
-	 * Enable reconnection
-	 */
-	reconnect?: boolean;
-	/**
-	 * Reconnect interval
-	 */
-	interval?: number;
-	/**
-	 * Immediately open socket after creation
-	 */
-	open?: boolean;
-};
-declare class Splash {
-	/**
-	 * Create Splash
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Splash root element
-	 * @type {Element}
-	 */
-	$loading: Element;
-	/**
-	 * Initializes splash
-	 */
-	init(): void;
-	/**
-	 * Shows splash
-	 */
-	show(): void;
-	/**
-	 * Destroys splash
-	 */
-	destroy(): void;
-}
 declare class Window extends EventEmitter {
 	/**
 	 * Get a list of all windows
@@ -171,7 +1419,7 @@ declare class Window extends EventEmitter {
 	 * @param {Core} core Core reference
 	 * @param {WindowOptions} [options={}] Options
 	 */
-	constructor(core: any, options?: WindowOptions);
+	constructor(core: Core, options?: WindowOptions);
 	/**
 	 * The Window ID
 	 * @type {string}
@@ -196,7 +1444,7 @@ declare class Window extends EventEmitter {
 	 * Core instance reference
 	 * @type {Core}
 	 */
-	core: any;
+	core: Core;
 	/**
 	 * The window destruction state
 	 * @type {boolean}
@@ -277,7 +1525,7 @@ declare class Window extends EventEmitter {
 	/**
 	 * Last DOM update data attributes
 	 * @private
-	 * @type {object}
+	 * @type {WindowAttributes}
 	 */
 	private _lastAttributes;
 	/**
@@ -423,9 +1671,9 @@ declare class Window extends EventEmitter {
 	getState(n: any): any;
 	/**
 	 * Get a snapshot of the Window session
-	 * @return {Object}
+	 * @return {WindowSession}
 	 */
-	getSession(): any;
+	getSession(): WindowSession;
 	/**
 	 * Internal method for setting state
 	 * @private
@@ -482,31 +1730,602 @@ declare class Window extends EventEmitter {
 	 */
 	private _updateStyles;
 }
+declare class WindowBehavior {
+	/**
+	 * Create window behavior
+	 *
+	 * @param {Core} core Core reference
+	 */
+	constructor(core: Core);
+	/**
+	 * Core instance reference
+	 * @type {Core}
+	 */
+	core: Core;
+	/**
+	 * Last action
+	 * @type {string}
+	 */
+	lastAction: string;
+	/**
+	 * LoFi DOM Element
+	 * @type {Element}
+	 */
+	$lofi: Element;
+	/**
+	 * Initializes window behavior
+	 * @param {Window} win Window reference
+	 */
+	init(win: Window): void;
+	/**
+	 * Handles Mouse Click Event
+	 * @param {Event} ev Browser Event
+	 * @param {Window} win Window reference
+	 */
+	click(ev: Event, win: Window): void;
+	/**
+	 * Handles Mouse Double Click Event
+	 * @param {Event} ev Browser Event
+	 * @param {Window} win Window reference
+	 */
+	dblclick(ev: Event, win: Window): void;
+	/**
+	 * Handles Mouse Down Event
+	 * @param {Event} ev Browser Event
+	 * @param {Window} win Window reference
+	 */
+	mousedown(ev: Event, win: Window): void;
+	/**
+	 * Handles Icon Double Click Event
+	 * @param {Event} ev Browser Event
+	 * @param {Window} win Window reference
+	 */
+	iconDblclick(ev: Event, win: Window): void;
+	/**
+	 * Handles Icon Click Event
+	 * @param {Event} ev Browser Event
+	 * @param {Window} win Window reference
+	 */
+	iconClick(ev: Event, win: Window): void;
+}
+declare namespace instance {
+	export function addMiddleware(m: any): void;
+	export function clearMiddleware(): void;
+}
 /**
- * Window dimension definition
+ * Basic Application Options
+ *
+ * @typedef {Object} BasicApplicationOptions
+ * @param {string[]} [mimeTypes] What MIME types to support (all/fallback)
+ * @param {string[]} [loadMimeTypes] What MIME types to support on load
+ * @param {string[]} [saveMimeTypes] What MIME types to support on save
+ * @param {string} [defaultFilename] Default filename of a new file
  */
-export type WindowDimension = {
+/**
+ * Basic Application Helper
+ *
+ * A class for helping creating basic applications with open/load/create functionality.
+ * Also sets the internal proc args for sessions.
+ */
+export class BasicApplication extends EventEmitter {
 	/**
-	 * Width in pixels
+	 * Basic Application Constructor
+	 * @param {Core} core OS.js Core API
+	 * @param {Application} proc The application process
+	 * @param {Window} win The main application window
+	 * @param {BasicApplicationOptions} [options] Basic application options
 	 */
-	width: number;
+	constructor(core: Core, proc: any, win: Window, options?: BasicApplicationOptions);
 	/**
-	 * Height in pixels
+	 * Core instance reference
+	 * @type {Core}
 	 */
-	height: number;
+	core: Core;
+	/**
+	 * Application instance reference
+	 * @type {Application}
+	 */
+	proc: any;
+	/**
+	 * Window instance reference
+	 * @type {Window}
+	 */
+	win: Window;
+	/**
+	 * Basic Application Options
+	 * @type {BasicApplicationOptions}
+	 */
+	options: BasicApplicationOptions;
+	/**
+	 * Destroys all Basic Application internals
+	 */
+	destroy(): void;
+	/**
+	 * Initializes the application
+	 * @return {Promise<boolean>}
+	 */
+	init(): Promise<boolean>;
+	/**
+	 * Gets options for a dialog
+	 * @param {string} type Dialog type
+	 * @return {object}
+	 */
+	getDialogOptions(type: string, options?: {}): object;
+	/**
+	 * Updates the window title to match open file
+	 */
+	updateWindowTitle(): void;
+	/**
+	 * Creates a new dialog of a type
+	 * @param {string} type Dialog type
+	 * @param {Function} cb Callback
+	 * @param {object} [options] Override options
+	 */
+	createDialog(type: string, cb: Function, options?: object): void;
+	/**
+	 * Opens given file
+	 *
+	 * Does not do any actual VFS operation
+	 *
+	 * @param {VFSFile} file A file
+	 */
+	open(item: any): void;
+	/**
+	 * Saves given file
+	 *
+	 * Does not do any actual VFS operation
+	 *
+	 * @param {VFSFile} file A file
+	 */
+	save(item: any): void;
+	/**
+	 * Create new file
+	 *
+	 * Does not do any actual VFS operation
+	 */
+	create(): void;
+	/**
+	 * Create new file
+	 * @see BasicApplication#create
+	 */
+	createNew(): void;
+	/**
+	 * Creates a new save dialog
+	 * @param {object} [options] Dialog options
+	 */
+	createSaveDialog(options?: object): void;
+	/**
+	 * Creates a new load dialog
+	 * @param {object} [options] Dialog options
+	 */
+	createOpenDialog(options?: object): void;
+	/**
+	 * Sets file from open/save action
+	 *
+	 * @private
+	 * @param {VFSFile} item File
+	 * @param {string} eventName Event to fire
+	 */
+	private _setFile;
+	/**
+	 * Creates the window title
+	 *
+	 * @private
+	 * @param {string} prefix Title prefix
+	 * @return {string}
+	 */
+	private _createTitle;
+}
+/**
+ * Application Data
+ */
+export type ApplicationData = {
+	/**
+	 * Launch arguments
+	 */
+	args: {
+		foo: any;
+	};
+	/**
+	 * Options
+	 */
+	options?: ApplicationOptions;
+	/**
+	 * Package Metadata
+	 */
+	metadata?: any;
 };
 /**
- * Window position definition
+ * Application Options
  */
-export type WindowPosition = {
+export type ApplicationOptions = {
 	/**
-	 * Left in pixels
+	 * Initial settings
 	 */
+	settings?: object;
+	/**
+	 * Restore data
+	 */
+	restore?: object;
+	/**
+	 * Auto-focus first created window
+	 */
+	windowAutoFocus?: boolean;
+	/**
+	 * Allow session storage
+	 */
+	sessionable?: boolean;
+};
+/**
+ * Application Session
+ */
+export type ApplicationSession = {
+	args: {
+		foo: string;
+	};
+	name: string;
+	windows: any[];
+};
+/**
+ * TODO: typedef
+ */
+export type AuthAdapter = any;
+export type AuthAdapterCallback = (core: Core) => AuthAdapter;
+/**
+ * TODO: typedef
+ */
+export type AuthAdapterConfig = any;
+export type AuthCallback = (data: AuthForm) => boolean;
+export type AuthForm = {
+	username?: string;
+	password?: string;
+};
+export type AuthSettings = {
+	/**
+	 * Adapter to use
+	 */
+	adapter?: AuthAdapterCallback | AuthAdapter;
+	/**
+	 * Login Adapter to use
+	 */
+	login?: LoginAdapterCallback | Login;
+	/**
+	 * Adapter configuration
+	 */
+	config?: AuthAdapterConfig;
+};
+/**
+ * Basic Application Options
+ */
+export type BasicApplicationOptions = any;
+/**
+ * Clipboard Data
+ */
+export type CliboardData = {
+	/**
+	 * Optional data type
+	 */
+	type?: string;
+	data: any;
+};
+/**
+ * Core Options
+ */
+export type CoreOptions = {
+	/**
+	 * The root DOM element for elements
+	 */
+	root?: Element;
+	/**
+	 * The root DOM element for resources
+	 */
+	resourceRoot?: Element;
+	/**
+	 * List of class names to apply to root dom element
+	 */
+	classNames?: string[];
+	/**
+	 * Custom callback function for creating splash screen
+	 */
+	splash?: SplashCallback | Splash;
+};
+/**
+ * User Data
+ */
+export type CoreUserData = {
+	username: string;
+	id?: number;
+	groups?: string[];
+};
+/**
+ * Desktop Options
+ */
+export type DeskopOptions = {
+	/**
+	 * Default Context menu items
+	 */
+	contextmenu?: object[];
+};
+/**
+ * TODO: typedef
+ */
+export type DesktopContextMenuEntry = any;
+export type DesktopIconViewSettings = any;
+/**
+ * TODO: typedef
+ */
+export type DesktopSettings = {
+	iconview?: DesktopIconViewSettings;
+};
+/**
+ * Desktop Viewport Rectangle
+ */
+export type DesktopViewportRectangle = {
 	left: number;
-	/**
-	 * Top in pixels
-	 */
 	top: number;
+	right: number;
+	bottom: number;
+};
+/**
+ * Filesystem Options
+ */
+export type FilesystemOptions = {
+	/**
+	 * Adapter registry
+	 */
+	adapters?: {
+		name: any;
+	};
+	/**
+	 * Mountpoints
+	 */
+	mounts?: Mountpoint[];
+};
+export type LoginAdapterCallback = (core: Core) => Login;
+/**
+ * Login Options
+ */
+export type LoginOptions = {
+	/**
+	 * Title
+	 */
+	title?: string;
+	/**
+	 * Fields
+	 */
+	fields?: object[];
+};
+/**
+ * VFS Mountpoint
+ */
+export type Mountpoint = {
+	/**
+	 * Name
+	 */
+	name: string;
+	/**
+	 * Label
+	 */
+	label: string;
+	/**
+	 * Adater name
+	 */
+	adapter: string;
+	/**
+	 * System adapter root
+	 */
+	root?: string;
+	/**
+	 * Enabled state
+	 */
+	enabled?: boolean;
+	/**
+	 * Attributes
+	 */
+	attributes?: MountpointAttributes;
+};
+/**
+ * VFS Mountpoint attributes
+ */
+export type MountpointAttributes = {
+	/**
+	 * Visibility in UI
+	 */
+	visibility?: string;
+	/**
+	 * Local filesystem ?
+	 */
+	local?: boolean;
+	/**
+	 * If can be searched
+	 */
+	searchable?: boolean;
+	/**
+	 * Readonly
+	 */
+	readOnly?: boolean;
+};
+/**
+ * Notification Options
+ */
+export type NotificationOptions = {
+	/**
+	 * Title
+	 */
+	title: string;
+	/**
+	 * Message
+	 */
+	message: string;
+	/**
+	 * Sound to play
+	 */
+	sound?: string;
+	/**
+	 * Icon source
+	 */
+	icon?: string;
+	/**
+	 * Timeout value (0=infinite)
+	 */
+	timeout?: number;
+	/**
+	 * Adds a DOM class name to notification
+	 */
+	className?: string;
+};
+/**
+ * Package Launch Options
+ */
+export type PackageLaunchOptions = {
+	/**
+	 * Force preload reloading
+	 */
+	forcePreload?: boolean;
+};
+/**
+ * A package metadata
+ */
+export type PackageMetadata = {
+	/**
+	 * The package name
+	 */
+	name: string;
+	/**
+	 * Package category
+	 */
+	category?: string;
+	/**
+	 * Package icon
+	 */
+	icon?: string;
+	/**
+	 * If only one instance allowed
+	 */
+	singleton?: boolean;
+	/**
+	 * Autostart on boot
+	 */
+	autostart?: boolean;
+	/**
+	 * Hide from launch menus etc.
+	 */
+	hidden?: boolean;
+	/**
+	 * Server script filename
+	 */
+	server?: string;
+	/**
+	 * Only available for users in this group
+	 */
+	groups?: string[];
+	/**
+	 * Files to preload
+	 */
+	files?: string[];
+	/**
+	 * A map of locales and titles
+	 */
+	title: {
+		key: string;
+	};
+	/**
+	 * A map of locales and titles
+	 */
+	description: {
+		key: string;
+	};
+};
+/**
+ * A registered package reference
+ */
+export type PackageReference = {
+	/**
+	 * Package metadata
+	 */
+	metadata: PackageMetadata;
+	/**
+	 * Callback to instanciate
+	 */
+	callback: Function;
+};
+/**
+ * TODO: typedef
+ */
+export type SettingsAdapter = any;
+export type SettingsAdapterCallback = (core: Core) => SettingsAdapterCallback;
+/**
+ * TODO: typedef
+ */
+export type SettingsAdapterConfiguration = any;
+/**
+ * Settings Options
+ */
+export type SettingsOptions = {
+	/**
+	 * Adapter to use
+	 */
+	adapter?: SettingsAdapterCallback | SettingsAdapter;
+	/**
+	 * Adapter configuration
+	 */
+	config?: SettingsAdapterConfiguration;
+};
+export type SplashCallback = (core: Core) => Splash;
+/**
+ * Tray Icon Entry
+ */
+export type TrayEntry = {
+	/**
+	 * The given entry data
+	 */
+	entry: TrayEntryData;
+	/**
+	 * Updates entry with given data
+	 */
+	update: Function;
+	/**
+	 * Destroy the entry
+	 */
+	destroy: Function;
+};
+/**
+ * Tray Icon Data
+ */
+export type TrayEntryData = {
+	/**
+	 * Icon source
+	 */
+	icon?: string;
+	/**
+	 * The title and tooltip
+	 */
+	title?: string;
+	/**
+	 * The callback function for clicks
+	 */
+	onclick?: Function;
+	/**
+	 * The callback function for contextmenu
+	 */
+	oncontextmenu?: Function;
+};
+/**
+ * Websocket options
+ */
+export type WebsocketOptions = {
+	/**
+	 * Enable reconnection
+	 */
+	reconnect?: boolean;
+	/**
+	 * Reconnect interval
+	 */
+	interval?: number;
+	/**
+	 * Immediately open socket after creation
+	 */
+	open?: boolean;
 };
 /**
  * Window attributes definition
@@ -584,6 +2403,87 @@ export type WindowAttributes = {
 	};
 };
 /**
+ * Window dimension definition
+ */
+export type WindowDimension = {
+	/**
+	 * Width in pixels
+	 */
+	width: number;
+	/**
+	 * Height in pixels
+	 */
+	height: number;
+};
+/**
+ * Window options definition
+ */
+export type WindowOptions = {
+	/**
+	 * Window Id (not globaly unique)
+	 */
+	id: string;
+	/**
+	 * Window Title
+	 */
+	title?: string;
+	/**
+	 * Window Icon
+	 */
+	icon?: string;
+	/**
+	 * The parent Window reference
+	 */
+	parent?: Window;
+	/**
+	 * The Window HTML template (or function with signature (el, win) for programatic construction)
+	 */
+	template?: string | Function;
+	/**
+	 * A callback function when window destructs to interrupt the procedure
+	 */
+	ondestroy?: Function;
+	/**
+	 * Window position
+	 */
+	position?: WindowPosition | string;
+	/**
+	 * Window dimension
+	 */
+	dimension?: WindowDimension;
+	/**
+	 * Apply Window attributes
+	 */
+	attributes?: WindowAttributes;
+	/**
+	 * Apply Window state
+	 */
+	state?: WindowState;
+};
+/**
+ * Window position definition
+ */
+export type WindowPosition = {
+	/**
+	 * Left in pixels
+	 */
+	left: number;
+	/**
+	 * Top in pixels
+	 */
+	top: number;
+};
+/**
+ * Window session
+ */
+export type WindowSession = {
+	id: number;
+	maximized: boolean;
+	minimized: boolean;
+	position: WindowPosition;
+	dimension: WindowDimension;
+};
+/**
  * Window state definition
  */
 export type WindowState = {
@@ -636,1777 +2536,6 @@ export type WindowState = {
 	 */
 	dimension?: WindowDimension;
 };
-/**
- * Window options definition
- */
-export type WindowOptions = {
-	/**
-	 * Window Id (not globaly unique)
-	 */
-	id: string;
-	/**
-	 * Window Title
-	 */
-	title?: string;
-	/**
-	 * Window Icon
-	 */
-	icon?: string;
-	/**
-	 * The parent Window reference
-	 */
-	parent?: Window;
-	/**
-	 * The Window HTML template (or function with signature (el, win) for programatic construction)
-	 */
-	template?: string | Function;
-	/**
-	 * A callback function when window destructs to interrupt the procedure
-	 */
-	ondestroy?: Function;
-	/**
-	 * Window position
-	 */
-	position?: WindowPosition | string;
-	/**
-	 * Window dimension
-	 */
-	dimension?: WindowDimension;
-	/**
-	 * Apply Window attributes
-	 */
-	attributes?: WindowAttributes;
-	/**
-	 * Apply Window state
-	 */
-	state?: WindowState;
-};
-declare class Application extends EventEmitter {
-	/**
-	 * Get a list of all running applications
-	 *
-	 * @return {Application[]}
-	 */
-	static getApplications(): Application[];
-	/**
-	 * Kills all running applications
-	 */
-	static destroyAll(): void;
-	/**
-	 * Create application
-	 *
-	 * @param {Core} core Core reference
-	 * @param {ApplicationData} data Application data
-	 */
-	constructor(core: any, data: ApplicationData);
-	/**
-	 * The Application ID
-	 * @type {Number}
-	 */
-	pid: number;
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Application arguments
-	 * @type {{foo: *}}
-	 */
-	args: {
-		foo: any;
-	};
-	/**
-	 * Application options
-	 * @type {object}
-	 */
-	options: object;
-	/**
-	 * Application metadata
-	 * @private
-	 * @type {PackageMetadata}
-	 */
-	private metadata;
-	/**
-	 * Window list
-	 * @type {Window[]}
-	 */
-	windows: Window[];
-	/**
-	 * Worker instances
-	 * @type {Worker[]}
-	 */
-	workers: Worker[];
-	/**
-	 * Options for internal fetch/requests
-	 * @type {object}
-	 */
-	requestOptions: object;
-	/**
-	 * The application destruction state
-	 * @type {boolean}
-	 */
-	destroyed: boolean;
-	/**
-	 * Application settings
-	 * @type {object}
-	 */
-	settings: object;
-	/**
-	 * Application started time
-	 * @type {Date}
-	 */
-	started: Date;
-	/**
-	 * Application WebSockets
-	 * @type {Websocket[]}
-	 */
-	sockets: Websocket[];
-	/**
-	 * Destroy application
-	 */
-	destroy(remove?: boolean): void;
-	/**
-	 * Re-launch this application
-	 */
-	relaunch(): void;
-	/**
-	 * Gets a URI to a resource for this application
-	 *
-	 * If given path is an URI it will just return itself.
-	 *
-	 * @param {string} path The path
-	 * @param {object} [options] Options for url() in core
-	 * @return {string} A complete URI
-	 */
-	resource(path?: string, options?: object): string;
-	/**
-	 * Performs a request to the OS.js server with the application
-	 * as the endpoint.
-	 * @param {string} [path=/] Append this to endpoint
-	 * @param {Options} [options] fetch options
-	 * @param {string} [type='json'] Request / Response type
-	 * @return {Promise<*>} ArrayBuffer or JSON
-	 */
-	request(path?: string, options?: any, type?: string): Promise<any>;
-	/**
-	 * Creates a new Websocket
-	 * @param {string} [path=/socket] Append this to endpoint
-	 * @param {WebsocketOptions} [options={}] Connection options
-	 * @return {Websocket}
-	 */
-	socket(path?: string, options?: any): Websocket;
-	/**
-	 * Sends a message over websocket via the core connection.
-	 *
-	 * This does not create a new connection, but rather uses the core connection.
-	 * For subscribing to messages from the server use the 'ws:message' event
-	 *
-	 * @param {*} ...args Arguments to pass to message
-	 */
-	send(...args: any[]): void;
-	/**
-	 * Creates a new Worker
-	 * @param {string} filename Worker filename
-	 * @param {object} [options] Worker options
-	 * @return {Worker}
-	 */
-	worker(filename: string, options?: object): Worker;
-	/**
-	 * Create a new window belonging to this application
-	 * @param {WindowOptions} [options={}] Window options
-	 * @return {Window}
-	 */
-	createWindow(options?: any): Window;
-	/**
-	 * Removes window(s) based on given filter
-	 * @param {Function} filter Filter function
-	 */
-	removeWindow(filter: Function): void;
-	/**
-	 * Gets a snapshot of the application session
-	 * TODO: typedef
-	 * @return {object}
-	 */
-	getSession(): object;
-	/**
-	 * Emits an event across all (or filtered) applications
-	 *
-	 * @deprecated
-	 * @param {Function} [filter] A method to filter what applications to send to
-	 * @return {Function} Function with 'emit()' signature
-	 */
-	emitAll(filter?: Function): Function;
-	/**
-	 * Saves settings
-	 * @return {Promise<boolean>}
-	 */
-	saveSettings(): Promise<boolean>;
-}
-/**
- * Application Options
- */
-export type ApplicationOptions = {
-	/**
-	 * Initial settings
-	 */
-	settings?: object;
-	/**
-	 * Restore data
-	 */
-	restore?: object;
-	/**
-	 * Auto-focus first created window
-	 */
-	windowAutoFocus?: boolean;
-	/**
-	 * Allow session storage
-	 */
-	sessionable?: boolean;
-};
-/**
- * Application Data
- */
-export type ApplicationData = {
-	/**
-	 * Launch arguments
-	 */
-	args: object;
-	/**
-	 * Options
-	 */
-	options?: ApplicationOptions;
-	/**
-	 * Package Metadata
-	 */
-	metadata?: any;
-};
-declare class Core extends CoreBase {
-	/**
-	 * Create core instance
-	 * @param {object} config Configuration tree
-	 * @param {CoreOptions} [options={}] Options
-	 */
-	constructor(config?: object, options?: CoreOptions);
-	/**
-	 * Websocket connection
-	 * @type {Websocket}
-	 */
-	ws: Websocket;
-	/**
-	 * Ping (stay alive) interval
-	 * @type {number}
-	 */
-	ping: number;
-	/**
-	 * Splash instance
-	 * @type {Splash}
-	 */
-	splash: Splash;
-	/**
-	 * Main DOM element
-	 * @type {Element}
-	 */
-	$root: Element;
-	/**
-	 * Windows etc DOM element
-	 * @type {Element}
-	 */
-	$contents: Element;
-	/**
-	 * Resource script container DOM element
-	 * @type {Element}
-	 */
-	$resourceRoot: Element;
-	/**
-	 * Default fetch request options
-	 * @type {Object}
-	 */
-	requestOptions: any;
-	/**
-	 * Url Resolver
-	 * TODO: typedef
-	 * @type {function(): string}
-	 */
-	urlResolver: () => string;
-	/**
-	 * Current user data
-	 * TODO: typedef
-	 * @type {Object}
-	 */
-	user: any;
-	connecting: boolean;
-	connectfailed: boolean;
-	/**
-	 * Attaches some internal events
-	 * @private
-	 */
-	private _attachEvents;
-	/**
-	 * Creates the main connection to server
-	 *
-	 * @private
-	 * @param {Function} cb Callback function
-	 * @return {boolean}
-	 */
-	private _createConnection;
-	/**
-	 * Creates event listeners*
-	 * @private
-	 */
-	private _createListeners;
-	/**
-	 * Creates an URL based on configured public path
-	 *
-	 * If you give a options.type, the URL will be resolved
-	 * to the correct resource.
-	 *
-	 * @param {string} [endpoint=/] Endpoint
-	 * @param {object} [options] Additional options for resolving url
-	 * @param {boolean} [options.prefix=false] Returns a full URL complete with scheme, etc. (will always be true on websocket)
-	 * @param {string} [options.type] Optional URL type (websocket)
-	 * @param {PackageMetadata} [metadata] A package metadata
-	 * @return {string}
-	 */
-	url(endpoint?: string, options?: {
-		prefix: boolean;
-		type: string;
-	}, metadata?: any): string;
-	/**
-	 * Make a HTTP request
-	 *
-	 * This is a wrapper for making a 'fetch' request with some helpers
-	 * and integration with OS.js
-	 *
-	 * @param {string} url The endpoint
-	 * @param {Options} [options] fetch options
-	 * @param {string} [type] Request / Response type
-	 * @param {boolean} [force=false] Force request even when in standalone mode
-	 * @return {*}
-	 */
-	request(url: string, options?: any, type?: string, force?: boolean): any;
-	/**
-	 * Create an application from a package
-	 *
-	 * @param {string} name Package name
-	 * @param {object} [args] Launch arguments
-	 * @param {object} [options] Launch options
-	 * @see {Packages}
-	 * @return {Application}
-	 */
-	run(name: string, args?: object, options?: object): Application;
-	/**
-	 * Spawns an application based on the file given
-	 * @param {object} file A file object
-	 * @param {object} [options] Options
-	 * @param {boolean} [options.useDefault] Use saved default application preference
-	 * @param {boolean} [options.forceDialog] Force application choice dialog on multiple choices
-	 * @return {Boolean|Application}
-	 */
-	open(file: object, options?: {
-		useDefault: boolean;
-		forceDialog: boolean;
-	}): boolean | Application;
-	/**
-	 * Wrapper method to create an application choice dialog
-	 * @private
-	 */
-	private _openApplicationDialog;
-	/**
-	 * Sends a 'broadcast' event with given arguments
-	 * to all applications matching given filter
-	 *
-	 * @param {string|Function} pkg The filter
-	 * @param {string} name The event name
-	 * @param {*} ...args Arguments to pass to emit
-	 * @return {string[]} List of application names emitted to
-	 */
-	broadcast(pkg: string | Function, name: string, ...args: any[]): string[];
-	/**
-	 * Set the internal fetch/request options
-	 * @param {object} options Request options
-	 */
-	setRequestOptions(options: object): void;
-	/**
-	 * Gets the current user
-	 * @return {{key: *}} User object
-	 */
-	getUser(): {
-		key: any;
-	};
-}
-export type SplashCallback = (core: Core) => Splash;
-/**
- * Core Options
- */
-export type CoreOptions = {
-	/**
-	 * The root DOM element for elements
-	 */
-	root?: Element;
-	/**
-	 * The root DOM element for resources
-	 */
-	resourceRoot?: Element;
-	/**
-	 * List of class names to apply to root dom element
-	 */
-	classNames?: string[];
-	/**
-	 * Custom callback function for creating splash screen
-	 */
-	splash?: SplashCallback | Splash;
-};
-declare class Search {
-	/**
-	 * Create Search instance
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Wired actions
-	 * @type {Object}
-	 */
-	ui: any;
-	/**
-	 * Last focused window
-	 * @type {Window}
-	 */
-	focusLastWindow: Window;
-	/**
-	 * Search root DOM element
-	 * @type {Element}
-	 */
-	$element: Element;
-	/**
-	 * Destroy Search instance
-	 */
-	destroy(): void;
-	/**
-	 * Initializes Search Service
-	 */
-	init(): void;
-	/**
-	 * Performs a search across all mounts
-	 * @param {string} pattern Search query
-	 * @return {Promise<FileMetadata[]>}
-	 */
-	search(pattern: string): Promise<any[]>;
-	/**
-	 * Focuses UI
-	 */
-	focus(): void;
-	/**
-	 * Hides UI
-	 */
-	hide(): void;
-	/**
-	 * Shows UI
-	 */
-	show(): void;
-}
-declare class DesktopIconView extends EventEmitter {
-	/**
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	core: any;
-	$root: HTMLDivElement;
-	iconview: any;
-	root: string;
-	destroy(): void;
-	_render(root: any): boolean;
-	render(root: any): void;
-	createFileContextMenu(ev: any, entry: any): void;
-	createDropContextMenu(ev: any, data: any, files: any): void;
-	createRootContextMenu(ev: any): void;
-	_createWatcher(): void;
-	applySettings(): void;
-}
-declare class Desktop extends EventEmitter {
-	/**
-	 * Create Desktop
-	 *
-	 * @param {Core} core Core reference
-	 * @param {DesktopOptions} [options={}] Options
-	 */
-	constructor(core: any, options?: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Desktop Options
-	 * @type {DeskopOptions}
-	 */
-	options: DeskopOptions;
-	/**
-	 * Theme DOM elements
-	 * @type {Element[]}
-	 */
-	$theme: Element[];
-	/**
-	 * Icon DOM elements
-	 * @type {Element[]}
-	 */
-	$icons: Element[];
-	/**
-	 * Default context menu entries
-	 * @type {Object[]}
-	 */
-	contextmenuEntries: any[];
-	/**
-	 * Search instance
-	 * @type {Search|null}
-	 */
-	search: Search | null;
-	/**
-	 * Icon View instance
-	 * @type {DesktopIconView}
-	 */
-	iconview: DesktopIconView;
-	/**
-	 * Keyboard context dom element
-	 * @type {Element|null}
-	 */
-	keyboardContext: Element | null;
-	/**
-	 * Desktop subtraction rectangle
-	 * TODO: typedef
-	 * @type {Object}
-	 */
-	subtract: any;
-	/**
-	 * Destroy Desktop
-	 */
-	destroy(): void;
-	/**
-	 * Initializes Desktop
-	 */
-	init(): void;
-	/**
-	 * Initializes connection events
-	 */
-	initConnectionEvents(): void;
-	/**
-	 * Initializes user interface events
-	 */
-	initUIEvents(): void;
-	/**
-	 * Initializes development tray icons
-	 */
-	initDeveloperTray(): void;
-	/**
-	 * Initializes drag-and-drop events
-	 */
-	initDragEvents(): void;
-	/**
-	 * Initializes keyboard events
-	 */
-	initKeyboardEvents(): void;
-	/**
-	 * Initializes global keyboard events
-	 */
-	initGlobalKeyboardEvents(): void;
-	/**
-	 * Initializes mouse events
-	 */
-	initMouseEvents(): void;
-	/**
-	 * Initializes base events
-	 */
-	initBaseEvents(): void;
-	/**
-	 * Initializes locales
-	 */
-	initLocales(): void;
-	/**
-	 * Starts desktop services
-	 */
-	start(): void;
-	/**
-	 * Update CSS
-	 * @private
-	 */
-	private _updateCSS;
-	/**
-	 * Adds something to the default contextmenu entries
-	 * @param {Object[]} entries
-	 */
-	addContextMenu(entries: any[]): void;
-	/**
-	 * Applies settings and updates desktop
-	 * @param {object} [settings] Use this set instead of loading from settings
-	 * @return {object} New settings
-	 */
-	applySettings(settings?: object): object;
-	/**
-	 * Removes current style theme from DOM
-	 * @private
-	 */
-	private _removeTheme;
-	/**
-	 * Removes current icon theme from DOM
-	 * @private
-	 */
-	private _removeIcons;
-	/**
-	 * Adds or removes the icon view
-	 * @param {Object} settings
-	 */
-	applyIconView(settings: any): void;
-	/**
-	 * Sets the current icon theme from settings
-	 * @param {string} name Icon theme name
-	 * @return {Promise<undefined>}
-	 */
-	applyIcons(name: string): Promise<undefined>;
-	/**
-	 * Sets the current style theme from settings
-	 * @param {string} name Theme name
-	 * @return {Promise<undefined>}
-	 */
-	applyTheme(name: string): Promise<undefined>;
-	/**
-	 * Apply theme wrapper
-	 * @private
-	 * @param {string} name Theme name
-	 * @return {Promise<undefined>}
-	 */
-	private _applyTheme;
-	/**
-	 * Apply settings by key
-	 * @private
-	 * @param {string} k Key
-	 * @param {*} v Value
-	 * @return {Promise<boolean>}
-	 */
-	private _applySettingsByKey;
-	/**
-	 * Create drop context menu entries
-	 * @param {Object} Drop data
-	 * @return {Object[]}
-	 */
-	createDropContextMenu(data: any): any[];
-	/**
-	 * When developer menu is shown
-	 * @param {Event} ev
-	 */
-	onDeveloperMenu(ev: Event): void;
-	/**
-	 * When drop menu is shown
-	 * @param {Event} ev
-	 * @param {Object} data
-	 */
-	onDropContextMenu(ev: Event, data: any): void;
-	/**
-	 * When context menu is shown
-	 * @param {Event} ev
-	 */
-	onContextMenu(ev: Event): void;
-	/**
-	 * Sets the keyboard context.
-	 *
-	 * Used for tabbing and other special events
-	 *
-	 * @param {Element} [ctx]
-	 */
-	setKeyboardContext(ctx?: Element): void;
-	/**
-	 * Gets the rectangle of available space
-	 *
-	 * This is based on any panels etc taking up space
-	 *
-	 * @return {object}
-	 */
-	getRect(): object;
-}
-/**
- * Desktop Options
- */
-export type DeskopOptions = {
-	/**
-	 * Default Context menu items
-	 */
-	contextmenu?: object[];
-};
-declare class Notification {
-	/**
-	 * Create notification
-	 *
-	 * @param {Core} core Core reference
-	 * @param {Element} root Root DOM element
-	 * @param {NotificationOptions} options Options
-	 */
-	constructor(core: any, root: Element, options?: NotificationOptions);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Root node reference
-	 * @type {Element}
-	 */
-	$root: Element;
-	/**
-	 * Notification DOM node
-	 * @type {Element}
-	 */
-	$element: Element;
-	/**
-	 * The notification destruction state
-	 * @type {Boolean}
-	 */
-	destroyed: boolean;
-	/**
-	 * Options
-	 * @type {Object}
-	 */
-	options: any;
-	/**
-	 * Destroy notification
-	 */
-	destroy(): void;
-	/**
-	 * Render notification
-	 * @return {Promise<boolean>}
-	 */
-	render(): Promise<boolean>;
-}
-/**
- * Notification Options
- */
-export type NotificationOptions = {
-	/**
-	 * Title
-	 */
-	title: string;
-	/**
-	 * Message
-	 */
-	message: string;
-	/**
-	 * Sound to play
-	 */
-	sound?: string;
-	/**
-	 * Icon source
-	 */
-	icon?: string;
-	/**
-	 * Timeout value (0=infinite)
-	 */
-	timeout?: number;
-	/**
-	 * Adds a DOM class name to notification
-	 */
-	className?: string;
-};
-declare class Notifications {
-	/**
-	 * @param {Core} core OS.js Core instance reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Destroy notification handler
-	 */
-	destroy(): void;
-	$element: HTMLDivElement;
-	/**
-	 * Initialize notification handler
-	 */
-	init(): void;
-	/**
-	 * Create a new notification
-	 * @param {object} options See notification class for options
-	 * @return {Notification}
-	 */
-	create(options: object): Notification;
-	/**
-	 * Sets the element styles
-	 */
-	setElementStyles(): void;
-	/**
-	 * Creates a new CSS style object
-	 * @return {object}
-	 */
-	createElementStyles(): object;
-}
-declare class WindowBehavior {
-	/**
-	 * Create window behavior
-	 *
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Last action
-	 * @type {string}
-	 */
-	lastAction: string;
-	/**
-	 * LoFi DOM Element
-	 * @type {Element}
-	 */
-	$lofi: Element;
-	/**
-	 * Initializes window behavior
-	 * @param {Window} win Window reference
-	 */
-	init(win: Window): void;
-	/**
-	 * Handles Mouse Click Event
-	 * @param {Event} ev Browser Event
-	 * @param {Window} win Window reference
-	 */
-	click(ev: Event, win: Window): void;
-	/**
-	 * Handles Mouse Double Click Event
-	 * @param {Event} ev Browser Event
-	 * @param {Window} win Window reference
-	 */
-	dblclick(ev: Event, win: Window): void;
-	/**
-	 * Handles Mouse Down Event
-	 * @param {Event} ev Browser Event
-	 * @param {Window} win Window reference
-	 */
-	mousedown(ev: Event, win: Window): void;
-	/**
-	 * Handles Icon Double Click Event
-	 * @param {Event} ev Browser Event
-	 * @param {Window} win Window reference
-	 */
-	iconDblclick(ev: Event, win: Window): void;
-	/**
-	 * Handles Icon Click Event
-	 * @param {Event} ev Browser Event
-	 * @param {Window} win Window reference
-	 */
-	iconClick(ev: Event, win: Window): void;
-}
-declare class Login extends EventEmitter {
-	/**
-	 * Create authentication handler
-	 *
-	 * @param {Core} core Core reference
-	 * @param {LoginOptions} [options] Options
-	 */
-	constructor(core: any, options?: LoginOptions);
-	/**
-	 * Login root DOM element
-	 * @type {Element}
-	 */
-	$container: Element;
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Login options
-	 * TODO: typedef
-	 * @type {Object}
-	 */
-	options: any;
-	/**
-	 * Initializes the UI
-	 */
-	init(startHidden: any): void;
-	/**
-	 * Destroys the UI
-	 */
-	destroy(): void;
-	/**
-	 * Renders the UI
-	 */
-	render(startHidden: any): void;
-}
-/**
- * Login Options
- */
-export type LoginOptions = {
-	/**
-	 * Title
-	 */
-	title?: string;
-	/**
-	 * Fields
-	 */
-	fields?: object[];
-};
-declare class Auth {
-	/**
-	 * @param {Core} core OS.js Core instance reference
-	 * @param {AuthSettings} [options={}] Auth Options
-	 */
-	constructor(core: any, options?: AuthSettings);
-	/**
-	 * Authentication UI
-	 * @type {Login}
-	 */
-	ui: Login;
-	/**
-	 * Authentication adapter
-	 * @type {AuthAdapter}
-	 */
-	adapter: AuthAdapter;
-	/**
-	 * Authentication callback function
-	 * @type {function(data: Object)}
-	 */
-	callback: (arg0: any, arg1: any) => any;
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Initializes authentication handler
-	 */
-	init(): any;
-	/**
-	 * Destroy authentication handler
-	 */
-	destroy(): void;
-	/**
-	 * Run the shutdown procedure
-	 * @param {boolean} [reload] Reload afterwards
-	 */
-	shutdown(reload?: boolean): void;
-	/**
-	 * Shows Login UI
-	 * @param {function(data: Object):boolean} cb Authentication callback
-	 * @return {Promise<boolean>}
-	 */
-	show(cb: (arg0: any, arg1: any) => boolean): Promise<boolean>;
-	/**
-	 * Performs a login
-	 * @param {Object} values Form values as JSON
-	 * @return {Promise<boolean>}
-	 */
-	login(values: any): Promise<boolean>;
-	/**
-	 * Performs a logout
-	 * @param {boolean} [reload=true] Reload client afterwards
-	 * @return {Promise<boolean>}
-	 */
-	logout(reload?: boolean): Promise<boolean>;
-	/**
-	 * Performs a register call
-	 * @param {object} values Form values as JSON
-	 * @return {Promise<*>}
-	 */
-	register(values: object): Promise<any>;
-}
-/**
- * TODO: typedef
- */
-export type AuthAdapter = any;
-export type AuthAdapterCallback = (core: any) => AuthAdapter;
-export type LoginAdapterCallback = (core: any) => Login;
-export type AuthSettings = {
-	/**
-	 * Adapter to use
-	 */
-	adapter?: AuthAdapterCallback | AuthAdapter;
-	/**
-	 * Login Adapter to use
-	 */
-	login?: LoginAdapterCallback | Login;
-	/**
-	 * Adapter configuration
-	 */
-	config?: any;
-};
-declare class Session {
-	/**
-	 * Creates the Session Handler
-	 *
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Destroys instance
-	 */
-	destroy(): void;
-	/**
-	 * Saves session
-	 * @return {Promise<boolean>}
-	 */
-	save(): Promise<boolean>;
-	/**
-	 * Loads session
-	 * @param {boolean} [fresh=false] Kill all current applications first
-	 * @return {Promise<boolean>}
-	 */
-	load(fresh?: boolean): Promise<boolean>;
-}
-declare class Tray {
-	/**
-	 * Creates the Tray Handler
-	 *
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * All Tray entries
-	 * @type {TrayEntry[]}
-	 */
-	entries: TrayEntry[];
-	/**
-	 * Destroys instance
-	 */
-	destroy(): void;
-	/**
-	 * Creates a new Tray entry
-	 * @param {object} options Options
-	 * @param {string} [options.icon] Icon source
-	 * @param {string} [options.title] The title and tooltip
-	 * @param {Function} [options.onclick] The callback function for clicks
-	 * @param {Function} [options.oncontextmenu] The callback function for contextmenu
-	 * @param {Function} [handler] The callback function for all events
-	 * @return {TrayEntry}
-	 */
-	create(options: {
-		icon: string;
-		title: string;
-		onclick: Function;
-		oncontextmenu: Function;
-	}, handler?: Function): TrayEntry;
-	/**
-	 * Removes a Tray entry
-	 * @param {TrayEntry} entry The tray entry
-	 */
-	remove(entry: TrayEntry): void;
-	/**
-	 * @return {TrayEntry[]}
-	 */
-	list(): TrayEntry[];
-}
-/**
- * A Tray Icon ("Entry")
- */
-export type TrayEntry = {
-	/**
-	 * The given entry data
-	 */
-	entry: any;
-	/**
-	 * Updates entry with given data
-	 */
-	update: Function;
-	/**
-	 * Destroy the entry
-	 */
-	destroy: Function;
-};
-declare class Preloader {
-	constructor(root: any);
-	/**
-	 * A list of cached preloads
-	 * @type {String[]}
-	 */
-	loaded: string[];
-	$root: any;
-	destroy(): void;
-	/**
-	 * Loads all resources required for a package
-	 * @param {string[]} list A list of resources
-	 * @param {boolean} [force=false] Force loading even though previously cached
-	 * @return {Promise<string[]>} A list of failed resources
-	 */
-	load(list: string[], force?: boolean): Promise<string[]>;
-	/**
-	 * Checks the loaded list
-	 * @param {Object[]} results Preload results
-	 * @param {string[]} cached Already cached preloads
-	 */
-	_load(results: any[], cached: string[]): {
-		errors: any[];
-		elements: any;
-	};
-}
-declare class Packages {
-	/**
-	 * Create package manage
-	 *
-	 * @param {Core} core Core reference
-	 */
-	constructor(core: any);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * A list of registered packages
-	 * @type {PackageReference[]}
-	 */
-	packages: PackageReference[];
-	/**
-	 * The lost of loaded package metadata
-	 * @type {PackageMetadata[]}
-	 */
-	metadata: PackageMetadata[];
-	/**
-	 * A list of running application names
-	 *
-	 * Mainly used for singleton awareness
-	 *
-	 * @private
-	 * @type {string[]}
-	 */
-	private _running;
-	/**
-	 * Preloader
-	 * @type {Preloader}
-	 */
-	preloader: Preloader;
-	/**
-	 * If inited
-	 * @type {boolean}
-	 */
-	inited: boolean;
-	/**
-	 * Destroy package manager
-	 */
-	destroy(): void;
-	/**
-	 * Initializes package manager
-	 * @return {Promise<boolean>}
-	 */
-	init(): Promise<boolean>;
-	/**
-	 * Launches a (application) package
-	 *
-	 * @param {string} name Package name
-	 * @param {object} [args] Launch arguments
-	 * @param {object} [options] Launch options
-	 * @param {boolean} [options.forcePreload=false] Force preload reloading
-	 * @see PackageServiceProvider
-	 * @throws {Error}
-	 * @return {Promise<Application>}
-	 */
-	launch(name: string, args?: object, options?: {
-		forcePreload: boolean;
-	}): Promise<Application>;
-	/**
-	 * Launches an application package
-	 *
-	 * @private
-	 * @param {string} name Application package name
-	 * @param {Metadata} metadata Application metadata
-	 * @param {{foo: *}} args Launch arguments
-	 * @param {object} options Launch options
-	 * @return {Promise<Application>}
-	 */
-	private _launchApplication;
-	/**
-	 * Launches a (theme) package
-	 *
-	 * @private
-	 * @param {string} name Package name
-	 * @param {Metadata} metadata Application metadata
-	 * @throws {Error}
-	 * @return {Promise<object>}
-	 */
-	private _launchTheme;
-	/**
-	 * Wrapper for launching a (application) package
-	 *
-	 * @private
-	 * @param {string} name Package name
-	 * @param {object} args Launch arguments
-	 * @param {object} options Launch options
-	 * @return {Promise<Application>}
-	 */
-	private _launch;
-	/**
-	 * Autostarts tagged packages
-	 * @private
-	 */
-	private _autostart;
-	/**
-	 * Registers a package
-	 *
-	 * @param {string} name Package name
-	 * @param {Function} callback Callback function to construct application instance
-	 * @throws {Error}
-	 */
-	register(name: string, callback: Function): void;
-	/**
-	 * Adds a set of packages
-	 * @param {PackageMetadata[]} list Package list
-	 * @return {PackageMetadata[]} Current list of packages
-	 */
-	addPackages(list: PackageMetadata[]): PackageMetadata[];
-	/**
-	 * Gets a list of packages (metadata)
-	 * @param {Function} [filter] A filter function
-	 * @return {PackageMetadata[]}
-	 */
-	getPackages(filter?: Function): PackageMetadata[];
-	/**
-	 * Gets a list of packages compatible with the given mime type
-	 * @param {string} mimeType MIME Type
-	 * @see PackageManager#getPackages
-	 * @return {PackageMetadata[]}
-	 */
-	getCompatiblePackages(mimeType: string): PackageMetadata[];
-	/**
-	 * Gets a list of running packages
-	 * @return {string[]}
-	 */
-	running(): string[];
-}
-/**
- * A registered package reference
- */
-export type PackageReference = {
-	/**
-	 * Package metadata
-	 */
-	metadata: PackageMetadata;
-	/**
-	 * Callback to instanciate
-	 */
-	callback: Function;
-};
-/**
- * A package metadata
- */
-export type PackageMetadata = {
-	/**
-	 * The package name
-	 */
-	name: string;
-	/**
-	 * Package category
-	 */
-	category?: string;
-	/**
-	 * Package icon
-	 */
-	icon?: string;
-	/**
-	 * If only one instance allowed
-	 */
-	singleton?: boolean;
-	/**
-	 * Autostart on boot
-	 */
-	autostart?: boolean;
-	/**
-	 * Hide from launch menus etc.
-	 */
-	hidden?: boolean;
-	/**
-	 * Server script filename
-	 */
-	server?: string;
-	/**
-	 * Only available for users in this group
-	 */
-	groups?: string[];
-	/**
-	 * Files to preload
-	 */
-	files?: string[];
-	/**
-	 * A map of locales and titles
-	 */
-	title: {
-		key: string;
-	};
-	/**
-	 * A map of locales and titles
-	 */
-	description: {
-		key: string;
-	};
-};
-declare class Clipboard {
-	/**
-	 * @type {CliboardData}
-	 */
-	clipboard: CliboardData;
-	/**
-	 * Destroy clipboard
-	 */
-	destroy(): void;
-	/**
-	 * Clear clipboard
-	 */
-	clear(): void;
-	/**
-	 * Set clipboard data
-	 * @param {*} data Clipboard data. For async data, provide a function that returns a promise
-	 * @param {string} [type] Optional type used by applications for identifying content
-	 */
-	set(data: any, type?: string): void;
-	/**
-	 * Checks if current clipboard data has this type
-	 * @param {string|RegExp} type Data type
-	 * @return {boolean}
-	 */
-	has(type: string | RegExp): boolean;
-	/**
-	 * Gets clipboard data
-	 * @param {boolean} [clear=false] Clear clipboard
-	 * @return {Promise<*>}
-	 */
-	get(clear?: boolean): Promise<any>;
-}
-/**
- * Clipboard Data
- */
-export type CliboardData = {
-	/**
-	 * Optional data type
-	 */
-	type?: string;
-	data: any;
-};
-declare class CoreServiceProvider extends ServiceProvider {
-	/**
-	 * @param {Object} core OS.js Core
-	 * @param {Object} [options] Arguments
-	 * @param {Function} [options.windowBehavior] Custom Window Behavior
-	 * @param {Object} [options.locales] Override locales
-	 */
-	constructor(core: any, options?: {
-		windowBehavior: Function;
-		locales: any;
-	});
-	session: Session;
-	tray: Tray;
-	pm: Packages;
-	clipboard: Clipboard;
-	initBaseProviders(): void;
-	initResourceProviders(): void;
-	createGlobalApi(): Readonly<{
-		make: (...args: any[]) => any;
-		register: (...args: any[]) => void;
-		url: (...args: any[]) => any;
-		run: (...args: any[]) => any;
-		open: (...args: any[]) => any;
-		request: (...args: any[]) => any;
-	}>;
-	onDistChanged(filename: any): void;
-	onPackageChanged(name: any): void;
-	/**
-	 * Provides localization
-	 * TODO: Move to a Locale class
-	 * @private
-	 */
-	private _createLocaleContract;
-	/**
-	 * Provides window contract
-	 * @private
-	 */
-	private _createWindowContract;
-}
-declare class DesktopServiceProvider extends ServiceProvider {
-	constructor(core: any, options?: {});
-	desktop: any;
-}
-declare class NotificationServiceProvider extends ServiceProvider {
-	constructor(core: any);
-	notifications: Notifications;
-}
-declare class Filesystem extends EventEmitter {
-	/**
-	 * Create filesystem manager
-	 *
-	 * @param {Core} core Core reference
-	 * @param {FilesystemOptions} [options] Options
-	 */
-	constructor(core: any, options?: FilesystemOptions);
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Adapter registry
-	 * @type {{name: Adapter}}
-	 */
-	adapters: {
-		name: any;
-	};
-	/**
-	 * Mountpoints
-	 * @type {Mountpoint[]}
-	 */
-	mounts: Mountpoint[];
-	/**
-	 * Options
-	 * @type {Object}
-	 */
-	options: any;
-	/**
-	 * A wrapper for VFS method requests
-	 * @type {{key: Function}}
-	 */
-	proxy: {
-		key: Function;
-	};
-	/**
-	 * Mounts all configured mountpoints
-	 */
-	mountAll(stopOnError?: boolean): Promise<any[]>;
-	/**
-	 * Mount given filesystem
-	 * @param {string} name Filesystem name
-	 * @throws {Error} On invalid name or if already mounted
-	 */
-	mount(name: string): Promise<boolean>;
-	/**
-	 * Unmount given filesystem
-	 * @param {string} name Filesystem name
-	 * @throws {Error} On invalid name or if already unmounted
-	 */
-	unmount(name: string): Promise<boolean>;
-	/**
-	 * Internal wrapper for mounting/unmounting
-	 *
-	 * @private
-	 * @param {Mountpoint} mountpoint The mountpoint
-	 * @param {boolean} [unmount=false] If action is unmounting
-	 * @return {Promise<boolean>}
-	 */
-	private _mountpointAction;
-	/**
-	 * Internal wrapper for mounting/unmounting by name
-	 *
-	 * @private
-	 * @param {string} name Mountpoint name
-	 * @param {boolean} [unmount=false] If action is unmounting
-	 * @return {Promise<boolean>}
-	 */
-	private _mountAction;
-	/**
-	 * Gets the proxy for VFS methods
-	 * @return {{key: Function}} A map of VFS functions
-	 */
-	request(): {
-		key: Function;
-	};
-	/**
-	 * Perform a VFS method request
-	 *
-	 * @private
-	 * @param {string} method VFS method name
-	 * @param {*} ...args Arguments
-	 * @return {*}
-	 */
-	private _request;
-	/**
-	 * Request action wrapper
-	 * @private
-	 * @param {string} method
-	 * @param {*} ...args Arguments
-	 * @return {Promise<*>}
-	 */
-	private _requestAction;
-	/**
-	 * Creates a new mountpoint based on given properties
-	 * @param {object} props Properties (see Mountpoint)
-	 * @return {Mountpoint}
-	 */
-	createMountpoint(props: object): Mountpoint;
-	/**
-	 * Gets mountpoint from given path
-	 * @param {string|object} file The file object
-	 * @return {Mountpoint|null}
-	 */
-	getMountpointFromPath(file: string | object): Mountpoint | null;
-	/**
-	 * Gets all mountpoints
-	 * @return {object[]}
-	 */
-	getMounts(all?: boolean): object[];
-}
-/**
- * VFS Mountpoint
- */
-export type Mountpoint = any;
-/**
- * Filesystem Options
- */
-export type FilesystemOptions = {
-	/**
-	 * Adapter registry
-	 */
-	adapters?: {
-		name: any;
-	};
-	/**
-	 * Mountpoints
-	 */
-	mounts?: Mountpoint[];
-};
-declare class VFSServiceProvider extends ServiceProvider {
-	constructor(core: any, args?: {});
-	fs: Filesystem;
-}
-declare class AuthServiceProvider extends ServiceProvider {
-	/**
-	 * @param {Object} core OS.js Core
-	 * @param {Object} [args] Arguments
-	 * @see Auth
-	 */
-	constructor(core: any, args?: any);
-	auth: Auth;
-}
-declare class Settings {
-	/**
-	 * Create application
-	 *
-	 * @param {Core} core Core reference
-	 * @param {SettingsOptions} options Options
-	 */
-	constructor(core: any, options: SettingsOptions);
-	/**
-	 * The settings adapter
-	 * @type {SettingsAdapter}
-	 */
-	adapter: SettingsAdapter;
-	/**
-	 * Internal timeout reference used for debouncing
-	 * @type {object}
-	 */
-	debounce: object;
-	/**
-	 * The settings tree
-	 * @type {{name: *}}
-	 */
-	settings: {
-		name: any;
-	};
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Initializes settings adapter
-	 */
-	init(): any;
-	/**
-	 * Saves settings
-	 * @return {Promise<boolean>}
-	 */
-	save(): Promise<boolean>;
-	/**
-	 * Loads settings
-	 * @return {Promise<boolean>}
-	 */
-	load(): Promise<boolean>;
-	/**
-	 * Gets a settings entry by key (cached)
-	 *
-	 * @param {string} [ns] The namespace
-	 * @param {string} [key] The key to get the value from
-	 * @param {*} [defaultValue] If result is undefined, return this instead
-	 * @return {*}
-	 */
-	get(ns?: string, key?: string, defaultValue?: any): any;
-	/**
-	 * Sets a settings entry by root key (but does not save).
-	 *
-	 * @param {string} ns The namespace
-	 * @param {string} [key] The key to set
-	 * @param {*} [value] The value to set
-	 * @return {Settings} This
-	 */
-	set(ns: string, key?: string, value?: any): Settings;
-	/**
-	 * Clears a namespace by root key
-	 * @param {string} ns The namespace
-	 * @return {Promise<boolean>}
-	 */
-	clear(ns: string): Promise<boolean>;
-}
-/**
- * TODO: typedef
- */
-export type SettingsAdapter = any;
-export type SettingsAdapterCallback = (core: any) => SettingsAdapterCallback;
-/**
- * Settings Options
- */
-export type SettingsOptions = {
-	/**
-	 * Adapter to use
-	 */
-	adapter?: SettingsAdapterCallback | SettingsAdapter;
-	/**
-	 * Adapter configuration
-	 */
-	config?: any;
-};
-declare class SettingsServiceProvider extends ServiceProvider {
-	constructor(core: any, args?: {});
-	settings: Settings;
-}
-declare namespace instance {
-	export function addMiddleware(m: any): void;
-	export function clearMiddleware(): void;
-}
-/**
- * Basic Application Helper
- *
- * A class for helping creating basic applications with open/load/create functionality.
- * Also sets the internal proc args for sessions.
- */
-export class BasicApplication extends EventEmitter {
-	/**
-	 * Basic Application Constructor
-	 * @param {Core} core OS.js Core API
-	 * @param {Application} proc The application process
-	 * @param {Window} win The main application window
-	 * @param {object} [options] Basic application options
-	 * @param {string[]} [options.mimeTypes] What MIME types to support (all/fallback)
-	 * @param {string[]} [options.loadMimeTypes] What MIME types to support on load
-	 * @param {string[]} [options.saveMimeTypes] What MIME types to support on save
-	 * @param {string} [options.defaultFilename] Default filename of a new file
-	 */
-	constructor(core: any, proc: any, win: Window, options?: {
-		mimeTypes: string[];
-		loadMimeTypes: string[];
-		saveMimeTypes: string[];
-		defaultFilename: string;
-	});
-	/**
-	 * Core instance reference
-	 * @type {Core}
-	 */
-	core: any;
-	/**
-	 * Application instance reference
-	 * @type {Application}
-	 */
-	proc: any;
-	/**
-	 * Window instance reference
-	 * @type {Window}
-	 */
-	win: Window;
-	/**
-	 * Basic Application Options
-	 * TODO: typedef
-	 * @type {Object}
-	 */
-	options: any;
-	/**
-	 * Destroys all Basic Application internals
-	 */
-	destroy(): void;
-	/**
-	 * Initializes the application
-	 * @return {Promise<boolean>}
-	 */
-	init(): Promise<boolean>;
-	/**
-	 * Gets options for a dialog
-	 * @param {string} type Dialog type
-	 * @return {object}
-	 */
-	getDialogOptions(type: string, options?: {}): object;
-	/**
-	 * Updates the window title to match open file
-	 */
-	updateWindowTitle(): void;
-	/**
-	 * Creates a new dialog of a type
-	 * @param {string} type Dialog type
-	 * @param {Function} cb Callback
-	 * @param {object} [options] Override options
-	 */
-	createDialog(type: string, cb: Function, options?: object): void;
-	/**
-	 * Opens given file
-	 *
-	 * Does not do any actual VFS operation
-	 *
-	 * @param {object} file A file object
-	 */
-	open(item: any): void;
-	/**
-	 * Saves given file
-	 *
-	 * Does not do any actual VFS operation
-	 *
-	 * @param {object} file A file object
-	 */
-	save(item: any): void;
-	/**
-	 * Create new file
-	 *
-	 * Does not do any actual VFS operation
-	 */
-	create(): void;
-	/**
-	 * Create new file
-	 * @see BasicApplication#create
-	 */
-	createNew(): void;
-	/**
-	 * Creates a new save dialog
-	 * @param {object} [options] Dialog options
-	 */
-	createSaveDialog(options?: object): void;
-	/**
-	 * Creates a new load dialog
-	 * @param {object} [options] Dialog options
-	 */
-	createOpenDialog(options?: object): void;
-	/**
-	 * Sets file from open/save action
-	 *
-	 * @private
-	 * @param {object} item File
-	 * @param {string} eventName Event to fire
-	 */
-	private _setFile;
-	/**
-	 * Creates the window title
-	 *
-	 * @private
-	 * @param {string} prefix Title prefix
-	 * @return {string}
-	 */
-	private _createTitle;
-}
 
 export {
 	Application as Application,

@@ -58,6 +58,13 @@ import logger from './logger';
  */
 
 /**
+ * Package Launch Options
+ *
+ * @typedef {Object} PackageLaunchOptions
+ * @property {boolean} [forcePreload=false] Force preload reloading
+ */
+
+/**
  * Package Manager
  *
  * Handles indexing, loading and launching of OS.js packages
@@ -151,9 +158,8 @@ export default class Packages {
    * Launches a (application) package
    *
    * @param {string} name Package name
-   * @param {object} [args] Launch arguments
-   * @param {object} [options] Launch options
-   * @param {boolean} [options.forcePreload=false] Force preload reloading
+   * @param {{foo: *}} [args={}] Launch arguments
+   * @param {PackageLaunchOptions} [options={}] Launch options
    * @see PackageServiceProvider
    * @throws {Error}
    * @return {Promise<Application>}
@@ -181,7 +187,7 @@ export default class Packages {
    * @param {string} name Application package name
    * @param {Metadata} metadata Application metadata
    * @param {{foo: *}} args Launch arguments
-   * @param {object} options Launch options
+   * @param {PackageLaunchOptions} options Launch options
    * @return {Promise<Application>}
    */
   _launchApplication(name, metadata, args, options) {
@@ -252,8 +258,8 @@ export default class Packages {
    *
    * @private
    * @param {string} name Package name
-   * @param {object} args Launch arguments
-   * @param {object} options Launch options
+   * @param {{foo: *}} args Launch arguments
+   * @param {PackageLaunchOptions} options Launch options
    * @return {Promise<Application>}
    */
   _launch(name, metadata, args, options) {

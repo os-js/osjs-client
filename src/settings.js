@@ -58,6 +58,11 @@ const createAdapter = (core, options) => {
 
 /**
  * TODO: typedef
+ * @typedef {Object} SettingsAdapterConfiguration
+ */
+
+/**
+ * TODO: typedef
  * @typedef {Object} SettingsAdapter
  */
 
@@ -72,7 +77,7 @@ const createAdapter = (core, options) => {
  *
  * @typedef {Object} SettingsOptions
  * @property {SettingsAdapterCallback|SettingsAdapter} [adapter] Adapter to use
- * @property {Object} [config] Adapter configuration
+ * @property {SettingsAdapterConfiguration} [config] Adapter configuration
  */
 
 /**

@@ -45,10 +45,35 @@ import merge from 'deepmerge';
 import logger from './logger';
 
 /**
+ * TODO: typedef
+ * @typedef {Object} DesktopContextMenuEntry
+ */
+
+/**
+ * @typedef {Object} DesktopIconViewSettings
+ */
+
+/**
+ * TODO: typedef
+ * @typedef {Object} DesktopSettings
+ * @property {DesktopIconViewSettings} [iconview]
+ */
+
+/**
  * Desktop Options
  *
  * @typedef {Object} DeskopOptions
  * @property {object[]} [contextmenu={}] Default Context menu items
+ */
+
+/**
+ * Desktop Viewport Rectangle
+ *
+ * @typedef {Object} DesktopViewportRectangle
+ * @property {number} left
+ * @property {number} top
+ * @property {number} right
+ * @property {number} bottom
  */
 
 /**
@@ -94,7 +119,7 @@ export default class Desktop extends EventEmitter {
 
     /**
      * Default context menu entries
-     * @type {Object[]}
+     * @type {DesktopContextMenuEntry[]}
      */
     this.contextmenuEntries = [];
 
@@ -119,7 +144,7 @@ export default class Desktop extends EventEmitter {
     /**
      * Desktop subtraction rectangle
      * TODO: typedef
-     * @type {Object}
+     * @type {DesktopViewportRectangle}
      */
     this.subtract = {
       left: 0,
@@ -454,7 +479,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Adds something to the default contextmenu entries
-   * @param {Object[]} entries
+   * @param {DesktopContextMenuEntry[]} entries
    */
   addContextMenu(entries) {
     this.contextmenuEntries = this.contextmenuEntries.concat(entries);
@@ -462,8 +487,8 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Applies settings and updates desktop
-   * @param {object} [settings] Use this set instead of loading from settings
-   * @return {object} New settings
+   * @param {DesktopSettings} [settings] Use this set instead of loading from settings
+   * @return {DesktopSettings} New settings
    */
   applySettings(settings) {
     const lockSettings = this.core.config('desktop.lock');
@@ -552,7 +577,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Adds or removes the icon view
-   * @param {Object} settings
+   * @param {DesktopIconViewSettings} settings
    */
   applyIconView(settings) {
     if (!this.iconview) {
@@ -644,7 +669,7 @@ export default class Desktop extends EventEmitter {
 
   /**
    * Create drop context menu entries
-   * @param {Object} Drop data
+   * @param {Object} data Drop data
    * @return {Object[]}
    */
   createDropContextMenu(data) {
@@ -820,7 +845,7 @@ export default class Desktop extends EventEmitter {
    *
    * This is based on any panels etc taking up space
    *
-   * @return {object}
+   * @return {DesktopViewportRectangle}
    */
   getRect() {
     const root = this.core.$root;

@@ -34,6 +34,32 @@ import {
   createFileIter
 } from './utils/vfs';
 
+/**
+ * VFS Method Options
+ *
+ * TODO: typedef
+ * @typedef {Object} VFSMethodOptions
+ */
+
+/**
+ * VFS Download Options
+ *
+ * @typedef {Object} VFSDownloadOptions
+ * @property {boolean} [readfile] Set to false to force backend fetch
+ */
+
+/**
+ * VFS File Object
+ *
+ * @typedef {Object} VFSFile
+ * @property {string} path
+ * @property {string} [filename]
+ * @property {boolean} [isDirectory]
+ * @property {boolean} [isFile]
+ * @property {string} [mime]
+ * @property {object} [stat]
+ */
+
 // Makes sure our input paths are object(s)
 const pathToObject = path => ({
   id: null,
@@ -51,8 +77,8 @@ const handleDirectoryList = (path, options) => result =>
 /**
  * Read a directory
  *
- * @param {object|string} path The path to read
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The path to read
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<object[]>} A list of files
  */
 export const readdir = (adapter, mount) => (path, options = {}) =>
@@ -64,9 +90,9 @@ export const readdir = (adapter, mount) => (path, options = {}) =>
  *
  * Available types are 'arraybuffer', 'blob', 'uri' and 'string'
  *
- * @param {object|string} path The path to read
+ * @param {string|VFSFile} path The path to read
  * @param {string} [type=string] Return this content type
- * @param {object} [options] Options
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<ArrayBuffer>}
  */
 export const readfile = (adapter, mount) => (path, type = 'string', options = {}) =>
@@ -75,9 +101,9 @@ export const readfile = (adapter, mount) => (path, type = 'string', options = {}
 
 /**
  * Writes a file
- * @param {object|string} path The path to write
+ * @param {string|VFSFile} path The path to write
  * @param {ArrayBuffer|Blob|string} data The data
- * @param {object} [options] Options
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<number>} File size
  */
 export const writefile = (adapter, mount) => (path, data, options = {}) => {
@@ -90,9 +116,9 @@ export const writefile = (adapter, mount) => (path, data, options = {}) => {
 
 /**
  * Copies a file or directory (move)
- * @param {object|string} from The source (from)
- * @param {object|string} to The destination (to)
- * @param {object} [options] Options
+ * @param {string|VFSFile} from The source (from)
+ * @param {string|VFSFile} to The destination (to)
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const copy = (adapter, mount) => (from, to, options = {}) =>
@@ -100,9 +126,9 @@ export const copy = (adapter, mount) => (from, to, options = {}) =>
 
 /**
  * Renames a file or directory (move)
- * @param {object|string} from The source (from)
- * @param {object|string} to The destination (to)
- * @param {object} [options] Options
+ * @param {string|VFSFile} from The source (from)
+ * @param {string|VFSFile} to The destination (to)
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const rename = (adapter, mount) => (from, to, options = {}) =>
@@ -110,17 +136,17 @@ export const rename = (adapter, mount) => (from, to, options = {}) =>
 
 /**
  * Alias of 'readme'
- * @param {object|string} from The source (from)
- * @param {object|string} to The destination (to)
- * @param {object} [options] Options
+ * @param {string|VFSFile} from The source (from)
+ * @param {string|VFSFile} to The destination (to)
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const move = rename;
 
 /**
  * Creates a directory
- * @param {object|string} path The path to new directory
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The path to new directory
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const mkdir = (adapter, mount) => (path, options = {}) =>
@@ -128,8 +154,8 @@ export const mkdir = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Removes a file or directory
- * @param {object|string} path The path to remove
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The path to remove
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const unlink = (adapter, mount) => (path, options = {}) =>
@@ -137,8 +163,8 @@ export const unlink = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Checks if path exists
- * @param {object|string} path The path to check
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The path to check
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<boolean>}
  */
 export const exists = (adapter, mount) => (path, options = {}) =>
@@ -146,8 +172,8 @@ export const exists = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Gets the stats of the file or directory
- * @param {object|string} path The path to check
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The path to check
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<object>}
  */
 export const stat = (adapter, mount) => (path, options = {}) =>
@@ -156,8 +182,8 @@ export const stat = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Gets an URL to a resource defined by file
- * @param {object|string} path The file
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The file
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<string>}
  */
 export const url = (adapter, mount) => (path, options = {}) =>
@@ -165,8 +191,8 @@ export const url = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Initiates a native browser download of the file
- * @param {object|string} path The file
- * @param {object} [options] Options
+ * @param {string|VFSFile} path The file
+ * @param {VFSDownloadOptions} [options] Options
  * @return {Promise<any>}
  */
 export const download = (adapter, mount) => (path, options = {}) =>
@@ -193,9 +219,9 @@ export const download = (adapter, mount) => (path, options = {}) =>
 
 /**
  * Searches for files and folders
- * @param {object|string} root The root
+ * @param {string|VFSFile} root The root
  * @param {string} pattern Search pattern
- * @param {object} [options] Options
+ * @param {VFSMethodOptions} [options] Options
  * @return {Promise<object[]>} A list of files
  */
 export const search = (adapter, mount) => (root, pattern, options = {}) => {
@@ -209,7 +235,7 @@ export const search = (adapter, mount) => (root, pattern, options = {}) => {
 
 /**
  * Touches a file
- * @param {object|string} path File path
+ * @param {string|VFSFile} path File path
  * @return {Promise<boolean>}
  */
 export const touch = (adapter, mount) => (path, options = {}) =>

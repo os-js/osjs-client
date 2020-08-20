@@ -32,9 +32,18 @@ import logger from './logger';
 import defaultIcon from './styles/logo-blue-32x32.png';
 
 /**
- * A Tray Icon ("Entry")
+ * Tray Icon Data
+ * @typedef {Object} TrayEntryData
+ * @property {string} [icon] Icon source
+ * @property {string} [title] The title and tooltip
+ * @property {Function} [onclick] The callback function for clicks
+ * @property {Function} [oncontextmenu] The callback function for contextmenu
+ */
+
+/**
+ * Tray Icon Entry
  * @typedef {Object} TrayEntry
- * @property {Object} entry The given entry data
+ * @property {TrayEntryData} entry The given entry data
  * @property {Function} update Updates entry with given data
  * @property {Function} destroy Destroy the entry
  */
@@ -72,11 +81,7 @@ export default class Tray {
 
   /**
    * Creates a new Tray entry
-   * @param {object} options Options
-   * @param {string} [options.icon] Icon source
-   * @param {string} [options.title] The title and tooltip
-   * @param {Function} [options.onclick] The callback function for clicks
-   * @param {Function} [options.oncontextmenu] The callback function for contextmenu
+   * @param {TrayEntryData} options Options
    * @param {Function} [handler] The callback function for all events
    * @return {TrayEntry}
    */

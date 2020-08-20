@@ -38,18 +38,25 @@ import logger from './logger';
 import merge from 'deepmerge';
 
 /**
+ * VFS Mountpoint attributes
+ *
+ * @typedef {Object} MountpointAttributes
+ * @property {string} [visibility='global'] Visibility in UI
+ * @property {boolean} [local=true] Local filesystem ?
+ * @property {boolean} [searchable=true] If can be searched
+ * @property {boolean} [readOnly=false] Readonly
+ */
+
+/**
  * VFS Mountpoint
  *
  * @typedef {Object} Mountpoint
- * @param {string} name Name
- * @param {string} label Label
- * @param {string} adapter Adater name
- * @param {boolean} [enabled=true] Enabled state
- * @param {object} [attributes] Attributes
- * @param {string} [attributes.visibility='global'] Visibility in UI
- * @param {boolean} [attributes.local=true] Local filesystem ?
- * @param {boolean} [attributes.searchable=true] If can be searched
- * @param {boolean} [attributes.readOnly=false] Readonly
+ * @property {string} name Name
+ * @property {string} label Label
+ * @property {string} adapter Adater name
+ * @property {string} [root] System adapter root
+ * @property {boolean} [enabled=true] Enabled state
+ * @property {MountpointAttributes} [attributes] Attributes
  */
 
 /**
@@ -105,7 +112,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * Options
-     * @type {Object}
+     * @type {FilesystemOptions}
      */
     this.options = {};
 
@@ -297,7 +304,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Creates a new mountpoint based on given properties
-   * @param {object} props Properties (see Mountpoint)
+   * @param {Mountpoint} props Properties
    * @return {Mountpoint}
    */
   createMountpoint(props) {
@@ -326,7 +333,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets mountpoint from given path
-   * @param {string|object} file The file object
+   * @param {string|VFSFile} file The file
    * @return {Mountpoint|null}
    */
   getMountpointFromPath(file) {
@@ -349,7 +356,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets all mountpoints
-   * @return {object[]}
+   * @return {Mountpoint[]}
    */
   getMounts(all = false) {
     const user = this.core.getUser();

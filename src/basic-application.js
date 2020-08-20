@@ -31,6 +31,15 @@
 import {EventEmitter} from '@osjs/event-emitter';
 import {basename, pathname} from './utils/vfs';
 
+/**
+ * Basic Application Options
+ *
+ * @typedef {Object} BasicApplicationOptions
+ * @param {string[]} [mimeTypes] What MIME types to support (all/fallback)
+ * @param {string[]} [loadMimeTypes] What MIME types to support on load
+ * @param {string[]} [saveMimeTypes] What MIME types to support on save
+ * @param {string} [defaultFilename] Default filename of a new file
+ */
 
 /**
  * Basic Application Helper
@@ -45,11 +54,7 @@ export class BasicApplication extends EventEmitter {
    * @param {Core} core OS.js Core API
    * @param {Application} proc The application process
    * @param {Window} win The main application window
-   * @param {object} [options] Basic application options
-   * @param {string[]} [options.mimeTypes] What MIME types to support (all/fallback)
-   * @param {string[]} [options.loadMimeTypes] What MIME types to support on load
-   * @param {string[]} [options.saveMimeTypes] What MIME types to support on save
-   * @param {string} [options.defaultFilename] Default filename of a new file
+   * @param {BasicApplicationOptions} [options] Basic application options
    */
   constructor(core, proc, win, options = {}) {
     super('BasicApplication<' + proc.name + '>');
@@ -74,8 +79,7 @@ export class BasicApplication extends EventEmitter {
 
     /**
      * Basic Application Options
-     * TODO: typedef
-     * @type {Object}
+     * @type {BasicApplicationOptions}
      */
     this.options = {
       mimeTypes: proc.metadata.mimes || [],
@@ -178,7 +182,7 @@ export class BasicApplication extends EventEmitter {
    *
    * Does not do any actual VFS operation
    *
-   * @param {object} file A file object
+   * @param {VFSFile} file A file
    */
   open(item) {
     this._setFile(item, 'open-file');
@@ -189,7 +193,7 @@ export class BasicApplication extends EventEmitter {
    *
    * Does not do any actual VFS operation
    *
-   * @param {object} file A file object
+   * @param {VFSFile} file A file
    */
   save(item) {
     this._setFile(item, 'save-file');
@@ -236,7 +240,7 @@ export class BasicApplication extends EventEmitter {
    * Sets file from open/save action
    *
    * @private
-   * @param {object} item File
+   * @param {VFSFile} item File
    * @param {string} eventName Event to fire
    */
   _setFile(item, eventName) {

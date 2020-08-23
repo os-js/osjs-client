@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  Julien Gomes Dias <abld@abld.info>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const fr_FR = {

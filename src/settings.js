@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  Anders Evenrud <andersevenrud@gmail.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 import merge from 'deepmerge';

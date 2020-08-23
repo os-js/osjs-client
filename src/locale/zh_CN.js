@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  lijun <lijun_ay@126.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const zh_CN = {

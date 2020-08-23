@@ -26,7 +26,7 @@
  *
  *
  * @author  Morteza Javan <javan.it@gmail.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const fa_FA = {

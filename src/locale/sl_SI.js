@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  Filip Š <projects@filips.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const sl_SI = {

@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  Matheus Felipe <matheusfelipeog@gmail.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const pt_BR = {

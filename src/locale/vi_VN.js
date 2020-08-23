@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @author  Nguyễn Anh Khoa <khoaakt@gmail.com>
- * @licence Simplified BSD License
+ * @license Simplified BSD License
  */
 
 export const vi_VN = {

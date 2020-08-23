@@ -54,7 +54,7 @@ export class BasicApplication extends EventEmitter {
    * @param {Core} core OS.js Core API
    * @param {Application} proc The application process
    * @param {Window} win The main application window
-   * @param {BasicApplicationOptions} [options] Basic application options
+   * @param {BasicApplicationOptions} [options={}] Basic application options
    */
   constructor(core, proc, win, options = {}) {
     super('BasicApplication<' + proc.name + '>');

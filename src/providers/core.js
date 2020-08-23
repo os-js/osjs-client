@@ -329,7 +329,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   /**
    * Event when dist changes from a build or deployment
    * @private
-   * @property {string} filename The resource filename
+   * @param {string} filename The resource filename
    */
   _onDistChanged(filename) {
     const url = this.core.url(filename).replace(/^\//, '');
@@ -354,7 +354,7 @@ export default class CoreServiceProvider extends ServiceProvider {
   /**
    * Event when package dist changes from a build or deployment
    * @private
-   * @property {string} name The package name
+   * @param {string} name The package name
    */
   _onPackageChanged(name) {
     // TODO: Reload themes as well

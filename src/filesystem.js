@@ -158,7 +158,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Mounts all configured mountpoints
-   * @property {boolean} [stopOnError=true] Stop on first error
+   * @param {boolean} [stopOnError=true] Stop on first error
    * @return {Promise<boolean[]>}
    */
   mountAll(stopOnError = true) {

@@ -455,7 +455,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
         return false;
       }
-    }
+    };
   }
 
   /**

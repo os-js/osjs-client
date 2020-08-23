@@ -111,6 +111,6 @@ export default class DesktopServiceProvider extends ServiceProvider {
       applySettings: settings => this.desktop.applySettings(settings),
       createDropContextMenu: data => this.desktop.createDropContextMenu(data),
       getRect: () => this.desktop.getRect()
-    }
+    };
   }
 }

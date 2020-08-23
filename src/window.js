@@ -241,6 +241,12 @@ export default class Window extends EventEmitter {
     this.rendered = false;
 
     /**
+     * The window was inited
+     * @type {boolean}
+     */
+    this.inited = false;
+
+    /**
      * The window attributes
      * @type {WindowAttributes}
      */
@@ -929,7 +935,9 @@ export default class Window extends EventEmitter {
   }
 
   /*
+   * Updates window styles and attributes
    * FIXME: Backward compability with themes
+   * @deprecated
    */
   _updateDOM() {
     this._updateAttributes();

@@ -192,8 +192,6 @@ export default class Core extends CoreBase {
 
     this.user = this.config('auth.defaultUserData');
     this.ws = null;
-    this.connecting = false;
-    this.connectfailed = false;
     this.ping = null;
 
     return super.destroy();

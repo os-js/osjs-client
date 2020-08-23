@@ -46,6 +46,11 @@ export default class Notifications {
      * @readonly
      */
     this.core = core;
+
+    /**
+     * @type {Element}
+     */
+    this.$element = null;
   }
 
   /**

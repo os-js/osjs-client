@@ -61,6 +61,7 @@ export default class Login extends EventEmitter {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -68,6 +69,7 @@ export default class Login extends EventEmitter {
      * Login options
      * TODO: typedef
      * @type {Object}
+     * @readonly
      */
     this.options = {
       id: 'osjs-login',

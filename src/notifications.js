@@ -43,6 +43,7 @@ export default class Notifications {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
   }

@@ -35,10 +35,10 @@ import {basename, pathname} from './utils/vfs';
  * Basic Application Options
  *
  * @typedef {Object} BasicApplicationOptions
- * @param {string[]} [mimeTypes] What MIME types to support (all/fallback)
- * @param {string[]} [loadMimeTypes] What MIME types to support on load
- * @param {string[]} [saveMimeTypes] What MIME types to support on save
- * @param {string} [defaultFilename] Default filename of a new file
+ * @property {string[]} [mimeTypes] What MIME types to support (all/fallback)
+ * @property {string[]} [loadMimeTypes] What MIME types to support on load
+ * @property {string[]} [saveMimeTypes] What MIME types to support on save
+ * @property {string} [defaultFilename] Default filename of a new file
  */
 
 /**
@@ -62,24 +62,28 @@ export class BasicApplication extends EventEmitter {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
     /**
      * Application instance reference
      * @type {Application}
+     * @readonly
      */
     this.proc = proc;
 
     /**
      * Window instance reference
      * @type {Window}
+     * @readonly
      */
     this.win = win;
 
     /**
      * Basic Application Options
      * @type {BasicApplicationOptions}
+     * @readonly
      */
     this.options = {
       mimeTypes: proc.metadata.mimes || [],

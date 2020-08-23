@@ -32,22 +32,45 @@ import {ServiceProvider} from '@osjs/common';
 import Desktop from '../desktop';
 
 /**
+ * Desktop Service Contract
+ * TODO: typedef
+ * @typedef {Object} DeskopProviderContract
+ * @property {Function} setKeyboardContext
+ * @property {Function} openContextMenu
+ * @property {Function} addContextMenuEntries
+ * @property {Function} applySettings
+ * @property {Function} createDropContextMenu
+ * @property {Function} getRect
+ */
+
+/**
  * OS.js Desktop Service Provider
  */
 export default class DesktopServiceProvider extends ServiceProvider {
 
+  /**
+   * @param {Core} core OS.js Core
+   */
   constructor(core, options = {}) {
     super(core, options || {});
 
-    this.desktop = null;
+    /**
+     * @type {Desktop}
+     * @readonly
+     */
+    this.desktop = new Desktop(this.core, this.options);
   }
 
+  /**
+   * Destroys instance
+   */
   destroy() {
     this.desktop = this.desktop.destroy();
   }
 
   /**
    * Get a list of services this provider registers
+   * @return {string[]}
    */
   provides() {
     return [
@@ -55,25 +78,39 @@ export default class DesktopServiceProvider extends ServiceProvider {
     ];
   }
 
+  /**
+   * Initializes desktop
+   * @return {Promise<undefined>}
+   */
   init() {
-    this.desktop = new Desktop(this.core, this.options);
     this.desktop.init();
 
-    this.core.singleton('osjs/desktop', () => ({
-      setKeyboardContext: ctx => this.desktop.setKeyboardContext(ctx),
-      openContextMenu: ev => this.desktop.onContextMenu(ev),
-      addContextMenuEntries: entries => this.desktop.addContextMenu(entries),
-      applySettings: settings => this.desktop.applySettings(settings),
-      createDropContextMenu: data => this.desktop.createDropContextMenu(data),
-      getRect: () => this.desktop.getRect()
-    }));
+    this.core.singleton('osjs/desktop', () => this.createDesktopContract());
 
     this.core.on('osjs/core:started', () => {
       this.desktop.applySettings();
     });
   }
 
+  /**
+   * Starts desktop
+   * @return {Promise<undefined>}
+   */
   start() {
     this.desktop.start();
+  }
+
+  /**
+   * @return {DeskopProviderContract}
+   */
+  createDesktopContract() {
+    return {
+      setKeyboardContext: ctx => this.desktop.setKeyboardContext(ctx),
+      openContextMenu: ev => this.desktop.onContextMenu(ev),
+      addContextMenuEntries: entries => this.desktop.addContextMenu(entries),
+      applySettings: settings => this.desktop.applySettings(settings),
+      createDropContextMenu: data => this.desktop.createDropContextMenu(data),
+      getRect: () => this.desktop.getRect()
+    }
   }
 }

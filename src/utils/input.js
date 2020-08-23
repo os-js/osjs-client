@@ -31,6 +31,14 @@
 const modifierNames =  ['ctrl', 'shift', 'alt', 'meta'];
 
 /**
+ * @typedef {Object} NormalizedEventPosition
+ * @property {number} clientX
+ * @property {number} clientY
+ * @property {boolean} touch
+ * @property {Element} target
+ */
+
+/**
  * Checks if keycombo matches
  * @param {string} combo Key combo
  * @param {Event} ev Event
@@ -48,6 +56,8 @@ export const matchKeyCombo = (combo, ev) => {
 
 /**
  * Normalizes event input (position)
+ * @param {Event} ev Event
+ * @return {NormalizedEventPosition}
  */
 export const getEvent = (ev) => {
   let {clientX, clientY, target} = ev;

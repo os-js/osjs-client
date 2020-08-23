@@ -38,12 +38,20 @@ const imageDropMimes = [
   'image/gif'
 ];
 
+/**
+ * Check if droppable data is a VFS type
+ * @return {boolean}
+ */
 export const validVfsDrop = data => data && data.path;
 
+/**
+ * Check if droppable data contains image
+ * @return {boolean}
+ */
 export const isDroppingImage = data => validVfsDrop(data) &&
   imageDropMimes.some(re => !!data.mime.match(re));
 
-/*
+/**
  * Creates a set of styles based on background settings
  */
 export const applyBackgroundStyles = (core, background) => {
@@ -81,7 +89,7 @@ export const applyBackgroundStyles = (core, background) => {
   Object.keys(styles).forEach(k => ($root.style[k] = styles[k]));
 };
 
-/*
+/**
  * Creates a rectangle with the realestate panels takes up
  */
 export const createPanelSubtraction = (panel, panels) => {

@@ -40,12 +40,14 @@ export default class Splash {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
     /**
      * Splash root element
      * @type {Element}
+     * @readonly
      */
     this.$loading = document.createElement('div');
     this.$loading.className = 'osjs-boot-splash';

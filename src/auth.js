@@ -116,24 +116,28 @@ export default class Auth {
     /**
      * Authentication UI
      * @type {Login}
+     * @readonly
      */
     this.ui = createUi(core, options);
 
     /**
      * Authentication adapter
      * @type {AuthAdapter}
+     * @readonly
      */
     this.adapter = createAdapter(core, options);
 
     /**
      * Authentication callback function
      * @type {AuthCallback}
+     * @readonly
      */
     this.callback = function() {};
 
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
   }

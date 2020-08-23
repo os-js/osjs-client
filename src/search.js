@@ -43,6 +43,7 @@ export default class Search {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -61,6 +62,7 @@ export default class Search {
     /**
      * Search root DOM element
      * @type {Element}
+     * @readonly
      */
     this.$element = document.createElement('div');
   }

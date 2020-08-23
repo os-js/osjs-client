@@ -63,6 +63,7 @@ export default class Websocket extends EventEmitter {
     /**
      * Socket URI
      * @type {string}
+     * @readonly
      */
     this.uri = uri;
 
@@ -99,6 +100,7 @@ export default class Websocket extends EventEmitter {
     /**
      * Options
      * @type {WebsocketOptions}
+     * @readonly
      */
     this.options = {
       reconnect: true,

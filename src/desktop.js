@@ -93,12 +93,14 @@ export default class Desktop extends EventEmitter {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
     /**
      * Desktop Options
      * @type {DeskopOptions}
+     * @readonly
      */
     this.options = {
       contextmenu: [],
@@ -126,12 +128,14 @@ export default class Desktop extends EventEmitter {
     /**
      * Search instance
      * @type {Search|null}
+     * @readonly
      */
     this.search = core.config('search.enabled') ? new Search(core) : null;
 
     /**
      * Icon View instance
      * @type {DesktopIconView}
+     * @readonly
      */
     this.iconview = new DesktopIconView(this.core);
 

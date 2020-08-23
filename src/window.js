@@ -46,15 +46,15 @@ import logger from './logger';
 /**
  * Window dimension definition
  * @typedef {Object} WindowDimension
- * @property {number} width Width in pixels
- * @property {number} height Height in pixels
+ * @property {number} width Width in pixels (or float for percentage in setters)
+ * @property {number} height Height in pixels (or float for percentage in setters)
  */
 
 /**
  * Window position definition
  * @typedef {Object} WindowPosition
- * @property {number} left Left in pixels
- * @property {number} top Top in pixels
+ * @property {number} left Left in pixels (or float for percentage in setters)
+ * @property {number} top Top in pixels (or float for percentage in setters)
  */
 
 /**
@@ -197,18 +197,21 @@ export default class Window extends EventEmitter {
     /**
      * The Window ID
      * @type {string}
+     * @readonly
      */
     this.id = options.id;
 
     /**
      * The Window ID
      * @type {Number}
+     * @readonly
      */
     this.wid = ++windowCount;
 
     /**
      * Parent Window reference
      * @type {Window}
+     * @readonly
      */
     this.parent = options.parent;
 
@@ -221,6 +224,7 @@ export default class Window extends EventEmitter {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -251,6 +255,7 @@ export default class Window extends EventEmitter {
     /**
      * The window container
      * @type {Element}
+     * @readonly
      */
     this.$element = document.createElement('div');
 
@@ -305,6 +310,7 @@ export default class Window extends EventEmitter {
      * Custom destructor callback
      * @private
      * @type {Function}
+     * @readonly
      */
     this._ondestroy = options.ondestroy || (() => true);
 

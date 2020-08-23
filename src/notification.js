@@ -63,30 +63,35 @@ export default class Notification {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
     /**
      * Root node reference
      * @type {Element}
+     * @readonly
      */
     this.$root = root;
 
     /**
      * Notification DOM node
      * @type {Element}
+     * @readonly
      */
     this.$element = document.createElement('div');
 
     /**
      * The notification destruction state
      * @type {Boolean}
+     * @readonly
      */
     this.destroyed = false;
 
     /**
      * Options
      * @type {NotificationOptions}
+     * @readonly
      */
     this.options = {
       icon: null,

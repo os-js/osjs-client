@@ -32,21 +32,47 @@ import {ServiceProvider} from '@osjs/common';
 import Settings from '../settings';
 
 /**
+ * Settings Service Contract
+ * TODO: typedef
+ * @typedef {Object} SettingsProviderContract
+ * @property {Function} save
+ * @property {Function} load
+ * @property {Function} clear
+ * @property {Function} set
+ * @property {Function} get
+ */
+
+/**
+ * TODO: typedef
+ * @typedef {Object} SettingsServiceOptions
+ * @property {Object} [config]
+ */
+
+/**
  * OS.js Settings Service Provider
  */
 export default class SettingsServiceProvider extends ServiceProvider {
 
-  constructor(core, args = {}) {
+  /**
+   * @param {Core} core OS.js Core
+   * @param {SettingsServiceOptions} [options={}]
+   */
+  constructor(core, options = {}) {
     super(core);
 
+    /**
+     * @type {Settings}
+     * @readonly
+     */
     this.settings = new Settings(core, {
       config: {},
-      ...args
+      ...options
     });
   }
 
   /**
    * Get a list of services this provider registers
+   * @return {string[]}
    */
   provides() {
     return [
@@ -54,15 +80,26 @@ export default class SettingsServiceProvider extends ServiceProvider {
     ];
   }
 
+  /**
+   * Initializes settings
+   * @return {Promise<undefined>}
+   */
   init() {
-    this.core.singleton('osjs/settings', () => ({
-      save: () => this.settings.save(),
-      load: () => this.settings.load(),
-      clear: (...args) => this.settings.clear(...args),
-      get: (...args) => this.settings.get(...args),
-      set: (...args) => this.settings.set(...args)
-    }));
+    this.core.singleton('osjs/settings', () => this.createSettingsContract());
 
     return this.settings.init();
+  }
+
+  /**
+   * @return {SettingsProviderContract}
+   */
+  createSettingsContract() {
+    return {
+      save: () => this.settings.save(),
+      load: () => this.settings.load(),
+      clear: (ns) => this.settings.clear(ns),
+      get: (ns, key, defaultValue) => this.settings.get(ns, key, defaultValue),
+      set: (ns, key, value) => this.settings.set(ns, key, value)
+    };
   }
 }

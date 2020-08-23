@@ -59,6 +59,7 @@ export default class WindowBehavior {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -71,6 +72,7 @@ export default class WindowBehavior {
     /**
      * LoFi DOM Element
      * @type {Element}
+     * @readonly
      */
     this.$lofi = document.createElement('div');
     this.$lofi.className = 'osjs-window-behavior-lofi';

@@ -30,6 +30,52 @@
 
 import logger from '../logger';
 
+/**
+ * @callback DraggableEvent
+ * @param {MouseEvent} ev
+ */
+
+/**
+ * @callback DroppableEvent
+ * @param {MouseEvent} ev
+ */
+
+/**
+ * @callback DroppedEvent
+ * @param {MouseEvent} ev
+ * @param {Object} data
+ * @param {File[]} [files=[]]
+ */
+
+/**
+ * @typedef {Object} DroppableOptions
+ * @property {string} [type=application/json] Content Type
+ * @property {string} [effect=move] DnD effect (cursor)
+ * @property {DroppableEvent} [ondragenter] Callback to event (ev) => {}
+ * @property {DroppableEvent} [ondragover] Callback to event (ev) => {}
+ * @property {DroppableEvent} [ondragleave] Callback to event (ev) => {}
+ * @property {DroppedEvent} [ondrop] Callback to event (ev, data, files) => {}
+ */
+
+/**
+ * @typedef {Object} DroppableInstance
+ * @property {Function} destroy
+ */
+
+/**
+ * @typedef {Object} DraggableOptions
+ * @property {string} [type=application/json] Content Type
+ * @property {string} [effect=move] DnD effect (cursor)
+ * @property {DraggableEvent} [ondragstart] Callback to event (ev) => {}
+ * @property {DraggableEvent} [ondragend] Callback to event (ev) => {}
+ * @property {DraggableEvent} [setDragImage] Set custom drag image (browser dependent)
+ */
+
+/**
+ * @typedef {Object} DraggableInstance
+ * @property {Function} destroy
+ */
+
 const retval = (fn, ...args) => {
   try {
     const result = fn(...args);
@@ -102,12 +148,8 @@ const setDataTransfer = (type, effect, data, setDragImage) => {
 /**
  * Creates a "draggable" element
  * @param {Element} el The DOM element to apply to
- * @param {string} [options.type=application/json] Content Type
- * @param {string} [options.effect=move] DnD effect (cursor)
- * @param {Function} [options.ondragstart] Callback to event (ev) => {}
- * @param {Function} [options.ondragend] Callback to event (ev) => {}
- * @param {Function} [options.setDragImage] Set custom drag image (browser dependent)
- * @return {object} An object with a destructor
+ * @param {DraggableOptions} [options={}] Options
+ * @return {DraggableInstance}
  */
 export const draggable = (el, options = {}) => {
   const {type, effect, data, ondragstart, ondragend, setDragImage} = {
@@ -153,13 +195,8 @@ export const draggable = (el, options = {}) => {
 /**
  * Creates a "droppable" element
  * @param {Element} el The DOM element to apply to
- * @param {string} [options.type=application/json] Content Type
- * @param {string} [options.effect=move] DnD effect (cursor)
- * @param {Function} [options.ondragenter] Callback to event (ev) => {}
- * @param {Function} [options.ondragover] Callback to event (ev) => {}
- * @param {Function} [options.ondragleave] Callback to event (ev) => {}
- * @param {Function} [options.ondrop] Callback to event (ev, data, files) => {}
- * @return {object} An object with a destructor
+ * @param {DroppableOptions} [options={}] Options
+ * @return {DroppableInstance}
  */
 export const droppable = (el, options = {}) => {
   const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = {

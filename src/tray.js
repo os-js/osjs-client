@@ -62,6 +62,7 @@ export default class Tray {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 

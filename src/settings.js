@@ -85,6 +85,8 @@ const createAdapter = (core, options) => {
  */
 export default class Settings {
 
+  // TODO: Destroy method
+
   /**
    * Create application
    *
@@ -96,6 +98,7 @@ export default class Settings {
     /**
      * The settings adapter
      * @type {SettingsAdapter}
+     * @readonly
      */
     this.adapter = createAdapter(core, options);
 
@@ -114,6 +117,7 @@ export default class Settings {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
   }

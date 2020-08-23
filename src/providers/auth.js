@@ -32,6 +32,21 @@ import {ServiceProvider} from '@osjs/common';
 import Auth from '../auth';
 
 /**
+ * Auth Service Contract
+ * TODO: typedef
+ * @typedef {Object} AuthProviderContract
+ * @property {Function} show
+ * @property {Function} login
+ * @property {Function} logout
+ * @property {Function} user
+ */
+
+/**
+ * Auth Service Options
+ * @typedef {Object} AuthServiceOptions
+ */
+
+/**
  * OS.js Auth Service Provider
  *
  * Creates the login prompt and handles authentication flow
@@ -39,26 +54,25 @@ import Auth from '../auth';
 export default class AuthServiceProvider extends ServiceProvider {
 
   /**
-   * @param {Object} core OS.js Core
-   * @param {Object} [args] Arguments
-   * @see Auth
+   * @param {Core} core OS.js Core
+   * @param {AuthServiceOptions} [options={}]
    */
-  constructor(core, args = {}) {
+  constructor(core, options = {}) {
     super(core);
 
-    this.auth = new Auth(core, args);
+    /**
+     * @type {Auth}
+     * @readonly
+     */
+    this.auth = new Auth(core, options);
   }
 
   /**
    * Initializes authentication
+   * @return {Promise<undefined>}
    */
   init() {
-    this.core.singleton('osjs/auth', () => ({
-      show: (cb) => this.auth.show(cb),
-      login: (values) => this.auth.login(values),
-      logout: (reload) => this.auth.logout(reload),
-      user: () => this.core.getUser()
-    }));
+    this.core.singleton('osjs/auth', () => this.createAuthContract());
 
     return this.auth.init();
   }
@@ -74,10 +88,23 @@ export default class AuthServiceProvider extends ServiceProvider {
 
   /**
    * Get a list of services this provider registers
+   * @return {string[]}
    */
   provides() {
     return [
       'osjs/auth'
     ];
+  }
+
+  /**
+   * @return {AuthProviderContract}
+   */
+  createAuthContract() {
+    return {
+      show: (cb) => this.auth.show(cb),
+      login: (values) => this.auth.login(values),
+      logout: (reload) => this.auth.logout(reload),
+      user: () => this.core.getUser()
+    };
   }
 }

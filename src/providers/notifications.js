@@ -36,27 +36,45 @@ import {ServiceProvider} from '@osjs/common';
  */
 export default class NotificationServiceProvider extends ServiceProvider {
 
+  /**
+   * @param {Core} core OS.js Core
+   */
   constructor(core) {
     super(core);
 
+    /**
+     * @type {Notifications}
+     * @readonly
+     */
     this.notifications = new Notifications(core);
   }
 
+  /**
+   * Destroys notifications
+   */
   destroy() {
     this.notifications.destroy();
   }
 
+  /**
+   * Get a list of services this provider registers
+   * @return {string[]}
+   */
   provides() {
     return [
       'osjs/notification'
     ];
   }
 
+  /**
+   * Initializes authentication
+   * @return {Promise<undefined>}
+   */
   init() {
-    this.notifications.init();
-
     this.core.instance('osjs/notification', (options) => {
       return this.notifications.create(options);
     });
+
+    return this.notifications.init();
   }
 }

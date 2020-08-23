@@ -45,6 +45,7 @@ export default class Session {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
   }

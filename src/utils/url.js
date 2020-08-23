@@ -28,9 +28,24 @@
  * @licence Simplified BSD License
  */
 
+/**
+ * @typedef {Object} URLResolverOptions
+ * @property {string} [type] URL type (ws/http)
+ * @property {string} [boolean] Add prefix to URL
+ */
+
+/**
+ * Resolves an URL
+ * @param {CoreConfig} configuration
+ */
 export const urlResolver = configuration => {
   const {http, ws} = configuration;
 
+  /**
+   * @param {string} [endpoint='/']
+   * @param {URLResolverOptions} [options={}]
+   * @param {PackageMetadata} [metadata={}] Metadata for package resolving
+   */
   return (endpoint = '/', options = {}, metadata = {}) => {
     if (typeof endpoint !== 'string') {
       return http.public;

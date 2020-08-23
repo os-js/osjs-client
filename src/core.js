@@ -108,24 +108,28 @@ export default class Core extends CoreBase {
     /**
      * Splash instance
      * @type {Splash}
+     * @readonly
      */
     this.splash = options.splash ? options.splash(this) : new Splash(this);
 
     /**
      * Main DOM element
      * @type {Element}
+     * @readonly
      */
     this.$root = options.root;
 
     /**
      * Windows etc DOM element
      * @type {Element}
+     * @readonly
      */
     this.$contents = $contents;
 
     /**
      * Resource script container DOM element
      * @type {Element}
+     * @readonly
      */
     this.$resourceRoot = options.resourceRoot || document.querySelector('head');
 
@@ -139,12 +143,14 @@ export default class Core extends CoreBase {
      * Url Resolver
      * TODO: typedef
      * @type {function(): string}
+     * @readonly
      */
     this.urlResolver = urlResolver(this.configuration);
 
     /**
      * Current user data
      * @type {CoreUserData}
+     * @readonly
      */
     this.user = this.config('auth.defaultUserData');
 
@@ -496,7 +502,7 @@ export default class Core extends CoreBase {
    * @param {{foo: *}} [args] Launch arguments
    * @param {PackageLaunchOptions} [options] Launch options
    * @see {Packages}
-   * @return {Application}
+   * @return {Promise<Application>}
    */
   run(name, args = {}, options = {}) {
     logger.debug('Core::run()', name, args, options);

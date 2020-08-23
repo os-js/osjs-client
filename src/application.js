@@ -102,12 +102,14 @@ export default class Application extends EventEmitter {
     /**
      * The Application ID
      * @type {Number}
+     * @readonly
      */
     this.pid = applicationCount;
 
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -129,8 +131,8 @@ export default class Application extends EventEmitter {
 
     /**
      * Application metadata
-     * @private
      * @type {PackageMetadata}
+     * @readonly
      */
     this.metadata = data.metadata;
 
@@ -168,6 +170,7 @@ export default class Application extends EventEmitter {
     /**
      * Application started time
      * @type {Date}
+     * @readonly
      */
     this.started = new Date();
 

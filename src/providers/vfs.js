@@ -33,20 +33,70 @@ import Filesystem from '../filesystem';
 import * as utils from '../utils/vfs';
 
 /**
+ * Filesytem Service Contract
+ * TODO: typedef
+ * @typedef {Object} VFSServiceFilesystemContract
+ * @property {Function} basename
+ * @property {Function} pathname
+ * @property {Function} pathJoin
+ * @property {Function} icon
+ * @property {Function} mountpoints
+ * @property {Function} mount
+ * @property {Function} unmount
+ */
+
+/**
+ * VFS Service Contract
+ * TODO: typedef
+ * @typedef {Object} VFSServiceContract
+ * @property {Function} readdir
+ * @property {Function} readfile
+ * @property {Function} writefile
+ * @property {Function} copy
+ * @property {Function} move
+ * @property {Function} rename
+ * @property {Function} mkdir
+ * @property {Function} unlink
+ * @property {Function} exists
+ * @property {Function} stat
+ * @property {Function} url
+ * @property {Function} download
+ * @property {Function} search
+ * @property {Function} touch
+ */
+
+/**
+ * VFS Service Options
+ * @typedef {Object} VFSServiceOptions
+ * @property {{name: FilesystemAdapter}} [adapters={}]
+ * @property {FilesystemMountpoint[]} [mountpoints=[]]
+ */
+
+/**
  * OS.js Virtual Filesystem Service Provider
  */
 export default class VFSServiceProvider extends ServiceProvider {
-  constructor(core, args = {}) {
+
+  /**
+   * @param {Core} core OS.js Core
+   * @param {VFSServiceOptions} [options={}]
+   */
+  constructor(core, options = {}) {
     super(core);
 
+    /**
+     * @type {Filesystem}
+     * @readonly
+     */
     this.fs = new Filesystem(core, {
-      adapters: args.adapters || {},
-      mounts: args.mounts || []
+      adapters: options.adapters || {},
+      mounts: options.mounts || []
     });
   }
 
   /**
    * Get a list of services this provider registers
+   * @return {string[]}
    */
   provides() {
     return [
@@ -55,20 +105,39 @@ export default class VFSServiceProvider extends ServiceProvider {
     ];
   }
 
+  /**
+   * Initializes VFS providers
+   * @return {Promise<undefined>}
+   */
   init() {
-    this.core.singleton('osjs/vfs', () => this.fs.request());
+    this.core.singleton('osjs/vfs', () => this.createVFSContract());
+    this.core.singleton('osjs/fs', () => this.createFilesystemContract());
 
+    return this.fs.mountAll(false);
+  }
+
+  /**
+   * @return {VFSServiceContract}
+   */
+  createVFSContract() {
+    return this.fs.request();
+  }
+
+  /**
+   * @return {VFSServiceFilesystemContract}
+   */
+  createFilesystemContract() {
     const iconMap = this.core.config('vfs.icons', {});
     const icon = utils.getFileIcon(iconMap);
 
-    this.core.singleton('osjs/fs', () => ({
+    return {
+      basename: p => utils.basename(p),
+      pathname: p => utils.pathname(p),
       pathJoin: (...args) => utils.pathJoin(...args),
       icon: icon,
-      mountpoints: (...args) => this.fs.getMounts(...args),
-      mount: (...args) => this.fs.mount(...args),
-      unmount: (...args) => this.fs.unmount(...args)
-    }));
-
-    return this.fs.mountAll(false);
+      mountpoints: (all = false) => this.fs.getMounts(all),
+      mount: name => this.fs.mount(name),
+      unmount: name => this.fs.unmount(name)
+    };
   }
 }

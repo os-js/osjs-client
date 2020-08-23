@@ -90,7 +90,7 @@ const createFetchOptions = (url, options, type) => {
  * @param {string} url The endpoint
  * @param {Options} [options] fetch options
  * @param {string} [type] Request / Response type
- * @return {*}
+ * @return {Promise<*>}
  */
 export const fetch = (url, options = {}, type = null) => {
   const [target, fetchOptions] = createFetchOptions(url, options, type);

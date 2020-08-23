@@ -32,6 +32,24 @@ import {style, script} from './dom';
 import logger from '../logger';
 
 /**
+ * @typedef {HTMLScriptElement|HTMLLinkElement} PreloaderEntryElement
+ */
+
+/**
+ * @typedef {Object} PreloaderEntry
+ * @property {boolean} success
+ * @property {PreloaderEntryElement} [el]
+ * @property {string} [entry]
+ * @property {string} [error]
+ */
+
+/**
+ * @typedef {Object} PreloaderResult
+ * @property {string[]} errors
+ * @property {{string: PreloaderEntryElement}} elements
+ */
+
+/**
  * The Preloader loads styles and scripts
  */
 export default class Preloader {
@@ -43,6 +61,9 @@ export default class Preloader {
      */
     this.loaded = [];
 
+    /**
+     * @type {Element}
+     */
     this.$root = root;
   }
 
@@ -54,7 +75,7 @@ export default class Preloader {
    * Loads all resources required for a package
    * @param {string[]} list A list of resources
    * @param {boolean} [force=false] Force loading even though previously cached
-   * @return {Promise<string[]>} A list of failed resources
+   * @return {Promise<PreloaderResult>} A list of failed resources
    */
   load(list, force = false) {
     const cached = entry => force
@@ -81,8 +102,10 @@ export default class Preloader {
 
   /**
    * Checks the loaded list
+   * @private
    * @param {Object[]} results Preload results
    * @param {string[]} cached Already cached preloads
+   * @return {PreloaderResult}
    */
   _load(results, cached) {
     const successes = results.filter(res => res.success);

@@ -40,7 +40,7 @@ import merge from 'deepmerge';
 /**
  * VFS Mountpoint attributes
  *
- * @typedef {Object} MountpointAttributes
+ * @typedef {Object} FilesystemMountpointAttributes
  * @property {string} [visibility='global'] Visibility in UI
  * @property {boolean} [local=true] Local filesystem ?
  * @property {boolean} [searchable=true] If can be searched
@@ -50,21 +50,46 @@ import merge from 'deepmerge';
 /**
  * VFS Mountpoint
  *
- * @typedef {Object} Mountpoint
+ * @typedef {Object} FilesystemMountpoint
  * @property {string} name Name
  * @property {string} label Label
  * @property {string} adapter Adater name
  * @property {string} [root] System adapter root
  * @property {boolean} [enabled=true] Enabled state
- * @property {MountpointAttributes} [attributes] Attributes
+ * @property {FilesystemMountpointAttributes} [attributes] Attributes
+ */
+
+/**
+ * Filesystem Adapter Methods
+ * TODO: typedef
+ * @typedef {Object} FilesystemAdapterMethods
+ * @property {Function} readdir
+ * @property {Function} readfile
+ * @property {Function} writefile
+ * @property {Function} copy
+ * @property {Function} move
+ * @property {Function} rename
+ * @property {Function} mkdir
+ * @property {Function} unlink
+ * @property {Function} exists
+ * @property {Function} stat
+ * @property {Function} url
+ * @property {Function} download
+ * @property {Function} search
+ * @property {Function} touch
+ */
+
+/**
+ * @callback FilesystemAdapterWrapper
+ * @return {FilesystemAdapterMethods}
  */
 
 /**
  * Filesystem Options
  *
  * @typedef {Object} FilesystemOptions
- * @property {{name: Adapter}} [adapters] Adapter registry
- * @property {Mountpoint[]} [mounts] Mountpoints
+ * @property {{name: FilesystemAdapterWrapper}} [adapters] Adapter registry
+ * @property {FilesystemMountpoint[]} [mounts] Mountpoints
  */
 
 /**
@@ -90,12 +115,14 @@ export default class Filesystem extends EventEmitter {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
     /**
      * Adapter registry
-     * @type {{name: Adapter}}
+     * @type {{name: FilesystemAdapterWrapper}}
+     * @readonly
      */
     this.adapters = {
       system: systemAdapter,
@@ -106,7 +133,7 @@ export default class Filesystem extends EventEmitter {
 
     /**
      * Mountpoints
-     * @type {Mountpoint[]}
+     * @type {FilesystemMountpoint[]}
      */
     this.mounts = [];
 
@@ -119,6 +146,7 @@ export default class Filesystem extends EventEmitter {
     /**
      * A wrapper for VFS method requests
      * @type {{key: Function}}
+     * @readonly
      */
     this.proxy = Object.keys(VFS).reduce((result, method) => {
       return {
@@ -130,6 +158,8 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Mounts all configured mountpoints
+   * @property {boolean} [stopOnError=true] Stop on first error
+   * @return {Promise<boolean[]>}
    */
   mountAll(stopOnError = true) {
     this.mounts = this.core.config('vfs.mountpoints')
@@ -165,6 +195,7 @@ export default class Filesystem extends EventEmitter {
    * Mount given filesystem
    * @param {string} name Filesystem name
    * @throws {Error} On invalid name or if already mounted
+   * @return {Promise<boolean>}
    */
   mount(name) {
     return this._mountAction(name, false);
@@ -174,6 +205,7 @@ export default class Filesystem extends EventEmitter {
    * Unmount given filesystem
    * @param {string} name Filesystem name
    * @throws {Error} On invalid name or if already unmounted
+   * @return {Promise<boolean>}
    */
   unmount(name) {
     return this._mountAction(name, true);
@@ -183,7 +215,7 @@ export default class Filesystem extends EventEmitter {
    * Internal wrapper for mounting/unmounting
    *
    * @private
-   * @param {Mountpoint} mountpoint The mountpoint
+   * @param {FilesystemMountpoint} mountpoint The mountpoint
    * @param {boolean} [unmount=false] If action is unmounting
    * @return {Promise<boolean>}
    */
@@ -232,7 +264,8 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets the proxy for VFS methods
-   * @return {{key: Function}} A map of VFS functions
+   * FIXME: Not correct type, but works for documentation atm
+   * @return {FilesystemAdapterMethods} A map of VFS functions
    */
   request() {
     return this.proxy;
@@ -304,8 +337,8 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Creates a new mountpoint based on given properties
-   * @param {Mountpoint} props Properties
-   * @return {Mountpoint}
+   * @param {FilesystemMountpoint} props Properties
+   * @return {FilesystemMountpoint}
    */
   createMountpoint(props) {
     const name = props.adapter || this.core.config('vfs.defaultAdapter');
@@ -334,7 +367,7 @@ export default class Filesystem extends EventEmitter {
   /**
    * Gets mountpoint from given path
    * @param {string|VFSFile} file The file
-   * @return {Mountpoint|null}
+   * @return {FilesystemMountpoint|null}
    */
   getMountpointFromPath(file) {
     const path = typeof file === 'string' ? file : file.path;
@@ -356,7 +389,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Gets all mountpoints
-   * @return {Mountpoint[]}
+   * @return {FilesystemMountpoint[]}
    */
   getMounts(all = false) {
     const user = this.core.getUser();

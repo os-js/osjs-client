@@ -80,6 +80,7 @@ export default class Packages {
     /**
      * Core instance reference
      * @type {Core}
+     * @readonly
      */
     this.core = core;
 
@@ -108,6 +109,7 @@ export default class Packages {
     /**
      * Preloader
      * @type {Preloader}
+     * @readonly
      */
     this.preloader = new Preloader(core.$resourceRoot);
 

@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.1.66 - 2020-08-23
+
+* Updated documentation
+* Minor refactor of contract registration
+* Cleaned up some code
+
 ## 3.1.62 - 3.1.65 - 2020-08-20
 
 * Updated TS type definitions

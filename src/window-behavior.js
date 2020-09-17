@@ -198,6 +198,7 @@ export default class WindowBehavior {
     let attributeSet = false;
 
     const {moveable, resizable} = win.attributes;
+    const {maximized} = win.state;
     const {lofi, moveKeybinding} = this.core.config('windows');
     const {clientX, clientY, touch, target} = getEvent(ev);
 
@@ -224,7 +225,7 @@ export default class WindowBehavior {
         ev.preventDefault();
       }
 
-      if ((!moveable && move) || (!resizable && resize)) {
+      if (maximized || (!moveable && move) || (!resizable && resize)) {
         return;
       }
 

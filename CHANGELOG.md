@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.67 - 2020-09-17
+
+* Don't trigger resize/move on window events when maximized
+
 ## 3.1.66 - 2020-08-23
 
 * Updated documentation

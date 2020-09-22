@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.68 - 2020-09-22
+
+* Added some missing EventEmitter#destroy calls
+
 ## 3.1.67 - 2020-09-17
 
 * Don't trigger resize/move on window events when maximized

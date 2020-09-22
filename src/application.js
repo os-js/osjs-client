@@ -218,6 +218,8 @@ export default class Application extends EventEmitter {
         applications.splice(foundIndex, 1);
       }
     }
+
+    super.destroy();
   }
 
   /**

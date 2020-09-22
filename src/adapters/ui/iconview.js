@@ -185,6 +185,8 @@ export class DesktopIconView extends EventEmitter {
     this.$root = null;
 
     this.emit('destroy');
+
+    super.destroy();
   }
 
   _render(root) {

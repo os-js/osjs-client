@@ -99,6 +99,7 @@ export class BasicApplication extends EventEmitter {
    */
   destroy() {
     this.off();
+    super.destroy();
   }
 
   /**

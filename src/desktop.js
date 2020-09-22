@@ -172,6 +172,8 @@ export default class Desktop extends EventEmitter {
 
     this._removeIcons();
     this._removeTheme();
+
+    super.destroy();
   }
 
   /**

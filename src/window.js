@@ -378,6 +378,8 @@ export default class Window extends EventEmitter {
     this.$header = null;
     this.$icon = null;
     this.$title = null;
+
+    super.destroy();
   }
 
   /**

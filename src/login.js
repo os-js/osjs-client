@@ -125,7 +125,10 @@ export default class Login extends EventEmitter {
 
     if (this.$container) {
       this.$container.remove();
+      this.$container = null;
     }
+
+    super.destroy();
   }
 
   /**

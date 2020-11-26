@@ -22,7 +22,8 @@ Contains base services, virtual filesystem, panels and other core services requi
 
 ### ESM, Webpack, etc.
 
-```js
+```javascript
+>>>>>>> a7dfe4d (Updated README)
 import { Core /*, ... */ } from '@osjs/client';
 ```
 
@@ -32,7 +33,8 @@ import { Core /*, ... */ } from '@osjs/client';
 <script src="https://cdn.jsdelivr.net/npm/@osjs/client/dist/main.js"></script>
 ```
 
-```js
+```javascript
+>>>>>>> a7dfe4d (Updated README)
 const { Core /*, ... */ } = osjsClient;
 ```
 

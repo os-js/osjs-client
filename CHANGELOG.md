@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.70 - 2020-11-26
+
+* Updated dependencies
+
 ## 3.1.68 - 2020-09-22
 
 * Added some missing EventEmitter#destroy calls

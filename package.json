@@ -34,8 +34,8 @@
     "osjs"
   ],
   "dependencies": {
-    "@osjs/common": "^3.0.10",
-    "@osjs/event-emitter": "^1.0.9",
+    "@osjs/common": "^3.0.12",
+    "@osjs/event-emitter": "^1.0.10",
     "css-mediaquery": "^0.1.2",
     "dateformat": "^3.0.3",
     "deepmerge": "^4.2.2",
@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^1.1.2"
+    "@osjs/dev-meta": "^2.0.0"
   },
   "eslintConfig": {
     "env": {

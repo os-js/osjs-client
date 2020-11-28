@@ -277,11 +277,11 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/packages', () => this.createPackagesContract());
     this.core.singleton('osjs/clipboard', () => this.createClipboardContract());
 
-    this.core.instance('osjs/tray', (options) => {
+    this.core.instance('osjs/tray', (options, handler) => {
       if (typeof options !== 'undefined') {
         // FIXME: Use contract instead
         logger.warn('osjs/tray usage without .create() is deprecated');
-        return this.tray.create(options);
+        return this.tray.create(options, handler);
       }
 
       return this.createTrayContract();
@@ -506,7 +506,7 @@ export default class CoreServiceProvider extends ServiceProvider {
    */
   createTrayContract() {
     return {
-      create: options => this.tray.create(options),
+      create: (options, handler) => this.tray.create(options, handler),
       remove: entry => this.tray.remove(entry),
       list: () => this.tray.list(),
       has: key => this.tray.has(key)

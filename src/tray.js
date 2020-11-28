@@ -34,6 +34,7 @@ import defaultIcon from './styles/logo-blue-32x32.png';
 /**
  * Tray Icon Data
  * @typedef {Object} TrayEntryData
+ * @property {string} [key] Used as internal index for tray entry
  * @property {string} [icon] Icon source
  * @property {string} [title] The title and tooltip
  * @property {Function} [onclick] The callback function for clicks
@@ -93,6 +94,7 @@ export default class Tray {
     handler = handler || (() => {});
 
     const entry = {
+      key: null,
       icon: defaultIcon,
       title: defaultTitle,
       onclick: handler,
@@ -140,6 +142,13 @@ export default class Tray {
    */
   list() {
     return this.entries;
+  }
+
+  /**
+   * @return {Boolean}
+   */
+  has(key) {
+    return this.entries.findIndex(entry => entry.key === key) !== -1
   }
 
 }

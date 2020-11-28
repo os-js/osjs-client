@@ -121,7 +121,7 @@ import merge from 'deepmerge';
  */
 
 /**
- * Core Provider Tray Contract
+ * Core Provider Clipboard Contract
  * TODO: typedef
  * @typedef {Object} CoreProviderClipboardContract
  * @property {Function} [clear]
@@ -135,6 +135,9 @@ import merge from 'deepmerge';
  * TODO: typedef
  * @typedef {Object} CoreProviderTrayContract
  * @property {Function} [create]
+ * @property {Function} [remove]
+ * @property {Function} [list]
+ * @property {Function} [has]
  */
 
 /**
@@ -505,7 +508,8 @@ export default class CoreServiceProvider extends ServiceProvider {
     return {
       create: options => this.tray.create(options),
       remove: entry => this.tray.remove(entry),
-      list: () => this.tray.list()
+      list: () => this.tray.list(),
+      has: key => this.tray.has(key)
     };
   }
 }

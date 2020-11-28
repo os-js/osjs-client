@@ -1540,6 +1540,10 @@ declare class Tray {
 	/**
 	 */
 	list(): TrayEntry[];
+
+	/**
+	 */
+  has(key): boolean;
 }
 /**
  * Tray Icon Data
@@ -1955,6 +1959,10 @@ export type CoreProviderClipboardContract = {
  */
 export type CoreProviderTrayContract = {
 	create?: Function;
+  remove?: Function;
+  list?: TrayEntry[],
+  has?: boolean;
+
 };
 /**
  * Core Provider Options

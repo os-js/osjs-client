@@ -13,6 +13,7 @@ describe('Tray', () => {
 
     const tray = new Tray(core);
     const item = tray.create({
+      key: 'keeeeey',
       icon: 'icon',
       title: 'title'
     });
@@ -21,6 +22,7 @@ describe('Tray', () => {
     expect(item.entry.icon).toBe('icon');
     expect(item.entry.title).toBe('title');
     expect(createEventEmitted).toBe(true);
+    expect(tray.has('keeeeey')).toBe(true);
   });
 
   test('#update', () => {

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.72 - 2020-11-28
+
+* Pass on missing handler to tray entry creation
+
 ## 3.1.71 - 2020-11-28
 
 * Added keys to tray entries

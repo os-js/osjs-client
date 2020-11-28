@@ -148,7 +148,7 @@ export default class Tray {
    * @return {Boolean}
    */
   has(key) {
-    return this.entries.findIndex(entry => entry.key === key) !== -1
+    return this.entries.findIndex(entry => entry.key === key) !== -1;
   }
 
 }

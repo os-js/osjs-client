@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.1.71 - 2020-11-28
+
+* Added keys to tray entries
+
 ## 3.1.70 - 2020-11-26
 
 * Updated dependencies

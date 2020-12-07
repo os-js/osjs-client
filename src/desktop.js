@@ -487,7 +487,6 @@ export default class Desktop extends EventEmitter {
   }
 
   _clampWindows(resize) {
-    console.warn('xxx', resize, this.core.config('windows.clampToViewport'))
     if (resize && !this.core.config('windows.clampToViewport')) {
       return;
     }

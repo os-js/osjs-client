@@ -237,7 +237,7 @@ export default class Desktop extends EventEmitter {
 
       try {
         this._updateCSS();
-        Window.getWindows().forEach(w => w.clampToViewport());
+        this._clampWindows();
       } catch (e) {
         logger.warn('Panel event error', e);
       }
@@ -422,7 +422,10 @@ export default class Desktop extends EventEmitter {
     let resizeDebounce;
     window.addEventListener('resize', () => {
       clearTimeout(resizeDebounce);
-      resizeDebounce = setTimeout(() => this._updateCSS(), 200);
+      resizeDebounce = setTimeout(() => {
+        this._updateCSS();
+        this._clampWindows(true);
+      }, 200);
     });
 
     // Prevent navigation
@@ -481,6 +484,15 @@ export default class Desktop extends EventEmitter {
       this.core.$contents.style.right = `${this.subtract.right}px`;
       this.core.$contents.style.bottom = `${this.subtract.bottom}px`;
     }
+  }
+
+  _clampWindows(resize) {
+    console.warn('xxx', resize, this.core.config('windows.clampToViewport'))
+    if (resize && !this.core.config('windows.clampToViewport')) {
+      return;
+    }
+
+    Window.getWindows().forEach(w => w.clampToViewport());
   }
 
   /**

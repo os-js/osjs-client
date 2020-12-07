@@ -237,6 +237,7 @@ export const defaultConfiguration = {
     lofi: false,
     mobile: false, // Trigger for setting mobile UI
     template: null, // A string. See 'window.js' for example
+    clampToViewport: true, // Clamp windows to viewport on resize
     moveKeybinding: 'ctrl'
   },
 

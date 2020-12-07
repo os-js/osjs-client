@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.2.0 - 2020-12-07
+
+* Make sure window clamp don't go into a negative
+* Added feature to auto-clamp windows to viewport on resize (#135)
+
 ## 3.1.72 - 2020-11-28
 
 * Pass on missing handler to tray entry creation

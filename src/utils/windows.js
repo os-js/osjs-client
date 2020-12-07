@@ -165,9 +165,13 @@ export const clampPosition = (rect, {dimension, position}) => {
   const maxLeft = rect.width - dimension.width;
   const maxTop = rect.height - dimension.height + rect.top;
 
+  // TODO: Make these an argument ?!
+  const minLeft = 0;
+  const minTop = 0;
+
   return {
-    left: Math.min(maxLeft, position.left),
-    top: Math.max(rect.top, Math.min(maxTop, position.top))
+    left: Math.max(minLeft, Math.min(maxLeft, position.left)),
+    top: Math.max(minTop, Math.max(rect.top, Math.min(maxTop, position.top)))
   };
 };
 

@@ -866,6 +866,7 @@ export default class Desktop extends EventEmitter {
    */
   getRect() {
     const root = this.core.$root;
+    // FIXME: Is this now wrong because panels are not on the root anymore ?!
     const {left, top, right, bottom} = this.subtract;
     const width = root.offsetWidth - left - right;
     const height = root.offsetHeight - top - bottom;

@@ -409,6 +409,7 @@ export default class Packages {
 
     const user = this.core.getUser();
     const metadata = this.metadata.map(m => ({...m}));
+    const hidden = this.core.config('packages.hidden', []);
 
     const filterGroups = iter => {
       const m = iter.strictGroups === false ? 'some' : 'every';
@@ -422,9 +423,14 @@ export default class Packages {
       ? user.blacklist.indexOf(iter.name) === -1
       : true;
 
+    const filterConfigHidden = iter => hidden instanceof Array
+      ? hidden.indexOf(iter.name) === -1
+      : true;
+
     return metadata
       .filter(filterGroups)
       .filter(filterBlacklist)
+      .filter(filterConfigHidden)
       .filter(filter);
   }
 

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.2.1 - 2020-12-24
+
+* Added config option to hide packages globally (#137)
+
 ## 3.2.0 - 2020-12-07
 
 * Make sure window clamp don't go into a negative

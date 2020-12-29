@@ -55,6 +55,7 @@ import logger from '../logger';
  * @property {DroppableEvent} [ondragover] Callback to event (ev) => {}
  * @property {DroppableEvent} [ondragleave] Callback to event (ev) => {}
  * @property {DroppedEvent} [ondrop] Callback to event (ev, data, files) => {}
+ * @property {boolean} [strict=false] Drop element must match exactly
  */
 
 /**
@@ -199,13 +200,14 @@ export const draggable = (el, options = {}) => {
  * @return {DroppableInstance}
  */
 export const droppable = (el, options = {}) => {
-  const {type, effect, ondragenter, ondragover, ondragleave, ondrop} = {
+  const {strict, type, effect, ondragenter, ondragover, ondragleave, ondrop} = {
     type: 'application/json',
     effect: 'move',
     ondragenter: () => true,
     ondragover: () => true,
     ondragleave: () => true,
     ondrop: () => true,
+    strict: false,
     ...options
   };
 
@@ -235,6 +237,10 @@ export const droppable = (el, options = {}) => {
   };
 
   const drop = ev => {
+    if (strict && ev.target !== el) {
+      return false;
+    }
+
     const {files, data} = getDataTransfer(ev, type);
 
     ev.stopPropagation();

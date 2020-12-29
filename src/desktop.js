@@ -276,7 +276,8 @@ export default class Desktop extends EventEmitter {
   initDragEvents() {
     const {droppable} = this.core.make('osjs/dnd');
 
-    droppable(this.core.$root, {
+    droppable(this.core.$contents, {
+      strict: true,
       ondrop: (ev, data, files) => {
         const droppedImage = isDroppingImage(data);
         if (droppedImage) {

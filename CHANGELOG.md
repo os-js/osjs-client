@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.2.2 - 2020-12-29
+
+* Added strict droppable target support
+
 ## 3.2.1 - 2020-12-24
 
 * Added config option to hide packages globally (#137)

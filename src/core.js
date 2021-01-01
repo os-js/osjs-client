@@ -630,6 +630,19 @@ export default class Core extends CoreBase {
   }
 
   /**
+   * Sends a signal to the server over websocket.
+   * This will be interpreted as an event in the server core.
+   * @param {string} name Event name
+   * @param {*} ...params Event callback parameters
+   */
+  send(name, ...params) {
+    return this.ws.send(JSON.stringify({
+      name,
+      params
+    }));
+  }
+
+  /**
    * Set the internal fetch/request options
    * @param {object} options Request options
    */

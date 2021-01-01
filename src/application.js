@@ -295,14 +295,11 @@ export default class Application extends EventEmitter {
    * @param {*} ...args Arguments to pass to message
    */
   send(...args) {
-    this.core.ws.send(JSON.stringify({
-      name: 'osjs/application:socket:message',
-      params: [{
-        pid: this.pid,
-        name: this.metadata.name,
-        args
-      }]
-    }));
+    this.core.send('osjs/application:socket:message', {
+      pid: this.pid,
+      name: this.metadata.name,
+      args
+    });
   }
 
   /**

@@ -948,6 +948,11 @@ declare class Core extends CoreBase {
 	 */
 	broadcast(pkg: string | Function, name: string, ...args: any[]): string[];
 	/**
+	 * Sends a signal to the server over websocket.
+	 * This will be interpreted as an event in the server core.
+	*/
+	send(name:string, ...params: any[]);
+	/**
 	 * Set the internal fetch/request options
 	 */
 	setRequestOptions(options: object): void;

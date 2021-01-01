@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "description": "OS.js client",
   "main": "dist/main.js",
   "style": "dist/main.css",

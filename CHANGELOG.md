@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.3.0 - 20201-01-01
+
+* Added Core#send method for easy signaling
+
 ## 3.2.2 - 2020-12-29
 
 * Added strict droppable target support

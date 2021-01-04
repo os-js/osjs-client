@@ -189,13 +189,17 @@ export default class Filesystem extends EventEmitter {
   }
 
   /**
-   * Mount given filesystem
-   * @param {string} name Filesystem name
+   * Mount given mountpoint
+   * @param {string|FilesystemMountpoint} name Mountpoint name or object
    * @throws {Error} On invalid name or if already mounted
    * @return {Promise<boolean>}
    */
-  mount(name) {
-    return this._mountAction(name, false);
+  mount(m) {
+    if (typeof m === 'string') {
+      return this._mountAction(m, false);
+    }
+
+    return this.addMountpoint(m);
   }
 
   /**

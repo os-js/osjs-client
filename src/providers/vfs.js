@@ -138,7 +138,7 @@ export default class VFSServiceProvider extends ServiceProvider {
       icon: icon,
       mountpoints: (all = false) => this.fs.getMounts(all),
       addMountpoint: (props, automount = true) => this.fs.addMountpoint(props, automount),
-      mount: name => this.fs.mount(name),
+      mount: m => this.fs.mount(m),
       unmount: name => this.fs.unmount(name)
     };
   }

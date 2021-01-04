@@ -43,6 +43,7 @@ import * as utils from '../utils/vfs';
  * @property {Function} mountpoints
  * @property {Function} mount
  * @property {Function} unmount
+ * @property {Function} addMountpoint
  */
 
 /**
@@ -136,6 +137,7 @@ export default class VFSServiceProvider extends ServiceProvider {
       pathJoin: (...args) => utils.pathJoin(...args),
       icon: icon,
       mountpoints: (all = false) => this.fs.getMounts(all),
+      addMountpoint: (props, automount = true) => this.fs.addMountpoint(props, automount),
       mount: name => this.fs.mount(name),
       unmount: name => this.fs.unmount(name)
     };

@@ -162,33 +162,30 @@ export default class Filesystem extends EventEmitter {
    * @return {Promise<boolean[]>}
    */
   mountAll(stopOnError = true) {
-    this.mounts = this.core.config('vfs.mountpoints')
-      .concat(this.options.mounts || [])
-      .map(mount => {
-        try {
-          return this.createMountpoint(mount);
-        } catch (e) {
-          logger.warn('Error while creating mountpoint', e);
-        }
-
-        return null;
-      })
-      .filter((mount, pos, arr) => {
-        const index = arr.findIndex(item => item.label === mount.label || item.root === mount.label);
-        if (index === pos) {
-          return true;
-        }
-
-        logger.warn('Removed duplicate mountpoint', mount);
-        return false;
-      })
-      .filter(mount => mount !== null);
+    this.mounts = this._getConfiguredMountpoints();
 
     const fn = m => stopOnError
       ? this._mountpointAction(m)
       : this._mountpointAction(m).catch(err => logger.warn('Error while mounting', m, err));
 
     return Promise.all(this.mounts.map(fn));
+  }
+
+  /**
+   * Adds a new mountpoint
+   * @param {FilesystemMountpoint} props Mountpoint props
+   * @param {boolean} [automount=true] Automount after creation
+   */
+  addMountpoint(props, automount = true) {
+    const mount = this.createMountpoint(props);
+
+    this.mounts.push(mount);
+
+    if (automount) {
+      return this.mount(mount.name);
+    }
+
+    return Promise.resolve(true);
   }
 
   /**
@@ -413,5 +410,37 @@ export default class Filesystem extends EventEmitter {
         label: m.label,
         root: m.root
       }));
+  }
+
+  /**
+   * Gets configured mountpoints
+   * @return {FilesystemMountpoint[]}
+   */
+  _getConfiguredMountpoints() {
+    const list = [
+      ...this.core.config('vfs.mountpoints', []),
+      ...(this.options.mounts || [])
+    ];
+
+    return list
+      .map(mount => {
+        try {
+          return this.createMountpoint(mount);
+        } catch (e) {
+          logger.warn('Error while creating mountpoint', e);
+        }
+
+        return null;
+      })
+      .filter((mount, pos, arr) => {
+        const index = arr.findIndex(item => item.label === mount.label || item.root === mount.label);
+        if (index === pos) {
+          return true;
+        }
+
+        logger.warn('Removed duplicate mountpoint', mount);
+        return false;
+      })
+      .filter(mount => mount !== null);
   }
 }

@@ -2046,9 +2046,13 @@ declare class Filesystem extends EventEmitter {
 	 */
 	mountAll(stopOnError?: boolean): Promise<boolean[]>;
 	/**
+	 * Adds a new mountpoint
+	 */
+	addMountpoint(props: FilesystemMountpoint, automount?: boolean): Promise<boolean>;
+	/**
 	 * Mount given filesystem
 	 */
-	mount(name: string): Promise<boolean>;
+	mount(m: string|FilesystemMountpoint): Promise<boolean>;
 	/**
 	 * Unmount given filesystem
 	 */
@@ -2085,6 +2089,10 @@ declare class Filesystem extends EventEmitter {
 	 * Gets all mountpoints
 	 */
 	getMounts(all?: boolean): FilesystemMountpoint[];
+	/**
+	 * Gets configured mountpoints
+	 */
+  private _getConfiguredMountpoints;
 }
 /**
  * VFS Mountpoint attributes

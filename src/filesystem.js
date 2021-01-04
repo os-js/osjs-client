@@ -175,6 +175,7 @@ export default class Filesystem extends EventEmitter {
    * Adds a new mountpoint
    * @param {FilesystemMountpoint} props Mountpoint props
    * @param {boolean} [automount=true] Automount after creation
+   * @return {Promise<boolean>}
    */
   addMountpoint(props, automount = true) {
     const mount = this.createMountpoint(props);
@@ -190,7 +191,7 @@ export default class Filesystem extends EventEmitter {
 
   /**
    * Mount given mountpoint
-   * @param {string|FilesystemMountpoint} name Mountpoint name or object
+   * @param {string|FilesystemMountpoint} m Mountpoint name or object
    * @throws {Error} On invalid name or if already mounted
    * @return {Promise<boolean>}
    */

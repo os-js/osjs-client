@@ -1,6 +1,10 @@
 # Changelog for osjs-client
 
-## 3.3.0 - 20201-01-01
+## 3.3.1 - 2021-01-04
+
+* Support for adding mounts on runtime (#134)
+
+## 3.3.0 - 2021-01-01
 
 * Added Core#send method for easy signaling
 

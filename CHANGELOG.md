@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.3.2 - 2021-01-04
+
+* Filesystem#mount can now do addMountpoint if object is given (#134)
+
 ## 3.3.1 - 2021-01-04
 
 * Support for adding mounts on runtime (#134)

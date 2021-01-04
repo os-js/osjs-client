@@ -21,6 +21,15 @@ describe('Filesystem', () => {
       .toEqual([true, true, true]);
   });
 
+  test('#addMountpoint', () => {
+    return expect(fs.addMountpoint({
+      name: 'addMountpoint',
+      label: 'addMountpoint'
+    }))
+      .resolves
+      .toEqual(true);
+  });
+
   test('#getMountpointFromPath - failure', () => {
     expect(() => fs.getMountpointFromPath('unknown:/file.name'))
       .toThrow(Error);
@@ -52,13 +61,13 @@ describe('Filesystem', () => {
   test('#getMounts', () => {
     const mounts = fs.getMounts(true);
     return expect(mounts.length)
-      .toBe(3);
+      .toBe(4);
   });
 
   test('getMounts - filtered', () => {
     const mounts = fs.getMounts();
     return expect(mounts.length)
-      .toBe(2);
+      .toBe(3);
   });
 
   test('#unmount - failure', () => {

@@ -31,6 +31,7 @@
 import Application from './application';
 import Preloader from './utils/preloader';
 import logger from './logger';
+import {createPackageAvailabilityCheck} from './utils/packages';
 
 /**
  * A registered package reference
@@ -266,6 +267,7 @@ export default class Packages {
    */
   _launch(name, metadata, args, options) {
     const _ = this.core.make('osjs/locale').translate;
+    const canLaunch = createPackageAvailabilityCheck(this.core);
 
     const dialog = e => {
       if (this.core.has('osjs/dialog')) {
@@ -321,6 +323,10 @@ export default class Packages {
 
       return app;
     };
+
+    if (!canLaunch(metadata)) {
+      fail(_('ERR_PACKAGE_PERMISSION_DENIED', name));
+    }
 
     return this.preloader.load(preloads, options.forcePreload === true)
       .then(({errors}) => {
@@ -407,41 +413,16 @@ export default class Packages {
   getPackages(filter) {
     filter = filter || (() => true);
 
-    const user = this.core.getUser();
     const metadata = this.metadata.map(m => ({...m}));
     const hidden = this.core.config('packages.hidden', []);
-    const permissions = this.core.config('packages.permissions', {});
-
-    const filterMetadataGroups = iter => {
-      const m = iter.strictGroups === false ? 'some' : 'every';
-
-      return iter.groups instanceof Array
-        ? iter.groups[m](g => user.groups.indexOf(g) !== -1)
-        : true;
-    };
-
-    const filterConfigGroups = iter => {
-      const perm = permissions[iter.name];
-      if (perm && perm.groups instanceof Array) {
-        const m = perm.strictGroups === false ? 'some' : 'every';
-        return perm.groups[m](g => user.groups.indexOf(g) !== -1);
-      }
-
-      return true;
-    };
-
-    const filterBlacklist = iter => user.blacklist instanceof Array
-      ? user.blacklist.indexOf(iter.name) === -1
-      : true;
+    const filterAvailable = createPackageAvailabilityCheck(this.core);
 
     const filterConfigHidden = iter => hidden instanceof Array
       ? hidden.indexOf(iter.name) === -1
       : true;
 
     return metadata
-      .filter(filterMetadataGroups)
-      .filter(filterConfigGroups)
-      .filter(filterBlacklist)
+      .filter(filterAvailable)
       .filter(filterConfigHidden)
       .filter(filter);
   }

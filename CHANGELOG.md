@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.4.0 - 2021-01-06
+
+* Deny package launch when blacklisted or no group match (#142)
+* Added config option to hide packages via user groups (#140)
+
 ## 3.3.3 - 2021-01-04
 
 * Updated documentation

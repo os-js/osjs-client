@@ -410,13 +410,24 @@ export default class Packages {
     const user = this.core.getUser();
     const metadata = this.metadata.map(m => ({...m}));
     const hidden = this.core.config('packages.hidden', []);
+    const permissions = this.core.config('packages.permissions', {});
 
-    const filterGroups = iter => {
+    const filterMetadataGroups = iter => {
       const m = iter.strictGroups === false ? 'some' : 'every';
 
       return iter.groups instanceof Array
         ? iter.groups[m](g => user.groups.indexOf(g) !== -1)
         : true;
+    };
+
+    const filterConfigGroups = iter => {
+      const perm = permissions[iter.name];
+      if (perm && perm.groups instanceof Array) {
+        const m = perm.strictGroups === false ? 'some' : 'every';
+        return perm.groups[m](g => user.groups.indexOf(g) !== -1);
+      }
+
+      return true;
     };
 
     const filterBlacklist = iter => user.blacklist instanceof Array
@@ -428,7 +439,8 @@ export default class Packages {
       : true;
 
     return metadata
-      .filter(filterGroups)
+      .filter(filterMetadataGroups)
+      .filter(filterConfigGroups)
       .filter(filterBlacklist)
       .filter(filterConfigHidden)
       .filter(filter);

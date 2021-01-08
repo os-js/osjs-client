@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.4.1 - 2021-01-08
+
+* Export configuration and logo
+
 ## 3.4.0 - 2021-01-06
 
 * Deny package launch when blacklisted or no group match (#142)

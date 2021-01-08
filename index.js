@@ -55,3 +55,5 @@ export {default as Packages} from './src/packages';
 export {default as Filesystem} from './src/filesystem';
 export {default as Clipboard} from './src/clipboard';
 export {BasicApplication} from './src/basic-application';
+export {defaultConfiguration as configuration} from './src/config';
+export {default as icon} from './src/styles/logo-blue-32x32.png';

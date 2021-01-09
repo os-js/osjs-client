@@ -1777,7 +1777,7 @@ export type PackageLaunchOptions = {
 declare class Clipboard {
 	/**
 	 */
-	clipboard: CliboardData;
+	clipboard: ClipboardData;
 	/**
 	 * Destroy clipboard
 	 */
@@ -1802,7 +1802,7 @@ declare class Clipboard {
 /**
  * Clipboard Data
  */
-export type CliboardData = {
+export type ClipboardData = {
 	/**
 	 * Optional data type
 	 */

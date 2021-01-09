@@ -31,7 +31,7 @@
 /**
  * Clipboard Data
  *
- * @typedef {Object} CliboardData
+ * @typedef {Object} ClipboardData
  * @property {string} [type] Optional data type
  * @property {*} data
  */
@@ -46,7 +46,7 @@ export default class Clipboard {
    */
   constructor() {
     /**
-     * @type {CliboardData}
+     * @type {ClipboardData}
      */
     this.clipboard = undefined;
 

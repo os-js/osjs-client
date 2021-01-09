@@ -658,4 +658,14 @@ export default class Core extends CoreBase {
     return {...this.user};
   }
 
+  /**
+   * Add middleware function to a group
+   *
+   * @param {string} group Middleware group
+   * @param {Function} callback Middleware function to add
+   */
+  middleware(group, callback) {
+    return this.make('osjs/middleware').add(group, callback);
+  }
+
 }

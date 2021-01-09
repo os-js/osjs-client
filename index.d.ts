@@ -960,6 +960,10 @@ declare class Core extends CoreBase {
 	 * Gets the current user
 	 */
 	getUser(): CoreUserData;
+	/**
+	 * Add middleware function to a group
+	 */
+	middleware(group: string, callback: Function): void;
 }
 export type SplashCallback = (core: Core) => Splash;
 /**
@@ -1805,6 +1809,37 @@ export type CliboardData = {
 	type?: string;
 	data: any;
 };
+declare class Middleware {
+	/**
+	 */
+	middleware: MiddlewareData;
+	/**
+	 * Destroy middleware
+	 */
+	destroy(): void;
+	/**
+	 * Clear middleware
+	 */
+	clear(): void;
+	/**
+	 * Add middleware function to a group
+	 */
+	add(group: string, callback: Function): void;
+	/**
+	 * Remove middleware function from a group
+	 */
+	remove(group: string, callback: Function): void;
+	/**
+	 * Gets middleware functions for a group
+	 */
+	get(group: string): Function[];
+}
+/**
+ * Middleware Data
+ */
+export type MiddlewareData = {
+	[group: string]: Function[]
+};
 declare class CoreServiceProvider extends ServiceProvider {
 	/**
 	 */
@@ -1821,6 +1856,9 @@ declare class CoreServiceProvider extends ServiceProvider {
 	/**
 	 */
 	readonly clipboard: Clipboard;
+	/**
+	 */
+	readonly middleware: Middleware;
 	/**
 	 * Registers contracts
 	 */
@@ -1880,6 +1918,10 @@ declare class CoreServiceProvider extends ServiceProvider {
 	 * Provides Clipboard contract
 	 */
 	createClipboardContract(): CoreProviderClipboardContract;
+	/**
+	 * Provides Middleware contract
+	 */
+	createMiddlewareContract(): CoreProviderMiddlewareContract;
 	/**
 	 * Provides Tray contract
 	 */
@@ -1951,13 +1993,20 @@ export type CoreProviderPackagesContract = {
 	running?: Function;
 };
 /**
- * Core Provider Tray Contract
+ * Core Provider Clipboard Contract
  */
 export type CoreProviderClipboardContract = {
 	clear?: Function;
 	set?: Function;
 	has?: Function;
 	get?: Function;
+};
+/**
+ * Core Provider Middleware Contract
+ */
+export type CoreProviderMiddlewareContract = {
+	add: Function;
+	get: Function;
 };
 /**
  * Core Provider Tray Contract
@@ -2471,6 +2520,7 @@ export {
 	Auth as Auth,
 	AuthServiceProvider as AuthServiceProvider,
 	Clipboard as Clipboard,
+	Middleware as Middleware,
 	Core as Core,
 	CoreServiceProvider as CoreServiceProvider,
 	Desktop as Desktop,

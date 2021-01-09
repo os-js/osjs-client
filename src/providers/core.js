@@ -36,6 +36,7 @@ import Packages from '../packages';
 import Tray from '../tray';
 import Websocket from '../websocket';
 import Clipboard from '../clipboard';
+import Middleware from '../middleware';
 import * as translations from '../locale';
 import {format, translatable, translatableFlat, getLocale} from '../utils/locale';
 import {style, script, playSound} from '../utils/dom';
@@ -131,6 +132,14 @@ import merge from 'deepmerge';
  */
 
 /**
+ * Core Provider Middleware Contract
+ * TODO: typedef
+ * @typedef {Object} CoreProviderMiddlewareContract
+ * @property {Function} [add]
+ * @property {Function} [get]
+ */
+
+/**
  * Core Provider Tray Contract
  * TODO: typedef
  * @typedef {Object} CoreProviderTrayContract
@@ -183,6 +192,12 @@ export default class CoreServiceProvider extends ServiceProvider {
      */
     this.clipboard = new Clipboard();
 
+    /**
+     * @type {Middleware}
+     * @readonly
+     */
+    this.middleware = new Middleware();
+
     window.OSjs = this.createGlobalApi();
   }
 
@@ -201,6 +216,7 @@ export default class CoreServiceProvider extends ServiceProvider {
       'osjs/dnd',
       'osjs/dom',
       'osjs/clipboard',
+      'osjs/middleware',
       'osjs/tray',
       'osjs/locale',
       'osjs/packages',
@@ -218,6 +234,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.tray.destroy();
     this.pm.destroy();
     this.clipboard.destroy();
+    this.middleware.destroy();
     this.session.destroy();
 
     super.destroy();
@@ -276,6 +293,7 @@ export default class CoreServiceProvider extends ServiceProvider {
     this.core.singleton('osjs/session', () => this.createSessionContract());
     this.core.singleton('osjs/packages', () => this.createPackagesContract());
     this.core.singleton('osjs/clipboard', () => this.createClipboardContract());
+    this.core.singleton('osjs/middleware', () => this.createMiddlewareContract());
 
     this.core.instance('osjs/tray', (options, handler) => {
       if (typeof options !== 'undefined') {
@@ -325,7 +343,8 @@ export default class CoreServiceProvider extends ServiceProvider {
       url: (endpoint, options, metadata) => this.core.url(endpoint, options, metadata),
       run: (name, args = {}, options = {}) => this.core.run(name, args, options),
       open: (file, options = {}) => this.core.open(file, options),
-      request: (url, options, type) => this.core.request(url, options, type)
+      request: (url, options, type) => this.core.request(url, options, type),
+      middleware: (group, callback) => this.middleware.add(group, callback)
     });
   }
 
@@ -497,6 +516,17 @@ export default class CoreServiceProvider extends ServiceProvider {
       set: (data, type) => this.clipboard.set(data, type),
       has: type => this.clipboard.has(type),
       get: (clear = false) => this.clipboard.get(clear)
+    };
+  }
+
+  /**
+   * Provides Middleware contract
+   * @return {CoreProviderMiddlewareContract}
+   */
+  createMiddlewareContract() {
+    return {
+      add: (group, callback) => this.middleware.add(group, callback),
+      get: group => this.middleware.get(group)
     };
   }
 

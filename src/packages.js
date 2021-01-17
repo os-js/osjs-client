@@ -31,7 +31,12 @@
 import Application from './application';
 import Preloader from './utils/preloader';
 import logger from './logger';
-import {createPackageAvailabilityCheck} from './utils/packages';
+import {
+  createPackageAvailabilityCheck,
+  createManifestFromArray,
+  filterMetadataFilesByType,
+  metadataFilesToFilenames
+} from './utils/packages';
 
 /**
  * A registered package reference
@@ -53,7 +58,7 @@ import {createPackageAvailabilityCheck} from './utils/packages';
  * @property {boolean} [hidden] Hide from launch menus etc.
  * @property {string} [server] Server script filename
  * @property {string[]} [groups] Only available for users in this group
- * @property {string[]} [files] Files to preload
+ * @property {Object[]|string[]} [files] Files to preload
  * @property {{key: string}} title A map of locales and titles
  * @property {{key: string}} description A map of locales and titles
  */
@@ -152,6 +157,7 @@ export default class Packages {
     return manifest
       ? this.core.request(manifest, {}, 'json', true)
         .then(metadata => this.addPackages(metadata))
+        .then(metadata => this._preloadBackgroundFiles(metadata))
         .then(() => true)
         .catch(error => logger.error(error))
       : Promise.resolve(true);
@@ -240,11 +246,7 @@ export default class Packages {
    * @return {Promise<object>}
    */
   _launchTheme(name, metadata) {
-    const preloads = (metadata.files || [])
-      .map(f => this.core.url(f, {}, ({
-        type: metadata.type,
-        ...metadata
-      })));
+    const preloads = this._getPreloads(metadata, 'preload', 'theme');
 
     return this.preloader.load(preloads)
       .then(result => {
@@ -254,6 +256,21 @@ export default class Packages {
           ...this.packages.find(pkg => pkg.metadata.name === name) || {}
         };
       });
+  }
+
+  /**
+   * Returns preloads
+   *
+   * @private
+   * @param {Metadata} metadata Application metadata
+   * @param {string} fileType Files type
+   * @param {string} packageType Package type
+   * @return {string[]}
+   */
+  _getPreloads(metadata, fileType, packageType) {
+    return metadataFilesToFilenames(
+      filterMetadataFilesByType(metadata.files, fileType)
+    ).map(f => this.core.url(f, {}, {type: packageType, ...metadata}));
   }
 
   /**
@@ -291,8 +308,7 @@ export default class Packages {
       throw new Error(err);
     };
 
-    const preloads = metadata.files
-      .map(f => this.core.url(f, {}, {type: 'apps', ...metadata}));
+    const preloads = this._getPreloads(metadata, 'preload', 'apps');
 
     const create = found => {
       let app;
@@ -392,12 +408,7 @@ export default class Packages {
    */
   addPackages(list) {
     if (list instanceof Array) {
-      const append = list
-        .map(iter => ({
-          type: 'application',
-          files: [],
-          ...iter
-        }));
+      const append = createManifestFromArray(list);
 
       this.metadata = [...this.metadata, ...append];
     }
@@ -450,6 +461,22 @@ export default class Packages {
 
       return false;
     });
+  }
+
+  /**
+   * Preloads background files of a set of packages
+   * @param {PackageMetadata[]} list Package list
+   */
+  _preloadBackgroundFiles(list) {
+    const backgroundFiles = list.reduce((filenames, iter) => [
+      ...filenames,
+      ...this._getPreloads(iter, 'background', 'apps')
+    ], []);
+
+    return this.preloader.load(backgroundFiles)
+      .then(({errors = []}) => {
+        errors.forEach(error => logger.error(error));
+      });
   }
 
   /**

@@ -62,3 +62,21 @@ export const createPackageAvailabilityCheck = (core) => {
 
   return metadata => checks.every(fn => fn(metadata));
 };
+
+export const createManifestFromArray = list => list
+  .map(iter => ({
+    type: 'application',
+    ...iter,
+    files: (iter.files || [])
+      .map(file =>
+        typeof file === 'string'
+          ? {filename: file, type: 'preload'}
+          : {type: 'preload', ...file}
+      )
+  }));
+
+export const filterMetadataFilesByType = (files, type) =>
+  (files || []).filter(file => file.type === type);
+
+export const metadataFilesToFilenames = files =>
+  (files || []).map(file => file.filename);

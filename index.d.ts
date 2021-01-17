@@ -1751,7 +1751,7 @@ export type PackageMetadata = {
 	/**
 	 * Files to preload
 	 */
-	files?: string[];
+	files?: Array<object | string>;
 	/**
 	 * A map of locales and titles
 	 */

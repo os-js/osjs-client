@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.5.0 - 2021-01-17
+
+Big thanks for @MoradiDavijani for the following:
+
+* Added background script loading strategy (#144)
+* Fixed typo in clipboard type definitions
+* Added middleware provider (#144)
+
 ## 3.4.1 - 2021-01-08
 
 * Export configuration and logo

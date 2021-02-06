@@ -147,6 +147,7 @@ export default class Auth {
    */
   init() {
     this.ui.on('login:post', values => this.login(values));
+    this.ui.on('register:post', values => this.register(values));
 
     return this.adapter.init();
   }
@@ -215,7 +216,7 @@ export default class Auth {
           this.callback(response);
 
           this.core.emit('osjs/core:logged-in');
-          this.ui.emit('login:stop');
+          this.ui.emit('login:stop', response);
 
           return true;
         }
@@ -258,6 +259,28 @@ export default class Auth {
    * @return {Promise<*>}
    */
   register(values) {
-    return this.adapter.register(values);
+    this.ui.emit('register:start');
+
+    return this.adapter
+      .register(values)
+      .then(response => {
+        if (response) {
+          this.ui.emit('register:stop', response);
+
+          return response;
+        }
+
+        return false;
+      })
+      .catch(e => {
+        if (this.core.config('development')) {
+          logger.warn('Exception on registration', e);
+        }
+
+        this.ui.emit('register:error', 'Registration failed');
+        this.ui.emit('register:stop');
+
+        return false;
+      });
   }
 }

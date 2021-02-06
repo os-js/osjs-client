@@ -138,6 +138,7 @@ export default class Login extends EventEmitter {
     const login = this.core.config('auth.login', {});
     const ui = createUI(this.options, login, startHidden, this.$container);
 
+    ui.on('register:post', values => this.emit('register:post', values));
     ui.on('login:post', values => this.emit('login:post', values));
     this.on('login:start', () => ui.emit('login:start'));
     this.on('login:stop', () => ui.emit('login:stop'));

@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.5.1 - 2021-02-06
+
+* Added some events for user registration (#145)
+
 ## 3.5.0 - 2021-01-17
 
 Big thanks for @MoradiDavijani for the following:

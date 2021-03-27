@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.0 - 2021-03-27
+
+* Added support for cookie auto login
+
 ## 3.5.1 - 2021-02-06
 
 * Added some events for user registration (#145)

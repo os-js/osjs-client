@@ -146,6 +146,13 @@ export const defaultConfiguration = {
   auth: {
     ui: {},
 
+    cookie: {
+      name: 'osjs.auth',
+      expires: 7,
+      enabled: false,
+      secure: false
+    },
+
     login: {
       username: null,
       password: null

@@ -27,6 +27,7 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @license Simplified BSD License
  */
+import Cookies from 'js-cookie';
 import Login from './login';
 import serverAuth  from './adapters/auth/server';
 import localStorageAuth from './adapters/auth/localstorage';
@@ -189,12 +190,19 @@ export default class Auth {
   show(cb) {
     const login = this.core.config('auth.login', {});
     const autologin = login.username && login.password;
+    const settings = this.core.config('auth.cookie');
 
     this.callback = cb;
     this.ui.init(autologin);
 
     if (autologin) {
       return this.login(login);
+    } else if (settings.enabled) {
+      const cookie = Cookies.get(settings.name);
+      console.warn(cookie);
+      if (cookie) {
+        return this.login(JSON.parse(cookie));
+      }
     }
 
     return Promise.resolve(true);
@@ -212,6 +220,16 @@ export default class Auth {
       .login(values)
       .then(response => {
         if (response) {
+          const settings = this.core.config('auth.cookie');
+          if (settings.enabled) {
+            Cookies.set(settings.name, JSON.stringify(values), {
+              expires: settings.expires,
+              sameSite: 'strict'
+            });
+          } else {
+            Cookies.remove(settings.name);
+          }
+
           this.ui.destroy();
           this.callback(response);
 
@@ -246,6 +264,9 @@ export default class Auth {
         if (!response) {
           return false;
         }
+
+        const settings = this.core.config('auth.cookie');
+        Cookies.remove(settings.name);
 
         this.shutdown(reload);
 

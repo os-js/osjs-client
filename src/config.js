@@ -55,7 +55,8 @@ const languages = {
   zh_CN: 'Chinese (simplified)',
   fa_FA: 'Persian',
   pt_BR: 'Português (Brasil)',
-  ru_RU: 'Русский (Russian)'
+  ru_RU: 'Русский (Russian)',
+  tr_TR: 'Türkçe (Turkish)'
 };
 
 export const defaultConfiguration = {

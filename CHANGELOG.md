@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.1 - 2021-03-28
+
+* Add Turkish (tr_TR) translations (#149)
+
 ## 3.6.0 - 2021-03-27
 
 * Added support for cookie auto login

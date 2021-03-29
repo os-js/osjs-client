@@ -38,3 +38,4 @@ export * from './zh_CN';
 export * from './fa_FA';
 export * from './pt_BR';
 export * from './ru_RU';
+export * from './tr_TR';

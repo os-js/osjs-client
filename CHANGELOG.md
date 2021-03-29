@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.2 - 2021-03-29
+
+* Added missing language export for tr_TR
+
 ## 3.6.1 - 2021-03-28
 
 * Add Turkish (tr_TR) translations (#149)

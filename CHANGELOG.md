@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.3 - 2021-03-31
+
+* Added Swedish (sv_SE) translations (#151)
+
 ## 3.6.2 - 2021-03-29
 
 * Added missing language export for tr_TR

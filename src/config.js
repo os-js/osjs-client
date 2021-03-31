@@ -56,7 +56,8 @@ const languages = {
   fa_FA: 'Persian',
   pt_BR: 'Português (Brasil)',
   ru_RU: 'Русский (Russian)',
-  tr_TR: 'Türkçe (Turkish)'
+  tr_TR: 'Türkçe (Turkish)',
+  sv_SE: 'Svenska (Swedish)'
 };
 
 export const defaultConfiguration = {

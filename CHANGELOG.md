@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.4 - 2021-04-17
+
+* Ability to pass dialog options in basic application (#154)
+
 ## 3.6.3 - 2021-03-31
 
 * Added Swedish (sv_SE) translations (#151)

@@ -123,13 +123,18 @@ export class BasicApplication extends EventEmitter {
    */
   getDialogOptions(type, options = {}) {
     const {
+      file,
+      ...rest
+    } = options;
+
+    const {
       defaultFilename,
       mimeTypes,
       loadMimeTypes,
       saveMimeTypes
     } = this.options;
 
-    const currentFile = options.file ? options.file : this.proc.args.file;
+    const currentFile = file ? file : this.proc.args.file;
     const defaultPath = this.core.config('vfs.defaultPath');
     const path = currentFile ? currentFile.path : null;
 
@@ -142,7 +147,8 @@ export class BasicApplication extends EventEmitter {
       type,
       mime,
       filename: path ? basename(path) : defaultFilename,
-      path: path ? pathname(path) : defaultPath
+      path: path ? pathname(path) : defaultPath,
+      ...rest
     }, {
       parent: this.win,
       attributes: {

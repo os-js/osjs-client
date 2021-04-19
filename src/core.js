@@ -350,6 +350,19 @@ export default class Core extends CoreBase {
       }
     });
 
+    const updateRootLocale = () => {
+      try {
+        const s = this.make('osjs/settings');
+        const l = s.get('osjs/locale', 'language');
+        this.$root.setAttribute('data-locale', l);
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+
+    this.on('osjs/locale:change', updateRootLocale);
+    this.on('osjs/settings:load', updateRootLocale);
+    this.on('osjs/settings:save', updateRootLocale);
   }
 
   /**

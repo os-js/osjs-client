@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.6.5 - 2021-04-19
+
+* Add locale as data attribute on root element (#155)
+
 ## 3.6.4 - 2021-04-17
 
 * Ability to pass dialog options in basic application (#154)

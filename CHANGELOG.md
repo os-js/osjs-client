@@ -1,6 +1,6 @@
 # Changelog for osjs-client
 
-## 3.6.6 - 2021-04-25
+## 3.6.7 - 2021-04-25
 
 * Added configuration option to override metadata
 

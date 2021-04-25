@@ -408,7 +408,9 @@ export default class Packages {
    */
   addPackages(list) {
     if (list instanceof Array) {
-      const append = createManifestFromArray(list);
+      const override = this.core.config('packages.overrideMetadata');
+      const append = createManifestFromArray(list)
+        .map(meta => override[meta.name] ? {...meta, ...override[meta.name]} : meta);
 
       this.metadata = [...this.metadata, ...append];
     }

@@ -90,7 +90,6 @@ const createFetchOptions = (url, options, type) => {
  */
 const fetchXhr = (target, fetchOptions) => new Promise((resolve, reject) => {
   const req = new XMLHttpRequest();
-  let onProgress = () => {};
 
   const onError = (msg) => (ev) => {
     console.warn(msg, ev);
@@ -112,18 +111,18 @@ const fetchXhr = (target, fetchOptions) => new Promise((resolve, reject) => {
   };
 
   if (typeof fetchOptions.onProgress === 'function') {
-    onProgress = (ev) => {
+    const rel = fetchOptions.method.toUpperCase() === 'GET' ? req : req.upload;
+    rel.addEventListener('progress', (ev) => {
       if (ev.lengthComputable) {
-        const percentComplete = ev.loaded / ev.total * 100;
+        const percentComplete = Math.round(ev.loaded / ev.total * 100);
         fetchOptions.onProgress(ev, percentComplete);
       }
-    };
+    });
   }
 
   req.addEventListener('load', onLoad);
   req.addEventListener('error', onError('An error occured while performing XHR request'));
   req.addEventListener('abort', onError('XHR request was aborted'));
-  req.addEventListener('progress', onProgress);
   req.open(fetchOptions.method, target);
   Object.entries(fetchOptions.headers).forEach(([k, v]) => req.setRequestHeader(k, v));
   req.responseType = fetchOptions.responseType || '';

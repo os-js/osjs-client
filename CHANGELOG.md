@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.7.1 - 2021-07-23
+
+* Detect upload/download for progress event in XHR
+
 ## 3.7.0 - 2021-07-23
 
 * Added progress event option for VFS writefile

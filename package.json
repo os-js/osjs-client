@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.6.7",
+  "version": "3.7.0",
   "description": "OS.js client",
   "main": "dist/main.js",
   "style": "dist/main.css",
@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^2.0.0"
+    "@osjs/dev-meta": "^2.1.0"
   },
   "eslintConfig": {
     "env": {

@@ -10,7 +10,7 @@ describe('LocalStorage Settings Adapter', () => {
   });
 
   afterAll(() => {
-    localStorage.clearItem('failure');
+    localStorage.removeItem('failure');
     core.destroy();
   });
 

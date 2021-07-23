@@ -85,6 +85,52 @@ const createFetchOptions = (url, options, type) => {
 };
 
 /**
+ * This is a fetch polyfill for XMLHttpRequest.
+ * Mainly used to get upload progress indicator.
+ */
+const fetchXhr = (target, fetchOptions) => new Promise((resolve, reject) => {
+  const req = new XMLHttpRequest();
+  let onProgress = () => {};
+
+  const onError = (msg) => (ev) => {
+    console.warn(msg, ev);
+    reject(new Error(msg));
+  };
+
+  const onLoad = () => {
+    resolve({
+      status: req.status,
+      statusText: req.statusText,
+      ok: req.status >= 200 && req.status <= 299,
+      headers: {
+        get: k => req.getResponseHeader(k)
+      },
+      text: () => Promise.resolve(JSON.responseText),
+      json: () => Promise.resolve(JSON.parse(req.responseText)),
+      arrayBuffer: () => Promise.resolve(req.response)
+    });
+  };
+
+  if (typeof fetchOptions.onProgress === 'function') {
+    onProgress = (ev) => {
+      if (ev.lengthComputable) {
+        const percentComplete = ev.loaded / ev.total * 100;
+        fetchOptions.onProgress(ev, percentComplete);
+      }
+    };
+  }
+
+  req.addEventListener('load', onLoad);
+  req.addEventListener('error', onError('An error occured while performing XHR request'));
+  req.addEventListener('abort', onError('XHR request was aborted'));
+  req.addEventListener('progress', onProgress);
+  req.open(fetchOptions.method, target);
+  Object.entries(fetchOptions.headers).forEach(([k, v]) => req.setRequestHeader(k, v));
+  req.responseType = fetchOptions.responseType || '';
+  req.send(fetchOptions.body);
+});
+
+/**
  * Make a HTTP request
  *
  * @param {string} url The endpoint
@@ -100,7 +146,11 @@ export const fetch = (url, options = {}, type = null) => {
       ? error
       : `${response.status} (${response.statusText})`));
 
-  return window.fetch(target, fetchOptions)
+  const op = options.xhr
+    ? fetchXhr(target, fetchOptions)
+    : window.fetch(target, fetchOptions);
+
+  return op
     .then(response => {
       if (!response.ok) {
         const contentType = response.headers.get('content-type');

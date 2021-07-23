@@ -1,5 +1,11 @@
 # Changelog for osjs-client
 
+## 3.7.0 - 2021-07-23
+
+* Added progress event option for VFS writefile
+* Added XHR alternative for fetch
+* Updated dependencies
+
 ## 3.6.7 - 2021-04-25
 
 * Added configuration option to override metadata

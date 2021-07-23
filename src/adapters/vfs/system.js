@@ -30,10 +30,11 @@
 
 const getters = ['exists', 'stat', 'readdir', 'readfile'];
 
-const requester = core => (fn, body, type) =>
+const requester = core => (fn, body, type, options = {}) =>
   core.request(`/vfs/${fn}`, {
     body,
-    method: getters.indexOf(fn) !== -1 ? 'get' : 'post'
+    method: getters.indexOf(fn) !== -1 ? 'get' : 'post',
+    ...options
   }, type)
     .then(response => {
       if (type === 'json') {
@@ -64,13 +65,16 @@ const methods = (core, request) => {
     readfile: ({path}, type, options) =>
       request('readfile', {path, options}),
 
-    writefile: ({path}, data, options) => {
+    writefile: ({path}, data, options = {}) => {
       const formData = new FormData();
       formData.append('upload', data);
       formData.append('path', path);
       formData.append('options', options);
 
-      return request('writefile', formData);
+      return request('writefile', formData, undefined, {
+        onProgress: options.onProgress,
+        xhr: !!options.onProgress
+      });
     },
 
     copy: (from, to, options) =>

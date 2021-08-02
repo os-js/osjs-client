@@ -171,6 +171,7 @@ export const defaultConfiguration = {
 
   settings: {
     lock: [],
+    prefix: 'osjs__', // localStorage settings adapter key prefix
 
     defaults: {
       'osjs/default-application': {},

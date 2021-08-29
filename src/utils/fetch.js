@@ -31,10 +31,16 @@
 /*
  * Creates URL request path
  */
-const encodeQueryData = data => Object.keys(data)
-  .filter(k => typeof data[k] !== 'object')
-  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-  .join('&');
+const encodeQueryData = (data, nesting = '') => {
+  const pairs = Object.entries(data).map(([key, val]) => {
+    if (typeof val === 'object') {
+      return encodeQueryData(val, nesting + `${key}.`);
+    } else {
+      return encodeURIComponent(nesting + key) + '=' + encodeURIComponent(val);
+    }
+  });
+  return pairs.join('&');
+};
 
 const bodyTypes = [
   window.ArrayBuffer,

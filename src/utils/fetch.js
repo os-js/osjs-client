@@ -31,9 +31,9 @@
 /*
  * Creates URL request path
  */
-const encodeQueryData = (data, nesting = '') => {
+export const encodeQueryData = (data, nesting = '') => {
   const pairs = Object.entries(data).map(([key, val]) => {
-    if (typeof val === 'object') {
+    if (typeof val === 'object' && val !== null) {
       return encodeQueryData(val, nesting + `${key}.`);
     } else {
       return encodeURIComponent(nesting + key) + '=' + encodeURIComponent(val);

@@ -33,19 +33,19 @@ const typesToken = {
   number : 'i',
   boolean : 'b',
   undefined: 'u',
-  object: 'n'
+  null: 'n'
 };
 
 /*
  * Creates URL request path
  */
 export const encodeQueryData = (data, nesting = '') => {
-  let type;
   const pairs = Object.entries(data).map(([key, val]) => {
-    if (typeof val === 'object' && val !== null) {
+    const isNull = val === null;
+    if (typeof val === 'object' && !isNull) {
       return encodeQueryData(val, nesting + `${key}.`);
     } else {
-      type = typesToken[typeof val];
+      const type = typesToken[isNull ? 'null' : typeof val];
       return encodeURIComponent(nesting + key + '.' + type) + '=' + encodeURIComponent(val);
     }
   });

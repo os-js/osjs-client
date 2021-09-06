@@ -28,15 +28,25 @@
  * @license Simplified BSD License
  */
 
+const typesToken = {
+  string : 's',
+  number : 'i',
+  boolean : 'b',
+  undefined: 'u',
+  object: 'n'
+};
+
 /*
  * Creates URL request path
  */
 export const encodeQueryData = (data, nesting = '') => {
+  let type;
   const pairs = Object.entries(data).map(([key, val]) => {
     if (typeof val === 'object' && val !== null) {
       return encodeQueryData(val, nesting + `${key}.`);
     } else {
-      return encodeURIComponent(nesting + key) + '=' + encodeURIComponent(val);
+      type = typesToken[typeof val];
+      return encodeURIComponent(nesting + key + '.' + type) + '=' + encodeURIComponent(val);
     }
   });
   return pairs.join('&');

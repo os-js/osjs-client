@@ -74,6 +74,12 @@ const handleDirectoryList = (path, options) => result =>
       filter: options.filter
     }));
 
+// Returns a new "options" object without properties from "ignore"
+const filterOptions = (ignore, options) => {
+  ignore.forEach(item => delete options[item]);
+  return options;
+};
+
 /**
  * Read a directory
  *
@@ -82,7 +88,7 @@ const handleDirectoryList = (path, options) => result =>
  * @return {Promise<object[]>} A list of files
  */
 export const readdir = (adapter, mount) => (path, options = {}) =>
-  adapter.readdir(pathToObject(path), options, mount)
+  adapter.readdir(pathToObject(path), filterOptions(['showHiddenFiles', 'filter'], options), mount)
     .then(handleDirectoryList(path, options));
 
 /**

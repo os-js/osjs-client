@@ -75,10 +75,11 @@ const handleDirectoryList = (path, options) => result =>
     }));
 
 // Returns a new "options" object without properties from "ignore"
-const filterOptions = (ignore, options) => {
-  ignore.forEach(item => delete options[item]);
-  return options;
-};
+const filterOptions = (ignore, options) => Object.fromEntries(
+  Object
+    .entries(options)
+    .filter(([k]) => !ignore.includes(k))
+);
 
 /**
  * Read a directory

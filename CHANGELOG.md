@@ -1,5 +1,10 @@
 # Changelog for osjs-client
 
+## 3.7.2 - 2021-09-22
+
+* Change default ping timer (#169)
+* Updated Jest
+
 ## 3.7.1 - 2021-07-23
 
 * Detect upload/download for progress event in XHR

@@ -28,7 +28,7 @@
  * @license Simplified BSD License
  */
 
-const getters = ['exists', 'stat', 'readdir', 'readfile'];
+const getters = ['capabilities', 'exists', 'stat', 'readdir', 'readfile'];
 
 const requester = core => (fn, body, type, options = {}) =>
   core.request(`/vfs/${fn}`, {
@@ -57,9 +57,16 @@ const methods = (core, request) => {
       .then(({body}) => body);
 
   return {
+    capabilities: ({path}, options) => request('capabilities', {
+      path,
+      options
+    }, 'json').then(({body}) => {
+      return body;
+    }),
+
     readdir: ({path}, options) => request('readdir', {
       path,
-      options: {}
+      options,
     }, 'json').then(({body}) => body),
 
     readfile: ({path}, type, options) =>
@@ -89,7 +96,7 @@ const methods = (core, request) => {
     stat: passthrough('stat'),
 
     url: ({path}, options) => Promise.resolve(
-      core.url(`/vfs/readfile?path=${encodeURIComponent(path)}`)
+      core.url(`/vfs/readfile?path.s=${encodeURIComponent(path)}`)
     ),
 
     search: ({path}, pattern, options) =>
@@ -102,7 +109,7 @@ const methods = (core, request) => {
     download: ({path}, options = {}) => {
       const json = encodeURIComponent(JSON.stringify({download: true}));
 
-      return Promise.resolve(`/vfs/readfile?options=${json}&path=` + encodeURIComponent(path))
+      return Promise.resolve(`/vfs/readfile?options=${json}&path.s=` + encodeURIComponent(path))
         .then(url => {
           return (options.target || window).open(url);
         });

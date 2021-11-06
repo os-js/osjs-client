@@ -79,7 +79,7 @@ describe('VFS', () => {
       .toBeInstanceOf(ArrayBuffer);
   });
 
-  test('writefile - blob', () => {
+  test('#writefile - blob', () => {
     return expect(call('writefile', 'null:/filename', new Blob()))
       .resolves
       .toBe(-1);

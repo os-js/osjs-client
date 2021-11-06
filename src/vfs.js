@@ -74,6 +74,25 @@ const handleDirectoryList = (path, options) => result =>
       filter: options.filter
     }));
 
+const filterOptions = (ignore, options) => Object.fromEntries(
+  Object
+    .entries(options)
+    .filter(([k]) => !ignore.includes(k))
+);
+
+/**
+ * Get vfs capabilities
+ *
+ * @param {string|VFSFile} path The path of a file
+ * @param {VFSMethodOptions} [options] Options
+ * @return {Promise<object[]>} An object of capabilities
+ */
+export const capabilities = (adapter, mount) => (path, options = {}) => {
+  console.log('********************capabilities**************************');
+  console.log(options);
+  return  adapter.capabilities(pathToObject(path), options, mount);
+};
+
 /**
  * Read a directory
  *
@@ -82,7 +101,7 @@ const handleDirectoryList = (path, options) => result =>
  * @return {Promise<object[]>} A list of files
  */
 export const readdir = (adapter, mount) => (path, options = {}) =>
-  adapter.readdir(pathToObject(path), options, mount)
+  adapter.readdir(pathToObject(path), filterOptions(['filter'], options), mount)
     .then(handleDirectoryList(path, options));
 
 /**

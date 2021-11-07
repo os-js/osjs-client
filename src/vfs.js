@@ -88,8 +88,6 @@ const filterOptions = (ignore, options) => Object.fromEntries(
  * @return {Promise<object[]>} An object of capabilities
  */
 export const capabilities = (adapter, mount) => (path, options = {}) => {
-  console.log('********************capabilities**************************');
-  console.log(options);
   return  adapter.capabilities(pathToObject(path), options, mount);
 };
 

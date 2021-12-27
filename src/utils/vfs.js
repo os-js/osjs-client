@@ -175,6 +175,7 @@ export const humanFileSize = (bytes, si = false) => {
  * Transforms a readdir result
  * @param {object} root The path to the readdir root
  * @param Object[] files An array of readdir results
+ * @param Object[] capabilityCache An object of mount point capabilities
  * @param {object} options Options
  * @param {Boolean} [options.showHiddenFiles=false] Show hidden files
  * @param {Function} [options.filter] A filter
@@ -182,7 +183,12 @@ export const humanFileSize = (bytes, si = false) => {
  * @param {string} [options.sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
-export const transformReaddir = ({path}, files, options = {}) => {
+export const transformReaddir = ({path}, files, capabilityCache, options = {}) => {
+  const mountPoint = path => path.split(':/')[0];
+  let mountPointSort = false;
+  if(capabilityCache[mountPoint(path)] !== undefined) {
+    mountPointSort = capabilityCache[mountPoint(path)].sort;
+  }
   options = {
     showHiddenFiles: false,
     sortBy: 'filename',
@@ -191,48 +197,44 @@ export const transformReaddir = ({path}, files, options = {}) => {
   };
 
   let {sortDir, sortBy, filter} = options;
+
   if (typeof filter !== 'function') {
     filter = () => true;
-  }
-
-  if (['asc', 'desc'].indexOf(sortDir) === -1) {
-    sortDir = 'asc';
   }
 
   const filterHidden = options.showHiddenFiles
     ? () => true
     : file => file.filename.substr(0, 1) !== '.';
 
-  const sorter = sortMap[sortBy]
-    ? sortMap[sortBy]
-    : sortFn('string');
-
   const modify = (file) => ({
     ...file,
     humanSize: humanFileSize(file.size)
   });
 
-  // FIXME: Optimize this to one chain!
+  let sortedSpecial = [];
+  let sortedFiles = [];
 
-  const sortedSpecial = createSpecials(path)
-    .sort(sorter(sortBy, sortDir))
+  sortedSpecial = createSpecials(path)
     .map(modify);
-
-  const sortedDirectories = files.filter(file => file.isDirectory)
-    .sort(sorter(sortBy, sortDir))
-    .filter(filterHidden)
+  sortedFiles = files.filter(filterHidden)
     .filter(filter)
     .map(modify);
 
-  const sortedFiles = files.filter(file => !file.isDirectory)
-    .sort(sorter(sortBy, sortDir))
-    .filter(filterHidden)
-    .filter(filter)
-    .map(modify);
+  if(!mountPointSort) {
+    if (['asc', 'desc'].indexOf(sortDir) === -1) {
+      sortDir = 'asc';
+    }
+    const sorter = sortMap[sortBy]
+      ? sortMap[sortBy]
+      : sortFn('ascii');
+    sortedSpecial = sortedSpecial
+      .sort(sorter(sortBy, sortDir));
+    sortedFiles = sortedFiles
+      .sort(sorter(sortBy, sortDir));
+  }
 
   return [
     ...sortedSpecial,
-    ...sortedDirectories,
     ...sortedFiles
   ];
 };

@@ -81,7 +81,9 @@ const createFetchOptions = (url, options, type) => {
   }
 
   if (fetchOptions.body && fetchOptions.method.toLowerCase() === 'get') {
-    url += '?' + encodeQueryData(fetchOptions.body);
+    if(encodeQueryData(fetchOptions.body) !== '') {
+      url += '?' + encodeQueryData(fetchOptions.body);
+    }
     delete fetchOptions.body;
   }
 

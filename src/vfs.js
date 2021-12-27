@@ -60,6 +60,9 @@ import {
  * @property {object} [stat]
  */
 
+// Cache the capability of each mount point
+let capabilityCache = {};
+
 // Makes sure our input paths are object(s)
 const pathToObject = path => ({
   id: null,
@@ -69,7 +72,7 @@ const pathToObject = path => ({
 // Handles directory listing result(s)
 const handleDirectoryList = (path, options) => result =>
   Promise.resolve(result.map(stat => createFileIter(stat)))
-    .then(result => transformReaddir(pathToObject(path), result, {
+    .then(result => transformReaddir(pathToObject(path), result, capabilityCache, {
       showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));
@@ -87,8 +90,16 @@ const filterOptions = (ignore, options) => Object.fromEntries(
  * @param {VFSMethodOptions} [options] Options
  * @return {Promise<object[]>} An object of capabilities
  */
-export const capabilities = (adapter, mount) => (path, options = {}) => {
-  return  adapter.capabilities(pathToObject(path), options, mount);
+export const capabilities = (adapter, mount) => (path, options) => {
+  const cached = capabilityCache[mount.name];
+  if (cached) {
+    return Promise.resolve(cached);
+  }
+  return adapter.capabilities(pathToObject(path), options, mount)
+    .then(capabilities => {
+      capabilityCache[mount.name] = capabilities;
+      return capabilities;
+    });
 };
 
 /**

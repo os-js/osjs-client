@@ -160,7 +160,7 @@ export const playSound = (src, options = {}) => {
   };
 
   const audio = new Audio();
-  audio.voule = opts.volume;
+  audio.volume = opts.volume;
   audio.src = src;
 
   try {

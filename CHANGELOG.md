@@ -1,5 +1,9 @@
 # Changelog for osjs-client
 
+## 3.7.3 - 2021-04-02
+
+* Fix audio volume typo (#173)
+
 ## 3.7.2 - 2021-09-22
 
 * Change default ping timer (#169)

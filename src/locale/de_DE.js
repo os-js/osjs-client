@@ -30,29 +30,29 @@
 
 export const de_DE = {
   // Core
-  ERR_REQUEST_STANDALONE: 'Cannot make requests in standalone mode.',
-  ERR_REQUEST_NOT_OK: 'An error occured while performing a request: {0}',
+  ERR_REQUEST_STANDALONE: 'Im standalone modus können keine Anfragen gemacht werden.',
+  ERR_REQUEST_NOT_OK: 'Beim Ausführen einer Anfrage ist der folgende Fehler aufgetreten: {0}',
   ERR_VFS_MOUNT_NOT_FOUND: 'Filesystem \'{0}\' nicht gefunden',
   ERR_VFS_MOUNT_NOT_FOUND_FOR: 'Filesystem für \'{0}\' nicht gefunden',
   ERR_VFS_MOUNT_NOT_MOUNTED: 'Filesystem \'{0}\' nicht gemountet',
   ERR_VFS_MOUNT_ALREADY_MOUNTED: 'Filesystem \'{0}\' schon gemountet',
-  ERR_VFS_PATH_FORMAT_INVALID: 'Given path \'{0}\' does not match \'name:/path\'',
+  ERR_VFS_PATH_FORMAT_INVALID: 'Der gegebene Pfad \'{0}\' stimmt nicht mit \'name:/path\' überein',
   ERR_PACKAGE_NOT_FOUND: 'Paket-Metadaten  \'{0}\' nicht gefunden',
   ERR_PACKAGE_LOAD: 'Paket Laden \'{0}\' ist fehlgeschlagen: {1}',
   ERR_PACKAGE_NO_RUNTIME: 'Paketlaufzeit \'{0}\' nicht gefunden',
   ERR_PACKAGE_NO_METADATA: 'Metadaten für \'{0}\' nicht gefunden. Ist es in der Manifest?',
   ERR_PACKAGE_EXCEPTION: 'Eine Ausnahme trat in \'{0}\' auf.',
   ERR_WINDOW_ID_EXISTS: 'Fenster mit der ID \'{0}\' existiert schon',
-  ERR_INVALID_LOCALE: 'Invalid locale \'{0}\'',
+  ERR_INVALID_LOCALE: 'Invalide Sprache \'{0}\'',
   LBL_CONNECTION_LOST: 'Verbindung unterbrochen',
   LBL_CONNECTION_LOST_MESSAGE: 'Die Verbindung zu OS.js wurde unterbrochen. Wiederverbinden... ',
   LBL_CONNECTION_RESTORED: 'Verbindung wiederhergestellt',
-  LBL_CONNECTION_RESTORED_MESSAGE: 'Die Verbindung OS.js server was restored.',
+  LBL_CONNECTION_RESTORED_MESSAGE: 'Die Verbindung zu dem OS.js wurde wieder hergestellt.',
 
   // Application categories
   LBL_APP_CAT_DEVELOPMENT: 'IT-Entwicklung',
   LBL_APP_CAT_SCIENCE: 'Wissenschaft',
-  LBL_APP_CAT_GAMES: 'Spiels',
+  LBL_APP_CAT_GAMES: 'Spiele',
   LBL_APP_CAT_GRAPHICS: 'Grafiken',
   LBL_APP_CAT_NETWORK: 'Netzwerk',
   LBL_APP_CAT_MULTIMEDIA: 'Multimedia',
@@ -64,7 +64,7 @@ export const de_DE = {
   // UI
   LBL_LAUNCH_SELECT: 'Applikation auswählen',
   LBL_LAUNCH_SELECT_MESSAGE: 'Applikation für \'{0}\' auswählen',
-  LBL_DESKTOP_SELECT_WALLPAPER: 'Wallpaper auswählen',
+  LBL_DESKTOP_SELECT_WALLPAPER: 'Hintergrundbild auswählen',
   LBL_DESKTOP_SELECT_THEME: 'Theme auswählen',
   LBL_SEARCH_TOOLTOP: 'Dateisysteme ({0}) finden',
   LBL_SEARCH_PLACEHOLDER: 'Dateisysteme finden...',
@@ -87,10 +87,10 @@ export const de_DE = {
   LBL_MENU: 'Menü',
   LBL_ERROR: 'Error',
   LBL_INFO: 'Info',
-  LBL_MESSAGE: 'Message',
+  LBL_MESSAGE: 'Nachricht',
   LBL_WARNINIG: 'Warnung',
   LBL_SUCCESS: 'Success',
-  LBL_FAILURE: 'Failure',
+  LBL_FAILURE: 'Fehler',
   LBL_WINDOW: 'Fenster',
   LBL_WINDOWS: 'Fenster',
   LBL_NOTIFICATION: 'Benachrichtigung',
@@ -130,5 +130,5 @@ export const de_DE = {
   LBL_APPLICATION: 'Anwendungsprogramme',
   LBL_APPLICATIONS: 'Anwendungsprogrammen',
   LBL_KILL: 'Beenden',
-  LBL_KILL_ALL: 'Beenden alle'
+  LBL_KILL_ALL: 'Alle benden'
 };

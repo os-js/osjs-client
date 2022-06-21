@@ -47,7 +47,7 @@ const onDropAction = actions => (ev, data, files, shortcut = true) => {
 const isRootElement = ev =>
   ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper');
 
-const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
+const view = (fileIcon, themeIcon, droppable) => (state, actions) => 
   h('div', {
     class: 'osjs-desktop-iconview__wrapper',
     oncontextmenu: ev => {
@@ -104,17 +104,29 @@ const view = (fileIcon, themeIcon, droppable) => (state, actions) =>
         ]),
         h('div', {
           class: 'osjs-desktop-iconview__entry__label'
-        }, entry.filename)
+        }, (entry.label || entry.filename))
       ])
     ]);
   }));
 
-const createShortcuts = (root, readfile, writefile) => {
+const getApplicationLocaleName = (filename, core) => {    
+  const [metadata] = core.make('osjs/packages').getPackages(pkg => (pkg.name == filename));
+  return core.make('osjs/locale').translatableFlat(metadata.title);
+}
+
+const updateShortcutLabel = (shortcut, core) => {
+  if ( shortcut.label ) return shortcut;
+  if ( shortcut.mime === "osjs/application" ) shortcut.label = getApplicationLocaleName(shortcut.filename, core);    
+  return shortcut;
+}
+
+const createShortcuts = (root, readfile, writefile, core) => { 
   const read = () => {
     const filename = pathJoin(root, '.shortcuts.json');
 
     return readfile(filename)
       .then(contents => JSON.parse(contents))
+      .then(contents => contents.map(shortcut => updateShortcutLabel(shortcut, core)))
       .catch(error => ([]));
   };
 
@@ -126,7 +138,8 @@ const createShortcuts = (root, readfile, writefile) => {
       .catch(() => 0);
   };
 
-  const add = entry => read(root)
+  const add = entry => read(root)  
+    .then(entry => updateShortcutLabel(entry, core))
     .then(shortcuts => ([...shortcuts, entry]))
     .then(write);
 
@@ -220,8 +233,8 @@ export class DesktopIconView extends EventEmitter {
     const {icon: themeIcon} = this.core.make('osjs/theme');
     const {copy, readdir, readfile, writefile, unlink, mkdir} = this.core.make('osjs/vfs');
     const error = err => console.error(err);
-    const shortcuts = createShortcuts(root, readfile, writefile);
-    const read = readDesktopFolder(root, readdir, shortcuts);
+    const shortcuts = createShortcuts(root, readfile, writefile, this.core);
+    const read = readDesktopFolder(root, readdir, shortcuts);    
 
     this.iconview = app({
       selected: -1,

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 /*
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *

@@ -44,11 +44,14 @@ const onDropAction = actions => (ev, data, files, shortcut = true) => {
   }
 };
 
-const createLabelComputer = (core) => (entry) => {
-  const [metadata] = (entry.mime === 'osjs/application')
-    ? core.make('osjs/packages').getPackages(pkg => (pkg.name === entry.filename)) : [];
+const createLabelComputer = (core) => {
+  const packages = f => core.make('osjs/packages').getPackages(f)[0];
+  const translate = n => core.make('osjs/locale').translatableFlat(n);
 
-  return entry.label || (metadata ? core.make('osjs/locale').translatableFlat(metadata.title) : entry.filename);
+  return ({filename, label}) => {
+    const metadata = packages(pkg => (pkg.name === filename));
+    return label || (metadata ? translate(metadata.title) : filename);
+  };
 };
 
 const isRootElement = ev =>

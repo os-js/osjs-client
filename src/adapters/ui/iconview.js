@@ -328,7 +328,7 @@ export class DesktopIconView extends EventEmitter {
     this.iconview.reload();
     this._createWatcher();
 
-    this.core.on('osjs/settings:save', this.iconview.reload);
+    this.core.on('osjs/settings:save', () => this.iconview.reload());
   }
 
   createFileContextMenu(ev, entry) {

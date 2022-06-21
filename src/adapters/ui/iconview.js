@@ -115,12 +115,10 @@ const getApplicationLocaleName = (filename, core) => {
   return core.make('osjs/locale').translatableFlat(metadata.title);
 };
 
-const updateShortcutLabel = (core) => (shortcut) => {
-  shortcut.label = shortcut.label ||
-    (shortcut.mime === 'osjs/application' ? getApplicationLocaleName(shortcut.filename, core) : null);
-
-  return shortcut;
-};
+const updateShortcutLabel = ({label, ...shortcut}, core) => ({
+  ...shortcut,
+  label: label || (shortcut.mime === 'osjs/application' ? getApplicationLocaleName(shortcut.filename, core) : null)
+});
 
 const createShortcuts = (root, readfile, writefile, core) => {
   const read = () => {

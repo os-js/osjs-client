@@ -44,15 +44,17 @@ const onDropAction = actions => (ev, data, files, shortcut = true) => {
   }
 };
 
-const computeLabel = (core, entry) => {
-  const [metadata] = core.make('osjs/packages').getPackages(pkg => (pkg.name === entry.filename));
+const createLabelComputer = (core) => (entry) => {
+  const [metadata] = (entry.mime === 'osjs/application')
+    ? core.make('osjs/packages').getPackages(pkg => (pkg.name === entry.filename)) : [];
+
   return entry.label || (metadata ? core.make('osjs/locale').translatableFlat(metadata.title) : entry.filename);
 };
 
 const isRootElement = ev =>
   ev.target && ev.target.classList.contains('osjs-desktop-iconview__wrapper');
 
-const view = (core, fileIcon, themeIcon, droppable) => (state, actions) =>
+const view = (computeLabel, fileIcon, themeIcon, droppable) => (state, actions) =>
   h('div', {
     class: 'osjs-desktop-iconview__wrapper',
     oncontextmenu: ev => {
@@ -109,7 +111,7 @@ const view = (core, fileIcon, themeIcon, droppable) => (state, actions) =>
         ]),
         h('div', {
           class: 'osjs-desktop-iconview__entry__label'
-        }, computeLabel(core, entry))
+        }, computeLabel(entry))
       ])
     ]);
   }));
@@ -227,6 +229,7 @@ export class DesktopIconView extends EventEmitter {
     const error = err => console.error(err);
     const shortcuts = createShortcuts(root, readfile, writefile);
     const read = readDesktopFolder(root, readdir, shortcuts);
+    const computeLabel = createLabelComputer(this.core);
 
     this.iconview = app({
       selected: -1,
@@ -316,7 +319,7 @@ export class DesktopIconView extends EventEmitter {
           .then(entries => actions.setEntries(entries));
       }
 
-    }, view(this.core, fileIcon, themeIcon, droppable), this.$root);
+    }, view(computeLabel, fileIcon, themeIcon, droppable), this.$root);
 
     this.applySettings();
     this.iconview.reload();

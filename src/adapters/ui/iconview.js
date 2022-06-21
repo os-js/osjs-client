@@ -138,7 +138,7 @@ const createShortcuts = (root, readfile, writefile, core) => {
   };
 
   const add = entry => read(root)
-    .then(entry => updateShortcutLabel(entry, core))
+    .then(updateShortcutLabel(core))
     .then(shortcuts => ([...shortcuts, entry]))
     .then(write);
 

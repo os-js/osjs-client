@@ -115,7 +115,7 @@ const getApplicationLocaleName = (filename, core) => {
   return core.make('osjs/locale').translatableFlat(metadata.title);
 };
 
-const updateShortcutLabel = ({label, ...shortcut}, core) => ({
+const updateShortcutLabel = (core) => ({label, ...shortcut}) => ({
   ...shortcut,
   label: label || (shortcut.mime === 'osjs/application' ? getApplicationLocaleName(shortcut.filename, core) : null)
 });

@@ -48,8 +48,8 @@ const createLabelComputer = (core) => {
   const packages = f => core.make('osjs/packages').getPackages(f)[0];
   const translate = n => core.make('osjs/locale').translatableFlat(n);
 
-  return ({filename, label}) => {
-    const metadata = packages(pkg => (pkg.name === filename));
+  return ({filename, mime, label}) => {
+    const metadata = (mime === 'osjs/application' ? packages(pkg => (pkg.name === filename)) : null);
     return label || (metadata ? translate(metadata.title) : filename);
   };
 };

@@ -326,7 +326,7 @@ export const pathname = path => {
  * @param {string} str Input
  * @return {string}
  */
-export const parseMontpointPrefix = str => {
+export const parseMountpointPrefix = str => {
   const re = /^([\w-_]+):+(.*)/;
 
   const match = String(str)

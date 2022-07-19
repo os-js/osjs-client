@@ -66,7 +66,7 @@ export const defaultConfiguration = {
   languages,
 
   http: {
-    ping: true, // By default maxAge / 2
+    ping: true,
     public: pathname,
     uri: href
   },

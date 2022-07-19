@@ -338,7 +338,7 @@ export default class Core extends CoreBase {
       if (enabled) {
         const pingTime = typeof enabled === 'number'
           ? enabled
-          : config.cookie.maxAge / 2;
+          : (30 * 60 * 1000);
 
         this.ping = setInterval(() => {
           if (this.ws) {

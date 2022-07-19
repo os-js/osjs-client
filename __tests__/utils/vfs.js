@@ -259,23 +259,23 @@ describe('utils.vfs#pathJoin', () => {
   });
 });
 
-describe('utils.vfs#parseMontpointPrefix', () => {
+describe('utils.vfs#parseMountpointPrefix', () => {
   test('Should match on valid', () => {
-    expect(vfs.parseMontpointPrefix('home:/')).toBe('home');
-    expect(vfs.parseMontpointPrefix('home://')).toBe('home');
-    expect(vfs.parseMontpointPrefix('home:://')).toBe('home');
-    expect(vfs.parseMontpointPrefix('home:dir:/')).toBe('home');
-    expect(vfs.parseMontpointPrefix('home-dir:/')).toBe('home-dir');
-    expect(vfs.parseMontpointPrefix('home-dir:/')).toBe('home-dir');
-    expect(vfs.parseMontpointPrefix('home-dir_long:/')).toBe('home-dir_long');
-    expect(vfs.parseMontpointPrefix('666:/')).toBe('666');
+    expect(vfs.parseMountpointPrefix('home:/')).toBe('home');
+    expect(vfs.parseMountpointPrefix('home://')).toBe('home');
+    expect(vfs.parseMountpointPrefix('home:://')).toBe('home');
+    expect(vfs.parseMountpointPrefix('home:dir:/')).toBe('home');
+    expect(vfs.parseMountpointPrefix('home-dir:/')).toBe('home-dir');
+    expect(vfs.parseMountpointPrefix('home-dir:/')).toBe('home-dir');
+    expect(vfs.parseMountpointPrefix('home-dir_long:/')).toBe('home-dir_long');
+    expect(vfs.parseMountpointPrefix('666:/')).toBe('666');
   });
 
   test('Should fail on valid', () => {
-    expect(vfs.parseMontpointPrefix(':dir:/')).toBe(undefined);
-    expect(vfs.parseMontpointPrefix('invalid.:/')).toBe(undefined);
-    expect(vfs.parseMontpointPrefix('invalid@:/')).toBe(undefined);
-    expect(vfs.parseMontpointPrefix('invalid/:/')).toBe(undefined);
+    expect(vfs.parseMountpointPrefix(':dir:/')).toBe(undefined);
+    expect(vfs.parseMountpointPrefix('invalid.:/')).toBe(undefined);
+    expect(vfs.parseMountpointPrefix('invalid@:/')).toBe(undefined);
+    expect(vfs.parseMountpointPrefix('invalid/:/')).toBe(undefined);
   });
 });
 

@@ -4,14 +4,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Unit tests (node ${{ matrix.node }})
-    strategy:
-      matrix:
-        node: [ '14', '10' ]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
-    - run: npm install -g jest
+        node-version: '14'
+    - run: npm install -g jest@^26
     - run: npm install
     - run: npm run jest

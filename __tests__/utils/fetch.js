@@ -11,13 +11,7 @@ describe('utils.fetch#encodeQueryData', () => {
     });
 
     const result2 = fetch.encodeQueryData({
-      a: {
-        a: 1,
-        b: true,
-        c: null,
-        d: 'foo',
-        e: undefined
-      },
+      a: 1,
       b: {
         c: {
           d: 'foo'
@@ -25,7 +19,7 @@ describe('utils.fetch#encodeQueryData', () => {
       }
     });
 
-    expect(result1).toEqual('a.i=1&b.b=true&c.n=null&d.s=foo&e.u=undefined');
-    expect(result2).toEqual('a.a.i=1&a.b.b=true&a.c.n=null&a.d.s=foo&a.e.u=undefined&b.c.d.s=foo');
+    expect(result1).toEqual('a=1&b=true&c=null&d=foo&e=undefined');
+    expect(result2).toEqual('a=1&b=%7B%22c%22%3A%7B%22d%22%3A%22foo%22%7D%7D');
   });
 });

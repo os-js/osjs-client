@@ -28,13 +28,22 @@
  * @license Simplified BSD License
  */
 
-/*
- * Creates URL request path
- */
-const encodeQueryData = data => Object.keys(data)
-  .filter(k => typeof data[k] !== 'object')
-  .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
-  .join('&');
+
+// /*
+//  * Creates URL request path
+//  */
+export const encodeQueryData = (data) => {
+  const replacer = (k, v)=>(v === undefined ? null : v);
+  const pairs = Object.entries(data).map(([key, val]) => {
+    const isNull = val === null;
+    if (typeof val === 'object' && !isNull) {
+      return `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(val, replacer))}`;
+    } else {
+      return `${encodeURIComponent(key)}=${encodeURIComponent(val)}`;
+    }
+  });
+  return pairs.join('&');
+};
 
 const bodyTypes = [
   window.ArrayBuffer,
@@ -65,7 +74,9 @@ const createFetchOptions = (url, options, type) => {
   }
 
   if (fetchOptions.body && fetchOptions.method.toLowerCase() === 'get') {
-    url += '?' + encodeQueryData(fetchOptions.body);
+    if(encodeQueryData(fetchOptions.body) !== '') {
+      url += '?' + encodeQueryData(fetchOptions.body);
+    }
     delete fetchOptions.body;
   }
 

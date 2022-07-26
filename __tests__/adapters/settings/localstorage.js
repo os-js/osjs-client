@@ -3,14 +3,14 @@ import adapter from '../../../src/adapters/settings/localstorage.js';
 let core;
 
 describe('LocalStorage Settings Adapter', () => {
-  beforeAll(() => {
-    localStorage.setItem('failure', '{failure}');
+  beforeAll(async () => {
+    localStorage.setItem('osjs__failure', '{failure}');
 
-    createInstance().then(c => (core = c));
+    core = await createInstance();
   });
 
   afterAll(() => {
-    localStorage.removeItem('failure');
+    localStorage.removeItem('osjs__failure');
     core.destroy();
   });
 

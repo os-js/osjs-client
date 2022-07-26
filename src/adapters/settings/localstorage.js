@@ -35,36 +35,49 @@ import logger from '../../logger';
  * @param {Core} core Core reference
  * @param {object} [options] Adapter options
  */
-const localStorageSettings = core => ({
-  clear: ns => {
-    if (ns) {
-      localStorage.removeItem(ns);
-    } else {
-      localStorage.clear();
+const localStorageSettings = (core) => {
+  const prefix = core.config('settings.prefix', '');
+
+  return {
+    clear(ns) {
+      if (ns) {
+        localStorage.removeItem(prefix + ns);
+      } else {
+        localStorage.clear();
+      }
+
+      return Promise.resolve(true);
+    },
+
+    save(settings) {
+      Object.keys(settings).forEach((k) => {
+        localStorage.setItem(prefix + k, JSON.stringify(settings[k]));
+      });
+
+      return Promise.resolve(true);
+    },
+
+    load() {
+      const entries = Object
+        .keys(localStorage)
+        .filter(k => prefix ? k.startsWith(prefix) : true)
+        .map((k) => {
+          const v = localStorage.getItem(k);
+          const kk = prefix ? k.substr(prefix.length) : k;
+
+          try {
+            return [kk, JSON.parse(v)];
+          } catch (e) {
+            logger.warn(`localStorageAdapter parse failed for '${k}'`, e);
+          }
+
+          return [kk, v];
+        });
+
+      return Promise.resolve(Object.fromEntries(entries));
     }
-
-    return Promise.resolve(true);
-  },
-
-  save: settings => {
-    Object.keys(settings).forEach((k) => {
-      localStorage.setItem(k, JSON.stringify(settings[k]));
-    });
-
-    return Promise.resolve(true);
-  },
-
-  load: () => Promise.resolve(Object.keys(localStorage).reduce((o, v) => {
-    let value = localStorage.getItem(v);
-    try {
-      value = JSON.parse(value);
-    } catch (e) {
-      logger.warn('localStorageAdapter parse error', e);
-    }
-
-    return Object.assign(o, {[v]: value});
-  }, {}))
-});
+  };
+};
 
 
 export default localStorageSettings;

@@ -29,19 +29,18 @@
  */
 
 
-// /*
-//  * Creates URL request path
-//  */
+/*
+ * Creates URL request path
+ */
 export const encodeQueryData = (data) => {
-  const replacer = (k, v)=>(v === undefined ? null : v);
-  const pairs = Object.entries(data).map(([key, val]) => {
-    const isNull = val === null;
-    if (typeof val === 'object' && !isNull) {
-      return `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(val, replacer))}`;
-    } else {
-      return `${encodeURIComponent(key)}=${encodeURIComponent(val)}`;
-    }
-  });
+
+  const pairs = Object.entries(data)
+    .filter(([, val]) => val !== null && val !== undefined)
+    .map(([key, val]) => {
+      const value = typeof val === 'object' ? JSON.stringify(val) : val;
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    });
+
   return pairs.join('&');
 };
 

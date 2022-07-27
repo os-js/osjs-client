@@ -33,7 +33,6 @@
  * Creates URL request path
  */
 export const encodeQueryData = (data) => {
-
   const pairs = Object.entries(data)
     .filter(([, val]) => val !== null && val !== undefined)
     .map(([key, val]) => {

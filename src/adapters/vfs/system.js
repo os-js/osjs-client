@@ -59,7 +59,7 @@ const methods = (core, request) => {
   return {
     readdir: ({path}, options) => request('readdir', {
       path,
-      options: {}
+      options,
     }, 'json').then(({body}) => body),
 
     readfile: ({path}, type, options) =>

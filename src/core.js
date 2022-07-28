@@ -681,4 +681,18 @@ export default class Core extends CoreBase {
     return this.make('osjs/middleware').add(group, callback);
   }
 
+  /**
+   * Kills the specified application
+   * @param {string|number} match Application name or PID
+   */
+  kill(match) {
+    const apps = Application.getApplications();
+    const matcher = typeof match === 'number'
+      ? app => app.pid === match
+      : app => app.metadata.name === match;
+
+    const found = apps.filter(matcher);
+    found.forEach(app => app.destroy());
+  }
+
 }

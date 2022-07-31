@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^2.1.0"
+    "@osjs/dev-meta": "^2.2.0"
   },
   "eslintConfig": {
     "env": {

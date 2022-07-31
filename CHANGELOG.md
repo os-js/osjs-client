@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.8.1 - 2022-07-31
+
+If you're upgrading from 3.7 or earlier, any settings stored in localStorage
+will be reset if you don't update your configuration.
+
+See https://github.com/os-js/osjs-client/pull/160#issuecomment-1193185847
+
 ## 3.8.0 - 2022-07-31
 
 * VFS documentation typo

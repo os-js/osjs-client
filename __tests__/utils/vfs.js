@@ -196,7 +196,8 @@ describe('utils.vfs#transformArrayBuffer', () => {
 
   test('Should create string', () =>
     create('string')
-      .then(result => expect(result).toStrictEqual(testText)));
+      .then(result => result.replace(/\0/g, ''))
+      .then(result => expect(result).toBe(testText)));
 
   test('Should create data url', async () => {
     const result = await create('uri');
@@ -211,7 +212,8 @@ describe('utils.vfs#transformArrayBuffer', () => {
   test('Should create blob', () =>
     create('blob')
       .then(blob2str)
-      .then(result => expect(result).toStrictEqual(testText)));
+      .then(result => result.replace(/\0/g, ''))
+      .then(result => expect(result).toBe(testText)));
 
   test('Should create arraybuffer (default)', () =>
     create('arraybuffer')

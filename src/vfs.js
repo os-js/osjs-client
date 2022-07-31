@@ -135,7 +135,7 @@ export const rename = (adapter, mount) => (from, to, options = {}) =>
   adapter.rename(pathToObject(from), pathToObject(to), options, mount);
 
 /**
- * Alias of 'readme'
+ * Alias of 'rename'
  * @param {string|VFSFile} from The source (from)
  * @param {string|VFSFile} to The destination (to)
  * @param {VFSMethodOptions} [options] Options

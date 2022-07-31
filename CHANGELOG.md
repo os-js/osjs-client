@@ -1,5 +1,22 @@
 # Changelog for osjs-client
 
+## 3.8.0 - 2022-07-31
+
+* VFS documentation typo
+* Fixed disabled VFS tests (#185)
+* Remove now defunct esdoc deploy
+* Update source code license comments
+* Update LICENSE
+* Core API kill application method (#183)
+* Support serialization of url query parameters (#182)
+* Add prefix to localStorage settings adapter (#159)
+* Fix typo in VFS utilities (#181)
+* Add support for labels in iconview (#179)
+* Remove matrix strategy from test CI
+* Add editorconfig
+* Lock jest version number in CI
+* Added more Translations and fixed a few spelling mistakes (#175)
+
 ## 3.7.3 - 2021-04-02
 
 * Fix audio volume typo (#173)

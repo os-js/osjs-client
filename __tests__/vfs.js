@@ -43,6 +43,12 @@ const call = (method, ...args) => VFS[method](testAdapter, testMount)(...args);
 const callOther = (method, ...args) => VFS[method](testAdapter, otherMount)(...args);
 
 describe('VFS', () => {
+  test('#capabilities', () => {
+    return expect(call('capabilities', 'null:/'))
+      .resolves
+      .toMatchObject({});
+  });
+
   test('#readdir', () => {
     return expect(call('readdir', 'null:/'))
       .resolves
@@ -79,7 +85,7 @@ describe('VFS', () => {
       .toBeInstanceOf(ArrayBuffer);
   });
 
-  test('writefile - blob', () => {
+  test('#writefile - blob', () => {
     return expect(call('writefile', 'null:/filename', new Blob()))
       .resolves
       .toBe(-1);

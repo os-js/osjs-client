@@ -28,7 +28,7 @@
  * @license Simplified BSD License
  */
 
-const getters = ['exists', 'stat', 'readdir', 'readfile'];
+const getters = ['capabilities', 'exists', 'stat', 'readdir', 'readfile'];
 
 const requester = core => (fn, body, type, options = {}) =>
   core.request(`/vfs/${fn}`, {
@@ -57,6 +57,11 @@ const methods = (core, request) => {
       .then(({body}) => body);
 
   return {
+    capabilities: ({path}, options) => request('capabilities', {
+      path,
+      options
+    }, 'json').then(({body}) => body),
+
     readdir: ({path}, options) => request('readdir', {
       path,
       options,

@@ -75,6 +75,17 @@ const handleDirectoryList = (path, options) => result =>
     }));
 
 /**
+ * Get vfs capabilities
+ *
+ * @param {string|VFSFile} path The path of a file
+ * @param {VFSMethodOptions} [options] Options
+ * @return {Promise<object[]>} An object of capabilities
+ */
+export const capabilities = (adapter, mount) => (path, options = {}) =>
+  adapter.capabilities(pathToObject(path), options, mount);
+
+
+/**
  * Read a directory
  *
  * @param {string|VFSFile} path The path to read

@@ -57,10 +57,7 @@ const methods = (core, request) => {
       .then(({body}) => body);
 
   return {
-    capabilities: ({path}, options) => request('capabilities', {
-      path,
-      options
-    }, 'json').then(({body}) => body),
+    capabilities: passthrough('capabilities'),
 
     readdir: ({path}, options) => request('readdir', {
       path,

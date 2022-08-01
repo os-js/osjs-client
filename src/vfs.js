@@ -73,6 +73,7 @@ const handleDirectoryList = (path, options) => result =>
       showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));
+
 /**
  * Get vfs capabilities
  *

@@ -72,7 +72,7 @@ const pathToObject = path => ({
 // Handles directory listing result(s)
 const handleDirectoryList = (path, options) => result =>
   Promise.resolve(result.map(stat => createFileIter(stat)))
-    .then(result => transformReaddir(pathToObject(path), result, {
+    .then(result => transformReaddir(pathToObject(path), result, capabilityCache, {
       showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));

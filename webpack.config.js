@@ -1,18 +1,23 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const minimize = mode === 'production';
 const plugins = [];
 
 if (mode === 'production') {
-  plugins.push(new OptimizeCSSAssetsPlugin({
-    cssProcessorOptions: {
-      discardComments: true,
-      map: {
-        inline: false
-      }
+  plugins.push(new CssMinimizerPlugin({
+    minimizerOptions: {
+      preset: [
+        'default',
+        {
+          discardComments: {removeAll: true},
+          map: {
+            inline: false,
+          },
+        },
+      ],
     },
   }));
 }

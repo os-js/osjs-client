@@ -79,6 +79,13 @@ const sortDefault = (k, d) => (a, b) =>
       : (d === 'asc' ? 0 : 1));
 
 /*
+ * Sort by ascii codes
+ */
+const sortAscii = (k, d) => (a, b) => d === 'asc'
+  ? (a[k] < b[k]) ? -1 : 1
+  : (a[k] < b[k]) ? 1 : -1;
+
+/*
  * Sorts an array of files
  */
 const sortFn = t => {
@@ -86,6 +93,8 @@ const sortFn = t => {
     return sortString;
   } else if (t === 'date') {
     return sortDate;
+  } else if (t === 'ascii') {
+    return sortAscii;
   }
 
   return sortDefault;
@@ -184,10 +193,7 @@ export const humanFileSize = (bytes, si = false) => {
  */
 export const transformReaddir = ({path}, files, capabilityCache, options = {}) => {
   const mountPoint = path => path.split(':/')[0];
-  let mountPointSort = false;
-  if(capabilityCache[mountPoint(path)] !== undefined) {
-    mountPointSort = capabilityCache[mountPoint(path)].sort;
-  }
+  const mountPointSort = capabilityCache[mountPoint(path)] ? capabilityCache[mountPoint(path)].sort : false;
 
   options = {
     showHiddenFiles: false,

@@ -67,8 +67,8 @@ describe('utils.vfs#transformReaddir', () => {
     size: 666
   }];
 
-  const check = (options = {}) => vfs.transformReaddir({path: root}, input, options);
-  const checkMap = (options = {}, key = 'filename') => check(options).map(iter => iter[key]);
+  const check = (options = {}, capability = {}) => vfs.transformReaddir({path: root}, input, capability, options);
+  const checkMap = (options = {}, key = 'filename', capability = {}) => check(options, capability).map(iter => iter[key]);
 
   test('Should add parent directory', () => {
     expect(check({

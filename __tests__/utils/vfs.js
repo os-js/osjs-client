@@ -133,7 +133,6 @@ describe('utils.vfs#transformReaddir', () => {
 
     expect(every).toEqual(true);
   });
-
 });
 
 describe('utils.vfs#getFileIcon', () => {

@@ -67,8 +67,8 @@ describe('utils.vfs#transformReaddir', () => {
     size: 666
   }];
 
-  const check = (options = {}, capability = {}) => vfs.transformReaddir({path: root}, input, capability, options);
-  const checkMap = (options = {}, key = 'filename', capability = {}) => check(options, capability).map(iter => iter[key]);
+  const check = (options = {}) => vfs.transformReaddir({path: root}, input, options);
+  const checkMap = (options = {}, key = 'filename') => check(options).map(iter => iter[key]);
 
   test('Should add parent directory', () => {
     expect(check({
@@ -89,6 +89,16 @@ describe('utils.vfs#transformReaddir', () => {
     expect(checkMap({
       showHiddenFiles: false
     })).toEqual(['..', 'directory', 'file', 'xdirectory', 'xfile']);
+  });
+
+  test('Should not sort due to server sorting', () => {
+    const result = checkMap({
+      showHiddenFiles: false,
+      serverSorting: true
+    });
+
+    return expect(result)
+      .toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
   });
 
   test('Should sort by descending order', () => {
@@ -123,6 +133,7 @@ describe('utils.vfs#transformReaddir', () => {
 
     expect(every).toEqual(true);
   });
+
 });
 
 describe('utils.vfs#getFileIcon', () => {

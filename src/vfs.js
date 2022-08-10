@@ -69,12 +69,16 @@ const pathToObject = path => ({
   ...typeof path === 'string' ? {path} : path
 });
 
+// Extract the mountpoint of a path
+const mountPoint = ({path}) => path.split(':/')[0];
+
 // Handles directory listing result(s)
 const handleDirectoryList = (path, options) => result =>
   Promise.resolve(result.map(stat => createFileIter(stat)))
-    .then(result => transformReaddir(pathToObject(path), result, capabilityCache, {
+    .then(result => transformReaddir(pathToObject(path), result, {
       showHiddenFiles: options.showHiddenFiles !== false,
-      filter: options.filter
+      filter: options.filter,
+      serverSorting: capabilityCache[mountPoint(pathToObject(path))] ? capabilityCache[mountPoint(pathToObject(path))].sort : false
     }));
 
 /**

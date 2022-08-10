@@ -191,18 +191,16 @@ export const humanFileSize = (bytes, si = false) => {
  * @param {string} [options.sortDir='asc'] Sort in this direction
  * @return {Object[]}
  */
-export const transformReaddir = ({path}, files, capabilityCache, options = {}) => {
-  const mountPoint = path => path.split(':/')[0];
-  const mountPointSort = capabilityCache[mountPoint(path)] ? capabilityCache[mountPoint(path)].sort : false;
-
+export const transformReaddir = ({path}, files, options = {}) => {
   options = {
     showHiddenFiles: false,
     sortBy: 'filename',
     sortDir: 'asc',
+    serverSorting: false,
     ...options
   };
 
-  let {sortDir, sortBy, filter} = options;
+  let {sortDir, sortBy, filter, serverSorting} = options;
   if (typeof filter !== 'function') {
     filter = () => true;
   }
@@ -227,7 +225,7 @@ export const transformReaddir = ({path}, files, capabilityCache, options = {}) =
     .filter(filter)
     .map(modify);
 
-  if(!mountPointSort) {
+  if(!serverSorting) {
     if (['asc', 'desc'].indexOf(sortDir) === -1) {
       sortDir = 'asc';
     }

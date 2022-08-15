@@ -2211,6 +2211,7 @@ export type FilesystemAdapterMethods = {
 	download: Function;
 	search: Function;
 	touch: Function;
+	archive: Function;
 };
 export type FilesystemAdapterWrapper = () => FilesystemAdapterMethods;
 /**
@@ -2272,6 +2273,7 @@ export type VFSServiceContract = {
 	download: Function;
 	search: Function;
 	touch: Function;
+	archive: Function;
 };
 /**
  * VFS Service Options

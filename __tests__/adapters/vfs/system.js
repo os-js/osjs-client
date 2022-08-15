@@ -97,4 +97,44 @@ describe('System VFS Adapter', () => {
         expect(open).toBeCalled();
       });
   });
+
+  test('#archive - compress file', () => {
+    return expect(
+      adapter.archive(['null:/filename'], {
+        action: 'compress',
+      })
+    ).resolves.toEqual({});
+  });
+
+  test('#archive - decompress file', () => {
+    return expect(
+      adapter.archive(['null:/filename'], {
+        action: 'extract',
+      })
+    ).resolves.toEqual({});
+  });
+
+  test('#archive - compress directory', () => {
+    return expect(
+      adapter.archive(['null:/directory'], {
+        action: 'compress',
+      })
+    ).resolves.toEqual({});
+  });
+
+  test('#archive - decompress directory', () => {
+    return expect(
+      adapter.archive(['null:/directory'], {
+        action: 'extract',
+      })
+    ).resolves.toEqual({});
+  });
+
+  test('#archive - decompress multiple selections', () => {
+    return expect(
+      adapter.archive(['null:/filename', 'null:/directory'], {
+        action: 'extract',
+      })
+    ).resolves.toEqual({});
+  });
 });

@@ -78,6 +78,7 @@ import merge from 'deepmerge';
  * @property {Function} download
  * @property {Function} search
  * @property {Function} touch
+ * @property {Function} archive
  */
 
 /**
@@ -330,6 +331,14 @@ export default class Filesystem extends EventEmitter {
               : result;
           });
       }
+    } else if (method === 'archive') {
+      const [selection] = args;
+      const mount = this.getMountpointFromPath(selection[0].path);
+      if (!mount) {
+        return Promise.reject(new Error('No selection was specified'));
+      }
+
+      return VFS[method](mount._adapter, mount)(...args);
     }
 
     const [file] = args;

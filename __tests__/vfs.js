@@ -163,6 +163,28 @@ describe('VFS', () => {
       .toBe(undefined);
   });
 
+  test('#archive - compress file', () => {
+    return expect(call('archive', ['null:/filename'])).resolves.toBe(false);
+  });
+
+  test('#archive - decompress file', () => {
+    return expect(call('archive', ['null:/filename'])).resolves.toBe(false);
+  });
+
+  test('#archive - compress directory', () => {
+    return expect(call('archive', ['null:/directory'])).resolves.toBe(false);
+  });
+
+  test('#archive - decompress directory', () => {
+    return expect(call('archive', ['null:/directory'])).resolves.toBe(false);
+  });
+
+  test('#archive - compress multiple selections', () => {
+    return expect(
+      call('archive', ['null:/selection1', 'null:/selection2'])
+    ).resolves.toBe(false);
+  });
+
   test('#stat', () => {
     return expect(call('stat', 'null:/filename'))
       .resolves

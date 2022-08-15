@@ -36,6 +36,8 @@ import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
 import {urlResolver} from './utils/url';
 import logger from './logger';
+import merge from 'deepmerge';
+import {isPlainObject} from 'is-plain-object';
 
 /**
  * @callback SplashCallback
@@ -494,7 +496,7 @@ export default class Core extends CoreBase {
       options = merge(
         options,
         this.requestOptions,
-        { isMergeableObject: isPlainObject }
+        {isMergeableObject: isPlainObject}
       );
     }
 

@@ -88,7 +88,7 @@ export default class Search {
 
     this.core.make('osjs/tray').create({
       title: _('LBL_SEARCH_TOOLTOP', 'F3'),
-      icon: icon('system-search.png')
+      icon: icon('system-search')
     }, () => this.show());
 
     this.ui = createUI(this.core, this.$element);

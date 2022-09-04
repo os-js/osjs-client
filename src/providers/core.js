@@ -451,7 +451,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     return {
       resource: themeResource,
-      icon: name => icon(name.replace(/(\.png)?$/, '.png'))
+      icon
     };
   }
 

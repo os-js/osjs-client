@@ -488,4 +488,13 @@ export default class Packages {
   running() {
     return this._running;
   }
+
+  /**
+   * Gets the package metadata for a given package name
+   * @param {string} name
+   * @returns {PackageMetadata}
+   */
+  getMetadataFromName(name) {
+    return this.metadata.find(pkg => pkg.name === name);
+  }
 }

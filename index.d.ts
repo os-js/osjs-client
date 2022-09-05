@@ -1552,7 +1552,7 @@ declare class Tray {
 
 	/**
 	 */
-  has(key): boolean;
+	has(key): boolean;
 }
 /**
  * Tray Icon Data
@@ -1991,6 +1991,7 @@ export type CoreProviderPackagesContract = {
 	getPackages?: Function;
 	getCompatiblePackages?: Function;
 	running?: Function;
+	getMetadataFromName?: Function;
 };
 /**
  * Core Provider Clipboard Contract
@@ -2013,9 +2014,9 @@ export type CoreProviderMiddlewareContract = {
  */
 export type CoreProviderTrayContract = {
 	create?: Function;
-  remove?: Function;
-  list?: TrayEntry[],
-  has?: boolean;
+	remove?: Function;
+	list?: TrayEntry[],
+	has?: boolean;
 
 };
 /**
@@ -2141,7 +2142,7 @@ declare class Filesystem extends EventEmitter {
 	/**
 	 * Gets configured mountpoints
 	 */
-  private _getConfiguredMountpoints;
+	private _getConfiguredMountpoints;
 }
 /**
  * VFS Mountpoint attributes

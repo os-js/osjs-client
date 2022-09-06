@@ -149,12 +149,14 @@ export const resourceResolver = (core) => {
   const soundsEnabled = () => !!getSoundThemeName();
 
   const icon = (name) => {
-    const theme = getThemeName('icons');
-    const extension = core.make('osjs/packages')
-      .getMetadataFromName(theme)
-      .icons[name] || 'png';
+    name = name.replace(/\.(png|svg|gif)$/, '');
+    const {getMetadataFromName} = core.make('osjs/packages');
+		const theme = getThemeName('icons');
+		const metadata = getMetadataFromName(theme) || {};
+		const iconDefinitions = metadata.icons || {};
+		const extension = iconDefinitions[name] || 'png';
 
-    return core.url(`icons/${theme}/icons/${name}.${extension}`);
+		return core.url(`icons/${theme}/icons/${name}.${extension}`);
   };
 
   return {themeResource, soundResource, soundsEnabled, icon};

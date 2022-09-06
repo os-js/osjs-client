@@ -496,6 +496,6 @@ export default class Packages {
    */
   getMetadataFromName(name) {
     const found = this.metadata.find(pkg => pkg.name === name);
-    return found ? { ...found } : null;
+    return found ? {...found} : null;
   }
 }

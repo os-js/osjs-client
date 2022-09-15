@@ -62,9 +62,9 @@ export const script = (root, src, options = {}) => new Promise((resolve, reject)
   const opts = {
     async: false,
     defer: false,
+    ...options,
     onerror: (err) => reject(err),
     onload: () => resolve(el),
-    ...options,
   };
 
   const el = document.createElement('script');
@@ -73,9 +73,7 @@ export const script = (root, src, options = {}) => new Promise((resolve, reject)
       resolve(el);
     }
   };
-  Object.assign(el, opts);
-  el.src = src;
-
+  Object.assign(el, opts, {src});
   root.appendChild(el);
 
   return el;

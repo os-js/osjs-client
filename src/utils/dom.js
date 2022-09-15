@@ -73,10 +73,7 @@ export const script = (root, src, options = {}) => new Promise((resolve, reject)
       resolve(el);
     }
   };
-  el.onerror = opts.onerror;
-  el.onload = opts.onload;
-  el.async = opts.async;
-  el.defer = opts.defer;
+  Object.assign(el, opts);
   el.src = src;
 
   root.appendChild(el);

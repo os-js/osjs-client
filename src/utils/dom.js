@@ -55,19 +55,26 @@ export const style = (root, src) => new Promise((resolve, reject) => {
  * Creates a new Script DOM element
  * @param {Element} root Root node
  * @param {string} src Source
+ * @param {Object} [options={}] Options
  * @return {Promise<StyleElement>}
  */
-export const script = (root, src) => new Promise((resolve, reject) => {
+export const script = (root, src, options = {}) => new Promise((resolve, reject) => {
+  const opts = {
+    async: false,
+    defer: false,
+    ...options,
+    src,
+    onerror: (err) => reject(err),
+    onload: () => resolve(el),
+  };
+
   const el = document.createElement('script');
   el.onreadystatechange = function() {
     if ((this.readyState === 'complete' || this.readyState === 'loaded')) {
       resolve(el);
     }
   };
-  el.onerror = (err) => reject(err);
-  el.onload = () => resolve(el);
-  el.src = src;
-
+  Object.assign(el, opts);
   root.appendChild(el);
 
   return el;

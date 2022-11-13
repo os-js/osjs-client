@@ -35,7 +35,8 @@ const imageDropMimes = [
   'image/png',
   'image/jpe?g',
   'image/webp',
-  'image/gif'
+  'image/gif',
+  'image/svg(\\+xml)?'
 ];
 
 /**
@@ -147,9 +148,15 @@ export const resourceResolver = (core) => {
 
   const soundsEnabled = () => !!getSoundThemeName();
 
-  const icon = path => {
+  const icon = (name) => {
+    name = name.replace(/\.(png|svg|gif)$/, '');
+    const {getMetadataFromName} = core.make('osjs/packages');
     const theme = getThemeName('icons');
-    return core.url(`icons/${theme}/icons/${path}`); // FIXME: Use metadata ?
+    const metadata = getMetadataFromName(theme) || {};
+    const iconDefinitions = metadata.icons || {};
+    const extension = iconDefinitions[name] || 'png';
+
+    return core.url(`icons/${theme}/icons/${name}.${extension}`);
   };
 
   return {themeResource, soundResource, soundsEnabled, icon};

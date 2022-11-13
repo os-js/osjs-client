@@ -1991,6 +1991,7 @@ export type CoreProviderPackagesContract = {
   getPackages?: Function;
   getCompatiblePackages?: Function;
   running?: Function;
+  getMetadataFromName?: Function;
 };
 /**
  * Core Provider Clipboard Contract

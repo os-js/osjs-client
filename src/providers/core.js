@@ -451,7 +451,7 @@ export default class CoreServiceProvider extends ServiceProvider {
 
     return {
       resource: themeResource,
-      icon: name => icon(name.replace(/(\.png)?$/, '.png'))
+      icon
     };
   }
 
@@ -502,7 +502,8 @@ export default class CoreServiceProvider extends ServiceProvider {
       addPackages: list => this.pm.addPackages(list),
       getPackages: filter => this.pm.getPackages(filter),
       getCompatiblePackages: mimeType => this.pm.getCompatiblePackages(mimeType),
-      running: () => this.pm.running()
+      running: () => this.pm.running(),
+      getMetadataFromName: name => this.pm.getMetadataFromName(name)
     };
   }
 

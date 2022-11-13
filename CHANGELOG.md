@@ -1,5 +1,21 @@
 # Changelog for osjs-client
 
+## 3.9.0 - 2022-11-13
+
+* feat: SVG icon support (#191)
+* ci: add husky and commit checks
+* ci: add commitlint workflow
+* ci: update actions
+* Format type definitions (#194)
+* Allow setting script DOM attributes (#193)
+* Add VFS capability caching
+* Add VFS capabilities method (#186)
+* Remove defunct jest CI installation
+* Add package lock
+* Update 'npm install' to 'npm ci' in CI
+* Remove global npm install from test CI
+* Updated dependencies
+
 ## 3.8.1 - 2022-07-31
 
 If you're upgrading from 3.7 or earlier, any settings stored in localStorage

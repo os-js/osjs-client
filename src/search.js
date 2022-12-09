@@ -39,7 +39,13 @@ export default class Search {
    * Create Search instance
    * @param {Core} core Core reference
    */
-  constructor(core) {
+  constructor(core, options) {
+  
+  
+    const providedAdapters = options.adapters || [];
+    const useAdapters = [VFSSearchAdapter, ...providedAdapters];
+    this.adapters = useAdapters.map(A => new A(core));
+	
     /**
      * Core instance reference
      * @type {Core}
@@ -99,6 +105,8 @@ export default class Search {
         .then(results => this.ui.emit('success', results))
         .catch(error => this.ui.emit('error', error));
     });
+	
+	await Promise.all(this.adapters.map(a => a.init()));
   }
 
   /**
@@ -119,8 +127,13 @@ export default class Search {
           });
       });
 
-    return Promise.all(promises)
-      .then(lists => [].concat(...lists));
+    //return Promise.all(promises)
+      //.then(lists => [].concat(...lists));
+	  
+	const results = await Promise.all(this.adapters.map(a => a.search(pattern)));
+    // Maybe sorted ?! Maybe provide grouping in UI ?!
+    // Start simple with a flat result ?!
+    return results.flat(1);
   }
 
   /**

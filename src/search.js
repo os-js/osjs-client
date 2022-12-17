@@ -64,6 +64,7 @@ export default class Search {
          * @type {Element}
          * @readonly
          */
+		 
         this.$element = document.createElement('div');
         const providedAdapters = options.adapters || [];
         const useAdapters = [VFSSearchAdapter, ...providedAdapters];

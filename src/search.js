@@ -113,7 +113,6 @@ export default class Search {
      */
     async search(pattern) {
         const results = await Promise.all(this.adapters.map(a => a.search(pattern)));
-        console.log(results.flat(1));
         return results.flat(1);
     }
 

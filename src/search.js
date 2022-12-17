@@ -39,7 +39,7 @@ export default class Search {
      * Create Search instance
      * @param {Core} core Core reference
      */
-    constructor(core,options) {
+    constructor(core, options) {
         /**
          * Core instance reference
          * @type {Core}
@@ -64,7 +64,7 @@ export default class Search {
          * @type {Element}
          * @readonly
          */
-		 
+
         this.$element = document.createElement('div');
         const providedAdapters = options.adapters || [];
         const useAdapters = [VFSSearchAdapter, ...providedAdapters];

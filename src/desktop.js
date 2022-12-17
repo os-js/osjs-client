@@ -130,8 +130,9 @@ export default class Desktop extends EventEmitter {
      * @type {Search|null}
      * @readonly
      */
-    //this.search = core.config('search.enabled') ? new Search(core) : null;
-	this.search = core.config('search.enabled') ? new Search(core, options.search || {}) : null;
+
+
+      this.search = core.config('search.enabled') ? new Search(core, options.search || {}) : null;
     /**
      * Icon View instance
      * @type {DesktopIconView}

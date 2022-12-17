@@ -28,148 +28,129 @@
  * @license Simplified BSD License
  */
 import Window from './window';
+import VFSSearchAdapter from './adapters/search/vfs';
 import createUI from './adapters/ui/search';
-import logger from './logger';
 
 /**
  * Search Service
  */
 export default class Search {
-  /**
-   * Create Search instance
-   * @param {Core} core Core reference
-   */
-  constructor(core, options) {
-  
-  
-    const providedAdapters = options.adapters || [];
-    const useAdapters = [VFSSearchAdapter, ...providedAdapters];
-    this.adapters = useAdapters.map(A => new A(core));
-	
     /**
-     * Core instance reference
-     * @type {Core}
-     * @readonly
+     * Create Search instance
+     * @param {Core} core Core reference
      */
-    this.core = core;
+    constructor(core,options) {
+        /**
+         * Core instance reference
+         * @type {Core}
+         * @readonly
+         */
+        this.core = core;
+
+        /**
+         * Wired actions
+         * @type {Object}
+         */
+        this.ui = null;
+
+        /**
+         * Last focused window
+         * @type {Window}
+         */
+        this.focusLastWindow = null;
+
+        /**
+         * Search root DOM element
+         * @type {Element}
+         * @readonly
+         */
+        this.$element = document.createElement('div');
+        const providedAdapters = options.adapters || [];
+        const useAdapters = [VFSSearchAdapter, ...providedAdapters];
+        this.adapters = useAdapters.map(A => new A(core));
+    }
 
     /**
-     * Wired actions
-     * @type {Object}
+     * Destroy Search instance
      */
-    this.ui = null;
+    async destroy() {
+        if (this.ui) {
+            this.ui.destroy();
+        }
+        await this.adapters.map(a => a.destroy());
+    }
 
     /**
-     * Last focused window
-     * @type {Window}
+     * Initializes Search Service
      */
-    this.focusLastWindow = null;
+    async init() {
+        const {icon} = this.core.make('osjs/theme');
+        const _ = this.core.make('osjs/locale').translate;
+
+        this.$element.className = 'osjs-search';
+        this.core.$root.appendChild(this.$element);
+
+        this.core.make('osjs/tray').create({
+            title: _('LBL_SEARCH_TOOLTOP', 'F3'),
+            icon: icon('system-search')
+        }, () => this.show());
+
+        this.ui = createUI(this.core, this.$element);
+        this.ui.on('hide', () => this.hide());
+        this.ui.on('open', iter => this.core.open(iter));
+        this.ui.on('search', query => {
+            this.search(query)
+                .then(results => this.ui.emit('success', results))
+                .catch(error => this.ui.emit('error', error));
+        });
+        await Promise.all(this.adapters.map(a => a.init()));
+    }
 
     /**
-     * Search root DOM element
-     * @type {Element}
-     * @readonly
+     * Performs a search across all mounts
+     * @param {string} pattern Search query
+     * @return {Promise<FileMetadata[]>}
      */
-    this.$element = document.createElement('div');
-  }
-
-  /**
-   * Destroy Search instance
-   */
-  destroy() {
-    if (this.ui) {
-      this.ui.destroy();
+    async search(pattern) {
+        const results = await Promise.all(this.adapters.map(a => a.search(pattern)));
+        console.log(results.flat(1));
+        return results.flat(1);
     }
-  }
 
-  /**
-   * Initializes Search Service
-   */
-  init() {
-    const {icon} = this.core.make('osjs/theme');
-    const _ = this.core.make('osjs/locale').translate;
-
-    this.$element.className = 'osjs-search';
-    this.core.$root.appendChild(this.$element);
-
-    this.core.make('osjs/tray').create({
-      title: _('LBL_SEARCH_TOOLTOP', 'F3'),
-      icon: icon('system-search')
-    }, () => this.show());
-
-    this.ui = createUI(this.core, this.$element);
-    this.ui.on('hide', () => this.hide());
-    this.ui.on('open', iter => this.core.open(iter));
-    this.ui.on('search', query => {
-      this.search(query)
-        .then(results => this.ui.emit('success', results))
-        .catch(error => this.ui.emit('error', error));
-    });
-	
-	await Promise.all(this.adapters.map(a => a.init()));
-  }
-
-  /**
-   * Performs a search across all mounts
-   * @param {string} pattern Search query
-   * @return {Promise<FileMetadata[]>}
-   */
-  search(pattern) {
-    const vfs = this.core.make('osjs/vfs');
-    const promises = this.core.make('osjs/fs')
-      .mountpoints()
-      .map(mount => `${mount.name}:/`)
-      .map(path => {
-        return vfs.search({path}, pattern)
-          .catch(error => {
-            logger.warn('Error while searching', error);
-            return [];
-          });
-      });
-
-    //return Promise.all(promises)
-      //.then(lists => [].concat(...lists));
-	  
-	const results = await Promise.all(this.adapters.map(a => a.search(pattern)));
-    // Maybe sorted ?! Maybe provide grouping in UI ?!
-    // Start simple with a flat result ?!
-    return results.flat(1);
-  }
-
-  /**
-   * Focuses UI
-   */
-  focus() {
-    if (this.ui) {
-      this.ui.emit('focus');
+    /**
+     * Focuses UI
+     */
+    focus() {
+        if (this.ui) {
+            this.ui.emit('focus');
+        }
     }
-  }
 
-  /**
-   * Hides UI
-   */
-  hide() {
-    if (this.ui) {
-      this.ui.emit('toggle', false);
+    /**
+     * Hides UI
+     */
+    hide() {
+        if (this.ui) {
+            this.ui.emit('toggle', false);
 
-      const win = Window.lastWindow();
-      if (this.focusLastWindow && win) {
-        win.focus();
-      }
+            const win = Window.lastWindow();
+            if (this.focusLastWindow && win) {
+                win.focus();
+            }
+        }
     }
-  }
 
-  /**
-   * Shows UI
-   */
-  show() {
-    if (this.ui) {
-      const win = Window.lastWindow();
+    /**
+     * Shows UI
+     */
+    show() {
+        if (this.ui) {
+            const win = Window.lastWindow();
 
-      this.focusLastWindow = win && win.blur();
+            this.focusLastWindow = win && win.blur();
 
-      this.ui.emit('toggle', true);
-      setTimeout(() => this.focus(), 1);
+            this.ui.emit('toggle', true);
+            setTimeout(() => this.focus(), 1);
+        }
     }
-  }
 }

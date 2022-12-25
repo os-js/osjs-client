@@ -20,7 +20,7 @@
     "test": "npm run eslint && npm run stylelint && npm run jest",
     "jest": "jest",
     "coverage": "jest --coverage",
-    "eslint": "eslint index.js 'src/**/*.js'",
+    "eslint": "eslint index.js src",
     "build": "webpack",
     "watch": "webpack --watch",
     "stylelint": "stylelint index.scss src/**/*.scss",

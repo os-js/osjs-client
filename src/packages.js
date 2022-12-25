@@ -448,7 +448,7 @@ export default class Packages {
    */
   getCompatiblePackages(mimeType) {
     return this.getPackages(meta => {
-      if (meta.mimes) {
+      if (meta.mimes && !meta.hidden) {
         return !!meta.mimes.find(mime => {
           try {
             const re = new RegExp(mime);

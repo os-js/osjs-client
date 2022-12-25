@@ -22,6 +22,13 @@ const packageList = [{
   type: 'application',
   singleton: true
 }, {
+  name: 'Package5',
+  type: 'application',
+  mimes: [
+    'video/mpeg'
+  ],
+  hidden: true
+}, {
   name: 'PackageMissingRuntime',
   type: 'application',
 }, {

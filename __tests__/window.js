@@ -226,12 +226,12 @@ describe('Window', () => {
 
   test('#resizeFit', () => {
     // TODO
-    //win.resizeFit()
+    // win.resizeFit()
   });
 
   test('#clampToViewport', () => {
     // TODO
-    //win.clampToViewport()
+    // win.clampToViewport()
   });
 
   test('#gravitate', () => {

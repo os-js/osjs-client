@@ -75,7 +75,7 @@ describe('Locale Utils', () => {
       'en_EN',
       'en_EN',
       'hello'
-    )).toBe('Hello World')
+    )).toBe('Hello World');
 
     expect(translate(
       {
@@ -88,9 +88,9 @@ describe('Locale Utils', () => {
       'foo_BAR',
       'foo_BAR',
       'hello'
-    )).toBe('Hello World')
+    )).toBe('Hello World');
   });
-  
+
   test('browserLocale', () => {
     expect(browserLocale()).toBe(undefined);
     expect(browserLocale({language: 'en'})).toBe('en_EN');

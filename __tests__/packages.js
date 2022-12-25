@@ -42,7 +42,7 @@ const packageMatch = [
   {name: 'ValidApplication', type: 'application'},
   ...packageList
     .filter(pkg => pkg.name.indexOf('Test') === -1)
-    .map(pkg => Object.assign({type: 'application'}, pkg))
+    .map(pkg => ({type: 'application', ...pkg}))
 ];
 
 describe('Packages', () =>  {

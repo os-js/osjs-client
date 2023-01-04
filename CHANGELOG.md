@@ -1,5 +1,12 @@
 # Changelog for osjs-client
 
+## 3.9.1 - 2022-12-28
+
+* chore(tests): eslint fix pass
+* ci: update eslint arguments
+* test: add basic units and mocking for search
+* fix: remove hidden packages from mime-compatible packages list
+
 ## 3.9.0 - 2022-11-13
 
 * feat: SVG icon support (#191)

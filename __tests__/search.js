@@ -35,11 +35,31 @@ class MockVFSServiceProvider extends ServiceProvider {
     ];
   }
 }
+class MySearchAdapter {
+    constructor(core) {
+        this.core = core;
 
+    }
+
+    destroy() {
+    }
+
+    async init() {
+    }
+
+    async search(pattern) {
+        const list = [
+            {
+             path: 'jest:/test.jpg',
+             filename: 'test.jpg'   
+            }
+        ];
+        return list;
+    }
+}
 describe('Search', () => {
   let core;
   let search;
-
   beforeAll(() => createInstance((c) => {
     c.register(MockVFSServiceProvider);
   }).then(c => core = c));
@@ -47,15 +67,20 @@ describe('Search', () => {
   afterAll(() => core.destroy());
 
   test('#constructor', () => {
-    search = new Search(core);
+    search = new Search(core, {
+       adapters: [MySearchAdapter],
+  });
   });
 
-  test('#search', () => {
+ test('#search', () => {
     return search.search('hello')
-      .then(result => {
-        expect(result).toMatchObject([{
+      .then(results => {
+        expect(results).toMatchObject([{
           path: 'jest:/hello.world',
           filename: 'hello.world'
+        }, {
+          path: 'jest:/test.jpg',
+          filename: 'test.jpg',
         }]);
       });
   });

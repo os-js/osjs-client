@@ -60,6 +60,9 @@ import {
  * @property {object} [stat]
  */
 
+// Cache the capability of each mount point
+let capabilityCache = {};
+
 // Makes sure our input paths are object(s)
 const pathToObject = path => ({
   id: null,
@@ -73,6 +76,26 @@ const handleDirectoryList = (path, options) => result =>
       showHiddenFiles: options.showHiddenFiles !== false,
       filter: options.filter
     }));
+
+/**
+ * Get vfs capabilities
+ *
+ * @param {string|VFSFile} path The path of a file
+ * @param {VFSMethodOptions} [options] Options
+ * @return {Promise<object[]>} An object of capabilities
+ */
+export const capabilities = (adapter, mount) => (path, options = {}) => {
+  const cached = capabilityCache[mount.name];
+  if (cached) {
+    return Promise.resolve(cached);
+  }
+  return adapter.capabilities(pathToObject(path), options, mount)
+    .then(res => {
+      capabilityCache[mount.name] = res;
+      return res;
+    });
+};
+
 
 /**
  * Read a directory

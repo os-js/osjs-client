@@ -1,6 +1,6 @@
 {
   "name": "@osjs/client",
-  "version": "3.8.1",
+  "version": "3.9.1",
   "description": "OS.js client",
   "main": "dist/main.js",
   "style": "dist/main.css",
@@ -20,11 +20,12 @@
     "test": "npm run eslint && npm run stylelint && npm run jest",
     "jest": "jest",
     "coverage": "jest --coverage",
-    "eslint": "eslint index.js 'src/**/*.js'",
+    "eslint": "eslint index.js src",
     "build": "webpack",
     "watch": "webpack --watch",
     "stylelint": "stylelint index.scss src/**/*.scss",
-    "prepublishOnly": "npm run test && rm ./dist/* && NODE_ENV=production npm run build"
+    "prepublishOnly": "npm run test && rm ./dist/* && NODE_ENV=production npm run build",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -50,7 +51,10 @@
   },
   "homepage": "https://github.com/os-js/osjs-client#readme",
   "devDependencies": {
-    "@osjs/dev-meta": "^2.2.0"
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@osjs/dev-meta": "^2.2.0",
+    "husky": "^8.0.0"
   },
   "eslintConfig": {
     "env": {
@@ -127,6 +131,11 @@
       "src/providers",
       "/node_modules/",
       "/locale/"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
   }
 }

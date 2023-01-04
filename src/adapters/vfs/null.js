@@ -34,6 +34,7 @@
  * @param {object} [options] Adapter options
  */
 const nullAdapter = ({
+  capabilities: (path, options) => Promise.resolve({}),
   readdir: (path, options) => Promise.resolve([]),
   readfile: (path, type, options) => Promise.resolve({body: new ArrayBuffer(), mime: 'application/octet-stream'}),
   writefile: (path, data, options) => Promise.resolve(-1),

@@ -63,6 +63,7 @@ import merge from 'deepmerge';
  * Filesystem Adapter Methods
  * TODO: typedef
  * @typedef {Object} FilesystemAdapterMethods
+ * @property {Function} capabilities
  * @property {Function} readdir
  * @property {Function} readfile
  * @property {Function} writefile

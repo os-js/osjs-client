@@ -448,7 +448,7 @@ export default class Packages {
    */
   getCompatiblePackages(mimeType) {
     return this.getPackages(meta => {
-      if (meta.mimes) {
+      if (meta.mimes && !meta.hidden) {
         return !!meta.mimes.find(mime => {
           try {
             const re = new RegExp(mime);
@@ -487,5 +487,15 @@ export default class Packages {
    */
   running() {
     return this._running;
+  }
+
+  /**
+   * Gets the package metadata for a given package name
+   * @param {string} name
+   * @returns {PackageMetadata}
+   */
+  getMetadataFromName(name) {
+    const found = this.metadata.find(pkg => pkg.name === name);
+    return found ? {...found} : null;
   }
 }

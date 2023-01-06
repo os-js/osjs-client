@@ -171,8 +171,6 @@ describe('Window', () => {
   });
 
   test('#_setState', () => {
-    const toggleEvent = jest.fn(() => {});
-
     win.setState('focused', true);
     expect(win.state.focused).toBe(true);
 

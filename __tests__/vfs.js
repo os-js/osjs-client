@@ -35,7 +35,7 @@ const testAdapter = {...nullAdapter, readdir: (path, options) => Promise.resolve
   filename: 'jest.tst',
   path: 'null:/jest.tst',
   mime: 'text/plain'
-}]), };
+}])};
 
 const call = (method, ...args) => VFS[method](testAdapter, testMount)(...args);
 const callOther = (method, ...args) => VFS[method](testAdapter, otherMount)(...args);

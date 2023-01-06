@@ -3,10 +3,15 @@ import {resourceResolver} from '../../src/utils/desktop';
 
 describe('#resourceResolver icon themes', () => {
   let resolver;
+  let core;
 
   beforeAll(() => createInstance().then(
-    (core) => (resolver = resourceResolver(core))
+    (c) => {
+      core = c;
+      resolver = resourceResolver(core);
+    }
   ));
+
   afterAll(() => core.destroy());
 
   test('Should work with image extensions in the icon name', () => {

@@ -65,10 +65,8 @@ const fetchMocks = {
       return {username: parsed.username};
     },
 
-    '/login': ({body}) => Object.assign({
-      id: 0,
-      groups: []
-    }, JSON.parse(body))
+    '/login': ({body}) => ({id: 0,
+      groups: [], ...JSON.parse(body)})
   }
 };
 

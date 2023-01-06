@@ -45,7 +45,7 @@ const packageMatch = [
     .map(pkg => ({type: 'application', ...pkg}))
 ];
 
-describe('Packages', () =>  {
+describe('Packages', () => {
   let core;
   let packages;
 

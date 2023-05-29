@@ -142,7 +142,7 @@ export default class Login extends EventEmitter {
     ui.on('login:post', values => this.emit('login:post', values));
     this.on('login:start', () => ui.emit('login:start'));
     this.on('login:stop', () => ui.emit('login:stop'));
-    this.on('login:error', err => ui.emit('login:error', err));
+    this.on('login:error', (msg, err) => ui.emit('login:error', msg, err));
   }
 
 }

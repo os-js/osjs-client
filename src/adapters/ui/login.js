@@ -173,7 +173,7 @@ const create = (options, login, startHidden, $container) => {
 
   ee.on('login:start', () => a.setLoading(true));
   ee.on('login:stop', () => a.setLoading(false));
-  ee.on('login:error', err => a.setError(err));
+  ee.on('login:error', (msg) => a.setError(msg));
 
   return ee;
 };

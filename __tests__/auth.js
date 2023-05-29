@@ -106,7 +106,7 @@ describe('Auth', () => {
     return a.login()
       .then(() => a.logout())
       .then(() => {
-        expect(fnError).toBeCalled();
+        expect(fnError).toBeCalledWith('Login failed', 'Simulated failure');
         expect(fnStop).toBeCalled();
       });
   });

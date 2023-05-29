@@ -1,5 +1,13 @@
 # Changelog for osjs-client
 
+## 3.10.0 - 2023-05-20
+
+* feat: forward exception on login errors
+* chore(tests): eslint fix pass
+* ci: update eslint paths
+* refactor: lint search tests
+* feat(search): adapter support
+
 ## 3.9.1 - 2022-12-28
 
 * chore(tests): eslint fix pass

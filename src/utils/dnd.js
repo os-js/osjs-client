@@ -95,8 +95,8 @@ const getDataTransfer = (ev, type) => {
   let data;
 
   if (ev.dataTransfer) {
-    files = ev.dataTransfer.files
-      ? Array.from(ev.dataTransfer.files)
+    files = ev.dataTransfer.items
+      ? Array.from(ev.dataTransfer.items)
       : [];
 
     try {

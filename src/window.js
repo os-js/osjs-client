@@ -458,7 +458,8 @@ export default class Window extends EventEmitter {
         ondragenter: (...args) => this.emit('dragenter', ...args, this),
         ondragover: (...args) => this.emit('dragover', ...args, this),
         ondragleave: (...args) => this.emit('dragleave', ...args, this),
-        ondrop: (...args) => this.emit('drop', ...args, this)
+        ondrop: (...args) => this.emit('drop', ...args, this),
+        dataTransferProperty: this.attributes.droppableDataTransferProperty,
       });
 
       this.on('destroy', () => d.destroy());

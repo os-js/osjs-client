@@ -90,13 +90,13 @@ const retval = (fn, ...args) => {
   return true;
 };
 
-const getDataTransfer = (ev, type) => {
+const getDataTransfer = (ev, type, dataTransferProperty) => {
   let files = [];
   let data;
 
   if (ev.dataTransfer) {
-    files = ev.dataTransfer.files
-      ? Array.from(ev.dataTransfer.files)
+    files = ev.dataTransfer[dataTransferProperty]
+      ? Array.from(ev.dataTransfer[dataTransferProperty])
       : [];
 
     try {
@@ -200,9 +200,10 @@ export const draggable = (el, options = {}) => {
  * @return {DroppableInstance}
  */
 export const droppable = (el, options = {}) => {
-  const {strict, type, effect, ondragenter, ondragover, ondragleave, ondrop} = {
+  const {strict, type, effect, dataTransferProperty, ondragenter, ondragover, ondragleave, ondrop} = {
     type: 'application/json',
     effect: 'move',
+    dataTransferProperty: 'files',
     ondragenter: () => true,
     ondragover: () => true,
     ondragleave: () => true,
@@ -241,7 +242,7 @@ export const droppable = (el, options = {}) => {
       return false;
     }
 
-    const {files, data} = getDataTransfer(ev, type);
+    const {files, data} = getDataTransfer(ev, type, dataTransferProperty);
 
     ev.stopPropagation();
     ev.preventDefault();

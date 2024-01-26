@@ -84,7 +84,7 @@ import logger from './logger';
  * @property {boolean} [controls=true] Show controls
  * @property {string} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
  * @property {boolean} [clamp=true] Clamp the window position upon creation
- * @property {boolean} [droppable=true] If window should have the default drop action
+ * @property {boolean | {dataTransferProperty?: 'files' | 'items'}} [droppable=true] If window should have the default drop action
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {{name: string}} [mediaQueries] A map of matchMedia to name
@@ -454,11 +454,16 @@ export default class Window extends EventEmitter {
 
     // DnD functionality
     if (this.attributes.droppable) {
+      const {dataTransferProperty = 'files'} = this.attributes.droppable === true
+        ? {}
+        : this.attributes.droppable;
+
       const d = droppable(this.$element, {
         ondragenter: (...args) => this.emit('dragenter', ...args, this),
         ondragover: (...args) => this.emit('dragover', ...args, this),
         ondragleave: (...args) => this.emit('dragleave', ...args, this),
-        ondrop: (...args) => this.emit('drop', ...args, this)
+        ondrop: (...args) => this.emit('drop', ...args, this),
+        dataTransferProperty,
       });
 
       this.on('destroy', () => d.destroy());

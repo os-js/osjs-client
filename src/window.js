@@ -454,16 +454,10 @@ export default class Window extends EventEmitter {
 
     // DnD functionality
     if (this.attributes.droppable) {
-      /*
-        `this.attributes.droppable` should probably always be an object
-        and never be set to `true`.
-        The following code is only to update the setting for legacy applications.
-      */
-      if (this.attributes.droppable === true) {
-        this.attributes.droppable = {};
-      }
+      const {dataTransferProperty = 'files'} = this.attributes.droppable === true
+        ? {}
+        : this.attributes.droppable;
 
-      const {dataTransferProperty = 'files'} = this.attributes.droppable;
       const d = droppable(this.$element, {
         ondragenter: (...args) => this.emit('dragenter', ...args, this),
         ondragover: (...args) => this.emit('dragover', ...args, this),

@@ -84,7 +84,7 @@ import logger from './logger';
  * @property {boolean} [controls=true] Show controls
  * @property {string} [visibility=global] Global visibility, 'restricted' to hide from window lists etc.
  * @property {boolean} [clamp=true] Clamp the window position upon creation
- * @property {boolean | {dataTransferProperty?: 'files' | 'items'}} [droppable={}] If window should have the default drop action
+ * @property {boolean | {dataTransferProperty?: 'files' | 'items'}} [droppable=true] If window should have the default drop action
  * @property {WindowDimension} [minDimension] Minimum dimension
  * @property {WindowDimension} [maxDimension] Maximum dimension
  * @property {{name: string}} [mediaQueries] A map of matchMedia to name

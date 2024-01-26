@@ -58,7 +58,7 @@ export const createAttributes = attrs => ({
   visibility: 'global',
   shadowDOM: false,
   clamp: true,
-  droppable: {},
+  droppable: true,
   mediaQueries: {
     small: 'screen and (max-width: 640px)',
     medium: 'screen and (min-width: 640px) and (max-width: 1024px)',

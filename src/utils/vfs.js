@@ -79,6 +79,13 @@ const sortDefault = (k, d) => (a, b) =>
       : (d === 'asc' ? 0 : 1));
 
 /*
+ * Sort by ascii codes
+ */
+const sortAscii = (k, d) => (a, b) => d === 'asc'
+  ? (a[k] < b[k]) ? -1 : 1
+  : (a[k] < b[k]) ? 1 : -1;
+
+/*
  * Sorts an array of files
  */
 const sortFn = t => {
@@ -86,6 +93,8 @@ const sortFn = t => {
     return sortString;
   } else if (t === 'date') {
     return sortDate;
+  } else if (t === 'ascii') {
+    return sortAscii;
   }
 
   return sortDefault;
@@ -187,52 +196,50 @@ export const transformReaddir = ({path}, files, options = {}) => {
     showHiddenFiles: false,
     sortBy: 'filename',
     sortDir: 'asc',
+    serverSorting: false,
     ...options
   };
 
-  let {sortDir, sortBy, filter} = options;
+  let {sortDir, sortBy, filter, serverSorting} = options;
   if (typeof filter !== 'function') {
     filter = () => true;
-  }
-
-  if (['asc', 'desc'].indexOf(sortDir) === -1) {
-    sortDir = 'asc';
   }
 
   const filterHidden = options.showHiddenFiles
     ? () => true
     : file => file.filename.substr(0, 1) !== '.';
 
-  const sorter = sortMap[sortBy]
-    ? sortMap[sortBy]
-    : sortFn('string');
-
   const modify = (file) => ({
     ...file,
     humanSize: humanFileSize(file.size)
   });
 
+  let sortedSpecial = [];
+  let sortedFiles = [];
+
   // FIXME: Optimize this to one chain!
-
-  const sortedSpecial = createSpecials(path)
-    .sort(sorter(sortBy, sortDir))
+  sortedSpecial = createSpecials(path)
     .map(modify);
 
-  const sortedDirectories = files.filter(file => file.isDirectory)
-    .sort(sorter(sortBy, sortDir))
-    .filter(filterHidden)
+  sortedFiles = files.filter(filterHidden)
     .filter(filter)
     .map(modify);
 
-  const sortedFiles = files.filter(file => !file.isDirectory)
-    .sort(sorter(sortBy, sortDir))
-    .filter(filterHidden)
-    .filter(filter)
-    .map(modify);
+  if(!serverSorting) {
+    if (['asc', 'desc'].indexOf(sortDir) === -1) {
+      sortDir = 'asc';
+    }
+    const sorter = sortMap[sortBy]
+      ? sortMap[sortBy]
+      : sortFn('ascii');
+    sortedSpecial = sortedSpecial
+      .sort(sorter(sortBy, sortDir));
+    sortedFiles = sortedFiles
+      .sort(sorter(sortBy, sortDir));
+  }
 
   return [
     ...sortedSpecial,
-    ...sortedDirectories,
     ...sortedFiles
   ];
 };

@@ -88,7 +88,17 @@ describe('utils.vfs#transformReaddir', () => {
   test('Should remove dotfiles', () => {
     expect(checkMap({
       showHiddenFiles: false
-    })).toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
+    })).toEqual(['..', 'directory', 'file', 'xdirectory', 'xfile']);
+  });
+
+  test('Should not sort due to server sorting', () => {
+    const result = checkMap({
+      showHiddenFiles: false,
+      serverSorting: true
+    });
+
+    return expect(result)
+      .toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
   });
 
   test('Should sort by descending order', () => {
@@ -98,7 +108,7 @@ describe('utils.vfs#transformReaddir', () => {
     });
 
     return expect(result)
-      .toEqual(['..', 'xdirectory', 'directory', 'xfile', 'file']);
+      .toEqual(['..', 'xfile', 'xdirectory', 'file', 'directory']);
   });
 
   test('Should sort by ascending order', () => {
@@ -108,7 +118,7 @@ describe('utils.vfs#transformReaddir', () => {
     });
 
     return expect(result)
-      .toEqual(['..', 'directory', 'xdirectory', 'file', 'xfile']);
+      .toEqual(['..', 'directory', 'file', 'xdirectory', 'xfile']);
   });
 
   test('Should sort by specified column', () => {

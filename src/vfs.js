@@ -49,6 +49,13 @@ import {
  */
 
 /**
+ * VFS Archive Options
+ *
+ * @typedef {Object} VFSArchiveOptions
+ * @property {string} [action] The action to perform on the archive
+ */
+
+/**
  * VFS File Object
  *
  * @typedef {Object} VFSFile
@@ -263,3 +270,14 @@ export const search = (adapter, mount) => (root, pattern, options = {}) => {
  */
 export const touch = (adapter, mount) => (path, options = {}) =>
   adapter.touch(pathToObject(path), options, mount);
+
+/**
+ * Compresses or decompresses a selection of files.
+ * @param {string[]|VFSFile[]} selection The selection to compress or decompress
+ * @param {VFSArchiveOptions} [options={}] Options
+ * @returns {Promise<boolean>}
+ */
+export const archive = (adapter, mount) => (selection, options = {}) => {
+  const paths = selection.map((path) => pathToObject(path));
+  return adapter.archive(paths, options, mount);
+};

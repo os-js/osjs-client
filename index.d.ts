@@ -2200,20 +2200,21 @@ export type FilesystemMountpoint = {
  * Filesystem Adapter Methods
  */
 export type FilesystemAdapterMethods = {
-  readdir: Function;
-  readfile: Function;
-  writefile: Function;
-  copy: Function;
-  move: Function;
-  rename: Function;
-  mkdir: Function;
-  unlink: Function;
-  exists: Function;
-  stat: Function;
-  url: Function;
-  download: Function;
-  search: Function;
-  touch: Function;
+	readdir: Function;
+	readfile: Function;
+	writefile: Function;
+	copy: Function;
+	move: Function;
+	rename: Function;
+	mkdir: Function;
+	unlink: Function;
+	exists: Function;
+	stat: Function;
+	url: Function;
+	download: Function;
+	search: Function;
+	touch: Function;
+	archive: Function;
 };
 export type FilesystemAdapterWrapper = () => FilesystemAdapterMethods;
 /**
@@ -2261,20 +2262,21 @@ export type VFSServiceFilesystemContract = {
  * VFS Service Contract
  */
 export type VFSServiceContract = {
-  readdir: Function;
-  readfile: Function;
-  writefile: Function;
-  copy: Function;
-  move: Function;
-  rename: Function;
-  mkdir: Function;
-  unlink: Function;
-  exists: Function;
-  stat: Function;
-  url: Function;
-  download: Function;
-  search: Function;
-  touch: Function;
+	readdir: Function;
+	readfile: Function;
+	writefile: Function;
+	copy: Function;
+	move: Function;
+	rename: Function;
+	mkdir: Function;
+	unlink: Function;
+	exists: Function;
+	stat: Function;
+	url: Function;
+	download: Function;
+	search: Function;
+	touch: Function;
+	archive: Function;
 };
 /**
  * VFS Service Options

@@ -359,8 +359,8 @@ export const createWatchEvents = (method, args) => {
   const options = args[args.length - 1] || {};
 
   const movement = ['move', 'rename', 'copy'].indexOf(method) !== -1;
-  const invalid = ['readdir', 'download', 'url', 'exists', 'readfile', 'search', 'stat'].indexOf(method) !== -1;
   const path = i => typeof i === 'string' ? i : i.path;
+  const invalid = ['readdir', 'download', 'url', 'exists', 'readfile', 'search', 'stat'].indexOf(method) !== -1;
 
   if (!invalid) {
     const obj = {
@@ -368,6 +368,11 @@ export const createWatchEvents = (method, args) => {
       source: path(args[0]),
       pid: options.pid
     };
+
+    let target = args[0];
+    if (Array.isArray(args[0])) {
+      target = target[0];
+    }
 
     events.push(['osjs/vfs:directoryChanged', {
       ...obj,
@@ -377,7 +382,7 @@ export const createWatchEvents = (method, args) => {
     if (movement) {
       events.push(['osjs/vfs:directoryChanged', {
         ...obj,
-        path: pathname(path(args[1]))
+        path: pathname(path(target))
       }]);
     }
   }

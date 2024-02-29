@@ -36,6 +36,8 @@ import {defaultConfiguration} from './config';
 import {fetch} from './utils/fetch';
 import {urlResolver} from './utils/url';
 import logger from './logger';
+import merge from 'deepmerge';
+import {isPlainObject} from 'is-plain-object';
 
 /**
  * @callback SplashCallback
@@ -491,11 +493,11 @@ export default class Core extends CoreBase {
 
     if (!url.match(/^((http|ws|ftp)s?:)/i)) {
       url = this.url(url);
-      // FIXME: Deep merge
-      options = {
-        ...options || {},
-        ...this.requestOptions || {}
-      };
+      options = merge(
+        options,
+        this.requestOptions,
+        {isMergeableObject: isPlainObject}
+      );
     }
 
     return fetch(url, options, type)

@@ -64,6 +64,7 @@ import * as utils from '../utils/vfs';
  * @property {Function} download
  * @property {Function} search
  * @property {Function} touch
+ * @property {Function} archive
  */
 
 /**

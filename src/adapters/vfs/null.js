@@ -48,7 +48,8 @@ const nullAdapter = ({
   mount: options => Promise.resolve(true),
   unmount: options => Promise.resolve(true),
   search: (root, pattern, options) => Promise.resolve([]),
-  touch: (path, options) => Promise.resolve(false)
+  touch: (path, options) => Promise.resolve(false),
+  archive: (selection, options) => Promise.resolve(false),
 });
 
 export default nullAdapter;

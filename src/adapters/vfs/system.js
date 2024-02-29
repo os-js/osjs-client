@@ -58,11 +58,7 @@ const methods = (core, request) => {
 
   return {
     capabilities: passthrough('capabilities'),
-
-    readdir: ({path}, options) => request('readdir', {
-      path,
-      options,
-    }, 'json').then(({body}) => body),
+    readdir: passthrough('readdir'),
 
     readfile: ({path}, type, options) =>
       request('readfile', {path, options}),
@@ -108,7 +104,14 @@ const methods = (core, request) => {
         .then(url => {
           return (options.target || window).open(url);
         });
-    }
+    },
+
+    archive: (selection, options = {}) => {
+      const paths = selection.map(item => item.path);
+      return request('archive', {selection: paths, options}, 'json').then(
+        ({body}) => body
+      );
+    },
   };
 };
 
